@@ -4,7 +4,9 @@ title: Home
 navigation: 1
 ---
 
-# ![logo](https://raw.githubusercontent.com/CRG-CNAG/BioCoreMiscOpen/master/logo/biocore-logo_small.png) RNAseq course 2019
+![logo](https://raw.githubusercontent.com/CRG-CNAG/BioCoreMiscOpen/master/logo/biocore-logo_small.png) 
+
+# [PHINDaccess](http://phindaccess.org/) RNAseq course 2020
 
 
 ## Dates, time & location
@@ -14,32 +16,28 @@ Dates:
 
 | Day  | Date  | Time  |
 | :---:  | :---  | ---:  |
-| 1 | Monday 13th of May 2019|9:30-13:30|
-| 2 | Tuesday 14th of May 2019|9:30-13:30| 
-| 3 | Wednesday 15th of May 2019|14:00-17:00| 
-| 4 | Thursday 16th of May 2019|14:00-17:00| 
-| 5 | Monday 27th of May 2019|9:30-13:00| 
+| 1 | Monday 10th of February 2020|9:30-17:00|
+| 2 | Tuesday 11th of February 2020|9:30-17:00| 
+| 3 | Wednesday 12th of February 2020|9:30-17:00| 
+| 4 | Thursday 13th of February 2020|9:30-17:00| 
 
 
 Location:
-Carrer del Dr. Aiguader, 88, 08003 Barcelona.
-CRG Training center, PRBB building ground floor. 
-
-<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d11973.94726186489!2d2.1942455!3d41.3852331!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x81e449abea5aae0e!2sPRBB+Parc+de+Recerca+Biom%C3%A8dica+de+Barcelona!5e0!3m2!1sit!2ses!4v1551808726678" width="500" height="500" align="middle" frameborder="0" style="border:0" allowfullscreen></iframe>
+[Institut Pasteur Tunis](http://www.pasteur.tn/)
 
 <br/>
 <br/>
 
 ## Instructors
 
-|[Luca Cozzuto](mailto:luca.cozzuto@crg.eu)| [Julia Ponomarenko](mailto:julia.ponomarenko@crg.eu)  | [Sarah Bonnin](mailto:sarah.bonnin@crg.eu) |
+|[Luca Cozzuto](mailto:luca.cozzuto@crg.eu)| [Sarah Bonnin](mailto:sarah.bonnin@crg.eu) |
 | :---:  | :---:  | :---:  |
-|<a href="https://biocore.crg.eu/wiki/User:Lcozzuto"><img src="pics/lcozzuto.jpg" width="100"/> </a> |<a href="https://biocore.crg.eu/wiki/User:Jponomarenko"><img src="pics/ponomarenko.jpg" width="100"/> </a> |<a href="https://biocore.crg.eu/wiki/User:SBonnin"><img src="pics/sbonnin.jpg" width="100"/></a> | 
+|<a href="https://biocore.crg.eu/wiki/User:Lcozzuto"><img src="pics/lcozzuto.jpg" width="100"/> </a>|<a href="https://biocore.crg.eu/wiki/User:SBonnin"><img src="pics/sbonnin.jpg" width="100"/></a> | 
 
 
-from the CRG [Bioinformatics core facility](https://biocore.crg.eu/) (office 460, 4th floor hotel side)
+from the CRG [Bioinformatics core facility](https://biocore.crg.eu/)
 
-Material available at https://biocorecrg.github.io/RNAseq_course_2019/
+Material available at https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/
 
 ##  Learning objectives
 At the end of the course, the participants will be able to:
@@ -56,7 +54,6 @@ At the end of the course, the participants will be able to:
 *	Day 2: Read mapping to reference genome
 *	Day 3: Differential expression analysis
 *	Day 4: Genome browser, gene ontology enrichment analysis
-*	Day 5: Troubleshooting of a mini-project
 
 
 ## Prerequisites
