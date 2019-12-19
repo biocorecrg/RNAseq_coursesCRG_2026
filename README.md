@@ -20,6 +20,109 @@ IPT (Institut Pasteur Tunis)
 
 [Luca Cozzuto](luca.cozzuto@crg.eu)
 
+## The plan (draft)
+The webpage is at https://biocorecrg.github.io/PHINDaccess_RNAseq_2020 
+
+### Day 1
+
+#### 9:00-10:15
+* Introduction of the course: goals of the course, outline
+* How to use the singularity image:
+  * Test with simple commands
+* Goals of RNA-seq experiments
+* Overview of platforms (Illumina, Nanopore, Pacbio)
+#### 10:45-12:00
+* Protocols: 
+  * polyA capture, ribo0, total RNA, microRNA, mRNA
+  * Stranded versus unstranded protocols
+  * Adaptors
+* Experimental / sequencing design
+  * Replicates
+  * Sequencing depth
+  * Read types: single, paired end. Read length
+#### 13:30-14:45
+* Get raw data from public repository
+  * Browse different repos
+  * Check fasta file and explain format
+* Get "toy" fastq from us (TBD: one chromosome from a small genome, to reduce computation)
+* FastQC (compare what should be seen in genome versus transcriptome), FastqScreen
+  * Explain details of reports
+#### 15:15-16:30
+* Adaptor trimming
+  * Run QC tools and adaptor trimming on one sample, give the second one as exercise
+  * Run QC tools on both "raw" and trimmed fastq files
+
+### Day 2
+
+#### 9:00-10:15
+* Get reference genome or transcriptome (fasta file): ENSEMBL, Gencode, UCSC
+  * Check fasta file, count sequences, grep headers, etc.
+* Get reference annotation (GTF)
+  * Explain GTF format
+  * Parsing GTF: retrieving only genes, only coordinates, only gene ID, etc.
+#### 10:45-12:00
+* Mapping theory
+  * Types of mappers
+  * Pros and con, which to choose ?
+* Map data to reference genome
+  * SALMON
+  * (STAR too computationally greedy)
+#### 13:30-14:45
+* Explain SAM and BAM format
+  * Fields in common with fastq format
+  * Fields specific to SAM/BAM
+  * Play with samtools: convert SAM to BAM, sort BAM, index BAM.
+#### 15:15-16:30
+* UCSC Genome browser
+  * Load BAM
+  * Explore annotations
+  * Convert bam to bigwig and load bigwig
+
+### Day 3
+
+#### 9:00-10:15
+* Refreshing R
+#### 10:45-12:00
+* Differential expression analysis
+  * Theory and popular tools
+* DESeq2
+  * Raw counts / input
+  * Import data from SALMON
+  * Import data from STAR even if we couldn't map it?
+  * Prepare transcript-to-gene annotation file for SALMON
+  * Sample sheet
+  * Analysis
+#### 13:30-14:45
+* DESeq2
+  * Prepare transcript-to-gene annotation file for SALMON
+  * Sample sheet
+  * Analysis
+  * Understanding output
+  * Filtering results, gene selection
+#### 15:15-16:30
+* Visualization of differential expression analysis
+  * PCA
+  * Dendrogram
+  * Heatmap
+  * Scatter plot?
+
+### Day 4
+
+#### 9:00-10:15
+* multiQC on FastQC, FastqScreen and mapped data
+* ?
+#### 10:45-12:00
+* Functional analysis
+  * Databases: GO, KEGG, MSigDB
+  * Run Enrichr
+  * Run GO/Panther tool
+#### 13:30-14:45
+* Functional analysis
+  * GSEA: theory and run
+#### 15:15-16:30
+* Keep this last session in case the course is running late.
+* BUT if time allows:
+  * GOstats? KEGGprofile?
 
 ## Computers in training room
 
@@ -93,53 +196,6 @@ Keyboard Layout: AZERTY
   * http://amp.pharm.mssm.edu/Enrichr/
   
 
-## The plan (draft)
-The webpage is at https://biocorecrg.github.io/PHINDaccess_RNAseq_2020 
 
-### Day 1
-* Introduction (lecture)
-  * goals of course
-  * SMALL INTRODUCTION ON HOW TO USE THE SINGULARITY IMAGE
-  * goals of RNA-seq experiments
-  * overview of platforms (Illumina, Nanopore, PacBio ?)
-  * polyA, ribo0, total RNA, microRNA
-  * stranded, unstranded
-  * adaptors
-  * read type: single, paired end; read length.
-  * experimental / sequencing design
-  * sequencing depth
-* Get raw data from public repository (Drosophila ?): check fastq file
-* Adaptor trimming
-* FastQC (compare what should be seen in genome versus transcriptome), FastqScreen, MultiQC
-
-### Day 2
-* Get reference genome or transcriptome: ENSEMBL, Gencode, UCSC
-* GTF format; a bit of exploration and excercises 
-* Map reads to genome or transcriptome? 
-* Existing approaches/methods to read mapping in an RNA-seq experiment: pros and cons, which to choose?
-* Map data to reference genome:
-  * STAR
-  * SALMON
-* SAM / BAM formats (play with samtools)
-* How to explore BAM files (e.g., using NCBI Genome Workbench https://www.ncbi.nlm.nih.gov/tools/gbench/tutorial6/; UCSC browser https://genome.ucsc.edu/goldenPath/help/bam.html - which http server can be used in the class for this?) other tools to view BAM file SeqMonk, RNAseqViewer, IGB,...
-* Make bigwig-files from BAMs and load into GenomeBrowser
-
-I suggest to move Genome Browser here to show its major functionality and to look at BAM and bigwig files. It can be ok to expand it to Day 3. Maybe, move SALMON to Day 3 and compare alignments from STAR ans SALMON using statistics on mapping and looking at bigwig-files in the borwser? 
-
-### Day 3
-* DESeq2: import data from STAR and SALMON
-* online tool that integrates DESeq2, edgeR, limma, and more: http://52.90.192.24:3838/rnaseq2g/
-* RSEM after SALMON?
-* Gene selection
-* PCA, heatmap
-
-### Day 4
-* Genome browser: ENSEMBL, UCSC or IGV
-* bigwig?
-* Conversion from UCSC chromosome naming convention to ENSEMBL's ?
-* Gene Ontology analysis:
-  * enrichR
-  * DAVID ?
-  * GSEA
 
 
