@@ -127,11 +127,17 @@ The webpage is at https://biocorecrg.github.io/PHINDaccess_RNAseq_2020
 ## Computers in training room
 
 Description: Ubuntu 18.04.3 LTS
+
 Release: 18.04
+
 Linux: 5.0.0-37-generic    
+
 RAM:  7.7 Go
+
 Storage: 480.08 Go
+
 Graphic Card: NIVIDIA Corporation GK208B (GeForce GT 710)
+
 Keyboard Layout: AZERTY
 
 ### Requirements for the course:
