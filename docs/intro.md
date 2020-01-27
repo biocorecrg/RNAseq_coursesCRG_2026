@@ -22,7 +22,7 @@ Other technologies for assessing RNA expression are Northern Blot, real-time PCR
 
 <br/>
 
-RNA-Seq can be performed using:
+RNA-Seq can be performed starting from:
 * total RNA (in this case the content of ribosomal RNA is about 80%);
 * rRNA depleted RNA (after removing ribosomal RNA);
 * mRNA transcripts (by performing polyA enrichment of RNA); 
