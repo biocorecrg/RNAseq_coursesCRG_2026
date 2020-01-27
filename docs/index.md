@@ -32,7 +32,7 @@ Location:
 
 |[Julia Ponomarenko](mailto:julia.ponomarenko@crg.eu)| [Sarah Bonnin](mailto:sarah.bonnin@crg.eu) |
 | :---:  | :---:  | :---:  |
-|<a href="https://biocore.crg.eu/wiki/User:JPonomarenko"><img src="pics/ponomanreko.jpg" width="100"/> </a>|<a href="https://biocore.crg.eu/wiki/User:SBonnin"><img src="pics/sbonnin.jpg" width="100"/></a> | 
+|<a href="https://biocore.crg.eu/wiki/User:JPonomarenko"><img src="pics/ponomarenko.jpg" width="100"/> </a>|<a href="https://biocore.crg.eu/wiki/User:SBonnin"><img src="pics/sbonnin.jpg" width="100"/></a> | 
 
 from the [CRG](https://www.crg.eu/) [Bioinformatics core facility](https://biocore.crg.eu/) in Barcelona, Catalonia, Spain.
 
