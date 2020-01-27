@@ -16,10 +16,10 @@ Dates:
 
 | Day  | Date  | Time  |
 | :---:  | :---  | ---:  |
-| 1 | Monday 10th of February 2020|9:30-17:00|
-| 2 | Tuesday 11th of February 2020|9:30-17:00| 
-| 3 | Wednesday 12th of February 2020|9:30-17:00| 
-| 4 | Thursday 13th of February 2020|9:30-17:00| 
+| 1 | Monday 10th of February 2020|9:00-16:30|
+| 2 | Tuesday 11th of February 2020|9:00-16:30| 
+| 3 | Wednesday 12th of February 2020|9:00-16:30| 
+| 4 | Thursday 13th of February 2020|9:00-16:30| 
 
 
 Location:
@@ -30,12 +30,11 @@ Location:
 
 ## Instructors
 
-|[Luca Cozzuto](mailto:luca.cozzuto@crg.eu)| [Sarah Bonnin](mailto:sarah.bonnin@crg.eu) |
+|[Julia Ponomarenko](mailto:julia.ponomarenko@crg.eu)| [Sarah Bonnin](mailto:sarah.bonnin@crg.eu) |
 | :---:  | :---:  | :---:  |
-|<a href="https://biocore.crg.eu/wiki/User:Lcozzuto"><img src="pics/lcozzuto.jpg" width="100"/> </a>|<a href="https://biocore.crg.eu/wiki/User:SBonnin"><img src="pics/sbonnin.jpg" width="100"/></a> | 
+|<a href="https://biocore.crg.eu/wiki/User:JPonomarenko"><img src="pics/ponomanreko.jpg" width="100"/> </a>|<a href="https://biocore.crg.eu/wiki/User:SBonnin"><img src="pics/sbonnin.jpg" width="100"/></a> | 
 
-
-from the CRG [Bioinformatics core facility](https://biocore.crg.eu/)
+from the [CRG](https://www.crg.eu/) [Bioinformatics core facility](https://biocore.crg.eu/) in Barcelona, Catalonia, Spain.
 
 Material available at https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/
 
