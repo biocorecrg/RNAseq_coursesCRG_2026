@@ -10,7 +10,7 @@ navigation: 4
 
 mRNA is selected using a polyT adapter that binds to the **polyA tail** of RNA. As a result, non poly-adenylated transcripts - rRNA, tRNA, long ncRNAs, miRNA, histone mRNA, degraded RNA, bacterial transcripts, and many viral transcripts  - are excluded from the reaction (washed away).
 
-* **RNA quantification, quality control and fragmentation**
+## **RNA quantification, quality control and fragmentation**
 
 
 <img src="images/illumina1.png" width="500" align="middle" />
@@ -28,7 +28,7 @@ mRNA is one-stranded: during a typical RNA-Seq experiment the information about 
 
 Methods were designed to take into account the strand: resulting **stranded RNA-Seq libraries** preserve the RNA strand information and allow detection of genes transcribed in both 5' and 3' direction. 
 
-<img src="images/rnaseq_strandedness.png" width="500" align="middle" />
+<img src="images/rnaseq_strandedness.png" width="900" align="middle" />
 
 Strand-specific protocols enhance the value of a RNA-seq experiment:
 * No ambiguity and better estimation of gene expression level.
@@ -44,7 +44,7 @@ The protocol uses the **introduction of dUTP** instead of dTTP during the amplif
 
 In the result (in other protocols it can be different), **Read 1 (forward)** is mapped to the **antisense DNA strand** (this is also true for single-end reads), while **Read 2 (reverse)**, to the **sense DNA strand**.
 
-<img src="images/dutp.jpg" width="200" align="middle" />
+<img src="images/dutp.jpg" width="500" align="middle" />
 
 
 |Read mapping in a stranded vs. unstranded sequencing|
@@ -54,7 +54,7 @@ In the result (in other protocols it can be different), **Read 1 (forward)** is 
 
 <br/>
 
-* **cDNA multiplexing** 
+## **cDNA multiplexing** 
 
 Fragmented cDNA is indexed with a hexamer or octamer barcode (so that cDNA from different samples can be pooled into a single lane for multiplexed sequencing).
 
@@ -64,7 +64,7 @@ Fragmented cDNA is indexed with a hexamer or octamer barcode (so that cDNA from 
 |from [https://github.com/hbctraining/rnaseq_overview](https://github.com/hbctraining/rnaseq_overview)|
 
 
-* **cDNA amplification**
+## **cDNA amplification**
 
 <br/>
 
@@ -72,7 +72,7 @@ Fragmented cDNA is indexed with a hexamer or octamer barcode (so that cDNA from 
 
 <br/>
 
-* **Sequencing**
+## **Sequencing**
 
 <br/>
 
