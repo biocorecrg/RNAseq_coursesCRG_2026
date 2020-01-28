@@ -6,7 +6,7 @@ navigation: 4
 
 # Library preparation
 
-* **mRNA purification**. 
+## **mRNA purification**. 
 
 mRNA is selected using a polyT adapter that binds to the **polyA tail** of RNA. As a result, non poly-adenylated transcripts - rRNA, tRNA, long ncRNAs, miRNA, histone mRNA, degraded RNA, bacterial transcripts, and many viral transcripts  - are excluded from the reaction (washed away).
 
@@ -15,21 +15,37 @@ mRNA is selected using a polyT adapter that binds to the **polyA tail** of RNA. 
 
 <img src="images/illumina1.png" width="500" align="middle" />
 
-* **RNA is converted to cDNA**
+## **RNA is converted to cDNA**
 
 mRNA that is targeted in RNA-Seq experiments has polarity 5' to 3'. 
 While it can be transcribed from either DNA strand. But for mRNA, it is always called sense RNA. 
 
 <img src="images/transcription.jpg" width="500" align="middle" />
 
-Because mRNA is one-stranded, during a typical RNA-Seq experiment the information about DNA strands is lost after both strands of cDNA are synthesized. 
+## Stranded vs unstranded RNA-seq
+
+mRNA is one-stranded: during a typical RNA-Seq experiment the information about DNA strands is lost after both strands of cDNA are synthesized.
 
 Methods were designed to take into account the strand: resulting **stranded RNA-Seq libraries** preserve the RNA strand information and allow detection of genes transcribed in both 5' and 3' direction. 
 
+<img src="images/rnaseq_strandedness.png" width="500" align="middle" />
+
+Strand-specific protocols enhance the value of a RNA-seq experiment:
+* No ambiguity and better estimation of gene expression level.
+* Add information on the originating strand (inferred from the alignment)
+* Can precisely delineate the bounderies of transcripts in regions with genes on opposite strands (better transcript model)
+
+
 (For detail, see [https://galaxyproject.org/tutorials/rb_rnaseq/](https://galaxyproject.org/tutorials/rb_rnaseq/))
 
-One of such methods is implemented in the Illumina's TruSeq Stranded mRNA protocol that uses the introduction of dUTP instead of dTTP during the amplification. The incorporation of dUTP in the second strand synthesis quenches the second strand during amplification, because the polymerase used in the assay is not incorporated past this nucleotide.  
-In the result (in other protocols it can be different), Read 1 (forward) is mapped to the antisense DNA strand (this is also true for single-end reads), while Read 2 (reverse), to the sense DNA strand.
+Illumina's TruSeq Stranded mRNA protocol has become a standard method for mRNA-sequencing.
+
+The protocol uses the **introduction of dUTP** instead of dTTP during the amplification. The incorporation of dUTP in the second strand synthesis quenches the second strand during amplification, because the polymerase used in the assay is not incorporated past this nucleotide.
+
+In the result (in other protocols it can be different), **Read 1 (forward)** is mapped to the **antisense DNA strand** (this is also true for single-end reads), while **Read 2 (reverse)**, to the **sense DNA strand**.
+
+<img src="images/dutp.jpg" width="200" align="middle" />
+
 
 |Read mapping in a stranded vs. unstranded sequencing|
 | :---:  |

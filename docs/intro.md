@@ -11,8 +11,29 @@ navigation: 3
 |<img src="images/Double-stranded_RNA.gif" width="300" align="middle" />|
 |from Wikipedia|
 
+In both prokaryotes and eukaryotes, there are 3 main types of RNA:
+* Messenger RNA = mRNA:
+  * ~ Represent ~ 1-5% of total RNA
+  * Protein-coding
+  * Mostly poly-adenylated
+  * Very heterogeneous in terms of base sequence and size.
+* Ribosomal RNA = rRNA:
+  * ~ Represent ~ 80-90% of total RNA
+* Transfer RNA = tRNA
+  * Represent ~ 15% of total RNA
+  * Small in size: ~ 75-95 nt
+  
+But there are many more types of RNAs:
+* Micro RNA = miRNA
+  * Regulatory RNAs
+  * Small in size: ~ 20-25 nt
+* Small nuclear RNA:  = snRNA
+  * Several are related to splicing mechanisms
+* And more: lncRNA, eRNA, scaRNA, gRNA, piRNA, etc.
 
-RNA sequencing, aka RNA-Seq, is a technique that allows to detect and quantify RNA molecules within biological samples by using next-generation sequencing (NGS). This technology is used to analyze RNA by revealing
+RNA-sequencing, aka RNA-Seq, is a High-Throughput Sequencing technique for identification and quantification of RNA molecules within biological samples. 
+
+This technology is used to analyze RNA by revealing:
 * RNA/gene/transcript expression;
 * alternatively spliced transcripts;
 * gene fusion and SNPs;
@@ -22,13 +43,10 @@ Other technologies for assessing RNA expression are Northern Blot, real-time PCR
 
 <br/>
 
-RNA-Seq can be performed starting from:
-* total RNA (in this case the content of ribosomal RNA is about 80%);
-* rRNA depleted RNA (after removing ribosomal RNA);
-* mRNA transcripts (by performing polyA enrichment of RNA); 
-* small RNA, such as miRNA, tRNA (by selecting the size of RNA molecules; e.g., < 100 nt);
-* RNA molecules transcribed at a specific time (ribosomal profiling);
-* specific RNA molecules (via hybridization with probes complementary to desired transcripts).
+RNA-seq can target different RNA populations, using different protocols:
+* Positive selection of mRNAs: polyA selection.
+* Negative selection of non-polyA: rRNA depletion.
+* Size selection: e.g. for small RNA selection.
 
 <br/>
 
