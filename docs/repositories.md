@@ -6,6 +6,9 @@ navigation: 8
 
 # RNA-Seq data repositories
 
+Public repositories exist that store high throughput sequencing experiment data ("raw" and processed) from the community.
+
+It is nowadays required by most journals to make data publicly available upon publication of an article.
 
 The major repositories for gene expression data:
 * [**GEO**](https://www.ncbi.nlm.nih.gov/geo/) 
@@ -20,21 +23,31 @@ These repositories  are linked to the repositories of NGS raw data (Fastq files)
 <br/>
 
 ## EXERCISE
-Let's explore [one of the GEO records](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126535)
+Let's explore [this GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126535) (GSE126535)
 * Which platform and protocol were used for sequencing?
 * What type of RNA was sequenced?
 * How many samples were sequenced?
 
 <br/>
 
-**NOTE: You will need to download data from SRA for an independent project after this week!**
-To download raw data from **SRA**, it is possible to use **fastq-dump program** from [**SRA toolkit**](https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc) or to download files from the NCBI ftp website using wget (for detail, see [https://www.ncbi.nlm.nih.gov/books/NBK158899/#SRA_download.when_to_use_a_command_line](https://www.ncbi.nlm.nih.gov/books/NBK158899/#SRA_download.when_to_use_a_command_line).
+## Downloading data from a public repository
 
-To download data, use the SRA identifier specifying whether reads are single or paired-end, otherwise paired-end reads will be downloaded as a single interleaved file; for paired-end reads use the parameter **--split-files in fastq-dump**. Fastq-dump adds SRA ID to each read in the file, to avoid it, use an option **--origfmt**; **--gzip** compresses fastq files immediately after download; and **--skip-technical** downloads only biological reads. The command below will download fastq-file(s) for one sample only (for example, using SRR identifier SRR8571764 from the exercise above; it is slow - it might take up to 30-40 minutes):
-
+**fastq-dump** program from the [**SRA toolkit**](https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc) allows you to retrieve raw data from the **SRA** platform, from the command line:
+<br>
 ```{bash}
 fastq-dump --gzip --origfmt --split-files --skip-technical SRR-IDENTIFIER
 ```
+
+The options used here are:
+* **--split-files** for paired-end data (if omitted, fastq-dump outputs a single interleaved file)
+* **--origfmt**: to avoid the generic "SRA" naming. Keep the original name.
+* **--gzip**: get a gzip-compressed fastq file (fastq files can ve very storage consuming!)
+* **--skip-technical**: download only biological reads???
+<br>
+Going back to the previous [GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126535):
+* Where can you find the SRA identifiers (code SRR...), for each sample?
+* Try and download one sample locally using fastq-dump.
+
 
 To download all samples for a specific GEO experiment, use the SRA study identifier (e.g., for the GEO experiment considered above, it is SRP185848) and follow the steps:
 * First, download a list of SRR identifiers for all samples in the study by going to [the NCBI SRA page for this study](https://www.ncbi.nlm.nih.gov/sra?LinkName=bioproject_sra_all&from_uid=522280) and clicking on the right top "Send" --> "File" --> "Accession List" --> "Save to file". That will give you the text file with all SRR identifiers for this study; save it for example to the file "sra_ids.txt". 
