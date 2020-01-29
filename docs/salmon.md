@@ -63,7 +63,9 @@ From the STAR output for read counts we already know that for the analyzed exper
 
 ```{bash}
 cd annotations
-wget wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_29/gencode.v29.annotation.gtf.gz
+# Get the annotation gtf from the Gencode data base
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_29/gencode.v29.annotation.gtf.gz
+# uncompress GTF file
 gunzip gencode.v29.annotation.gtf.gz
 cd ../
 ```

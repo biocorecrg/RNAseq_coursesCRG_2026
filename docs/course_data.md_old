@@ -6,36 +6,6 @@ navigation: 9
 
 # Data used in this course
 
-For this course, we will use public data sets from GEO data set **GSE139905**.
-
-## Exercise:
-
-* Go to GEO, retrive the SRA codes corresponding to the following samples
-
-|GSM4148513 |	Pdxk-1 -|
-|GSM4148514 |	Pdxk-1 +|
-|GSM4148515 |	Pdxk-2 -|
-|GSM4148516 |	Pdxk-2 +|
-|GSM4148517 |	Pdxk-3 -|
-|GSM4148518 |	Pdxk-3 +|
-
-* Download the raw data for the 6 samples using fastq-dump (it can take a long time!).
-
-```{bash}
-for sra in SRR10399006 SRR10399007 SRR10399008 SRR10399009 SRR10399010 SRR10399011
-do $RUN fastq-dump --gzip --origfmt --skip-technical --split-files $sra
-done
-```
-
-
-
-
-
-
-
-
-
-
 For the purpose of this course, we downloaded the following [ENCODE](https://www.encodeproject.org/) data:
 
 1. [Homo sapiens A549 treated with 100 nM dexamethasone for 0 minutes](https://www.encodeproject.org/experiments/ENCSR937WIG/)
@@ -45,6 +15,8 @@ For the purpose of this course, we downloaded the following [ENCODE](https://www
 | :---:  |
 |<img src="images/encode1.png" width="800" align="middle" />|
 |<img src="images/encode2.png" width="800" align="middle" />|
+
+
 To download all fastq-files for this experiment takes a lot of time; therefore, to restrict the computation time of the read mapping, we selected reads that are mapped only to chromosome 10. Please run the following commands to obtain these files: 
 
 ```{bash}
