@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Linux containers
-navigation: 2
+navigation: 3
 ---
 
 # Basic concepts on Linux containers
@@ -25,23 +25,27 @@ The Singularity image is a simple file: it can be accessed by the program **sing
 This image can be created using the following command (imported from the [Docker hub repository](https://hub.docker.com/) and converted on the fly):
 
 ```{bash}
+# go to the folder created to store the image
+cd ~/rnaseq_course/singularity_image
+
+# import image from Docker hub
 singularity pull docker://biocorecrg/rnaseq2020:1.0
 ```
 
-This creates the "rnaseq2020-1.0.simg".
+This creates the "rnaseq2020-1.0.simg" file.
 
 <br>
 The image can be accessed/run the following way:
 
 ```{bash}
-singularity exec -e $PWD/rnaseq2020-1.0.simg salmon --help
+singularity exec -e rnaseq2020-1.0.simg salmon --help
 ```
 
 In order to facilitate the access to the image during the course, we will store the previous command in the **RUN** variable:
 
 ```{bash}
 # Export the RUN variable
-export RUN="singularity exec -e $PWD/rnaseq2020-1.0.simg"
+export RUN="singularity exec -e ~/rnaseq_course/singularity_image/rnaseq2020-1.0.simg"
 
 # Access the image
 $RUN salmon --help
