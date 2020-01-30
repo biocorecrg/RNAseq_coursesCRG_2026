@@ -68,6 +68,9 @@ Fragmented cDNA is indexed with a hexamer or octamer barcode (so that cDNA from 
 |from [https://github.com/hbctraining/rnaseq_overview](https://github.com/hbctraining/rnaseq_overview)|
 
 
+<img src="images/multiplexing_illumina.jpg" width="800" align="middle" />
+from [https://www.illumina.com/documents/products/illumina_sequencing_introduction.pdf](https://www.illumina.com/documents/products/illumina_sequencing_introduction.pdf)
+
 ## **cDNA amplification**
 
 <br/>
