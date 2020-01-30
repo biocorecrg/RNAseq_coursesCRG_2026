@@ -18,19 +18,33 @@ For this course, we created a [**Docker**](https://www.docker.com/) image from [
 
 This will allow us to use **exactly the same versions of the tools**.
 
-This image can be downloaded and used on computers running Linux/Mac OS or can be converted into another Linux Container called [**Singularity**](https://www.sylabs.io/docs/), which we will be using in this course. 
+This image can be downloaded and used on computers running Linux/Mac OS or can be converted into another Linux Container called [**Singularity**](https://www.sylabs.io/docs/), which we will be using in this course. Singularity containers are easier to share and to export.
 
-The Singularity image is a file that can be accessed by the program Singularity for executing any software installed within that image. This image can be created using the following command:
+The Singularity image is a simple file: it can be accessed by the program **singularity** in order to access and executes the programs installed inside. 
+<br>
+This image can be created using the following command (imported from the [Docker hub repository](https://hub.docker.com/) and converted on the fly):
 
 ```{bash}
 singularity pull docker://biocorecrg/rnaseq2020:1.0
 ```
 
-And accessed/run with:
+This creates the "rnaseq2020-1.0.simg".
+
+<br>
+The image can be accessed/run the following way:
 
 ```{bash}
+singularity exec -e $PWD/rnaseq2020-1.0.simg salmon --help
+```
+
+In order to facilitate the access to the image during the course, we will store the previous command in the **RUN** variable:
+
+```{bash}
+# Export the RUN variable
 export RUN="singularity exec -e $PWD/rnaseq2020-1.0.simg"
-$RUN STAR --help
+
+# Access the image
+$RUN salmon --help
 ```
 
 
