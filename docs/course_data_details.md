@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Course data
+title: Course data details
 navigation: 9
 ---
 
