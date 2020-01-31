@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Introduction
-navigation: 4
+navigation: 3
 ---
 
 # Introduction: What is RNA-Seq? 

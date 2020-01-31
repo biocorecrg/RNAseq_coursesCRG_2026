@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Read QC and trimming
-navigation: 10
+navigation: 11
 ---
 # Pre-processing of sequencing reads
 

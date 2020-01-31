@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Read mapping
-navigation: 11
+navigation: 13
 ---
 
 # Read mapping to a reference genome/transcriptome

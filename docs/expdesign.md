@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Experimental design
-navigation: 5
+navigation: 10
 ---
 
 # Experimental design

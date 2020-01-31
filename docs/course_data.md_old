@@ -1,9 +1,3 @@
----
-layout: page
-title: Course data
-navigation: 9
----
-
 # Data used in this course
 
 For the purpose of this course, we downloaded the following [ENCODE](https://www.encodeproject.org/) data:

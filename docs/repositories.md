@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Data repositories
-navigation: 8
+navigation: 7
 ---
 
 # RNA-Seq data repositories

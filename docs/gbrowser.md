@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Genome Browser 
-navigation: 13
+navigation: 15
 ---
 
 # Genome Browser

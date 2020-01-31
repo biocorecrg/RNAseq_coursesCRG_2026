@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Linux containers
-navigation: 3
+navigation: 2
 ---
 
 # Basic concepts on Linux containers

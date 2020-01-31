@@ -6,102 +6,15 @@ navigation: 9
 
 # Data used in this course
 
-For this course, we will use public data sets from GEO data set **GSE139905**.
+For this course, we will use public data sets from GEO data set **GSE76647**.
 
 ## Exercise:
 
-* Go to GEO, retrive the SRA codes corresponding to the following samples
+* Go to the GEO page corresponding to entry **GSE76647**
 
-|GSM4148513 |	Pdxk-1 -|
-|GSM4148514 |	Pdxk-1 +|
-|GSM4148515 |	Pdxk-2 -|
-|GSM4148516 |	Pdxk-2 +|
-|GSM4148517 |	Pdxk-3 -|
-|GSM4148518 |	Pdxk-3 +|
+* Go to GEO, retrive the SRA codes corresponding to the following samples (from the **SRA RUN Selector**): GSM2031982, GSM2031983, GSM2031984, GSM2031985, GSM2031986, GSM2031987, GSM2031988, GSM2031989, GSM2031990, GSM2031991.
 
-* Download the raw data for the 6 samples using fastq-dump (it can take a long time!).
+* What information can you retrieve about these samples?
 
-```{bash}
-for sra in SRR10399006 SRR10399007 SRR10399008 SRR10399009 SRR10399010 SRR10399011
-do $RUN fastq-dump --gzip --origfmt --skip-technical --split-files $sra
-done
-```
+* Download the raw data for all these samples using fastq-dump (it can take a long time!).
 
-
-
-
-
-
-
-
-
-
-For the purpose of this course, we downloaded the following [ENCODE](https://www.encodeproject.org/) data:
-
-1. [Homo sapiens A549 treated with 100 nM dexamethasone for 0 minutes](https://www.encodeproject.org/experiments/ENCSR937WIG/)
-2. [Homo sapiens A549 treated with 100 nM dexamethasone for 25 minutes](https://www.encodeproject.org/experiments/ENCSR525HSH/)
-
-|Encode website|
-| :---:  |
-|<img src="images/encode1.png" width="800" align="middle" />|
-|<img src="images/encode2.png" width="800" align="middle" />|
-To download all fastq-files for this experiment takes a lot of time; therefore, to restrict the computation time of the read mapping, we selected reads that are mapped only to chromosome 10. Please run the following commands to obtain these files: 
-
-```{bash}
-wget https://public-docs.crg.es/biocore/projects/training/RNAseq_2019/resources.tar
-
-tar -vxf resources.tar 
-
-resources/
-resources/A549_0_3chr10_1.fastq.gz
-resources/A549_25_3chr10_2.fastq.gz
-resources/A549_25_1chr10_1.fastq.gz
-resources/A549_25_3chr10_1.fastq.gz
-resources/A549_0_3chr10_2.fastq.gz
-resources/A549_0_1chr10_1.fastq.gz
-resources/A549_0_1chr10_2.fastq.gz
-resources/A549_25_2chr10_1.fastq.gz
-resources/A549_25_1chr10_2.fastq.gz
-resources/A549_0_2chr10_1.fastq.gz
-resources/A549_0_2chr10_2.fastq.gz
-resources/A549_25_2chr10_2.fastq.gz
-
-```
-
-Let's inspect these files, count the number of reads, and check the read length:
-
-```{bash}
-zcat resources/A549_25_3chr10_2.fastq.gz |more 
-
-@D00137:455:HLFL3BCXY:1:1111:7527:60273/2
-GACAAACCCACAGCCAATATCATACTGAATGGGCAAAAACTGGAAGCATTC
-+
-ADDDDIIFHHIIIIIIIIIIHHHHIIIIHIIHHGIIIGIIIHHIIHHGHHH
-@D00137:455:HLFL3BCXY:1:1111:3751:48736/2
-CTATGGTGACCTGAACCACCTGGTGTCTGCTACCATGAGTGGGGTCACCAC
-+
-DDDDDIIIIIIIHIIHIIIIIIIIIIIIIHIIIIIIIIIIIIIHIIIIIIG
-@D00137:455:HLFL3BCXY:2:1214:18935:42305/2
-CTATGGTGACCTGAACCACCTGGTGTCTGCTACCATGAGTGGGGTCACCAC
-+
-DDDDDIIIHIIIIIIIIIIIIIIIIIIIIIIHIIIIIGHIIHIIIIIIIII
-...
-
-zcat resources/A549_25_3chr10_2.fastq.gz | awk '{num++} END{print num/4}'
-
-2808343
-....
-
-zcat resources/A549_25_3chr10_2.fastq.gz | head -n 4 | tail -n 1 | awk '{print length($0)}'
-
-51
-```
-
-<br/>
-
-### EXERCISE 
-* Count the number of reads and check the read length for the Read 1 for the sample called A549_25_3chr10.
-* Count the number of reads in all fastq files (use for-loop).
-
-
-<br/>

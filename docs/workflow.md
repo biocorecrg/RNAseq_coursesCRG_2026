@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Analysis workflow
-navigation: 6
+navigation: 5
 ---
 
 # mRNA-Seq data analysis workflow

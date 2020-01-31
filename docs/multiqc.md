@@ -1,7 +1,7 @@
 ---
 layout: page
 title: MultiQC report
-navigation: 15
+navigation: 17
 ---
 
 # Combining reports
