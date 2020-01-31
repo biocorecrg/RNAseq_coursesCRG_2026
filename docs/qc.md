@@ -14,31 +14,23 @@ This step includes the quality control of initial reads and read trimming that i
 
 ## QC of sequencing reads
 
+### FastQC
+
 To assess the quality of sequencing data, we will use the programs [**FastQC**](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) and [**Fastq Screen**](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/). 
 
 FastQC calculates statistics about the composition and quality of raw sequences, while Fastq Screen looks for possible contaminations. 
 
 ```{bash}
-mkdir QC
-$RUN fastqc resources/A549_25_3chr10_*.fastq.gz -o ./QC/
+# Go to the "quality_control" folder
+cd ~/rnaseq_course/quality_control
 
-Started analysis of A549_25_3chr10_1.fastq.gz
-Approx 5% complete for A549_25_3chr10_1.fastq.gz
-Approx 10% complete for A549_25_3chr10_1.fastq.gz
-Approx 15% complete for A549_25_3chr10_1.fastq.gz
-Approx 20% complete for A549_25_3chr10_1.fastq.gz
-...
-Approx 85% complete for A549_25_3chr10_2.fastq.gz
-Approx 90% complete for A549_25_3chr10_2.fastq.gz
-Approx 95% complete for A549_25_3chr10_2.fastq.gz
-Analysis complete for A549_25_3chr10_2.fastq.gz
+$RUN fastqc ~/rnaseq_course/raw_data/*fastq.gz -o .
 ```
 
-We can display the results with a browser; e.g., Firefox, for each file individually or all files with one command:
+We can display the results with an Internet browser; e.g. Firefox:
 ```{bash}
-firefox QC/A549_25_3chr10_1_fastqc.html
-
-firefox QC/*.html
+# all reports at once
+firefox *.html
 ```
 
 <img src="images/fastqc.png" width="800"/>
@@ -49,14 +41,40 @@ Below is an example of a poor quality dataset. As you can see, the average quali
 
 <img src="images/bad_fastqc.png" width="800"/>
 
+### FastQ Screen
 
-**FastQ Screen** requires a number of databases to be installed. **Note, the program is included in the Docker and Singularity images but the databases are not.**  A number of databases prepared by the authors of the program can be downloaded by using the following command (**DO NOT LAUNCH IT IN THE CLASS because it will take a while!!! But you will need to do it when completing the [Final project](https://biocorecrg.github.io/RNAseq_course_2019/challenge.html)**):
+[**FastQ Screen**](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/) is a tool that allows you to screen libraries for **potential contaminations**.
+<br>
+It requires to download genome indices (data bases) from a variety of organisms, a lot of which can be downloaded by default.
+<br>
+*Note that fastq_screen can be found in the singularity image, but not the data bases!*
+<br>
+**WARNING**: do not run the following command in class: it will take too much time and resources!
 
 ```{bash}
+# Download default data bases
 $RUN fastq_screen --get_genomes
 ``` 
 
-This will download Bowtie indexes for 11 genomes (arabidopsis, drosophila, E. coli, human, lambda, mouse, mitochondria, phiX, rat, worm and yeast) and 3 collection of sequences (adapters, vectors, rRNA). The files will be downloaded in the **FastQ_Screen_Genomes** folder. The file **fastq_screen.conf** will be also downloaded in this folder. To use the tool, you will have to modify the fastq_screen.conf by providing the full path to the Bowtie2 executable (**/usr/local/bin/bowtie2** if you use our singularity image) and full paths to the downloaded folders with genome index files. Here we show where to change the executables:
+The latter commands download [**Bowtie2**](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) 14 indexes (from model organisms or known contaminants):
+* *Arabidopsis thaliana*
+* *Drosophila melanogaster*
+* *Escherichia coli*
+* *Homo sapiens*
+* *Mus musculus*
+* *Rattus norvegicus*
+* *Caenorhabditis elegans*
+* *Saccharomyces cerevisiae*
+* Lambda
+* Mitochondria
+* PhiX
+* Adapters
+* Vectors
+* rRNA
+
+Upon download, the **FastQ_Screen_Genomes** folder is created, containing all indexes.
+<br>
+The file **fastq_screen.conf** will be also downloaded in this folder: in order to use the tool, you will have to modify the fastq_screen.conf by providing the full path to the Bowtie2 executable (**/usr/local/bin/bowtie2** if you use our singularity image) and full paths to the downloaded folders with genome index files. Here we show where to change the executables:
 
 ```
 # This is a configuration file for fastq_screen
@@ -76,40 +94,14 @@ BOWTIE2 /usr/local/bin/bowtie2
 
 ```
 
-
-
-FastQ Screen runs check on a random subset of 100,000 reads (that can be changed using option --subset).
-
-To execute FastQ Screen: 
+FastQ Screen runs checks on a **random subset of 100,000 reads** (that can be changed using option --subset).
+<br>
+You can execute FastQ Screen this way:
 
 ```{bash}
 $RUN fastq_screen --conf FastQ_Screen_Genomes/fastq_screen.conf \
-           resources/A549_0_1chr10_1.fastq.gz \
-           --outdir ./QC/A549_0_1
-
-Using fastq_screen v0.13.0
-Reading configuration from 'fastq_screen.conf'
-Aligner (--aligner) not specified, but Bowtie2 path and index files found: mapping with Bowtie2
-Adding database Human
-Adding database Mouse
-Adding database Rat
-Adding database Drosophila
-Adding database Worm
-Adding database Yeast
-Adding database Arabidopsis
-Adding database Ecoli
-Adding database rRNA
-Adding database MT
-Adding database PhiX
-Adding database Lambda
-Adding database Vectors
-Adding database Adapters
-Using 7 threads for searches
-Option --subset set to 100000 reads
-Processing A549_0_1chr10_1.fastq.gz
-Counting sequences in A549_0_1chr10_1.fastq.gz
-Making reduced sequence file with ratio 711:1
-...
+           ~/rnaseq_course/raw_data/ \
+           --outdir ~/rnaseq_course/quality_control/
 ```
 
 Below is an example of the FastQ Screen results for A549_0_1_1.fastq.gz which we prepared.  
@@ -149,14 +141,6 @@ Adapters are usually expected in small RNA-Seq because the molecules are typical
 
 ```{bash}
 $RUN fastqc resources/subsample_to_trim.fq.gz -o ./QC
-
-Started analysis of subsample_to_trim.fq.gz
-Approx 5% complete for subsample_to_trim.fq.gz
-Approx 10% complete for subsample_to_trim.fq.gz
-Approx 15% complete for subsample_to_trim.fq.gz
-Approx 20% complete for subsample_to_trim.fq.gz
-Approx 25% complete for subsample_to_trim.fq.gz
-...
 ```
 
 
