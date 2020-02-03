@@ -89,16 +89,16 @@ tar -xvzf reference_chr6_Hsapiens.tar.gz
 The genome is often stored as a FASTA file (.fa file): each header (that can be chromosomes, transcripts), starts with "**>**":
 
 ```{bash}
-zcat | head -n 5
+zcat reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa.gz | head -n 5
 
 ```
 
 The size of the chromosome (in bp) is already reported in the header, but we can check it as follows:
 
 ```{bash}
-zcat annotations/Homo_sapiens.GRCh38.dna.chromosome.10.fa.gz | grep -v ">" | tr -d '\n' | wc -m  
+zcat reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa.gz | grep -v ">" | tr -d '\n' | wc -m  
 
-133797422
+# 170805979
 ```
 
 ### GTF file
@@ -119,44 +119,26 @@ The annotation is stored in **G**eneral **T**ransfer **F**ormat (**GTF**) format
 
 
 ```{bash}
-zcat annotations/gencode.v29.annotation_chr10.gtf.gz | head -n 10
-
-##description: evidence-based annotation of the human genome (GRCh38), version 29 (Ensembl 94)
-##provider: GENCODE
-##contact: gencode-help@ebi.ac.uk
-##format: gtf
-chr10	HAVANA	gene	14061	16544	.	-	.	gene_id "ENSG00000260370.1"; gene_type "lincRNA"; gene_name "AC215217.1"; level 2; havana_gene "OTTHUMG00000174801.2";
-chr10	HAVANA	transcript	14061	14604	.	-	.	gene_id "ENSG00000260370.1"; transcript_id "ENST00000562162.1"; gene_type "lincRNA"; gene_name "AC215217.1"; transcript_type "lincRNA"; transcript_name "AC215217.1-201"; level 2; transcript_support_level "3"; tag "basic"; havana_gene "OTTHUMG00000174801.2"; havana_transcript "OTTHUMT00000427447.1";
-chr10	HAVANA	exon	14497	14604	.	-	.	gene_id "ENSG00000260370.1"; transcript_id "ENST00000562162.1"; gene_type "lincRNA"; gene_name "AC215217.1"; transcript_type "lincRNA"; transcript_name "AC215217.1-201"; exon_number 1; exon_id "ENSE00002606019.1"; level 2; transcript_support_level "3"; tag "basic"; havana_gene "OTTHUMG00000174801.2"; havana_transcript "OTTHUMT00000427447.1";
-chr10	HAVANA	exon	14061	14299	.	-	.	gene_id "ENSG00000260370.1"; transcript_id "ENST00000562162.1"; gene_type "lincRNA"; gene_name "AC215217.1"; transcript_type "lincRNA"; transcript_name "AC215217.1-201"; exon_number 2; exon_id "ENSE00002584618.1"; level 2; transcript_support_level "3"; tag "basic"; havana_gene "OTTHUMG00000174801.2"; havana_transcript "OTTHUMT00000427447.1";
-chr10	HAVANA	transcript	14138	16544	.	-	.	gene_id "ENSG00000260370.1"; transcript_id "ENST00000566940.1"; gene_type "lincRNA"; gene_name "AC215217.1"; transcript_type "lincRNA"; transcript_name "AC215217.1-202"; level 2; transcript_support_level "3"; havana_gene "OTTHUMG00000174801.2"; havana_transcript "OTTHUMT00000430636.1";
-chr10	HAVANA	exon	16502	16544	.	-	.	gene_id "ENSG00000260370.1"; transcript_id "ENST00000566940.1"; gene_type "lincRNA"; gene_name "AC215217.1"; transcript_type "lincRNA"; transcript_name "AC215217.1-202"; exon_number 1; exon_id "ENSE00002578035.1"; level 2; transcript_support_level "3"; havana_gene "OTTHUMG00000174801.2"; havana_transcript "OTTHUMT00000430636.1";
+zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | head -n 10
 ```
 
 Let's check the 9th field:
+
 ```{bash}
-zcat annotations/gencode.v29.annotation_chr10.gtf.gz | cut -f9 | head -2
+zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | cut -f9 | head
 ```
 
 Let's check how many genes are in the annotation file:
 
 ```{bash}
-zcat annotations/gencode.v29.annotation_chr10.gtf.gz | grep -v "#" | awk '$3=="gene"' | wc -l 
-2240
+zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | grep -v "#" | awk '$3=="gene"' | wc -l 
+2860
 ```
 
 And get a final counts of every feature:
 
 ```{bash}
-zcat annotations/gencode.v29.annotation_chr10.gtf.gz | grep -v "#" | cut -f3 | sort | uniq -c 
-
-  29578 CDS
-  46414 exon
-   2240 gene
-   2750 start_codon
-   2693 stop_codon
-   6894 transcript
-   9274 UTR
+zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | grep -v "#" | cut -f3 | sort | uniq -c 
 
 ```
 
