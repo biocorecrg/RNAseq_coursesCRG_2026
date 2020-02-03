@@ -11,33 +11,20 @@ For the **STAR** running options, see [STAR Manual](http://labshare.cshl.edu/sha
 <br/>
 
 ## Building the STAR index
+
 To make an index for STAR, we need both the genome sequence in FASTA format and the annotation in GTF format. 
 We will be building an index only for chromosome 10.
 
-Let's look at the files we will need in **the directory "annotations"**:
+As STAR is very resource consuming, we will create an index for **chromosome 6 only**. We already downloaded the **FASTA** and **GTF** files needed for the indexing.
+
+<br>
+
+However, STAR requires **unzipped** .fa and .gtf files.
 
 ```{bash}
-ls -alht annotations
-total 136M
-drwxr-xr-x 9 lcozzuto Bioinformatics_Unit 1.6K Apr 30 17:37 ..
-drwxr-xr-x 2 lcozzuto Bioinformatics_Unit  253 Apr 30 17:37 .
--rw-r--r-- 1 lcozzuto Bioinformatics_Unit  63M Apr 30 16:56 gencode.v29.transcripts.fa.gz
--rw-r--r-- 1 lcozzuto Bioinformatics_Unit  39M Apr 17 16:25 Homo_sapiens.GRCh38.dna.chromosome.10.fa.gz
--rw-r--r-- 1 lcozzuto Bioinformatics_Unit 1.5M Apr 17 16:08 gencode.v29.annotation_chr10.gtf.gz
-```
-
-STAR requires unzipped .fa and .gtf files. Let's unzip them, using the option -k which allows to keep .gz files.
-This works on Mac, but dpending on the version might not work on the cluster:
-
-```{bash}
-gunzip -k gencode.v29.annotation_chr10.gtf.gz
-gunzip -k Homo_sapiens.GRCh38.dna.chromosome.10.fa.gz
-```
-
-This works on any Linux:
-```{bash}
-zcat gencode.v29.annotation_chr10.gtf.gz > gencode.v29.annotation_chr10.gtf
-zcat Homo_sapiens.GRCh38.dna.chromosome.10.fa.gz > Homo_sapiens.GRCh38.dna.chromosome.10.fa
+cd ~/rnaseq_course/reference_genome/
+zcat Homo_sapiens.GRCh38.88.chr6.gtf.gz > Homo_sapiens.GRCh38.88.chr6.gtf
+zcat Homo_sapiens.GRCh38.dna.chrom6.fa.gz > Homo_sapiens.GRCh38.dna.chrom6.fa
 ```
 
 **Q. How much (in percentage) disk space is saved when those two files are kept zipped vs unzipped?**
@@ -45,42 +32,30 @@ zcat Homo_sapiens.GRCh38.dna.chromosome.10.fa.gz > Homo_sapiens.GRCh38.dna.chrom
 **Once index is built, we have to not forget to remove those unzipped files!**
 
 
-To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** option needs to be specified for detecting possible splicing sites. It usually equals to the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a spicing site. In our case, since the read size is 51 bases, we can accept maximum 50 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **50**. This also means that for every different read-length to be aligned a new STAR index needs to be generated. Otherwise a drop in aligned reads can be experienced.
+To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** option needs to be specified for detecting possible splicing sites. 
+<br>
+It usually equals the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a spicing site. In our case, since the read size is 51 bases, we can accept maximum 50 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **50**. 
+<br>
+This also means that for every different read-length to be aligned a new STAR index needs to be generated. Otherwise a drop in aligned reads can be experienced.
 
 Building the STAR index (--runMode genomeGenerate):
 
 ```{bash}
-cd ..
-mkdir indexes
-mkdir indexes/chr10
+cd ~/rnaseq_course/mapping
+mkdir index_star_chr6
 
-$RUN STAR --runMode genomeGenerate --genomeDir indexes/chr10 \
-            --genomeFastaFiles annotations/Homo_sapiens.GRCh38.dna.chromosome.10.fa \
-            --sjdbGTFfile annotations/gencode.v29.annotation_chr10.gtf \
-            --sjdbOverhang 50 --outFileNamePrefix chr10
-
-Apr 30 18:21:00 ..... started STAR run
-Apr 30 18:21:00 ... starting to generate Genome files
-Apr 30 18:21:05 ... starting to sort Suffix Array. This may take a long time...
-Apr 30 18:21:06 ... sorting Suffix Array chunks and saving them to disk...
-Apr 30 18:25:18 ... loading chunks from disk, packing SA...
-Apr 30 18:25:42 ... finished generating suffix array
-Apr 30 18:25:42 ... generating Suffix Array index
-Apr 30 18:26:37 ... completed Suffix Array index
-Apr 30 18:26:37 ..... processing annotations GTF
-Apr 30 18:26:38 ..... inserting junctions into the genome indices
-Apr 30 18:27:08 ... writing Genome to disk ...
-Apr 30 18:27:09 ... writing Suffix Array to disk ...
-Apr 30 18:27:16 ... writing SAindex to disk
-Apr 30 18:27:24 ..... finished successfully
-
+$RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
+            --genomeFastaFiles ~/rnaseq_course/reference_genome/Homo_sapiens.GRCh38.dna.chrom6.fa \
+            --sjdbGTFfile ~/rnaseq_course/reference_genome/Homo_sapiens.GRCh38.88.chr6.gtf \
+            --sjdbOverhang 50 \
+	    --outFileNamePrefix Hsapiens_chr6
 ```
 
 Remove unzipped files:
 
 ```{bash}
-rm annotations/gencode.v29.annotation_chr10.gtf
-rm annotations/Homo_sapiens.GRCh38.dna.chromosome.10.fa
+rm ~/rnaseq_course/reference_genome/Homo_sapiens.GRCh38.dna.chrom6.fa
+rm ~/rnaseq_course/reference_genome/Homo_sapiens.GRCh38.88.chr6.gtf
 ```
 <br/>
 
@@ -95,26 +70,47 @@ The following options are optional:
 * the path for the output directory and prefix of all output files prefix (**--outFileNamePrefix**). By default, this parameter is ./, i.e. all output files are written in the current directory.
 * (**--quantMode**). With **--quantMode GeneCounts** option STAR will count the number of reads per gene while mapping. A read is counted if it overlaps (1nt or more) one and only one gene. Both ends of the paired- end read are checked for overlaps. The counts coincide with those produced by htseq-count with default parameters. **This option requires annotations (GTF or GFF with –sjdbGTFfile option) used at the genome generation step, or at the mapping step.**" (from [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf)) 
 
+<br>
 
+We can try to launch the mapping for one file:
 
 ```{bash}
+cd ~/rnaseq_course/mapping
+
 mkdir alignments
 
-$RUN STAR --genomeDir indexes/chr10 \
-      --readFilesIn resources/A549_0_1chr10_1.fastq.gz resources/A549_0_1chr10_2.fastq.gz \
+$RUN STAR --genomeDir index_star_chr6 \
+      --readFilesIn ~/rnaseq_course/raw_data/? \
       --readFilesCommand zcat \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
-      --outFileNamePrefix alignments/A549_0_1
-      
-Apr 30 18:50:13 ..... started STAR run
-Apr 30 18:50:13 ..... loading genome
-Apr 30 18:50:52 ..... started mapping
-Apr 30 18:54:41 ..... started sorting BAM
-Apr 30 18:55:30 ..... finished successfully
+      --outFileNamePrefix alignments/?
 ```
 
-Let's explore the output directory "alignments".
+If this was successful and not too slow and resource consuming, you can do it for all samples, in a **loop**:
+
+```{bash}
+for fastq in ~/rnaseq_course/raw_data/*chr6*fastq.gz
+do echo $fastq
+$RUN STAR --genomeDir index_star_chr6 \
+      --readFilesIn $fastq \
+      --readFilesCommand zcat \
+      --outSAMtype BAM SortedByCoordinate \
+      --quantMode GeneCounts \
+      --outFileNamePrefix alignments/$(basename $fastq .fastq.gz)
+```
+
+**BACKUP !!**
+
+If it was too resource consuming, you can download the aligned files in **BAM** format from:
+
+```{bash}
+wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/bam_chr6.tar.gz
+```
+
+
+Let's explore the output directory "alignments" (or "bam_chr6", if we used the backup).
+
 ```{bash}
 ln -lh alignments
 ```
