@@ -42,7 +42,7 @@ The options used here are:
 * **--split-files** for paired-end data (if omitted, fastq-dump outputs a single interleaved file)
 * **--origfmt**: to avoid the generic "SRA" naming. Keep the original name of the reads.
 * **--gzip**: get a gzip-compressed fastq file (fastq files can ve very storage consuming!)
-* **--skip-technical**: download only biological reads (do not output barcodes)
+* **--skip-technical**: download only biological reads (do not output barcodes, linkers, etc.)
 <br>
 
 ### EXERCISE
