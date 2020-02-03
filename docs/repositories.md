@@ -6,7 +6,7 @@ navigation: 7
 
 # RNA-Seq data repositories
 
-Public repositories exist that store high throughput sequencing experiment data ("raw" and processed) from the community.
+**Public data repositories** exist that store data ("raw" and processed) produced by the community: microarrays, high-throughput sequencing, etc.
 
 It is nowadays required by most journals to make data publicly available upon publication of an article.
 
@@ -22,10 +22,10 @@ These repositories  are linked to the repositories of NGS raw data (Fastq files)
 
 <br/>
 
-## EXERCISE
-Let's explore [this GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126535) (GSE126535)
+### EXERCISE
+Let's explore [this GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE76647) (GSE76647)
 * Which platform and protocol were used for sequencing?
-* What type of RNA was sequenced?
+* What type of RNA was sequenced? From which organism?
 * How many samples were sequenced?
 
 <br/>
@@ -42,8 +42,11 @@ The options used here are:
 * **--split-files** for paired-end data (if omitted, fastq-dump outputs a single interleaved file)
 * **--origfmt**: to avoid the generic "SRA" naming. Keep the original name of the reads.
 * **--gzip**: get a gzip-compressed fastq file (fastq files can ve very storage consuming!)
-* **--skip-technical**: download only biological reads???
+* **--skip-technical**: download only biological reads (do not output barcodes)
 <br>
+
+### EXERCISE
+
 Going back to the previous [GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126535):
 * Where can you find the SRA identifiers (code SRR...), for each sample?
 * Try and download one sample locally using fastq-dump.
