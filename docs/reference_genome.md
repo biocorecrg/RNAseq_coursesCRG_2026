@@ -21,28 +21,28 @@ Before proceeding, we need to retrieve a **reference genome or transcriptome** f
 
 #### GENCODE
 
-The current version for *Mus musculus* genome is release [**M24**](https://www.gencodegenes.org/mouse/release_M24.html).
+The current version for *Homo sapiens* genome is release [**33**](https://www.gencodegenes.org/human/release_33.html).
 <br>
 The files you would need are:
-* FASTA file for the [**Genome sequence, primary assembly**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/GRCm38.primary_assembly.genome.fa.gz)
-* FASTA file corresponding to the [**transcripts**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/gencode.vM24.transcripts.fa.gz)
-* GTF file of the [**Comprehensive gene annotation**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/gencode.vM24.annotation.gtf.gz)
+* FASTA file for the [**Genome sequence, primary assembly**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_33/GRCh38.primary_assembly.genome.fa.gz)
+* FASTA file corresponding to the [**transcripts**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_33/gencode.v33.transcripts.fa.gz)
+* GTF file of the [**Comprehensive gene annotation**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_33/gencode.v33.annotation.gtf.gz)
 
 |GENCODE website|
 | :---:  |
-|<img src="images/gencode_mouse_gtf.png" width="800" align="middle" />|
-|<img src="images/gencode_mouse_fasta.png" width="800" align="middle" />|
+|<img src="images/gencode_human_gtf.png" width="800" align="middle" />|
+|<img src="images/gencode_human_fasta.png" width="800" align="middle" />|
 
 
 ```{bash}
 # genome
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/GRCm38.primary_assembly.genome.fa.gz
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_33/GRCh38.primary_assembly.genome.fa.gz
 
 # transcriptome
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/gencode.vM24.transcripts.fa.gz
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_33/gencode.v33.transcripts.fa.gz
 
 # annotation
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/gencode.vM24.annotation.gtf.gz
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_33/gencode.v33.annotation.gtf.gz
 ```
 
 #### ENSEMBL
@@ -50,24 +50,24 @@ wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/gencode
 The current version of the *Mus musculus* genome in [Ensembl](https://www.ensembl.org/index.html) is [**release 99**](ftp://ftp.ensembl.org/pub/release-99/)
 
 The files you would need are:
-* FASTA file for the [**genome primary assembly**](ftp://ftp.ensembl.org/pub/release-99/fasta/mus_musculus/dna/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz)
+* FASTA file for the [**genome primary assembly**](ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_rm.primary_assembly.fa.gz)
 * FASTA file corresponding to the [**CDS regions / transcripts**](ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/cds/Homo_sapiens.GRCh38.cds.all.fa.gz)
-* GTF file for the [**annotation**](ftp://ftp.ensembl.org/pub/release-99/gtf/mus_musculus/Mus_musculus.GRCm38.99.chr.gtf.gz)
+* GTF file for the [**annotation**](ftp://ftp.ensembl.org/pub/release-99/gtf/homo_sapiens/Homo_sapiens.GRCh38.99.chr.gtf.gz)
 
 |GENCODE website|
 | :---:  |
-|<img src="images/ensembl_mouse_main.png" width="800" align="middle" />|
+|<img src="images/ensembl_human_main.png" width="800" align="middle" />|
 |<img src="images/ensembl_mouse_ftp.png" width="800" align="middle" />|
 
 ```{bash}
 # genome
-wget ftp://ftp.ensembl.org/pub/release-99/fasta/mus_musculus/dna/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz
+wget ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_rm.primary_assembly.fa.gz
 
 # transcriptome
 wget ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/cds/Homo_sapiens.GRCh38.cds.all.fa.gz
 
 # annotation
-wget ftp://ftp.ensembl.org/pub/release-99/gtf/mus_musculus/Mus_musculus.GRCm38.99.chr.gtf.gz
+wget ftp://ftp.ensembl.org/pub/release-99/gtf/homo_sapiens/Homo_sapiens.GRCh38.99.chr.gtf.gz
 ```
 <br/>
 
@@ -78,22 +78,19 @@ To speed up the mapping process, we retrieved a subset of the FASTA and GTF file
 You can download them from:
 
 ```{bash}
-#wget https://public-docs.crg.es/biocore/projects/training/RNAseq_2019/annotations.tar
-#tar -xf annotations.tar
+wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/reference_chr6_Hsapiens.tar.gz
+
+# extract
+tar -xvzf reference_chr6_Hsapiens.tar.gz
 ```
 
 ### FASTA file
 
-The genome is generally represented as a FASTA file (.fa file) with the header indicated by the "**>**":
+The genome is often stored as a FASTA file (.fa file): each header (that can be chromosomes, transcripts), starts with "**>**":
 
 ```{bash}
-zcat annotations/Homo_sapiens.GRCh38.dna.chromosome.10.fa.gz| head -n 5
+zcat | head -n 5
 
->chr10 dna:chromosome chromosome:GRCh38:10:1:133797422:1 REF
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 ```
 
 The size of the chromosome (in bp) is already reported in the header, but we can check it as follows:
