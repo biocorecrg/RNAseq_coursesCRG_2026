@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Library preparation
-navigation: 4
+navigation: 5
 ---
 
 # Library preparation
@@ -68,7 +68,7 @@ Fragmented cDNA is indexed with a hexamer or octamer barcode (so that cDNA from 
 |from [https://github.com/hbctraining/rnaseq_overview](https://github.com/hbctraining/rnaseq_overview)|
 
 
-<img src="images/multiplexing_illumina.jpg" width="800" align="middle" />
+<img src="images/multiplexing_illumina.png" width="800" align="middle" />
 from [https://www.illumina.com/documents/products/illumina_sequencing_introduction.pdf](https://www.illumina.com/documents/products/illumina_sequencing_introduction.pdf)
 
 ## **cDNA amplification**

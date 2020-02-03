@@ -1,12 +1,12 @@
 ---
 layout: page
 title: Course structure
-navigation: 6
+navigation: 2
 ---
 
 # Course/Project structure
 
-Let's create a directory structure in order to organize the data.
+Let's create a directory structure in order to organize the data as we produce it:
 
 ```{bash}
 # ~ is a shortcut for the home directory
