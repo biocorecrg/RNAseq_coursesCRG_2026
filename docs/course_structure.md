@@ -16,6 +16,7 @@ mkdir rnaseq_course
 mkdir rnaseq_course/singularity_image
 mkdir rnaseq_course/raw_data
 mkdir rnaseq_course/quality_control
+mkdir rnaseq_course/trimming
 mkdir rnaseq_course/mapping
 mkdir rnaseq_course/differential_expression
 ```
