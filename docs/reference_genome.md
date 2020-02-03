@@ -28,6 +28,12 @@ The files you would need are:
 * FASTA file corresponding to the [**transcripts**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/gencode.vM24.transcripts.fa.gz)
 * GTF file of the [**Comprehensive gene annotation**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/gencode.vM24.annotation.gtf.gz)
 
+|GENCODE website|
+| :---:  |
+|<img src="images/gencode_mouse_gtf.png" width="800" align="middle" />|
+|<img src="images/gencode_mouse_fasta.png" width="800" align="middle" />|
+
+
 ```{bash}
 # genome
 wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/GRCm38.primary_assembly.genome.fa.gz
@@ -39,12 +45,6 @@ wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/gencode
 wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M24/gencode.vM24.annotation.gtf.gz
 ```
 
-|GENCODE website|
-| :---:  |
-|<img src="images/gencode_1.png" width="800" align="middle" />|
-|<img src="images/gencode_2.png" width="800" align="middle" />|
-
-
 #### ENSEMBL
 
 The current version of the *Mus musculus* genome in [Ensembl](https://www.ensembl.org/index.html) is [**release 99**](ftp://ftp.ensembl.org/pub/release-99/)
@@ -53,6 +53,11 @@ The files you would need are:
 * FASTA file for the [**genome primary assembly**](ftp://ftp.ensembl.org/pub/release-99/fasta/mus_musculus/dna/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz)
 * FASTA file corresponding to the [**CDS regions / transcripts**](ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/cds/Homo_sapiens.GRCh38.cds.all.fa.gz)
 * GTF file for the [**annotation**](ftp://ftp.ensembl.org/pub/release-99/gtf/mus_musculus/Mus_musculus.GRCm38.99.chr.gtf.gz)
+
+|GENCODE website|
+| :---:  |
+|<img src="images/ensembl_mouse_main.png" width="800" align="middle" />|
+|<img src="images/ensembl_mouse_ftp.png" width="800" align="middle" />|
 
 ```{bash}
 # genome
@@ -64,13 +69,6 @@ wget ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/cds/Homo_sapiens.GR
 # annotation
 wget ftp://ftp.ensembl.org/pub/release-99/gtf/mus_musculus/Mus_musculus.GRCm38.99.chr.gtf.gz
 ```
-
-|Ensembl website|
-| :---:  |
-|<img src="images/ensembl_1.png" width="800" align="middle" />|
-|<img src="images/ensembl_2.png" width="800" align="middle" />|
-|<img src="images/ensembl_3.png" width="800" align="middle" />|
-
 <br/>
 
 ## Our data set
