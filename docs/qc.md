@@ -12,7 +12,7 @@ This step includes the quality control of initial reads and read trimming that i
 
 <br/>
 
-## QC of sequencing reads
+## Quality control of sequencing reads
 
 ### FastQC
 
@@ -24,13 +24,21 @@ FastQC calculates statistics about the composition and quality of raw sequences,
 # Go to the "quality_control" folder
 cd ~/rnaseq_course/quality_control
 
+# Run FastQC for one sample
+$RUN fastqc ~/rnaseq_course/raw_data/SRR3091420_1.fastq.gz -o .
+
+
+# Run for all samples
 $RUN fastqc ~/rnaseq_course/raw_data/*fastq.gz -o .
 ```
 
-We can display the results with an Internet browser; e.g. Firefox:
+The output files are a **.zip** archive and an **.html** file
+
+<br>
+
+We can display the results (.html file) with an Internet browser; e.g. Firefox:
 ```{bash}
-# all reports at once
-firefox *.html
+firefox SRR3091420_1_fastqc.html &
 ```
 
 <img src="images/fastqc.png" width="800"/>
@@ -40,6 +48,26 @@ firefox *.html
 Below is an example of a poor quality dataset. As you can see, the average quality drops dramatically towards the 3'-end.
 
 <img src="images/bad_fastqc.png" width="800"/>
+
+You can extract the .zip archive:
+
+```{bash}
+# extract
+unzip SRR3091420_1_fastqc.zip
+
+# remove remaining .zip file
+rm SRR3091420_1_fastqc.zip
+
+# display content of directory
+ls SRR3091420_1_fastqc
+```
+
+File **fastqc_data.txt** contains the results in text format:
+
+```{bash}
+less SRR3091420_1_fastqc/fastqc_data.txt
+```
+
 
 ### FastQ Screen
 
@@ -100,33 +128,31 @@ You can execute FastQ Screen this way:
 
 ```{bash}
 $RUN fastq_screen --conf FastQ_Screen_Genomes/fastq_screen.conf \
-           ~/rnaseq_course/raw_data/ \
+           ~/rnaseq_course/raw_data/SRR3091420_1.fastq.gz \
            --outdir ~/rnaseq_course/quality_control/
 ```
 
 Below is an example of the FastQ Screen results for A549_0_1_1.fastq.gz which we prepared.  
 
 ```{bash}
-wget https://biocorecrg.github.io/RNAseq_course_2019/precomp_res/A549_0_1_fastq_screen.tar.gz
-tar -zvxf A549_0_1_fastq_screen.tar.gz 
-A549_0_1_fastq_screen/
-A549_0_1_fastq_screen/A549_0_1chr10_1_screen.html
-A549_0_1_fastq_screen/A549_0_1chr10_1_screen.txt
-A549_0_1_fastq_screen/A549_0_1chr10_1_screen.png
+cd ~/rnaseq_course/quality_control/
 
-mv A549_0_1_fastq_screen QC
+# get files from fastq_screen run
+wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/SRR3091420_1_fastq_screen.tar.gz
 
-firefox QC/A549_0_1_fastq_screen/A549_0_1chr10_1_screen.html
+# extract
+tar -zvxf SRR3091420_1_fastq_screen.tar.gz
+
+firefox SRR3091420_1_screen.html
 ```
 
-<img src="images/A549_0_1_1_screen_2.png" />
-<img src="images/A549_0_1_1_screen_1.png" />
+<img src="images/SRR3091420_1_screen.png" />
 
 <br/>
 
 ## Initial processing of sequencing reads
 
-Before mapping reads to the genome/transcriptome or performing a *de novo* assembly, the reads has to be pre-processed, if needed, as follows: 
+Before mapping reads to the genome/transcriptome or performing a *de novo* assembly, the reads have to be pre-processed, if needed, as follows: 
 * Demultiplex by index or barcode (it is usually done in the sequencing facility)
 * Remove adapter sequences
 * Trim reads by quality
