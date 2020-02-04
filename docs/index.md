@@ -49,14 +49,15 @@ At the end of the course, the participants will be able to:
 
 
 ##  Course Program
-*	Day 1: Introduction, download raw data, quality control of data
-*	Day 2: Read mapping to reference genome
-*	Day 3: Differential expression analysis
-*	Day 4: Genome browser, gene ontology enrichment analysis
+*	Day 1: Introduction to RNA-seq,  experimental design, Start analyzing RNA-seq data: raw data download, quality control, prepare sequencing reads for mapping.
+* Day 2: Read mapping to reference genome/transcriptome, UCSC Genome Browser.
+* Day 3: Refreshment of R. Gene differential expression analysis.
+* Day 4: Gene set enrichment analysis. Independent exercise. 
+
 
 
 ## Prerequisites
-[Basic experience of command line Linux](https://biocorecrg.github.io/advanced_linux_2019/)
+[Basic experience of the Linux command line](https://biocorecrg.github.io/advanced_linux_2019/)
 
 
 
