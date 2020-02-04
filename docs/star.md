@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Mapping with STAR
+title: STAR mapping, BAM/SAM/CRAM and QualiMap
 navigation: 14
 ---
 
