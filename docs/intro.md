@@ -15,7 +15,7 @@ navigation: 4
 
 In both prokaryotes and eukaryotes, there are 3 main types of RNA:
 * Messenger RNA, aka mRNA:
-  * Represent ~1-5% of total RNA;
+  * Represent ~1-5% of total RNA mass;
   * Protein-coding;
   * Mostly poly-adenylated (at the 3');
   * Very heterogeneous in terms of base sequence and size.
@@ -36,14 +36,14 @@ But there are many more types of RNAs:
 
 |Estimate of RNA levels in a typical mammalian cell|
 | :---:  |
-|<img src="images/RNA_types.jpg" width="500" align="left" />|
-|from Palazzo and Lee, Frontiers in Genetics, 2015|
+|<img src="images/RNA_types.jpg" width="600" align="left" />|
+|from [Palazzo and Lee, Frontiers in Genetics, 2015](https://www.frontiersin.org/articles/10.3389/fgene.2015.00002/full)|
 
 <br/>
 
 ## RNA-sequencing
 
-RNA-sequencing, aka RNA-Seq, is a High-Throughput Sequencing technique for identifying and quantifying RNA molecules in biological samples. 
+RNA-sequencing, aka RNA-seq, is a High-Throughput Sequencing technique for identifying and quantifying RNA molecules in biological samples. 
 
 This technology is used to analyze RNA for assessing:
 * RNA/gene/transcript expression;
@@ -53,19 +53,21 @@ This technology is used to analyze RNA for assessing:
 
 Other technologies for assessing RNA expression are Northern Blot, real-time PCR and hybridization-based microarrays [3].
 
+<br/>
+
 ## Technologies and protocols
 
 RNA-seq can target different RNA populations, using different protocols:
 * Positive selection of mRNAs: **polyA selection**.
 * Negative selection of non-polyA: **rRNA depletion**.
-* Size selection: e.g. for **small RNA selection**.
+* Size selection: e.g. **small RNA selection**.
 
 <br/>
 
-Depending on the technology and the protocol, RNA-Seq can produce:
+Depending on the technology and the protocol, RNA-seq can produce:
 * single-end short reads (50-450 nt), which are useful for gene expression quantification (mainly **Illumina**, but also **Ion Torrent** and **BGISEQ**);
 * paired-end reads (2 x 50-250 nt), which are useful for detecting splicing events and refinement of transcriptome annotation;
-* single long reads (**PACBio** or **ONT**), which are used for the de novo identification of new transcripts and improving transcriptome assembly. 
+* single long reads (**PACBio** or **ONT**), which are used for the *de novo* identification of new transcripts and improving transcriptome assembly. 
 
 
 <br/>
