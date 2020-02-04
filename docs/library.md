@@ -61,9 +61,10 @@ The protocol uses the **introduction of dUTP** instead of dTTP during amplificat
 <img src="images/rnaseq_strandedness.png" width="700" align="middle" />
 
 <br>
+
 In the result (in other protocols it can be different), **Read 1 (forward)** is mapped to the **antisense DNA strand** (this is also true for single-end reads), while **Read 2 (reverse)**, to the **sense DNA strand**.
 
-
+| :---:  |
 |<img src="images/Reads_direction.jpg" width="700" align="middle" />|
 |from [https://seekdeep.brown.edu/illumina_paired_info.html](https://seekdeep.brown.edu/illumina_paired_info.html)|
 
