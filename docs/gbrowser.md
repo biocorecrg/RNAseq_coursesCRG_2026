@@ -18,29 +18,53 @@ There are two kinds of genome browsers:
   * [GBrowse](http://gmod.org/wiki/GBrowse_2.0_HOWTO)
   * [IGV](https://software.broadinstitute.org/software/igv/)
   
-Small size data can be directly uploaded to the genome browser, while large files are normally placed on a web-server that is accessible to the browser. To explore BAM and CRAM files produced by the STAR mapper, we first need to sort and index the files. In our case, sorting has been already done by STAR because we output alignments to the BAM files sorted by coordinates. The indexing step:
+Small size data can be directly uploaded to the genome browser, while large files are normally placed on a web-server that is accessible to the browser. To explore BAM and CRAM files produced by the STAR mapper, we first need to sort and index the files. In our case, sorting has been already done by STAR because we output alignments to the BAM files sorted by coordinates. 
+<br>
+The indexing can be done with samtools:
 
 ```{bash}
-$RUN samtools index alignments/A549_0_1Aligned.sortedByCoord.out.bam
-$RUN samtools index alignments/A549_0_1.cram       
+cd ~/rnaseq_course/mapping
 
-ls alignments
-
-A549_0_1Aligned.sortedByCoord.out.bam      A549_0_1.cram.crai     A549_0_1Log.progress.out      A549_0_1_STARtmp
-A549_0_1Aligned.sortedByCoord.out.bam.bai  A549_0_1Log.final.out  A549_0_1ReadsPerGene.out.tab  salmon_A549_0_1
-A549_0_1.cram                              A549_0_1Log.out        A549_0_1SJ.out.tab
+$RUN samtools index alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
+$RUN samtools index alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
 
 ```
 <br/>
 
 ## UCSC Genome Browser
-**IMPORTANT!** Be careful with the chromosome name conventions since different genome browsers name chromosomes differently. Thus UCSC names chromosomes **chr1**, **chr2**,...**chrM**; while Ensembl, **1**, **2**, ... **MT**. When you map reads to a genome with a given convention you cannot directly display BAM/CRAM files in the genome browser that uses a different convention.
-GENCODE, from which we downloaded a human genome, uses the UCSC convention, we therefore can directly display our BAM/CRAM files in the UCSC Genome Browser. 
 
-First, you need to upload your sorted bam (or cram) file(s) **together with an index (.bai or .crai) file(s)** to a http server that is accessible from the Internet. We already made our files accessible at this address:
+**IMPORTANT!** 
+<br>
+Be careful with the **chromosome name conventions**!
+<br>
+Different genome browsers name chromosomes differently. UCSC names chromosomes as **chr1**, **chr2**,...**chrM**; while Ensembl, **1**, **2**, ... **MT**. 
+<br>
+When you map reads to a genome with a given convention you cannot directly display BAM/CRAM files in the genome browser that uses a different convention.
+<br>
+GENCODE uses the UCSC convention, while ENSEMBL doesn't: we need to change the chromsomes names before being able to load them in the UCSC Genome Browser. 
 
 ```{bash}
-https://public-docs.crg.es/biocore/projects/training/RNAseq_2019/
+cd ~/rnaseq_course/mapping
+
+# create new sub-directory
+mkdir bam_ucsc
+
+# convert chromosome naming (produce a SAM file)
+$RUN samtools view -h alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam | awk -F "\t" 'BEGIN{OFS="\t"}{if($1 ~ /^@/){print $0} else {print $1,$2,"chr"$3,$4,$5,$6,$7,$8,$9,$10,$11,$12}}' | sed 's/chrMT/chrM/g' | sed 's/SN:/SN:chr/g' > bam_ucsc/SRR3091420_1_chr6_ucsc.sam
+
+# convert SAM to BAM
+$RUN samtools view -b -o bam_ucsc/SRR3091420_1_chr6_ucsc.bam bam_ucsc/SRR3091420_1_chr6_ucsc.sam
+
+# create index
+$RUN samtools index bam_ucsc/SRR3091420_1_chr6_ucsc.bam
+```
+
+First, you need to upload your sorted bam (or cram) file(s) **together with an index (.bai or .crai) file(s)** to a http server that is accessible from the Internet. 
+<br>
+The files for this project (chromosome 6 only) are found in:
+
+```{bash}
+https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/ucsc/bam
 ```
 
 Using the mouse's right click copy this URL address.  
@@ -49,7 +73,7 @@ Now go to the [UCSC genome browser website](https://genome-euro.ucsc.edu/cgi-bin
 
 <img src="images/ucsc1.png"  align="middle" />
 
-Choose human genome version hg38 (that corresponds to the GENCODE annotation we used). Click **GO**. 
+Choose human genome version hg38 (that corresponds to the ENCODE annotation we used). Click **GO**. 
 
 <img src="images/ucsc2.png"  align="middle" />
 
