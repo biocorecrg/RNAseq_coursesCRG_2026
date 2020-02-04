@@ -57,11 +57,11 @@ For additional information regarding the tool and the algorithm, please refer to
 Get the count data for the full data set, output of both STAR and Salmon:
 
 ```{bash}
-# Go to the home directory
-cd ~
+# Go to the differential expression directory
+cd ~/rnaseq_course/differential_expression
 
 # Get the folder containing all the data
-wget https://biocorecrg.github.io/RNAseq_course_2019/precomp_res/full_data.tar.gz
+wget /full_data.tar.gz
 
 # Gunzip
 tar -zxvf full_data.tar.gz
@@ -70,102 +70,54 @@ tar -zxvf full_data.tar.gz
 rm full_data.tar.gz
 ```
 
-**Exercise**
-* Explore count formats for both **STAR** and **Salmon**: what information do you get in each ?
-  * STAR: ReadsPerGene.out.tab extension.
-  * Salmon: quant.sf files.
-* How many rows are there in ~/full_data/counts_star/A549_0_1ReadsPerGene.out.tab and ~/full_data/counts_salmon/A549_0_1/quant.sf ? How do you explain the difference ?
-
-
 ### Raw count matrices
 
 **DESeq2** takes as an input raw (non normalized) counts, in various forms:
 * Option 1: a matrix for all sample
 * Option 2: one file per sample
 
+For both STAR and Salmon data files, we will use **one file per sample**
+
 #### Prepare data from STAR
 
-##### **Option 1**: a <b>matrix of integer values</b> (the value at the i-th row and j-th column tells how many reads have been assigned to gene i in sample j), such as:
+We need to create one file per sample, each file containing the raw counts of all genes:
 
-| gene | A549_0_1chr10 | A549_0_2chr10 | A549_0_3chr10 | A549_25_1chr10 | A549_25_2chr10 | A549_25_3chr10 |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| ENSG00000260370.1 | 0 | 0 | 1 | 0 | 1 | 1 |
-| ENSG00000237297.1 | 10 | 8 | 10 | 12 | 5 | 2 |
-| ENSG00000261456.5 | 210 | 320 | 291 | 300 | 267 | 222 |
-| ENSG00000232420.2 | 3 | 2 | 0 | 1 | 2 | 6 |
-
-Let's prepare the matrix for our 6 samples, from the **STAR** output.
-<br><br>
-__REMINDER regarding the STAR output__
-<br>
-The **ReadsPerGene.out.tab** output files of STAR (from option --quantMode GeneCounts) contain 4 columns that correspond to different counts per gene calculated **according to the protocol's strandedness** (see [Mapping with STAR pratical](https://biocorecrg.github.io/RNAseq_course_2019/alnpractical.html)):
-* column 1: gene ID
-* column 2: counts for unstranded RNA-seq.
-* column 3: counts for the 1st read strand aligned with RNA
-* column 4: counts for the 2nd read strand aligned with RNA (the most common protocol nowadays)
-
-The protocol used to prepare the libraries for the A549 ENCODE samples is **reverse stranded**, so we need to extract the 4th column of each of the "ReadsPerGene" files, along with the column containing the <b>gene names</b>.
-<br>
-<br>
-Create a folder for the deseq2 analysis in the **full_data**:
-
-```{bash}
-mkdir -p ~/full_data/deseq2
-```
-
-* Create a matrix of expression:
-
-```{bash}
-cd ~/full_data/counts_star
-
-# retrieve the 4th column of each "ReadsPerGene.out.tab" file + the first column that contains the gene IDs
-paste A549_*ReadsPerGene.out.tab | grep -v "_" | awk '{printf "%s\t", $1}{for (i=4;i<=NF;i+=4) printf "%s\t", $i; printf "\n" }' > tmp
-
-# add header: "gene_name" + the name of each of the counts file
-sed -e "1igene_name\t$(ls A549_*ReadsPerGene.out.tab | tr '\n' '\t' | sed 's/ReadsPerGene.out.tab//g')" tmp | cut -f1-7 > ../deseq2/raw_counts_A549_matrix.txt
-
-# another way can be the following one
-ls *.tab | awk 'BEGIN{ORS="";print "gene name\t"}{print $0"\t"}END{print "\n"}'| sed 's/ReadsPerGene.out.tab//g' > ../deseq2/raw_counts_A549_matrix.txt; cat tmp >> ../deseq2/raw_counts_A549_matrix.txt
-
-
-# remove temporary file
-rm tmp
-```
-
-##### **Option 2**: one file per sample, each file containing the raw counts of all genes:
-
-File **A549_0_1chr10_counts.txt**:
+File **SRR3091420_1_chr6_counts.txt**:
 
 | ENSG00000260370.1 | 0 |
 | ENSG00000237297.1 | 10 |
 | ENSG00000261456.5 | 210 |
 
-File **A549_0_2chr10_counts.txt**:
+File **SRR3091421_1_chr6_counts.txt**:
 
 | ENSG00000260370.1 | 0 |
 | ENSG00000237297.1 | 8 |
 | ENSG00000261456.5 | 320 |
 
 and so on...
+<br>
+Remember that the STAR counts file contains **4 columns** depending on the library preparation protocol!
 <br><br>
+
 **Exercise**
-* Prepare the 6 files needed for our analysis, from the STAR output, and save them in the <b>counts_4thcol</b> directory:
+
+* Prepare the 10 files needed for our analysis, from the STAR output, and save them in the <b>counts_selected</b> directory: knowing that our libraries are **unstranded**, which column will you pick?
   
 
-* Create the sub-directory **counts_4thcol** inside the deseq2 directory:
+* Create the sub-directory **counts_selected** inside the deseq2 directory:
 ```{bash}
-mkdir -p ~/full_data/deseq2/counts_4thcol
+mkdir -p ~/rnaseq_course/counts_selected
 ```
 
-* Loop around the 6 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (4th column).
+* Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (2nd column).
 
 ```{bash}
-cd ~/full_data/counts_star
+cd ~/rnaseq_course/differential_expression
 
-for i in *ReadsPerGene.out.tab
+for i in full_data/counts_star/*ReadsPerGene.out.tab
 do echo $i
-# retrieve the first (gene name) and fourth column (raw reads)
-cut -f1,4 $i | grep -v "_" > ~/full_data/deseq2/counts_4thcol/`basename $i ReadsPerGene.out.tab`_counts.txt
+# retrieve the first (gene name) and second column (raw reads for unstranded protocol)
+cut -f1,2 $i | grep -v "_" > counts_selected/$(basename $i ReadsPerGene.out.tab)_counts.txt
 done
 ```
 
