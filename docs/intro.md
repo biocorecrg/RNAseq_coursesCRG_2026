@@ -45,13 +45,18 @@ But there are many more types of RNAs:
 
 RNA-sequencing, aka RNA-seq, is a High-Throughput Sequencing technique for identifying and quantifying RNA molecules in biological samples. 
 
+|RNA-Seq summary|
+| :---:  |
+|<img src="images/RNAseq_wiki.png" width="600" align="middle" />|
+|from Wikipedia|
+
 This technology is used to analyze RNA for assessing:
 * RNA/gene/transcript expression;
 * alternatively spliced transcripts;
 * gene fusion and SNPs;
 * post-translational modification.
 
-Other technologies for assessing RNA expression are Northern Blot, real-time PCR and hybridization-based microarrays [3].
+Other technologies for assessing RNA expression are Northern Blot, real-time PCR, hybridization-based microarrays.
 
 <br/>
 
@@ -65,21 +70,13 @@ RNA-seq can target different RNA populations, using different protocols:
 <br/>
 
 Depending on the technology and the protocol, RNA-seq can produce:
-* single-end short reads (50-450 nt), which are useful for gene expression quantification (mainly **Illumina**, but also **Ion Torrent** and **BGISEQ**);
-* paired-end reads (2 x 50-250 nt), which are useful for detecting splicing events and refinement of transcriptome annotation;
-* single long reads (**PACBio** or **ONT**), which are used for the *de novo* identification of new transcripts and improving transcriptome assembly. 
+* Single-end short reads (50-450 nt), which are used for gene expression quantification (mainly **Illumina**, but also **Ion Torrent** and **BGISEQ**);
+* Paired-end reads (2 x 50-250 nt), which are useful for detecting splicing events and refinement of transcriptome annotation;
+* Single long reads (**PACBio** or **ONT**), which are used for the *de novo* identification of new transcripts and improving transcriptome assembly. 
 
 
 <br/>
 
-## mRNA-Seq protocol (Illumina)
 
-
-|mRNA-Seq protocol|
-| :---:  |
-|<img src="images/tileshop.jpeg" align="middle" />|
-|from Wang et al 2009|
-
-<br/>
 
 
