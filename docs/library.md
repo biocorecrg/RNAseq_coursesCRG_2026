@@ -32,15 +32,15 @@ Selected mRNAs are then fragmented and a **primer** is added at their 3' end.
 
 ## Convertion of RNA to cDNA
 
-RNA is reverse transcribed to cDNA because DNA is more stable and to allow for amplification (which uses DNA polymerases) and leverage more mature DNA sequencing technology. Amplification subsequent to reverse transcription results in loss of strandedness because mRNA that is targeted in RNA-seq experiments has a **5' to 3' polarity**. 
+RNA is reverse transcribed to cDNA because DNA is more stable and allow for amplification (which uses DNA polymerases) and leverage more mature DNA sequencing technology.  
 <br>
-It can be transcribed from either DNA strand. However, for mRNA, it is always called **sense RNA**. 
+mRNA can be transcribed from either DNA strand, sense or antisense. 
 
 <img src="images/transcription.jpg" width="500" align="middle" />
 
 <br>
 
-## Stranded vs unstranded RNA-seq
+## Stranded vs. unstranded RNA-seq
 
 mRNA is one-stranded: during a typical RNA-seq experiment the information about DNA strands is lost after both strands of cDNA are synthesized.
 
