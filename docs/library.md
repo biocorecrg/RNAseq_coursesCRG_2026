@@ -56,15 +56,18 @@ First, the first strand of cDNA is synthesized by priming mRNA fragments with ra
 Then, the second strand of cDNA is synthesized.
 The protocol uses the **introduction of dUTP** instead of dTTP during amplification. The incorporation of dUTP in the second strand synthesis "kills" this second strand during amplification, because the polymerase used in the assay is not incorporated past this incorporated nucleotide.
 
-In the result (in other protocols it can be different), **Read 1 (forward)** is mapped to the **antisense DNA strand** (this is also true for single-end reads), while **Read 2 (reverse)**, to the **sense DNA strand**.
-
 <br>
 
 <img src="images/rnaseq_strandedness.png" width="700" align="middle" />
 
+<br>
+In the result (in other protocols it can be different), **Read 1 (forward)** is mapped to the **antisense DNA strand** (this is also true for single-end reads), while **Read 2 (reverse)**, to the **sense DNA strand**.
 
-<img src="images/Reads_direction.jpg" width="700" align="middle" />
 
+|<img src="images/Reads_direction.jpg" width="700" align="middle" />|
+|from [https://seekdeep.brown.edu/illumina_paired_info.html](https://seekdeep.brown.edu/illumina_paired_info.html)|
+
+<br>
 
 Strand-specific protocols **enhance the value of a RNA-seq experiment**:
 * No ambiguity and better estimation of gene expression level.
