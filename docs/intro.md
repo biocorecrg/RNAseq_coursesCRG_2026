@@ -36,7 +36,7 @@ But there are many more types of RNAs:
 
 |Estimate of RNA levels in a typical mammalian cell|
 | :---:  |
-|<img src="images/RNA_types.jpg" align="left" />|
+|<img src="images/RNA_types.jpg" width="500" align="left" />|
 |from Palazzo and Lee, Frontiers in Genetics, 2015|
 
 <br/>
