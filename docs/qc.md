@@ -185,8 +185,14 @@ There are many tools for trimming reads and removing adapters, such as **Trim Ga
 Let's use **skewer** to trim the Illumina small RNA 3' adapter.  
 
 ```{bash}
-$RUN skewer resources/subsample_to_trim.fq.gz -x TGGAATTCTCGGGTGCCAAGG -o QC/subsample_to_trim
+cd ~/rnaseq_course/trimming
 
+$RUN skewer ~/rnaseq_course/raw_data/SRR3091420_1.fastq.gz \
+		-x TGGAATTCTCGGGTGCCAAGG \
+		-o SRR3091420_1
+```
+
+```
 .--. .-.
 : .--': :.-.
 `. `. : `'.' .--. .-..-..-. .--. .--.
@@ -194,42 +200,36 @@ _`, :: . `.' '_.': `; `; :' '_.': ..'
 `.__.':_;:_;`.__.'`.__.__.'`.__.':_;
 skewer v0.2.2 [April 4, 2016]
 Parameters used:
--- 3' end adapter sequence (-x):	TGGAATTCTCGGGTGCCAAGG
--- maximum error ratio allowed (-r):	0.100
--- maximum indel error ratio allowed (-d):	0.030
--- minimum read length allowed after trimming (-l):	18
--- file format (-f):		Sanger/Illumina 1.8+ FASTQ (auto detected)
--- minimum overlap length for adapter detection (-k):	3
-Thu Apr 18 17:51:18 2019 >> started
+-- 3' end adapter sequence (-x):        TGGAATTCTCGGGTGCCAAGG
+-- maximum error ratio allowed (-r):    0.100
+-- maximum indel error ratio allowed (-d):      0.030
+-- minimum read length allowed after trimming (-l):     18
+-- file format (-f):            Solexa/Illumina 1.3+/Illumina 1.5+ FASTQ (auto detected)
+-- minimum overlap length for adapter detection (-k):   3
+Tue Feb  4 11:00:56 2020 >> started
 |=================================================>| (100.00%)
-Thu Apr 18 17:51:25 2019 >> done (6.789s)
-1000000 reads processed; of these:
-  30171 ( 3.02%) short reads filtered out after trimming by size control
-   2220 ( 0.22%) empty reads filtered out after trimming by size control
- 967609 (96.76%) reads available; of these:
- 958360 (99.04%) trimmed reads available after processing
-   9249 ( 0.96%) untrimmed reads available after processing
-log has been saved to "QC/subsample_to_trim-trimmed.log".
+Tue Feb  4 11:01:40 2020 >> done (43.669s)
+12157169 reads processed; of these:
+       0 ( 0.00%) short reads filtered out after trimming by size control
+       0 ( 0.00%) empty reads filtered out after trimming by size control
+12157169 (100.00%) reads available; of these:
+  480367 ( 3.95%) trimmed reads available after processing
+11676802 (96.05%) untrimmed reads available after processing
+log has been saved to "SRR3091420_1-trimmed.log".
 ```
 
 We can look at the read distribution after the trimming of the adapter by inspecting the log-file or **re-launching FastQC**.
 
 ```{bash}
-$RUN fastqc QC/subsample_to_trim-trimmed.fastq -o QC
-
-Started analysis of subsample_to_trim-trimmed.fastq
-Approx 5% complete for subsample_to_trim-trimmed.fastq
-Approx 10% complete for subsample_to_trim-trimmed.fastq
-Approx 15% complete for subsample_to_trim-trimmed.fastq
-Approx 20% complete for subsample_to_trim-trimmed.fastq
-Approx 25% complete for subsample_to_trim-trimmed.fastq
-Approx 30% complete for subsample_to_trim-trimmed.fastq
-...
-
+cd ~/rnaseq_course/quality_control/
+$RUN fastqc ~/rnaseq_course/trimming/SRR3091420_1-trimmed.fastq -o .
 ```
-<img src="images/size_dist_small.png" width="800"/>
-<img src="images/adapter_removed.png" width="800"/>
 
+<img src="images/trimmed_sequence_length_distribution.png" width="800"/>
+
+Example of a FastQC report for a trimmed **small-RNA** sample:
+
+<img src="images/size_dist_small.png" width="800"/>
 
 
 ## EXERCISE
