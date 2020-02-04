@@ -78,10 +78,17 @@ To speed up the mapping process, we retrieved a subset of the FASTA and GTF file
 You can download them from:
 
 ```{bash}
+# go to the appropriate folder
+cd ~/rnaseq_course/reference_genome
+
+# download reference files for chromosome 6
 wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/reference_chr6_Hsapiens.tar.gz
 
-# extract
+# extract archive
 tar -xvzf reference_chr6_Hsapiens.tar.gz
+
+# remove remaining .tar.gz archive
+rm reference_chr6_Hsapiens.tar.gz
 ```
 
 ### FASTA file

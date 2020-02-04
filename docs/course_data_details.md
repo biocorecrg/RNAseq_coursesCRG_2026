@@ -41,13 +41,19 @@ done
 
 * **BACK UP**
 
-In case downloading those files is too slow, we have prepared fastq files that correspond to **chromosome 6 only**:
+In case downloading those files is too slow, we have prepared fastq files that correspond to **chromosome 6 only**. Please download it later usage:
 
 ```{bash}
+# go to raw data folder
+cd ~/rnaseq_course/raw_data
+
 # archive containing the 6 fastq files for chromosome 6 only
 wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/fastq_chr6.tar.gz
 
-# extract
+# extract archive
 tar -xvzf fastq_chr6.tar.gz
+
+# remove .tar.gz file
+rm fastq_chr6.tar.gz
 ```
 
