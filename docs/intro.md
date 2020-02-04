@@ -14,24 +14,32 @@ navigation: 4
 ## Types of RNAs
 
 In both prokaryotes and eukaryotes, there are 3 main types of RNA:
-* Messenger RNA = mRNA:
-  * ~ Represent ~ 1-5% of total RNA
-  * Protein-coding
-  * Mostly poly-adenylated
+* Messenger RNA, aka mRNA:
+  * Represent ~1-5% of total RNA;
+  * Protein-coding;
+  * Mostly poly-adenylated (at the 3');
   * Very heterogeneous in terms of base sequence and size.
-* Ribosomal RNA = rRNA:
-  * ~ Represent ~ 80-90% of total RNA
-* Transfer RNA = tRNA
-  * Represent ~ 15% of total RNA
+* Ribosomal RNA, aka rRNA:
+  * Represent ~80-90% of total RNA.
+* Transfer RNA, aka tRNA:
+  * Represent ~15% of total RNA
   * Small in size: ~ 75-95 nt
   
 But there are many more types of RNAs:
-* Micro RNA = miRNA
-  * Regulatory RNAs
-  * Small in size: ~ 20-25 nt
-* Small nuclear RNA:  = snRNA
-  * Several are related to splicing mechanisms
-* And more: lncRNA, eRNA, scaRNA, gRNA, piRNA, etc.
+* Micro RNA, aka miRNA:
+  * Regulatory RNAs;
+  * Small in size: ~20-25 nt.
+* Small nuclear RNA, aka snRNA:
+  * Some of snRNA are related to splicing mechanisms.
+* And many more: lncRNA, eRNA, scaRNA, gRNA, piRNA, etc.
+
+
+|Estimate of RNA levels in a typical mammalian cell|
+| :---:  |
+|<img src="images/RNA_types.jpg" align="left" />|
+|from Palazzo and Lee, Frontiers in Genetics, 2015|
+
+<br/>
 
 ## RNA-sequencing
 
