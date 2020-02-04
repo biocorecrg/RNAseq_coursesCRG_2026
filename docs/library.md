@@ -38,8 +38,6 @@ mRNA can be transcribed from either DNA strand, sense or antisense, and its 5' t
 
 <img src="images/transcription.jpg" width="500" align="middle" />
 
-<br>
-
 mRNA is one-stranded: during a typical RNA-seq experiment information about DNA strands is lost after both strands of cDNA are synthesized.
 
 Special methods were designed to take into account the strand, resulting in **stranded RNA-Seq libraries** that preserve the RNA strand information and allow detection of genes transcribed in both 5' and 3' direction. 
