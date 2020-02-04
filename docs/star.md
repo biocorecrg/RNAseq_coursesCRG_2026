@@ -22,7 +22,7 @@ However, STAR requires **unzipped** .fa and .gtf files.
 
 ```{bash}
 # go to reference_genome folder
-cd ~/rnaseq_course/reference_genome/
+cd ~/rnaseq_course/reference_genome/reference_chr6
 
 # unzip files (keep original zipped file)
 zcat Homo_sapiens.GRCh38.88.chr6.gtf.gz > Homo_sapiens.GRCh38.88.chr6.gtf
@@ -53,8 +53,8 @@ cd ~/rnaseq_course/mapping
 mkdir index_star_chr6
 
 $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
-            --genomeFastaFiles ~/rnaseq_course/reference_genome/Homo_sapiens.GRCh38.dna.chrom6.fa \
-            --sjdbGTFfile ~/rnaseq_course/reference_genome/Homo_sapiens.GRCh38.88.chr6.gtf \
+            --genomeFastaFiles ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa \
+            --sjdbGTFfile ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf \
             --sjdbOverhang 48 \
 	    --outFileNamePrefix Hsapiens_chr6
 ```
