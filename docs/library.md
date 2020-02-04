@@ -34,23 +34,21 @@ Selected mRNAs are then fragmented and a **primer** is added at their 3' end.
 
 RNA is reverse transcribed to cDNA because DNA is more stable and allow for amplification (which uses DNA polymerases) and leverage more mature DNA sequencing technology.  
 <br>
-mRNA can be transcribed from either DNA strand, sense or antisense. 
+mRNA can be transcribed from either DNA strand, sense or antisense, and its 5' to 3' direction coincides with the gene 5' - 3' direction. Thus, if the mRNA is transcribed from the DNA sense strand, its 5' - 3' direction is the same as for sense DNA; otherwise, it is opposite.
 
 <img src="images/transcription.jpg" width="500" align="middle" />
 
 <br>
 
-## Stranded vs. unstranded RNA-seq
+mRNA is one-stranded: during a typical RNA-seq experiment information about DNA strands is lost after both strands of cDNA are synthesized.
 
-mRNA is one-stranded: during a typical RNA-seq experiment the information about DNA strands is lost after both strands of cDNA are synthesized.
-
-Methods were designed to take into account the strand: resulting **stranded RNA-Seq libraries** preserve the RNA strand information and allow detection of genes transcribed in both 5' and 3' direction. 
+Special methods were designed to take into account the strand, resulting in **stranded RNA-Seq libraries** that preserve the RNA strand information and allow detection of genes transcribed in both 5' and 3' direction. 
 
 <br>
 
-**Illumina's TruSeq Stranded mRNA protocol** has become a standard method for mRNA-sequencing.
+**Illumina's TruSeq Stranded mRNA protocol** has become a standard stranded method for mRNA-sequencing.
 
-The protocol uses the **introduction of dUTP** instead of dTTP during the amplification. The incorporation of dUTP in the second strand synthesis quenches the second strand during amplification, because the polymerase used in the assay is not incorporated past this nucleotide.
+The protocol uses the **introduction of dUTP** instead of dTTP during amplification. The incorporation of dUTP in the second strand synthesis "kills" the second strand during amplification, because the polymerase used in the assay is not incorporated past this incorporated nucleotide.
 
 In the result (in other protocols it can be different), **Read 1 (forward)** is mapped to the **antisense DNA strand** (this is also true for single-end reads), while **Read 2 (reverse)**, to the **sense DNA strand**.
 
@@ -84,11 +82,7 @@ Fragmented cDNA is indexed with a hexamer or octamer barcode (so that cDNA from 
 <img src="images/multiplexing_illumina.png" width="800" align="middle" />
 from [https://www.illumina.com/documents/products/illumina_sequencing_introduction.pdf](https://www.illumina.com/documents/products/illumina_sequencing_introduction.pdf)
 
-## cDNA amplification
-
-<br/>
-
-* **cDNA library quality control and fragment selection** 
+## cDNA library quality control and fragment selection
 
 <br/>
 
