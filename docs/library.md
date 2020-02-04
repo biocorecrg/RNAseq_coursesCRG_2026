@@ -62,6 +62,10 @@ In the result (in other protocols it can be different), **Read 1 (forward)** is 
 
 <img src="images/rnaseq_strandedness.png" width="700" align="middle" />
 
+
+<img src="images/Reads_direction.jpg" width="700" align="middle" />
+
+
 Strand-specific protocols **enhance the value of a RNA-seq experiment**:
 * No ambiguity and better estimation of gene expression level.
 * Add information on the originating strand (inferred from the alignment)
