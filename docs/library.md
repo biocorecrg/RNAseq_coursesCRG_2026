@@ -52,7 +52,7 @@ The protocol uses the **introduction of dUTP** instead of dTTP during amplificat
 
 In the result (in other protocols it can be different), **Read 1 (forward)** is mapped to the **antisense DNA strand** (this is also true for single-end reads), while **Read 2 (reverse)**, to the **sense DNA strand**.
 
-<img src="images/rnaseq_strandedness.png" width="900" align="middle" />
+<img src="images/rnaseq_strandedness.png" width="600" align="middle" />
 
 Strand-specific protocols **enhance the value of a RNA-seq experiment**:
 * No ambiguity and better estimation of gene expression level.
