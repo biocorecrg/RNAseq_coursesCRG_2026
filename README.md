@@ -18,7 +18,7 @@ IPT (Institut Pasteur Tunis)
 
 [Sarah Bonnin](sarah.bonnin@crg.eu)
 
-[Luca Cozzuto](luca.cozzuto@crg.eu)
+[Julia Ponomarenko](julia.ponomarenko@crg.eu)
 
 ## The plan (draft)
 The webpage is at https://biocorecrg.github.io/PHINDaccess_RNAseq_2020 
