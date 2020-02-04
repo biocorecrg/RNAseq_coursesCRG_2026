@@ -40,12 +40,13 @@ Material available at https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/
 
 ##  Learning objectives
 At the end of the course, the participants will be able to:
-*	Understand the steps from raw reads to expression counts, differential expression and interpretation of gene lists using enrichment analysis
-*	Define a good experimental design, including experimental design, sequencing design, and quality control steps)
-*	Perform quality assessment of RNA-seq data, raw and processed
-*	Understand file formats commonly used in RNA-seq data analysis
-*	Gain an overview on common software tools for RNA-seq data analysis and their limitations
-*	Run RNA-seq pipeline to perform differential expression analysis
+*	Understand the analysis steps from raw reads to expression counts, differential expression and interpretation of DE genes using the gene set enrichment analysis.
+* Find RNA-seq data in public repositories.
+*	Define a good experimental design, including sequencing parameters and quality control steps.
+*	Perform quality assessment of RNA-seq data, both raw and computed.
+*	Understand file formats commonly used in RNA-seq data analysis.
+*	Gain an overview on common software tools for RNA-seq data analysis and their limitations.
+*	Perform gene differential expression analysis.
 
 
 ##  Course Program
@@ -57,7 +58,7 @@ At the end of the course, the participants will be able to:
 
 
 ## Prerequisites
-[Basic experience of the Linux command line](https://biocorecrg.github.io/advanced_linux_2019/)
+[Familiarity with the Linux command line](https://biocorecrg.github.io/advanced_linux_2019/)
 
 
 
