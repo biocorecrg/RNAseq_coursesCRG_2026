@@ -428,7 +428,7 @@ png("sample_distance_heatmap_star.png")
 dev.off() 
 ```
 
-<img src="images/sample_distance_heatmap_star.png" width="600"/>
+<img src="images/sample_distance_heatmap_star.png" width="900"/>
 
 Do samples cluster how you would expect ?
 
@@ -438,8 +438,8 @@ Reduction of dimensionality to be able to retrieve main differences / underlying
 
 ```{r}
 png("PCA_star.png")
-plotPCA(object = vsd,
-		intgroup = "Time")
+plotPCA(object = se_rlog,
+		intgroup = c("Condition", "Differentiation"))
 dev.off()
 ```
 
@@ -447,38 +447,27 @@ dev.off()
 
 The horizontal axis (PC1 = Principal Component 1) represents the highest variation between the samples. Differences along PC1 are more important than differences along PC2.
 
-#### Differential expression analysis
+
+##### Differential expression analysis
 
 ```{r}
-# check results names: depends on what was modeled. Here it was the "Time"
+# check results names: depends on what was modeled. Here it was the "Condition"
 resultsNames(se_star2)
 
-# extract results for t25 vs t0
-	# contrast: the column from the metadata that is used for the grouping of the samples (Time), then the baseline (t0) and the group compared to the baseline (t25) -> results will be as "t25 vs t0"
+# extract results for WT vs KO
+	# contrast: the column from the metadata that is used for the grouping of the samples (Condition), then WT is compared to the KO -> results will be as "WT vs KO"
 de <- results(object = se_star2, 
-		name="Time_t25_vs_t0")
-```
-To generate more accurate log2 foldchange estimates, DESeq2 allows (and recommends) the **shrinkage of the LFC** estimates toward zero when the information for a gene is low, which could include:<br>
-- Low counts<br>
-- High dispersion values<br>
+		name="Condition_WT_vs_KO")
 
-```{r}
-# processing the same results as above but including the log2FoldChange shrinkage
-        # useful for visualization and gene ranking
-de_shrink <- lfcShrink(dds = se_star2,
-                 coef="Time_t25_vs_t0",
-		 type="apeglm")
-
-# check first rows of both results
+# check first rows
 head(de)
-head(de_shrink)
 ```
 
 #### DESeq2 output
 
 * **log2 fold change**:  
 A positive fold change indicates an increase of expression while a negative fold change indicates a decrease in expression for a given comparison.<br>
-This value is reported in a **logarithmic scale (base 2)**: for example, a log2 fold change of 1.5 in the "t25 vs t0 comparison" means that the expression of that gene is increased, in the t25 relative to the t0, by a multiplicative factor of 2^1.5 ≈ 2.82.
+This value is reported in a **logarithmic scale (base 2)**: for example, a log2 fold change of 1.5 in the "WT vs KO comparison" means that the expression of that gene is increased, in the WT relative to the KO, by a multiplicative factor of 2^1.5 ≈ 2.82.
 * **pvalue**:
 Wald test p-value: Indicates whether the gene analysed is likely to be differentially expressed in that comparison. **The lower the more significant**.
 * **padj**:
@@ -492,13 +481,26 @@ Wald statistic: the log2FoldChange divided by its standard error.
 
 
 ```{r}
-# check the data for a very differentially expressed gene
-de[rownames(de)=="ENSG00000128016.5",]
-de_shrink[rownames(de_shrink)=="ENSG00000128016.5",]
+# how many genes are differentially expressed, taking into account "padj < 0.05"?
+nrow(de[de$padj < 0.05,])
 
-# add the more comprehensive gene symbols to de_shrink
-de_symbols <- merge(unique(tx2gene[,2:3]), data.frame(ID=rownames(de_shrink), de_shrink), by=1, all=F)
+# contains NAs... Filter them out
+nrow(de[de$padj < 0.05 & !is.na(de$padj),])
+  # 84 genes
 
+# add more annotation to "de"
+de_symbols <- merge(data.frame(ID=rownames(de), de, check.names=FALSE), annot, by.x="ID", by.y="ensembl_gene_id", all=F)
+
+# select those that are differentially expressed, taking into account "padj < 0.05"
+de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
+
+# is FOXC1 differentially expressed?
+de_select[de_select$external_gene_name == "FOXC1",]
+```
+
+
+
+```{r}
 # write differential expression analysis result to a text file
 write.table(de_symbols, "deseq2_results.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
