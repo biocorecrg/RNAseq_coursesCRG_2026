@@ -32,7 +32,7 @@ In this section, we will consider the procedure of the standard library preparat
 
 |Illumina TruSeq stranded poly(A) library preparation steps|
 | :---:  |
-|<img src="images/mRNA_library_steps.png" width="400" align="middle" />|
+|<img src="images/mRNA_library_steps.png" width="600" align="middle" />|
 |from https://www.labome.com/method/RNA-seq.html(https://www.labome.com/method/RNA-seq.html)|
 
 <br>
@@ -129,12 +129,8 @@ The 5’ and 3’ ends of cDNA fragments are next prepared to allow efficient li
 
 |cDNA multiplexing|
 | :---:  |
-|<img src="images/multiplexing.jpg" width="600" align="middle" />|
-|from [https://github.com/hbctraining/rnaseq_overview](https://github.com/hbctraining/rnaseq_overview)|
-
-
-<img src="images/multiplexing_illumina.png" width="800" align="middle" />
-from [https://www.illumina.com/documents/products/illumina_sequencing_introduction.pdf](https://www.illumina.com/documents/products/illumina_sequencing_introduction.pdf)
+|<img src="images/multiplexing_illumina.png" width="800" align="middle" />|
+|from [https://www.illumina.com/documents/products/illumina_sequencing_introduction.pdf](https://www.illumina.com/documents/products/illumina_sequencing_introduction.pdf)|
 
 ## cDNA library quality control 
 
