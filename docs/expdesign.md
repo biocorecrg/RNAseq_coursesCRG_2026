@@ -13,15 +13,13 @@ navigation: 10
 
 <br/>
 
-A good experimental design is vital to answer a well addressed biological hypothesis.
+[All-over very useful experimental design manual!](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf) It discusses what is a good experimental design, factorial design, choice of control, paired vs. unpaired desing, bias and confounding factors, randomization, block design, blinding, sample size, effect size and power, sample pooling.
 
-In this section, we will go through some of the crucial aspects to consider.
+<br/>
 
-<br> 
+## Technical vs. biological replicates
 
-## Replicates
-
-### Technical versus biological replicates
+**Technical replicates can be defined as different library preparations from the same RNA sample.** They should account for batch effects from the library preparation such as reverse transcription and PCR amplification. To avoid possible lane effects (e.g., differences in the sample loading, cluster amplification, and efficiency of the sequencing reaction), it is good practice to multiplex the same sample over different lanes of the same flowcell. In most cases, technical variability introduced by the sequencing protocol is quite low and well controlled.
 
 **Technical replicates** are samples in which the starting biological material is the same, but the replicates are processed separately: there, we test the technical variability. It can be done for example to assess the **variability in library preparation**, or in the **sequencing** part itself.
 
@@ -40,10 +38,12 @@ They are crucial to assess the **variability within an experimental group**: the
 
 <br> 
 
-(add numbers, papers and exercises)
 
+From [ENCODE Guidelines and Best Practices for RNA-Seq](https://www.encodeproject.org/documents/cede0cbe-d324-4ce7-ace4-f0c3eddf5972/@@download/attachment/ENCODE%20Best%20Practices%20for%20RNA_v2.pdf):
+"In all cases, experiments should be performed with **two or more biological replicates**, unless there is a compelling reason why this is impractical or wasteful (e.g. overlapping time points with high temporal resolution). **A biological replicate is defined as an independent growth of cells/tissue** and subsequent analysis. **Technical replicates from the same RNA library are not required, except to evaluate cases where biological variability is abnormally high.** In such instances, separating technical and biological variation is critical. In general, detecting and quantifying low prevalence RNAs is inherently more variable than high abundance RNAs. As part of the ENCODE pipeline, annotated transcript and genes are quantified using RSEM and the values are made available for downstream correlation analysis. 
+**Replicate concordance:** the gene level quantification should have a Spearman correlation of >0.9 between **isogenic replicates** *(Two replicates from biosamples derived from the same human donor or model organism strain. These biosamples have been treated separately; i.e. two growths, two separate knockdowns, or two different excisions)* and >0.8 between **anisogenic replicates** *(Two biological replicates from similar tissue biosamples derived from different human donors or model organism strains)*."
 
-## Sequencing depth
+<br/>
 
 Sequencing depth refers to the number of reads covering each genomic position, on average.
 
@@ -53,12 +53,128 @@ Sequencing depth is a very important consideration for **rare events discovery**
 
 However, for regular mRNA gene expression, **biological replicates are of greater importance than sequencing depth**.
 
-(add numbers and exercise)
 
-*Sources (and more):* 
-* *[https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md](https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md)*
-* *[https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)*
+## Number of replicates in RNA-Seq experiment
 
+
+| Recommendations for RNA-seq experiment design  for DGE|
+| :---:  |
+|<img src="images/fig2_schurch_2016.png" width="700" align="middle" />|
+| from [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)|
+
+
+* At least 6 replicates per condition for all experiments.
+* At least 12 replicates per condition for experiments where identifying the majority of all DE genes is important.
+* For experiments with <12 replicates per condition; use edgeR (exact) or DESeq2.
+* For experiments with >12 replicates per condition; use DESeq.
+* Apply a fold-change threshold appropriate to the number of replicates per condition between 0.1≤T≤0.5.
+
+<br/>
+
+### [Larger sample sizes are needed when](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
+* There is a large number of uncontrolled variables which interact unpredictably.
+* The total sample set is going to be analysed as several sub-sets.
+* When the population under study has many variables.
+* The goal is to detect small effect sizes (the difference in gene expression, for example).
+* Some samples or subjects are expected to be lost by attrition.
+
+<br/>
+
+## Power analysis
+text below was adapted from the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
+
+Sample size calculations, power calculations and power analysis (the terms are used interchangeably) are a way of determining the appropriate number of replicates (the sample size) for a study.
+
+**Power** is the probability of **not accepting a false null hypothesis**, or the probability of detecting a specified difference, or **effect size**, given it exists, within the population (e.g., a fold change in a microarray experiment or a change in the size of a tumour). The desired power of research experiment is usually above 80%; while for clinical studies, it might be required to be above 90%. 
+
+**Power (aka, sensitivity of the statistical test) = 1 - (type II error)**,  *(type II error is an error of accepting a false null hypothesis)*
+
+If all other parameters remain the same, a larger experiment will have more power than a smaller experiment. However, if an experiment is too large and a smaller experiment would have achieved the same statistical result, it is **overpowered experiment** and it has wasted subjects, money, time and effort, and is potentially unethical. On the other hand, if an experiment is too small, it may **lack power and miss important differences that do actually exist**. Therefore, an **underpowered study** also wastes resources and can be unethical. It is important to know what effect size is important to ensure that an experiment is sufficiently powered.
+
+### Factors affecting a power calculation
+* The precision and variance of measurements within any sample
+* Magnitude of a significant difference (aka, effect size)
+* Significance level (in biology, usually 0.05); that is, how certain we want to be to avoid type I error *(when the null hypothesis is incorrectly rejected)* 
+* The type of statistical test performed
+
+### Example 1
+We study the difference of some measurement in two populations (in which we assume this variable is normally distributed). <br/>
+We draw two samples (n=2) from each population independently and randomly and get
+**x=(9, 11)** and **y=(17,19)**. 
+<br/>
+We run the t-test on difference of means and get **p-value=0.03** *( in R, t.test(x, y) )*.
+<br/>
+Since we know the variance for x and y (sd=2), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd)*   *( in R, power.t.test(n, delta, sd) )*.
+<br/>
+The obtained **power = 0.56** - this means that Type II error (or the probability of accepting a false null hypothesis, or concluding that there is no difference when in fact there is the difference) = 44% !!!! – in roughly 44% of tests conducted with these parameters, the given effect size will be not seen as significant even when it is significant. It is a waist of resources to conduct such an under-powered study. That is, if we want to detect this effect size with higher power, we have to increase the number of samples (n).
+
+<br/>
+
+But what difference in means can we detect with just 2 samples at a sufficient enough power?
+<br/>
+Assume **x=(9, 11)** and **y=(24, 26)**. We run the t-test on difference of means and get **p-value=0.009**.
+<br/>
+Since we know the variance for x and y (sd=2), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd)= 15/sqrt(2)* .
+<br/>
+The obtained **power = 0.94 !!!** 
+
+### Example 2
+We draw 6 samples (n=6) from each population independently and randomly and get
+**x=(8, 10, 11, 11.8, 10.6, 8.6)** and **y=(8, 10, 11, 11.8, 10.6, 8.6)**. 
+<br/>
+We run the t-test on difference of means and get **p-value=0.04**.
+<br/>
+Since we know the variance for x and y (sd=sqrt(2)), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd) = 2/sqrt(2)* .
+<br/>
+The obtained **power = 0.35**. That means we have to increase n, and it can be calculated for the power=80% as
+*power.t.test(power=.80, delta=2/sqrt(2), sd=sqrt(2))*.
+<br/>
+The obtained **n = 17**.
+
+### Consider examples on page 36 of the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
+
+<br/>
+
+## RNA-Seq: Paired-end vs. single-end reads, read size and sequencing depth
+
+| Paired-end read |
+| :---:  |
+|<img src="images/read.png" width="400" align="middle" />|
+
+### General gene-level differential expression
+* For large genomes (human/mouse), ENCODE suggests to have per sample 30 million single-end (aligned to the genome) reads of size 50 bp and more (stranded protocol with polyA selection).
+
+### Gene-level differential expression with detection of low-expressed genes
+* For large genomes, 30-60M single-end (aligned to the genome) reads of size 50 bp and more (stranded protocol with polyA selection).
+
+### Differential expression of gene isoforms and detection of new isoforms
+* 50-100M paired-end reads of size 100 bp or more
+
+### De novo transcriptome assembly
+* 100-200M paired-end reads of size 150 bp or more
+
+<br/>
+
+| Adding more sequencing depth after 10 M reads gives diminishing returns on power to detect DE genes, whereas adding biological replicates improves power significantly regardless of sequencing depth |
+| :---:  |
+|<img src="images/seq_depth_Bioinformatics_2014.png" width="800" align="middle" />|
+| from [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/)|
+
+<br/>
+
+## Resources
+* [ENCODE Guidelines and Best Practices for RNA-Seq](https://www.encodeproject.org/documents/cede0cbe-d324-4ce7-ace4-f0c3eddf5972/@@download/attachment/ENCODE%20Best%20Practices%20for%20RNA_v2.pdf)
+* [https://eda.nc3rs.org.uk/experimental-design-variables](https://eda.nc3rs.org.uk/experimental-design-variables)
+* [https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md](https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md)
+* [Experimental design manual, Cambridge University, UK ](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
+* [Paper on statistical power in biomedical science](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5367316/)
+* [Paper "Statistical significance and statistical power in hypothesis testing"](http://muscle.ucsd.edu/More_HTML/papers/pdf/Lieber_JOR_1990.pdf)
+* [Blog post "Underpowered statistics"](https://www.statisticsdonewrong.com/power.html)
+* [Paper "An introduction to power and sample size estimation"](https://emj.bmj.com/content/20/5/453)
+* [Paper "Mindless statistics"](http://library.mpib-berlin.mpg.de/ft/gg/GG_Mindless_2004.pdf)
+* [http://chagall.med.cornell.edu/RNASEQcourse/Intro2RNAseq.pdf](http://chagall.med.cornell.edu/RNASEQcourse/Intro2RNAseq.pdf)
+* [Paper "How many biological replicates are needed in an RNA-seq experiment and which differential expression tool should you use?" RNA, 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)
+* [Paper "RNA-seq differential expression studies: more sequence or more replication?" Bioinformatics, 2014](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/)
 
 
 
