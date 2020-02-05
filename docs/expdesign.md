@@ -15,13 +15,19 @@ navigation: 10
 
 A good experimental design is vital to answer a well addressed biological hypothesis.
 
-We will go through some of the crucial aspects to consider.
+In this section, we will go through some of the crucial aspects to consider.
+
+<br> 
 
 ## Replicates
 
 ### Technical versus biological replicates
 
 **Technical replicates** are samples in which the starting biological material is the same, but the replicates are processed separately: there, we test the technical variability. It can be done for example to assess the **variability in library preparation**, or in the **sequencing** part itself.
+
+Technical variation of the sequencing protocols is very low: **hence technical replicates are nowadays considered unnecessary** (in the era of microarrays, it was more problematic).
+
+<br> 
 
 **Biological replicates** are samples in which the starting biological material is different. It could include:
   * Different organisms
@@ -30,25 +36,24 @@ We will go through some of the crucial aspects to consider.
 
 Why are **biological** replicates important?
 
-Technical variation of the sequencing protocols is very low: **hence technical replicates are nowadays considered unnecessary** (in the era of microarrays, it was more problematic).
+They are crucial to assess the **variability within an experimental group**: the more the number of replicates, the better this assessment, and thus the more precise the differential expression measurement.
 
-However, biological replicates are crucial to assess the **variability within an experimental group**: the more the number of replicates, the better this assessment, and the more precise the differential expression measurement.
 <br> 
-Without biological replicates: how can you differentiate between the changes triggered by conditions being compared, and the **individual variability**?
+
+(add numbers, papers and exercises)
 
 
 ## Sequencing depth
 
-Sequencing depth refers to the number of reads covering each genomic position, in average.
+Sequencing depth refers to the number of reads covering each genomic position, on average.
 
-It is calculated as:<br>
-**(total number of reads * average read length) / total length of genome**
+It is calculated as **(total number of reads * average read length) / total length of genome**
 
-Sequencing depth is a very important consideration for **rare events discovery** (e.g. some splicing events) or **lowly-expressed gene assessment** (e.g. lncRNAs).
+Sequencing depth is a very important consideration for **rare events discovery** (e.g., some splicing events) or **lowly-expressed gene assessment** (e.g., lncRNAs).
 
 However, for regular mRNA gene expression, **biological replicates are of greater importance than sequencing depth**.
 
-
+(add numbers and exercise)
 
 *Sources (and more):* 
 * *[https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md](https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md)*
