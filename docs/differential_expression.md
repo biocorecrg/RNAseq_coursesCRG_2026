@@ -443,7 +443,7 @@ plotPCA(object = se_rlog,
 dev.off()
 ```
 
-<img src="images/PCA_star.png" width="700"/>
+<img src="images/PCA_star.png" width="700", height=800/>
 
 The horizontal axis (PC1 = Principal Component 1) represents the highest variation between the samples. Differences along PC1 are more important than differences along PC2.
 
@@ -461,6 +461,12 @@ de <- results(object = se_star2,
 
 # check first rows
 head(de)
+
+# add more annotation to "de"
+de_symbols <- merge(data.frame(ID=rownames(de), de, check.names=FALSE), annot, by.x="ID", by.y="ensembl_gene_id", all=F)
+
+# write differential expression analysis result to a text file
+write.table(de_symbols, "deseq2_results.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
 
 #### DESeq2 output
@@ -480,36 +486,6 @@ Standard error of the log2FoldChange.
 Wald statistic: the log2FoldChange divided by its standard error.
 
 
-```{r}
-# how many genes are differentially expressed, taking into account "padj < 0.05"?
-nrow(de[de$padj < 0.05,])
-
-# contains NAs... Filter them out
-nrow(de[de$padj < 0.05 & !is.na(de$padj),])
-  # 84 genes
-
-# add more annotation to "de"
-de_symbols <- merge(data.frame(ID=rownames(de), de, check.names=FALSE), annot, by.x="ID", by.y="ensembl_gene_id", all=F)
-
-# select those that are differentially expressed, taking into account "padj < 0.05"
-de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
-
-# is FOXC1 differentially expressed?
-de_select[de_select$external_gene_name == "FOXC1",]
-```
-
-
-
-```{r}
-# write differential expression analysis result to a text file
-write.table(de_symbols, "deseq2_results.txt", quote=F, col.names=T, row.names=F, sep="\t")
-```
-
-**Exercise**
-* What are the log2FoldChange and padj values of genes "ENSG00000010017.12" and "ENSG00000163874.10" ? What can you tell about those ?
-* What about the **padj** of those genes ?
-* Check the expression of those genes in each sample (in **normalized_counts.txt**).
-
 
 #### Gene selection
 
@@ -519,7 +495,7 @@ write.table(de_symbols, "deseq2_results.txt", quote=F, col.names=T, row.names=F,
 <br>
 the log2FoldChange gives a **quantitative** information about the expression changes, but does not give an information on the **within-group variability**, hence the reliability of the information:
 <br><br> 
-In the picture below, fold changes for gene A and for gene B between t25 and t0 are the same, however the variability between the replicated samples in gene B is higher, so the result for gene A will be more reliable (i.e. the p-value will be smaller).
+In the picture below, fold changes for gene A and for gene B between groups **t25** and **t0** (from another data set) are the same, however the variability between the replicated samples in gene B is higher, so the result for gene A will be more reliable (i.e. the p-value will be smaller).
 
 <img src="images/RNAseq_dispersion.png" width="450"/>
 
@@ -536,25 +512,57 @@ The Benjamini-Hochberg procedure controls the False Discovery Rate (FDR) (it is 
 A FDR adjusted p-value of 0.05 implies that 5% of **significant tests according to the "raw" p-value** will result in false positives.
 <br>
 
-* We select our list of differentially expressed genes betwen t25 and t0 based on padj < 0.05 and log2FC > 0.5 or log2FC < -0.5 (However, note that *selecting by log2FoldChange is not required if the selection is done using the padj*).
+* Selection of differentially expressed genes between WT and KO based on padj < 0.05.
 
-```{bash}
-cd ~/full_data/deseq2
+```{r}
+# how many genes are differentially expressed, taking into account "padj < 0.05"?
+  # contains NAs... Filter them out
+de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
+  # 84 genes
 
-# column 4 is the log2FoldChange, column 7 is the adjusted p-value (padj)
-	# keep all columns
-awk '($7 < 0.05 && $4 > 0.5) || ($7 < 0.05 && $4 < -0.5) {print}' deseq2_results.txt > deseq2_results_padj0.05_log2fc0.5.txt
-
-# extract only gene IDs (column 1)
-cut -f1 deseq2_results_padj0.05_log2fc0.5.txt > deseq2_results_padj0.05_log2fc0.5_IDs.txt
-
-# extract only gene symbols (column 2)
-cut -f2 deseq2_results_padj0.05_log2fc0.5.txt > deseq2_results_padj0.05_log2fc0.5_symbols.txt
+# save results in file for further usage
+write.table(de_select, "deseq2_selection_padj005.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
+
+* Selection of differentially expressed genes between WT and KO based on padj < 0.05 **AND** log2FC > 0.5 or log2FC < -0.5 (However, note that *selecting by log2FoldChange is not required if the selection is done using the padj*).
+
+```{r}
+# how many genes are differentially expressed, taking into account "padj < 0.05" and log2FoldChange < -0.5 or > 0.5?
+  # contains NAs... Filter them out
+de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(de_symbols$log2FoldChange) > 0.5,]
+  # 82 genes
+```
+
 <br>
 
-**Exercise**
-* How many genes are found differentially expressed if you change the log2FoldChange threshold to 0.8 / -0.8 ? What if you remove the log2FoldChange threshold completely ?
+**Exercise 1**
+* Is **FOXC1** differentially expressed? What are the corresponding adjusted-value and log2FoldChanges?
+* How many genes are found differentially expressed if you change the log2FoldChange threshold to 0.8 / -0.8 and the padj threshold to 0.01 ?
+
+**Exercise 2**
+* Repeat the analysis comparing WT vs KO for the **undifferentiated samples** only!
+* Steps are:
+	* Modify the "sampletable" so that it contains only samples corresponding to "undiff" Differentiation state.
+|SampleName |FileName |Differentiation |Condition |
+| :---: | :---: | :---: | :---: |
+|5p4_25c |SRR3091420_1_counts.txt |undiff |WT |
+|5p4_27c |SRR3091421_1_counts.txt |undiff |WT |
+|5p4_28c |SRR3091422_1_counts.txt |diff5days |WT |
+|5p4_29c |SRR3091423_1_counts.txt |diff5days |WT |
+|5p4_30c |SRR3091424_1_counts.txt |diff5days |WT |
+|5p4_31cfoxc1 |SRR3091425_1_counts.txt |undiff |KO |
+|5p4_32cfoxc1 |SRR3091426_1_counts.txt |undiff |KO |
+|5p4_33cfoxc1 |SRR3091427_1_counts.txt |undiff |KO |
+|5p4_34cfoxc1 |SRR3091428_1_counts.txt |diff5days |KO |
+|5p4_35cfoxc1 |SRR3091429_1_counts.txt |diff5days |KO |
+* Read in data **DESeqDataSetFromHTSeqCount()**
+* Filter low counts
+* Fit statistical model **DESeq()**
+* rlog-transform counts **rlog()**
+  * Plot PCA and sample-to-sample distances heatmap
+* Check differential expression **resultsNames()**
+  * How many genes are differentially expressed, when considering padj < 0.05?
+
 
 **Homework**
 
