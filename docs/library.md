@@ -1,10 +1,41 @@
 ---
 layout: page
-title: Library preparation
+title: mRNA-seq
 navigation: 5
 ---
 
-# cDNA library preparation for mRNA sequencing
+# mRNA sequencing
+
+
+|Workflow of mRNA-seq|
+| :---:  |
+|<img src="images/RNAseq_steps.png" width="900" align="middle" />|
+|from [Sudhagar et al., Int. J. Mol. Sci. 2018](https://www.mdpi.com/1422-0067/19/1/245/htm)|
+
+mRNA sequencing conventional workflow consists of four major steps: 
+* Experimental design.
+* Sample preparation and library generation.
+* Next-generation sequencing of the library.
+* Bioinformatic analysis.
+
+In this section, we will consider the procedure of the standard library preparation; in particular, **Illumina TruSeq stranded poly(A) library**. It includes the following steps: 
+* RNA isolation/extraction.
+* mRNA purification.
+* mRNA fragmentation.
+* Synthesis of the cDNA first strand.
+* Synthesis of the cDNA second strand.
+* Adenylation of 3' ends.
+* Ligtion of adapters (cDNA multiplexing).
+* cDNA amplification.
+* cDNA library quality control.
+
+
+|Illumina TruSeq stranded poly(A) library preparation steps|
+| :---:  |
+|<img src="images/mRNA_library_steps.png" width="900" align="middle" />|
+|from https://www.labome.com/method/RNA-seq.html(https://www.labome.com/method/RNA-seq.html)|
+
+<br>
 
 ## RNA isolation
 
@@ -12,12 +43,12 @@ RNA is isolated from tissue and mixed with deoxyribonuclease (DNase), which redu
 
 <br>
 
-## RNA selection/depletion
+## mRNA purification
 
 For Illumina protocol, RNA input is 0.1-4 microgram.
 The most typical library preparation protocol for **mRNA-sequencing** uses the **poly(A)-selection strategy** for purifying mRNA by filtering RNA with 3' polyadenylated (poly(A)) tails to include only mRNA. 
 
-The poly(A) containing mRNA molecules are purified using poly(T) oligomer attached magnetic beads that bind to the **poly(A) tail** of mRNAs. Poly(A) selection introduces 3' bias.
+The poly(A) containing mRNA molecules are purified using poly(T) oligomer attached magnetic beads that bind to the **poly(A) tail** of mRNAs. 
 
 As a result, non polyadenylated transcripts - rRNA, tRNA, lncRNAs, miRNA, histone mRNA, degraded RNA, bacterial transcripts, and many viral transcripts - are excluded from the reaction (washed away).
 
@@ -25,21 +56,21 @@ Further, the ribosomal depletion is conducted to remove rRNA as it represents ov
 
 <br>
 
-## RNA fragmentation
+## mRNA fragmentation
 
-Purified mRNAs are then fragmented and a **primer for cDNA synthesis** is added at their 3' end.
+Purified mRNA is then fragmented and a **primer for cDNA synthesis** is added at the 3' end.
 
 <img src="images/illumina1.png" width="500" align="middle" />
 
 <br>
 
-## cDNA synthesis: Convertion of RNA to cDNA
+## cDNA synthesis: Convertion of RNA to ds cDNA
 
 RNA fragments are reverse transcribed to cDNA because DNA is more stable and allow for amplification (which uses DNA polymerases) and leverage more mature DNA sequencing technology.  
 <br>
 mRNA can be transcribed from either of two DNA strand. 
 
-The sense strand (or the coding strand) is the strand of DNA that has the same sequence as the mRNA, which takes the antisense strand (or the template strand) as its template during transcription.
+The **sense strand (coding strand)** is the strand of DNA that has the same sequence as the mRNA, which takes the **antisense strand (template strand)** as its template during transcription.
 
 <img src="images/transcription.jpg" width="500" align="middle" />
 
@@ -85,9 +116,15 @@ Strand-specific protocols **enhance the value of a RNA-seq experiment**:
 
 <br/>
 
-## cDNA multiplexing and DNA amplification
+## Adenylation of 3' ends
 
-Fragmented cDNA is indexed with a hexamer or octamer barcode, so that cDNA from different samples can be pooled into a single lane for multiplexed sequencing.
+A single "A" nucleotide is added to the 3' ends of cDNA fragments to prevent them from ligating to one another during the adapter ligation reaction (next step). A corresponding "T" nucleotide at the 3' end of the adapter provides a complementary overhang for ligating the adapter to the fragment. This strategy ensures a low rate of formation of concatenated chimera fragments.
+
+<br/>
+
+## Adapter ligation, cDNA multiplexing and DNA amplification
+
+The 5’ and 3’ ends of cDNA fragments are next prepared to allow efficient ligation of “Y” adapters containing unique barcodes and adapters for hybridization of cDNA fragments onto a flowcell. Hexamer or octamer barcodes allow to pool cDNA from different samples into a single lane for multiplexed sequencing.
 
 |cDNA multiplexing|
 | :---:  |
