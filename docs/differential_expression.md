@@ -443,7 +443,7 @@ plotPCA(object = se_rlog,
 dev.off()
 ```
 
-<img src="images/PCA_star.png" width="700 height=800/>
+<img src="images/PCA_star.png" width="700"/>
 
 The horizontal axis (PC1 = Principal Component 1) represents the highest variation between the samples. Differences along PC1 are more important than differences along PC2.
 
@@ -456,7 +456,7 @@ We can also plot the **normalized counts** of a gene per sample / experimental g
 plotCounts(se_star2, gene="ENSG00000054598", intgroup="Condition")
 ```
 
-<img src="images/counts_foxc1.png" width="700" height=800/>
+<img src="images/counts_foxc1.png" width="700"/>
 
 Let's produce a more comprehensive plot: we can **add the sample names and the differentiation status**.
 <br>
@@ -487,7 +487,7 @@ pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differenti
   theme_bw()
 ```
 
-<img src="images/counts_foxc1_nice.png" width="700" height=800/>
+<img src="images/counts_foxc1_nice.png" width="700"/>
 
 
 ##### Differential expression analysis
@@ -616,7 +616,6 @@ it means that we want to test for the effect of the **FOXC1 knock out**, while c
 
 * Repeat the first analysis, changing the design **~ Condition** to **~ Differentiation + Condition**.
 * How many genes are now found differentially expressed, when filtering for padj < 0.05?
-
 
 
 **Homework**
