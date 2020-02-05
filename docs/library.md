@@ -32,7 +32,7 @@ In this section, we will consider the procedure of the standard library preparat
 
 |Illumina TruSeq stranded poly(A) library preparation steps|
 | :---:  |
-|<img src="images/mRNA_library_steps.png" width="600" align="middle" />|
+|<img src="images/mRNA_library_steps.png" width="500" align="middle" />|
 |from https://www.labome.com/method/RNA-seq.html(https://www.labome.com/method/RNA-seq.html)|
 
 <br>
@@ -97,7 +97,7 @@ The protocol uses the **introduction of dUTP** instead of dTTP during amplificat
 In the result (in other protocols it can be different), **Read 1 (forward)** is mapped to the **antisense DNA strand** (this is also true for single-end reads), while **Read 2 (reverse)**, to the **sense DNA strand**.
 
 | :---:  |
-|<img src="images/Reads_direction.jpg" width="700" align="middle" />|
+|<img src="images/Reads_direction.jpg" width="900" align="middle" />|
 |from [https://seekdeep.brown.edu/illumina_paired_info.html](https://seekdeep.brown.edu/illumina_paired_info.html)|
 
 <br>
@@ -112,7 +112,7 @@ Strand-specific protocols **enhance the value of a RNA-seq experiment**:
 
 |Read mapping in a stranded vs. unstranded sequencing|
 | :---:  |
-|<img src="images/stranded_vs_unstranded.jpg" width="900" align="middle" />|
+|<img src="images/stranded_vs_unstranded.jpg" width="1000" align="middle" />|
 |from [https://galaxyproject.org/tutorials/rb_rnaseq/](https://galaxyproject.org/tutorials/rb_rnaseq/)|
 
 <br/>
