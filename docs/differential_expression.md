@@ -447,6 +447,48 @@ dev.off()
 
 The horizontal axis (PC1 = Principal Component 1) represents the highest variation between the samples. Differences along PC1 are more important than differences along PC2.
 
+<br>
+
+We can also plot the **normalized counts** of a gene per sample / experimental group:
+
+```{r}
+# FOXC1 is ENSG00000054598 
+plotCounts(se_star2, gene="ENSG00000054598", intgroup="Condition")
+```
+
+<img src="images/counts_foxc1.png" width="700", height=800/>
+
+Let's produce a more comprehensive plot: we can **add the sample names and the differentiation status**.
+<br>
+To do so, we can use the **ggplot2** package.
+
+```{r}
+library(ggplot2)
+library(reshape2)
+
+# Retrieve the normalized counts per sample for FOXC1 / ENSG00000054598
+tmp <- norm_counts[rownames(norm_counts)=="ENSG00000054598",]
+
+# convert to "long" format
+mygenelong <- melt(tmp)
+
+# sample name
+mygenelong$name <- rownames(mygenelong)
+
+# sample Condition and Differentiation: merge with sample table
+mygenelong <- merge(mygenelong, sampletable, by.x="name", by.y="SampleName", all=F)
+
+# Dot plot
+pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differentiation, shape=Condition, label=name)) + 
+  geom_point() +
+  geom_text(nudge_x=0.2) +  
+  xlab(label="Experimental group") +
+  ylab(label="Normalized expression (log2)") +
+  theme_bw()
+```
+
+<img src="images/counts_foxc1_nice.png" width="700", height=800/>
+
 
 ##### Differential expression analysis
 
@@ -543,18 +585,15 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 * Repeat the analysis comparing WT vs KO for the **undifferentiated samples** only!
 * Steps are:
 	* Modify the "sampletable" so that it contains only samples corresponding to "undiff" Differentiation state.
+
 |SampleName |FileName |Differentiation |Condition |
 | :---: | :---: | :---: | :---: |
 |5p4_25c |SRR3091420_1_counts.txt |undiff |WT |
 |5p4_27c |SRR3091421_1_counts.txt |undiff |WT |
-|5p4_28c |SRR3091422_1_counts.txt |diff5days |WT |
-|5p4_29c |SRR3091423_1_counts.txt |diff5days |WT |
-|5p4_30c |SRR3091424_1_counts.txt |diff5days |WT |
 |5p4_31cfoxc1 |SRR3091425_1_counts.txt |undiff |KO |
 |5p4_32cfoxc1 |SRR3091426_1_counts.txt |undiff |KO |
 |5p4_33cfoxc1 |SRR3091427_1_counts.txt |undiff |KO |
-|5p4_34cfoxc1 |SRR3091428_1_counts.txt |diff5days |KO |
-|5p4_35cfoxc1 |SRR3091429_1_counts.txt |diff5days |KO |
+
 * Read in data **DESeqDataSetFromHTSeqCount()**
 * Filter low counts
 * Fit statistical model **DESeq()**
@@ -562,6 +601,22 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
   * Plot PCA and sample-to-sample distances heatmap
 * Check differential expression **resultsNames()**
   * How many genes are differentially expressed, when considering padj < 0.05?
+
+##### Control for "Differentiation"
+
+While in Exercise 2 we tested **WT vs KO** on **undifferentiated** samples only, we can also use a more complex **design** formula. If we specify:
+
+```{r}
+~ Differentiation + Condition
+```
+
+it means that we want to test for the effect of the **FOXC1 knock out**, while controlling for the effect of differentiation.
+
+**Exercise 3**
+
+* Repeat the first analysis, changing the design **~ Condition** to **~ Differentiation + Condition**.
+* How many genes are now found differentially expressed, when filtering for padj < 0.05?
+
 
 
 **Homework**
