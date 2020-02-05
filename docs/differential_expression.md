@@ -48,11 +48,22 @@ For additional information regarding the tool and the algorithm, please refer to
 
 ### Tutorial on basic DESeq2 usage for differential analysis of gene expression
 
-* In this tutorial, we will use the counts calculated from the mapping on **all chromosomes** (in the two last days we practiced QC and mapping for data of only one chromosome but here we consider all chromosomes), for the 6 samples previously selected from **ENCODE**:
-  * A549 treated 0 minute with Dexamethasone, in triplicates: A549_0_1, A549_0_2, A549_0_3.
-  * A549 treated 25 minutes with Dexamethasone, in triplicates: A549_25_1, A549_25_2, A549_25_3.
+* In this tutorial, we will use the counts calculated from the mapping on **all chromosomes** (we practiced so far QC and mapping for data of only one chromosome but here we consider all chromosomes), for the 10 samples previously selected from **GEO**:
 
-*Dexamethasone is a synthetic adrenal corticosteroid with potent anti-inflammatory properties. In addition to binding to specific nuclear steroid receptors, dexamethasone also interferes with NF-kB activation and apoptotic pathways. This agent lacks the salt-retaining properties of other related adrenal hormones. [Source](https://pubchem.ncbi.nlm.nih.gov/compound/Dexamethasone).*
+|GEO ID |SRA ID |Sample name |Differentiation |Condition |
+|GSM2031982 |SRR3091420 |5p4_25c |undiff |WT |
+|GSM2031983 |SRR3091421 |5p4_27c |undiff |WT |
+|GSM2031984 |SRR3091422 |5p4_28c |diff 5 days |WT |
+|GSM2031985 |SRR3091423 |5p4_29c |diff 5 days |WT |
+|GSM2031986 |SRR3091424 |5p4_30c |diff 5 days |WT |
+|GSM2031987 |SRR3091425 |5p4_31cfoxc1 |undiff |KO |
+|GSM2031988 |SRR3091426 |5p4_32cfoxc1 |undiff |KO |
+|GSM2031989 |SRR3091427 |5p4_33cfoxc1 |undiff |KO |
+|GSM2031990 |SRR3091428 |5p4_34cfoxc1 |diff 5 days |KO |
+|GSM2031991 |SRR3091429 |5p4_35cfoxc1 |diff 5 days |KO |
+
+* The [FOXC1](https://ghr.nlm.nih.gov/gene/FOXC1) protein plays a critical role in early development, particularly in the formation of structures in the front part of the eye (the anterior segment). These structures include the colored part of the eye (the iris), the lens of the eye, and the clear front covering of the eye (the cornea). Studies suggest that the FOXC1 protein may also have functions in the adult eye, such as helping cells respond to oxidative stress. Oxidative stress occurs when unstable molecules called free radicals accumulate to levels that can damage or kill cells.
+The FOXC1 protein is also involved in the normal development of other parts of the body, including the heart, kidneys, and brain. [Source](https://ghr.nlm.nih.gov/gene/FOXC1).*
 <br>
 Get the count data for the full data set, output of both STAR and Salmon:
 
@@ -61,13 +72,13 @@ Get the count data for the full data set, output of both STAR and Salmon:
 cd ~/rnaseq_course/differential_expression
 
 # Get the folder containing all the data
-wget /full_data.tar.gz
+wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/full_data_counts.tar.gz
 
 # Gunzip
-tar -zxvf full_data.tar.gz
+tar -zxvf full_data_counts.tar.gz
 
 # Remove full_data.tar.gz once extraction is completed
-rm full_data.tar.gz
+rm full_data_counts.tar.gz
 ```
 
 ### Raw count matrices
@@ -96,7 +107,7 @@ File **SRR3091421_1_chr6_counts.txt**:
 
 and so on...
 <br>
-Remember that the STAR counts file contains **4 columns** depending on the library preparation protocol!
+Remember that the STAR count file contains **4 columns** depending on the library preparation protocol!
 <br><br>
 
 **Exercise**
@@ -104,9 +115,9 @@ Remember that the STAR counts file contains **4 columns** depending on the libra
 * Prepare the 10 files needed for our analysis, from the STAR output, and save them in the <b>counts_selected</b> directory: knowing that our libraries are **unstranded**, which column will you pick?
   
 
-* Create the sub-directory **counts_selected** inside the deseq2 directory:
+* Create the sub-directory **counts_STAR_selected** inside the deseq2 directory:
 ```{bash}
-mkdir -p ~/rnaseq_course/counts_selected
+mkdir -p ~/rnaseq_course/counts_STAR_selected
 ```
 
 * Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (2nd column).
@@ -114,10 +125,10 @@ mkdir -p ~/rnaseq_course/counts_selected
 ```{bash}
 cd ~/rnaseq_course/differential_expression
 
-for i in full_data/counts_star/*ReadsPerGene.out.tab
+for i in counts_STAR/*ReadsPerGene.out.tab
 do echo $i
 # retrieve the first (gene name) and second column (raw reads for unstranded protocol)
-cut -f1,2 $i | grep -v "_" > counts_selected/$(basename $i ReadsPerGene.out.tab)_counts.txt
+cut -f1,2 $i | grep -v "_" > counts_STAR_selected/$(basename $i ReadsPerGene.out.tab)_counts.txt
 done
 ```
 
@@ -125,19 +136,20 @@ done
 
 #### Prepare transcript-to-gene annotation file
 
-Prepare the annotation file needed to import the **Salmon** counts: a two-column data frame linking transcript id (column 1) to gene id (column 2). <br>
-We will add the gene symbol in column 3, for a more comprehensive annotation (that will also be used when processing the **STAR** counts).
+Prepare the annotation file needed to import the **Salmon** counts: a two-column data frame linking transcript id (column 1) to gene id (column 2). 
+<br>
+We will add the gene symbol in column 3, for a more comprehensive annotation.
 <br>
 Process from the **GTF file**:<br>
 
 ```{bash}
-cd ~/full_data/deseq2
+cd ~/rnaseq_course/differential_expression
 
 # Download annotation for all chromosomes
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_29/gencode.v29.annotation.gtf.gz
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_33/gencode.v33.annotation.gtf.gz
 
 # first column is the transcript ID, second column is the gene ID, third column is the gene symbol
-zcat gencode.v29.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transcript"){split($9, a, "\""); print a[4],a[2],a[8]}}' > tx2gene.gencode.v29.csv
+zcat gencode.v33.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transcript"){split($9, a, "\""); print a[4],a[2],a[8]}}' > tx2gene.gencode.v33.csv
 
 ```
 
@@ -145,33 +157,29 @@ zcat gencode.v29.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transc
 
 Additionally, DESeq2 needs a <b>sample sheet</b> that describes the samples characteristics: treatment, knock-out / wild type, replicates, time points, etc. in the form:
 
-| SampleName | FileName | Time | Dexamethasone |
+|SampleName |FileName |Differentiation |Condition |
 | :---: | :---: | :---: | :---: |
-| A549_0_1 | A549_0_1_counts.txt | t0 | 100nM |
-| A549_0_2 | A549_0_2_counts.txt |  t0 | 100nM |
-| A549_0_3 | A549_0_3_counts.txt | t0 | 100nM |
-| A549_25_1 | A549_25_1_counts.txt | t25 | 100nM |
-| A549_25_2 | A549_25_2_counts.txt | t25 | 100nM |
-| A549_25_3 | A549_25_3_counts.txt | t25 | 100nM |
+|5p4_25c |SRR3091420_1_counts.txt |undiff |WT |
+|5p4_27c |SRR3091421_1_counts.txt |undiff |WT |
+|5p4_28c |SRR3091422_1_counts.txt |diff5days |WT |
+|5p4_29c |SRR3091423_1_counts.txt |diff5days |WT |
+|5p4_30c |SRR3091424_1_counts.txt |diff5days |WT |
+|5p4_31cfoxc1 |SRR3091425_1_counts.txt |undiff |KO |
+|5p4_32cfoxc1 |SRR3091426_1_counts.txt |undiff |KO |
+|5p4_33cfoxc1 |SRR3091427_1_counts.txt |undiff |KO |
+|5p4_34cfoxc1 |SRR3091428_1_counts.txt |diff5days |KO |
+|5p4_35cfoxc1 |SRR3091429_1_counts.txt |diff5days |KO |
+
 
 <br>
-The first column is the sample name, the second column the file name of the count file generated by STAR (after selection of the appropriate column as we just did), and the remaining columns are description of the samples, some of which will be used in the statistical design.
+The first column is the **sample name**, the second column the **file name** of the count file generated by STAR (after selection of the appropriate column as we just did), and the remaining columns are description of the samples, some of which will be used in the **statistical design**.
 <br><br>
 The design indicates how to model the samples: in the model we need to specify what we want to **measure** and what we want to **control**.
 <br>
 <br>
 <b>Exercise</b>
-* Prepare this file (tab-separated columns) in a text editor: save it as **sample_sheet_A549.txt in the deseq2 directory**: you can do it "manually" using a text editor, or you can try using the command line.
+* Prepare this file (tab-separated columns) in a text editor: save it as **sample_sheet_foxc1.txt in the differential_analysis directory**: you can do it "manually" using a text editor, or you can try using the command line.
 <br>
-
-
-```{bash}
-# A not so elegant solution:
-
-cat <(echo -e "SampleName\tFileName\tTime\tDexamethasone") <(paste <(ls counts_4thcol | cut -d"_" -f1-3) <(ls counts_4thcol) <(ls counts_4thcol | cut -d"_" -f2 | awk '{print "t"$0}') <(printf '100nM\n%.0s' {1..6})) > sample_sheet_A549.txt
-
-```
-
 
 *Note that the same sample sheet will be used for both **the STAR and the Salmon** DESeq2 analysis.*
 
@@ -180,27 +188,26 @@ cat <(echo -e "SampleName\tFileName\tTime\tDexamethasone") <(paste <(ls counts_4
 
 The analysis is done in R ! <br>
 
-Start an R interactive session:
+Start **R Studio**.
 
-```{bash}
-# type R (capital letter) in the terminal
-$RUN R
-```
+<br>
 
 Note that in the R code boxes below **\#** is followed by comments, i.e. words not interpreted by R.
 
-* Go to the **deseq2** working directory and load the DESeq2 package (loading a package in R allows to use specific sets of functions developped as part of this package).
+* Go to the **differential_expression** working directory and load the **DESeq2** package (loading a package in R allows to use specific sets of functions developped as part of this package).
 
 ```{bash}
 # setwd = set working directory; equivalent to the Linux "cd".
 # the R equivalent to the Linux pwd is getwd() = get working directory.
-setwd("~/full_data/deseq2")
+setwd("~/rnaseq_course/differential_expression")
 
 # load package DESeq2 (all functions)
 library(DESeq2)
 ```
 
-#### Load raw counts into DESeq objects
+##### Analysis from STAR
+
+###### Load raw counts into DESeq objects
 
 * Read in the sample table that we prepared:
 
@@ -208,62 +215,53 @@ library(DESeq2)
 # read in the sample sheet
 	# header = TRUE: the first row is the "header", i.e. it contains the column names.
 	# sep = "\t": the columns/fields are separated with tabs.
-sampletable <- read.table("sample_sheet_A549.txt", header=T, sep="\t")
+sampletable <- read.table("sample_sheet_foxc1.txt", header=T, sep="\t")
 
-# add the sample names as row names (it is needed for some of the DESeq functions)
-rownames(sampletable) <- sampletable$SampleName
+# add the SRA codes as row names (it is needed for some of the DESeq functions)
+rownames(sampletable) <- gsub("_counts.txt", "", sampletable$FileName)
 
 # display the first 6 rows
 head(sampletable)
 
 # check the number of rows and the number of columns
-nrow(sampletable) # if this is not 6, please raise your hand !
+nrow(sampletable) # if this is not 10, please raise your hand !
 ncol(sampletable) # if this is not 4, also raise your hand !
 ```
 
 * Load the count data from **STAR** into an **DESeq** object:
 
 ```{r}
-# Option 1 that reads in a matrix (we will not do it here):
-
-	# first read in the matrix
-count_matrix <- read.delim("raw_counts_A549_matrix.txt", header=T, sep="\t", row.names=1)
-
-	# then create the DESeq object
-		# countData is the matrix containing the counts
-		# sampletable is the sample sheet / metadata we created
-		# design is how we wish to model the data: what we want to measure here is the difference between the treatment times
-se_star_matrix <- DESeqDataSetFromMatrix(countData = count_matrix,
-                                  colData = sampletable,
-                                  design = ~ Time)
-
-# Option 2 that compiles one file per sample:
-	# sampleTable is the sample sheet / metadata we created
-	# directory is the path to the directory where the counts are stored (one file per sample)
-	# design is how we wish to model the data: what we want to measure here is the difference between the treat
+# Import STAR counts
+  # sampleTable is the sample sheet / metadata we created
+  # directory is the path to the directory where the counts are stored (one file per sample)
+  # design is how we wish to model the data: what we want to measure here is the difference between the treat
 ment times
 se_star <- DESeqDataSetFromHTSeqCount(sampleTable = sampletable,
-                        directory = "counts_4thcol",
-                        design = ~ Time)
+                        directory = "counts_STAR_selected",
+                        design = ~ Condition)
 ```
+
+
+
+##### Analysis from Salmon counts
 
 * Load the count data from **SALMON** into an **DESeq** object:
 
 ```{r}
 # Go to the deseq2 directory
-setwd("~/full_data/deseq2")
+setwd("~/rnaseq_course/differential_expression")
 
 # Load the tximport package that we use to import Salmon counts
 library(tximport)
 
 # List the quantification files from Salmon: one quant.sf file per sample
-	# dir is list all files in "~/full_data/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
-files <- dir("~/full_data/counts_salmon", recursive=TRUE, pattern="quant.sf", full.names=TRUE)
+	# dir is list all files in "~/rnaseq_course/differential_expression/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
+files <- dir("~/rnaseq_course/differential_expression/counts_salmon", recursive=TRUE, pattern="quant.sf", full.names=TRUE)
 	# files is a vector of file paths. we will name each element of this vector with a simplified corresponding sample name
-names(files) <- dir("~/full_data/counts_salmon/")
+names(files) <- gsub("_quant.sf", "", dir("~/rnaseq_course/differential_expression/counts_salmon"))
 
 # Read in the two-column data.frame linking transcript id (column 1) to gene id (column 2)
-tx2gene <- read.table("tx2gene.gencode.v29.csv", 
+tx2gene <- read.table("tx2gene.gencode.v33.csv", 
 		sep="\t",
 		header=F)
 
@@ -282,14 +280,15 @@ head(txi$counts)
 # Create a DESeq2 object based on Salmon per-gene counts
 se_salmon <- DESeqDataSetFromTximport(txi,
 			colData = sampletable, 
-			design = ~ Time)
+			design = ~ Condition)
 
 ```
-* From that step on, you can proceed __exactly the same way__ with se_star, se_star_matrix and se_salmon !
+
+* From that step on, you can proceed __the same way__ with se_star and se_salmon ! The only thing that differs slightly is the annotation *(remember that for STAR we used ENSEMBL annotation while we used GENCODE annotation for Salmon)*
 * We will focus the rest of the analysis on the **se_star**.
 
 
-#### Filtering
+##### Filtering
 
 * Remove lowly expressed genes: we want to remove genes that have no or very little expression. It will allow us to proceed with the statistical analysis using less genes. Working with less genes increases the **statistical power**.
   * We choose to keep only those genes that have **more than 10 summed raw counts across the 6 samples**: this is not very stringent. You can refer to that [paper](https://f1000research.com/articles/5-1438/v2) for suggestions on how to filter out genes with low counts.
@@ -303,12 +302,57 @@ nrow(se_star)
 # Filter
 se_star <- se_star[rowSums(counts(se_star)) > 10, ]
 
-
 # Number of genes left after low-count filtering:
 nrow(se_star)
 ```
 
-#### Fit statistical model
+##### Prepare annotation
+
+The **biomaRt** package is used for adding a more **detailed annotation** to our data sets.
+<br>
+Additionally to the ENSEMBL gene IDs we want:
+* The external gene name (symbol)
+* A more thorough gene description
+* Chromosome and coordinates
+
+```{bash}
+# load library
+library(biomaRt)
+
+# list ENSEMBL archives
+listEnsemblArchives()
+	# We used version 88 of ENSEMBL, which corresponds to URL http://mar2017.archive.ensembl.org
+
+# we can load the corresponding database
+mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="mar2017.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
+
+# "filters" correspond to the input WE want to retrieve more annotation for
+  # a list of available filters can be obtained with listFilters(mart)
+head(listFilters(mart))
+
+# let's see what is available in terms of ensembl ID
+grep("ensembl", listFilters(mart)[,1], value=TRUE)
+  # ensembl_gene_id is what we want!
+
+# "attributes" correspond to the kind of annotation you want to retrieve
+  # a list of available attributes can be obtained with listAttributes(mart)
+head(listAttributes(mart))
+  # you can browse and decide what is interesting for you. For this exercise, we will use 'ensembl_gene_id', 'chromosome_name', 'start_position', 'end_position', 'description', 'external_gene_name'
+
+# list of ENSEMBL IDs we want to annotate
+gene_ids <- rownames(se_star)
+  # 18025 IDs
+
+# annotate!
+annot <- getBM(attributes=c('ensembl_gene_id', 'chromosome_name', 'start_position', 'end_position', 'description', 'external_gene_name'), filters ='ensembl_gene_id', values = gene_ids, mart = mart)
+  
+dim(annot)
+  # 18025 rows
+
+head(annot)
+```
+
+##### Fit statistical model
 
 ```{r}
 se_star2 <- DESeq(se_star)
@@ -321,29 +365,43 @@ se_star2 <- DESeq(se_star)
 # normalized = TRUE: divide the counts by the size factors calculated by the DESeq function
 norm_counts <- log2(counts(se_star2, normalized = TRUE)+1)
 
-# add the gene symbols
-norm_counts_symbols <- merge(unique(tx2gene[,2:3]), data.frame(ID=rownames(norm_counts), norm_counts), by=1, all=F)
+# add annotation
+norm_counts_symbols <- merge(data.frame(ID=rownames(norm_counts), norm_counts, check.names=FALSE), annot, by.x="ID", by.y="ensembl_gene_id", all=F)
 
 # write normalized counts to text file
-write.table(norm_counts_symbols, "normalized_counts.txt", quote=F, col.names=T, row.names=F, sep="\t")
+write.table(norm_counts_symbols, "normalized_counts_log2_star.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
 
 **Exercise**
-* What are the normalized counts corresponding to genes "ENSG00000010017.12" and "ENSG00000163874.10" in each sample ?
-* How do they differ ? What can you tell about them ?
+* What are the normalized counts corresponding to genes "ENSG00000169813" and "ENSG00000182898" ?
+* Calculate the average and the standard deviation of these genes normalized counts. How do they differ ? What can you tell about them ? 
+
 
 #### Visualization
 
 * Transform raw counts to be able to visualize the data
 
-DESeq2 developper advice to use: **rlog** (Regularized log) or **vst** (Variance Stabilizing Transformation)transformations for visualization and other applications other than differential testing:<br>
-VST runs faster than rlog. If the library size of the samples and therefore their size factors vary widely, the rlog transformation is more robust.
+DESeq2 developpers advice to use **transformed counts**, rather than normalized counts, for anything involving a distance (e.g. visualization).
 <br>
-Both options produce log2 scale data which has been normalized by the DESeq2 method with respect to library size.
+They offer to choose between two transformation methods, both of which stabilize the variance across the mean: 
+* **rlog** (Regularized log)
+* **VST** (Variance Stabilizing Transformation)
+<br>
+Both options produce **log2 scale data** which has been normalized by the DESeq2 method with respect to library size.
+<br>
+From [this tutorial](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog):<br>
+*The VST is* **much faster** *to compute and is* **less sensitive to high count outliers** *than the rlog. The rlog tends to work well on* **small datasets (n < 30)**, *potentially outperforming the VST when there is a wide range of sequencing depth across samples (an order of magnitude difference). We therefore* **recommend the VST for medium-to-large datasets (n > 30)**.*
+
+<br>
+We have a 10 sample dataset: Let's use the **rlog** transformation.
+<br>
+*As a homework, you can try and use the VST transformation (function vst)*.
+
+
 
 ```{r}
-# Try with the vst transformation
-vsd <- vst(se_star2)
+# Try with the rlog transformation
+se_rlog <- rlog(se_star2)
 
 # You can also try the same with the rlog transformation as a homework, running: rld <- rlog(se_star2)
 ```
@@ -357,11 +415,15 @@ Calculate the sample-to-sample distances:
 library(pheatmap)
 
 # calculate between-sample distance matrix
-sampleDistMatrix <- as.matrix(dist(t(assay(vsd))))
+sampleDistMatrix <- as.matrix(dist(t(assay(se_rlog))))
+
+# prepare a "metadata" object to add a colored bar with the differentiation and condition information
+metadata <- sampletable[,c("Differentiation", "Condition")]
+rownames(metadata) <- sampletable$SampleName
 
 # create figure in PNG format
 png("sample_distance_heatmap_star.png")
-  pheatmap(sampleDistMatrix)
+  pheatmap(sampleDistMatrix, annotation_col=metadata)
   # close PNG file after writing figure in it
 dev.off() 
 ```
