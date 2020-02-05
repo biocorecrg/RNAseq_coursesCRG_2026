@@ -132,6 +132,118 @@ cut -f2 deseq2_results.txt | sed '1d' > deseq2_universe_symbols.txt
 <img src="images/GO_tool_results_symbols.png" width="800" align="middle" />
 
 
+### with R: GOstats
+
+Load the "GOstats" package
+
+```{r}
+library("GOstats")
+```
+
+Read in differentially expression data
+```{r}
+de_select <- read.table("deseq2_selection_diff_padj005.txt", header=T, as.is=T, sep="\t")
+```
+
+The gene universe can be the list of genes **after filtering for low counts**:
+
+norm <- read.table("normalized_counts_log2_star.txt", header=T, as.is=T, sep="\t")
+
+GOstats works only with EntrezIDs
+
+
+```{r}
+library(biomaRt)
+
+
+# load database
+mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="mar2017.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
+
+# ENSEMBL IDs for differentially expressed genes
+ids <- rownames(de_select)
+
+# get Entrez IDs
+entrez <- getBM(attributes=c('entrezgene', 'ensembl_gene_id'), filters ='ensembl_gene_id', values = ids, mart = mart)
+
+# get Entrez IDs for the universe
+ids_univ <- norm$ID
+entrez_univ <- getBM(attributes=c('entrezgene', 'ensembl_gene_id'), filters ='ensembl_gene_id', values = ids_univ, mart = mart)
+```
+
+Hypergeometric test for **Biological Process**
+
+```{r}
+hgCutoff <- 0.001
+
+params <- new("GOHyperGParams",
+	geneIds=na.omit(unique(entrez)),
+	universeGeneIds=na.omit(unique(entrez_univ)),
+	ontology="BP",
+	annotation="org.Hs.eg",
+	pvalueCutoff=hgCutoff,
+	conditional=FALSE,
+	testDirection="over")
+
+hgOver <- hyperGTest(params)
+
+df <- summary(hgOver)
+```
+
+|GOBPID|Pvalue|OddsRatio|ExpCounts|Counts|Size|Term|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|GO:0031424| 6.315336e-12|  9.896492|  3.128680|    20|   57|keratinization|
+|GO:0008544| 1.838352e-10|  4.791667|  8.068702|    30| 147|epidermis development|
+|GO:0043588| 6.001794e-10|  5.007273|  6.970920|    27|  127|skin development|
+|GO:0009913| 3.565321e-09|  5.343814|  5.598691|    23|  102|epidermal cell differentiation|
+|GO:0030855| 4.750102e-09|  3.530075| 12.514722|    36|  228|epithelial cell differentiation|
+|GO:0030216| 7.362299e-09|  5.640151|  4.885133|    21|   89|keratinocyte differentiation|
+
+Write HTML report
+
+```{r}
+htmlReport(hgOver, file="GOstats_BP.html")
+```
+
+Let's open the report in a web browser
+
+
+### With R: KEGGprofile
+
+Load **KEGGprofile** package
+
+```{r}
+library(KEGGprofile)
+```
+
+
+KEGGprofile works with EntrezID: get EntrezID with biomaRt
+
+KEGG pathway enrichment
+
+```{r}
+KEGGresult <- find_enriched_pathway(na.omit(unique(entrez$entrezgene)), returned_genenumber=10, species='hsa', download_latest = TRUE)
+
+# Format file file
+kegg_final <- data.frame(KEGGresult$stastic, genes_entrezid=unlist(lapply(KEGGresult$detail, function(x)paste(x, collapse=",")), use.names=F), stringsAsFactors=F)
+
+# Write table to file
+write.table(kegg_final, "KEGGprofile_results.txt", sep="\t", row.names=F, col.names=T, quote=F)
+```
+
+|Pathway_Name|Gene_Found|Gene_Pathway|Percentage|pvalue|pvalueAdj|
+|:---:|:---:|:---:|:---:|:---:|:---:|
+|Metabolic pathways| 88|1489|0.06|4.644397e-08|1.565162e-05|
+|Cytokine-cytokine receptor interaction|26|294|0.09|3.187192e-05|3.580279e-03|
+|Viral protein interaction with cytokine and cytokine receptor|12|100|0.12|1.671507e-04|8.047114e-03|
+|NF-kappa B signaling pathway|10|102|0.10|2.490180e-03|3.356763e-02|
+|Mitophagy - animal|11|65|0.17|8.801457e-06|1.483046e-03|
+|C-type lectin receptor signaling pathway|10|104|0.10|2.898658e-03|3.757106e-02|
+
+
+
+
+
+
 ## Enrichment based on ranked lists of genes using GSEA
 
 ### GSEA (Gene Set Enrichment Analysis)
