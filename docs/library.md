@@ -9,7 +9,7 @@ navigation: 5
 
 |Workflow of mRNA-seq|
 | :---:  |
-|<img src="images/RNAseq_steps.png" width="900" align="middle" />|
+|<img src="images/RNAseq_steps.png" width="600" align="middle" />|
 |from [Sudhagar et al., Int. J. Mol. Sci. 2018](https://www.mdpi.com/1422-0067/19/1/245/htm)|
 
 mRNA sequencing conventional workflow consists of four major steps: 
@@ -32,7 +32,7 @@ In this section, we will consider the procedure of the standard library preparat
 
 |Illumina TruSeq stranded poly(A) library preparation steps|
 | :---:  |
-|<img src="images/mRNA_library_steps.png" width="900" align="middle" />|
+|<img src="images/mRNA_library_steps.png" width="600" align="middle" />|
 |from https://www.labome.com/method/RNA-seq.html(https://www.labome.com/method/RNA-seq.html)|
 
 <br>
