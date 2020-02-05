@@ -22,17 +22,17 @@ In this section, we will consider the procedure of the standard library preparat
 * RNA isolation/extraction.
 * mRNA purification.
 * mRNA fragmentation.
-* Synthesis of the cDNA first strand.
-* Synthesis of the cDNA second strand.
+* Synthesis of the first strand cDNA.
+* Synthesis of the second strand cDNA.
 * Adenylation of 3' ends.
-* Ligtion of adapters (cDNA multiplexing).
+* Ligation of adapters (cDNA multiplexing).
 * cDNA amplification.
 * cDNA library quality control.
 
 
 |Illumina TruSeq stranded poly(A) library preparation steps|
 | :---:  |
-|<img src="images/mRNA_library_steps.png" width="600" align="middle" />|
+|<img src="images/mRNA_library_steps.png" width="400" align="middle" />|
 |from https://www.labome.com/method/RNA-seq.html(https://www.labome.com/method/RNA-seq.html)|
 
 <br>
@@ -40,12 +40,13 @@ In this section, we will consider the procedure of the standard library preparat
 ## RNA isolation
 
 RNA is isolated from tissue and mixed with deoxyribonuclease (DNase), which reduces the amount of genomic DNA. 
+For Illumina protocol, RNA input is required to be 0.1 - 4 microgram.
 
 <br>
 
 ## mRNA purification
 
-For Illumina protocol, RNA input is 0.1-4 microgram.
+
 The most typical library preparation protocol for **mRNA-sequencing** uses the **poly(A)-selection strategy** for purifying mRNA by filtering RNA with 3' polyadenylated (poly(A)) tails to include only mRNA. 
 
 The poly(A) containing mRNA molecules are purified using poly(T) oligomer attached magnetic beads that bind to the **poly(A) tail** of mRNAs. 
