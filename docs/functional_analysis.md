@@ -131,6 +131,7 @@ cut -f2 deseq2_results.txt | sed '1d' > deseq2_universe_symbols.txt
 * **Launch** !
 <img src="images/GO_tool_results_symbols.png" width="800" align="middle" />
 
+<br>
 
 ### with R: GOstats
 
@@ -147,9 +148,11 @@ de_select <- read.table("deseq2_selection_diff_padj005.txt", header=T, as.is=T, 
 
 The gene universe can be the list of genes **after filtering for low counts**:
 
+```{r}
 norm <- read.table("normalized_counts_log2_star.txt", header=T, as.is=T, sep="\t")
+```
 
-GOstats works only with EntrezIDs
+GOstats works only with **Entrez IDs**: we can get them with the **biomaRt** package, as we did for the differential expression analysis.
 
 
 ```{r}
@@ -170,11 +173,13 @@ ids_univ <- norm$ID
 entrez_univ <- getBM(attributes=c('entrezgene', 'ensembl_gene_id'), filters ='ensembl_gene_id', values = ids_univ, mart = mart)
 ```
 
-Hypergeometric test for **Biological Process**
+We can proceed with the **hypergeometric test** (enrichment) for the **Biological Process** ontologies:
 
 ```{r}
+# Set p-value cutoff
 hgCutoff <- 0.001
 
+# Set parameters
 params <- new("GOHyperGParams",
 	geneIds=na.omit(unique(entrez)),
 	universeGeneIds=na.omit(unique(entrez_univ)),
@@ -184,8 +189,10 @@ params <- new("GOHyperGParams",
 	conditional=FALSE,
 	testDirection="over")
 
+# Run enrichment test
 hgOver <- hyperGTest(params)
 
+# Get a summary table
 df <- summary(hgOver)
 ```
 
@@ -198,29 +205,30 @@ df <- summary(hgOver)
 |GO:0030855| 4.750102e-09|  3.530075| 12.514722|    36|  228|epithelial cell differentiation|
 |GO:0030216| 7.362299e-09|  5.640151|  4.885133|    21|   89|keratinocyte differentiation|
 
-Write HTML report
+
+**GOstats** also provides an **HTML report**:
 
 ```{r}
+# Produce HTML report
 htmlReport(hgOver, file="GOstats_BP.html")
 ```
 
-Let's open the report in a web browser
+We can open the report in a web browser.
+<br>
 
 
 ### With R: KEGGprofile
 
-Load **KEGGprofile** package
+Load **KEGGprofile** package:
 
 ```{r}
 library(KEGGprofile)
 ```
 
-
-KEGGprofile works with EntrezID: get EntrezID with biomaRt
-
-KEGG pathway enrichment
+KEGGprofile also works with **Entrez ID** (we got them for the GOstats analysis).
 
 ```{r}
+# KEGG pathway enrichment
 KEGGresult <- find_enriched_pathway(na.omit(unique(entrez$entrezgene)), returned_genenumber=10, species='hsa', download_latest = TRUE)
 
 # Format file file
@@ -229,6 +237,8 @@ kegg_final <- data.frame(KEGGresult$stastic, genes_entrezid=unlist(lapply(KEGGre
 # Write table to file
 write.table(kegg_final, "KEGGprofile_results.txt", sep="\t", row.names=F, col.names=T, quote=F)
 ```
+
+Results table:
 
 |Pathway_Name|Gene_Found|Gene_Pathway|Percentage|pvalue|pvalueAdj|
 |:---:|:---:|:---:|:---:|:---:|:---:|
@@ -240,9 +250,7 @@ write.table(kegg_final, "KEGGprofile_results.txt", sep="\t", row.names=F, col.na
 |C-type lectin receptor signaling pathway|10|104|0.10|2.898658e-03|3.757106e-02|
 
 
-
-
-
+<br>
 
 ## Enrichment based on ranked lists of genes using GSEA
 
@@ -286,17 +294,17 @@ The first column contains the gene ID (HUGO symbols for *Homo sapiens*).<br>
 The second column contains any description or symbol, and will be ignoreed by the algorithm.<br>
 The remaining columns contains normalized expressions: one column per sample.
 
-| NAME | DESCRIPTION | A549_0_1 | A549_0_2 | A549_0_3 | A549_25_1 | A549_25_2 | A549_25_3 |
-| DKK1 | NA| 0 | 0 | 0 | 0 | 0 | 0 |
-| HGT | NA | 0 | 0 | 0 | 0 | 0 | 0 |
+| NAME | DESCRIPTION | 5p4_25c | 5p4_27c | 5p4_28c | 5p4_29c | 5p4_30c | 5p4_31cfoxc1 | ... |
+| DKK1 | NA| 0 | 0 | 0 | 0 | 0 | 0 | ... |
+| HGT | NA | 0 | 0 | 0 | 0 | 0 | 0 | ... |
 
 <b>Exercise</b>
 <br>
-Adjust the file **normalized_counts.txt** so the first column is the gene symbol, the second is the gene ID (or anything else), and the remaining ones are the expression columns. You can save that new file as **gsea_normalized_counts.txt**.
+Adjust the file **normalized_counts_log2_star.txt** so the first column is the gene symbol, the second is the gene ID (or anything else), and the remaining ones are the expression columns. You can save that new file as **gsea_normalized_counts.txt**.
 <br>
 
 ```{bash}
-awk 'BEGIN{OFS="\t"}{print $2,$1,$3,$4,$5,$6,$7,$8}' normalized_counts.txt > gsea_normalized_counts.txt
+awk 'BEGIN{OFS="\t"}{print $16,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11}' normalized_counts_log2_star.txt > gsea_normalized_counts.txt
 
 ```
 
@@ -309,19 +317,20 @@ A phenotype label file defines phenotype labels (experimental groups) and assign
 
 Let's create it for our experiment:
 
-| 6 | 2 | 1 |  |  |  |
-| # | t0 | t25 |  |  |  |
-| t0 | t0 | t0 | t25 | t25 | t25 |
+| 10 | 2 | 1 |  |  |  | | | | |
+| # | WT | KO |  |  |  | | | | |
+| WT | WT | WT | WT | WT | KO | KO | KO | KO | KO |
+
 
 **NOTE**: the first label used is assigned to the first class named on the second line; the second unique label is assigned to the second class named; and so on. 
 <br> 
 So the phenotype file could also be:
 
-| 6 | 2 | 1 |  |  |  |
-| # | t0 | t25 |  |  |  |
-| 0 | 0 | 0 | 1 | 1 | 1 |
+| 10 | 2 | 1 |  |  |  | | | | |
+| # | WT | KO |  |  |  | | | | |
+| 0 | 0 | 0 | 0 | 0 | 1 | 1 | 1 | 1 | 1 |
 
-The first label **t0** in the second line is associated to the first label **0** on the third line.
+The first label **WT** in the second line is associated to the first label **0** on the third line.
 
 <b>Exercise</b>
 <br>
@@ -333,7 +342,7 @@ Create the phenotype labels file and save it as **gsea_phenotypes.cls**.
 
 ##### Download Java application:
 
-Enter the [download page](http://software.broadinstitute.org/gsea/login.jsp), enter your Email and **login**:
+Enter the [registration page](https://www.gsea-msigdb.org/gsea/register.jsp), enter your **email** and **organization**, then to [download page](http://software.broadinstitute.org/gsea/login.jsp), enter your Email and **login**:
 <img src="images/gsea_downloads.png" width="800" align="middle" />
 <br>
 Click on **download gsea-3.0.jar** link and save file locally to your home directory.
