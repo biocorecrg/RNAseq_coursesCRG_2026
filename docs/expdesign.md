@@ -16,19 +16,73 @@ navigation: 10
 ## Well-designed experiment
 
 
-| Good experimental design|
-| :---:  |
 |<img src="images/good_exp_design.jpg" width="700" align="middle" />|
 |from [Cambridge University's Experimental Design Manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)|
 
-### Factorial design to address wide range of the result applicability
+<br/>
 
-factorial_design_1.jpg
-| Good experimental design|
-| :---:  |
+## Factorial design to address wide range of the result applicability
+
 |<img src="images/factorial_design_1.jpg" width="700" align="middle" />|
 |from [Cambridge University's Experimental Design Manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)|
 
+<br/>
+
+
+
+## Power analysis & sample size
+
+Sample size calculations, power calculations and power analysis (the terms are used interchangeably) are a way of determining the appropriate number of replicates (the sample size) for a study.
+
+**Power** is the probability of **not accepting a false null hypothesis**, or the probability of detecting a specified difference, or **effect size**, given it exists, within the population (e.g., a fold change in a microarray experiment or a change in the size of a tumour). The desired power of research experiment is usually above 80%; while for clinical studies, it might be required to be above 90%. 
+
+**Power (aka, sensitivity of the statistical test) = 1 - (type II error)**,  *(type II error is an error of accepting a false null hypothesis)*
+
+If all other parameters remain the same, a larger experiment will have more power than a smaller experiment. However, if an experiment is too large and a smaller experiment would have achieved the same statistical result, it is **overpowered experiment** and it has wasted subjects, money, time and effort, and is potentially unethical. On the other hand, if an experiment is too small, it may **lack power and miss important differences that do actually exist**. Therefore, an **underpowered study** also wastes resources and can be unethical. It is important to know what effect size is important to ensure that an experiment is sufficiently powered.
+
+### Factors affecting a power calculation
+* The precision and variance of measurements within any sample
+* Magnitude of a significant difference (aka, effect size)
+* Significance level (in biology, usually 0.05); that is, how certain we want to be to avoid type I error *(when the null hypothesis is incorrectly rejected)* 
+* The type of statistical test performed
+
+### Example 1
+We study the difference of some measurement in two populations (in which we assume this variable is normally distributed). <br/>
+We draw two samples (n=2) from each population independently and randomly and get
+**x=(9, 11)** and **y=(17,19)**. 
+<br/>
+We run the t-test on difference of means and get **p-value=0.03** *( in R, t.test(x, y) )*.
+<br/>
+Since we know the variance for x and y (sd=2), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd)*   *( in R, power.t.test(n, delta, sd) )*.
+<br/>
+The obtained **power = 0.56** - this means that Type II error (or the probability of accepting a false null hypothesis, or concluding that there is no difference when in fact there is the difference) = 44% !!!! – in roughly 44% of tests conducted with these parameters, the given effect size will be not seen as significant even when it is significant. It is a waist of resources to conduct such an under-powered study. That is, if we want to detect this effect size with higher power, we have to increase the number of samples (n).
+
+<br/>
+
+But what difference in means can we detect with just 2 samples at a sufficient enough power?
+<br/>
+Assume **x=(9, 11)** and **y=(24, 26)**. We run the t-test on difference of means and get **p-value=0.009**.
+<br/>
+Since we know the variance for x and y (sd=2), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd)= 15/sqrt(2)* .
+<br/>
+The obtained **power = 0.94 !!!** 
+
+### Example 2
+We draw 6 samples (n=6) from each population independently and randomly and get
+**x=(8, 10, 11, 11.8, 10.6, 8.6)** and **y=(8, 10, 11, 11.8, 10.6, 8.6)**. 
+<br/>
+We run the t-test on difference of means and get **p-value=0.04**.
+<br/>
+Since we know the variance for x and y (sd=sqrt(2)), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd) = 2/sqrt(2)* .
+<br/>
+The obtained **power = 0.35**. That means we have to increase n, and it can be calculated for the power=80% as
+*power.t.test(power=.80, delta=2/sqrt(2), sd=sqrt(2))*.
+<br/>
+The obtained **n = 17**.
+
+### Consider examples on page 36 of the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
+
+<br/>
 
 ## Technical vs. biological replicates
 
@@ -95,61 +149,6 @@ Final recommendations from this paper:
 
 <br/>
 
-## Power analysis
-text below was adapted from the [Cambridge University's Experimental Design Manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
-
-Sample size calculations, power calculations and power analysis (the terms are used interchangeably) are a way of determining the appropriate number of replicates (the sample size) for a study.
-
-**Power** is the probability of **not accepting a false null hypothesis**, or the probability of detecting a specified difference, or **effect size**, given it exists, within the population (e.g., a fold change in a microarray experiment or a change in the size of a tumour). The desired power of research experiment is usually above 80%; while for clinical studies, it might be required to be above 90%. 
-
-**Power (aka, sensitivity of the statistical test) = 1 - (type II error)**,  *(type II error is an error of accepting a false null hypothesis)*
-
-If all other parameters remain the same, a larger experiment will have more power than a smaller experiment. However, if an experiment is too large and a smaller experiment would have achieved the same statistical result, it is **overpowered experiment** and it has wasted subjects, money, time and effort, and is potentially unethical. On the other hand, if an experiment is too small, it may **lack power and miss important differences that do actually exist**. Therefore, an **underpowered study** also wastes resources and can be unethical. It is important to know what effect size is important to ensure that an experiment is sufficiently powered.
-
-### Factors affecting a power calculation
-* The precision and variance of measurements within any sample
-* Magnitude of a significant difference (aka, effect size)
-* Significance level (in biology, usually 0.05); that is, how certain we want to be to avoid type I error *(when the null hypothesis is incorrectly rejected)* 
-* The type of statistical test performed
-
-### Example 1
-We study the difference of some measurement in two populations (in which we assume this variable is normally distributed). <br/>
-We draw two samples (n=2) from each population independently and randomly and get
-**x=(9, 11)** and **y=(17,19)**. 
-<br/>
-We run the t-test on difference of means and get **p-value=0.03** *( in R, t.test(x, y) )*.
-<br/>
-Since we know the variance for x and y (sd=2), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd)*   *( in R, power.t.test(n, delta, sd) )*.
-<br/>
-The obtained **power = 0.56** - this means that Type II error (or the probability of accepting a false null hypothesis, or concluding that there is no difference when in fact there is the difference) = 44% !!!! – in roughly 44% of tests conducted with these parameters, the given effect size will be not seen as significant even when it is significant. It is a waist of resources to conduct such an under-powered study. That is, if we want to detect this effect size with higher power, we have to increase the number of samples (n).
-
-<br/>
-
-But what difference in means can we detect with just 2 samples at a sufficient enough power?
-<br/>
-Assume **x=(9, 11)** and **y=(24, 26)**. We run the t-test on difference of means and get **p-value=0.009**.
-<br/>
-Since we know the variance for x and y (sd=2), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd)= 15/sqrt(2)* .
-<br/>
-The obtained **power = 0.94 !!!** 
-
-### Example 2
-We draw 6 samples (n=6) from each population independently and randomly and get
-**x=(8, 10, 11, 11.8, 10.6, 8.6)** and **y=(8, 10, 11, 11.8, 10.6, 8.6)**. 
-<br/>
-We run the t-test on difference of means and get **p-value=0.04**.
-<br/>
-Since we know the variance for x and y (sd=sqrt(2)), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd) = 2/sqrt(2)* .
-<br/>
-The obtained **power = 0.35**. That means we have to increase n, and it can be calculated for the power=80% as
-*power.t.test(power=.80, delta=2/sqrt(2), sd=sqrt(2))*.
-<br/>
-The obtained **n = 17**.
-
-### Consider examples on page 36 of the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
-
-<br/>
-
 ## RNA-Seq: Paired-end vs. single-end reads, read size and sequencing depth
 
 | Paired-end read |
@@ -192,7 +191,7 @@ However, for regular mRNA gene expression, **biological replicates are of greate
 <br/>
 ## Resources
 * [ENCODE Guidelines and Best Practices for RNA-Seq](https://www.encodeproject.org/documents/cede0cbe-d324-4ce7-ace4-f0c3eddf5972/@@download/attachment/ENCODE%20Best%20Practices%20for%20RNA_v2.pdf)
-* [https://eda.nc3rs.org.uk/experimental-design-variables](https://eda.nc3rs.org.uk/experimental-design-variables)
+* [The Experimental Design Assistant from NC3RS, UK](https://eda.nc3rs.org.uk/experimental-design)
 * [https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md](https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md)
 * [Experimental design manual, Cambridge University, UK ](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
 * [Paper on statistical power in biomedical science](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5367316/)
