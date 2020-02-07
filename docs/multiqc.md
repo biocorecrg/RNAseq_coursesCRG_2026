@@ -5,33 +5,38 @@ navigation: 17
 ---
 
 # Combining reports
-At this point, we can summarize all the work done by using the tool [**MultiQC**](https://multiqc.info/). 
+At this point, we can summarize all the work done with the tool [**MultiQC**](https://multiqc.info/). 
 MultiQC aggregates outputs from many bioinformatics tools across many samples into a single report by searching a given directory for analysis logs and compiling a HTML report. 
 
-First, link our mapping results to the directory QC:
+<br>
+Let's create a multiqc_report folder and link all analysis done so far.
+
 ```{bash}
-cd QC/
-ln -s ../alignments/* .
+cd ~/rnaseq_course/
+
+# create a folder for the multiqc result
+mkdir multiqc_report
+cd ~/rnaseq_course/multiqc_report
+
+# link QC, trimming and mapping data
+ln -s ~/rnaseq_course/quality_control* .
+ln -s ~/rnaseq_course/mapping* .
+ln -s ~/rnaseq_course/trimming
 ```
 
-Then run multiqc on the directory QC to combine all reports:
+Then run **multiqc** on the directory **multiqc_report** to combine all reports:
 
 ```{bash}
+cd ~/rnaseq_course/multiqc_report
+
 $RUN multiqc .
-[INFO   ]         multiqc : This is MultiQC v1.7 (7d02b24)
-[INFO   ]         multiqc : Template    : default
-[INFO   ]         multiqc : Searching 'QC/'
-Searching 70 files..  [####################################]  100% 
-...
 ```
 
-and visualize the final report in the browser:
+We can visualize the final report in the internet browser:
 
 ```{bash}
 firefox multiqc_report.html
 ```
-
-
 
 <img src="images/multiqc.png"  align="middle" />
 

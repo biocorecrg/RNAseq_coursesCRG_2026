@@ -62,9 +62,10 @@ For additional information regarding the tool and the algorithm, please refer to
 |GSM2031990 |SRR3091428 |5p4_34cfoxc1 |diff 5 days |KO |
 |GSM2031991 |SRR3091429 |5p4_35cfoxc1 |diff 5 days |KO |
 
-* The [FOXC1](https://ghr.nlm.nih.gov/gene/FOXC1) protein plays a critical role in early development, particularly in the formation of structures in the front part of the eye (the anterior segment). These structures include the colored part of the eye (the iris), the lens of the eye, and the clear front covering of the eye (the cornea). Studies suggest that the FOXC1 protein may also have functions in the adult eye, such as helping cells respond to oxidative stress. Oxidative stress occurs when unstable molecules called free radicals accumulate to levels that can damage or kill cells.
+*The [FOXC1](https://ghr.nlm.nih.gov/gene/FOXC1) protein plays a critical role in early development, particularly in the formation of structures in the front part of the eye (the anterior segment). These structures include the colored part of the eye (the iris), the lens of the eye, and the clear front covering of the eye (the cornea). Studies suggest that the FOXC1 protein may also have functions in the adult eye, such as helping cells respond to oxidative stress. Oxidative stress occurs when unstable molecules called free radicals accumulate to levels that can damage or kill cells.
 The FOXC1 protein is also involved in the normal development of other parts of the body, including the heart, kidneys, and brain. [Source](https://ghr.nlm.nih.gov/gene/FOXC1).*
 <br>
+
 Get the count data for the full data set, output of both STAR and Salmon:
 
 ```{bash}
@@ -84,10 +85,10 @@ rm full_data_counts.tar.gz
 ### Raw count matrices
 
 **DESeq2** takes as an input raw (non normalized) counts, in various forms:
-* Option 1: a matrix for all sample
-* Option 2: one file per sample
+* A matrix for all sample
+* One file per sample (our option for STAR)
+* A **txi** object (our option for Salmon)
 
-For both STAR and Salmon data files, we will use **one file per sample**
 
 #### Prepare data from STAR
 
@@ -111,11 +112,9 @@ Remember that the STAR count file contains **4 columns** depending on the librar
 <br><br>
 
 **Exercise**
-
 * Prepare the 10 files needed for our analysis, from the STAR output, and save them in the <b>counts_selected</b> directory: knowing that our libraries are **unstranded**, which column will you pick?
-  
-
 * Create the sub-directory **counts_STAR_selected** inside the deseq2 directory:
+
 ```{bash}
 mkdir -p ~/rnaseq_course/counts_STAR_selected
 ```
@@ -181,7 +180,7 @@ The design indicates how to model the samples: in the model we need to specify w
 * Prepare this file (tab-separated columns) in a text editor: save it as **sample_sheet_foxc1.txt in the differential_analysis directory**: you can do it "manually" using a text editor, or you can try using the command line.
 <br>
 
-*Note that the same sample sheet will be used for both **the STAR and the Salmon** DESeq2 analysis.*
+*Note that the same sample sheet will be used for both **the STAR and the Salmon** DESeq2 analysis. (with a slight modification that we will see later on)*
 
 
 #### Analysis
@@ -189,10 +188,9 @@ The design indicates how to model the samples: in the model we need to specify w
 The analysis is done in R ! <br>
 
 Start **R Studio**.
-
 <br>
 
-Note that in the R code boxes below **\#** is followed by comments, i.e. words not interpreted by R.
+Note that in the R code boxes below **\#** is followed by comments, i.e. words not interpreted by R, as in Linux.
 
 * Go to the **differential_expression** working directory and load the **DESeq2** package (loading a package in R allows to use specific sets of functions developped as part of this package).
 

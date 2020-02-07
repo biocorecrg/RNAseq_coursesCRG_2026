@@ -10,15 +10,15 @@ During this course we will use tools that are stored in a [**Linux container**](
 
 A Linux Container can be seen as a **minimal virtual environment** that can be used in any Linux-compatible machine. 
 
-Using containers is time- and resources-savingas they allow:
-* Controlling for software installation and dependencies and
+Using containers is time- and resources-saving as they allow:
+* Controlling for software installation and dependencies.
 * Reproducibility of the analysis.
 
 For this course, we created a [**Docker**](https://www.docker.com/) image from [this Dockerfile](https://github.com/biocorecrg/PHINDaccess_RNAseq_2020/blob/master/Dockerfile) available for download from [DockerHub](https://cloud.docker.com/u/biocorecrg/repository/docker/biocorecrg/rnaseq2020).
 
 This will allow all of us to use **exactly the same versions of the tools**.
 
-This image can be downloaded and used on computers running Linux/Mac OS (if you have a root access on the computer) or can be converted into another Linux Container called [**Singularity**](https://www.sylabs.io/docs/), which we will be using in this course. Singularity containers are easier to share and to export, and they can be ran without root privileges.
+This image can be downloaded and used on computers running Linux/Mac OS (if you have a root access on the computer) or can be converted into another Linux Container called [**Singularity**](https://www.sylabs.io/docs/), which we will be using in this course. Singularity containers are easier to share and to export, and they can be run without root privileges.
 
 The Singularity image is a file that is accessed by the program **singularity** in order to execute the programs installed inside this image. 
 <br>
@@ -32,7 +32,7 @@ cd ~/rnaseq_course/singularity_image
 singularity pull docker://biocorecrg/rnaseq2020:1.0
 ```
 
-This creates the "rnaseq2020-1.0.simg" file.
+This creates the **rnaseq2020-1.0.simg** file.
 
 <br>
 The image can be accessed/run the following way:

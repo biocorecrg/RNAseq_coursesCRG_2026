@@ -14,11 +14,10 @@ For the **STAR** running options, see [STAR Manual](http://labshare.cshl.edu/sha
 
 To make an index for STAR, we need both the genome sequence in FASTA format and the annotation in GTF format. 
 <br>
-As STAR is very resource consuming, we will create an index for **chromosome 6 only**. We already downloaded the **FASTA** and **GTF** files (in ~/rnaseq_course/reference_genome) needed for the indexing.
-
+As STAR is very resource consuming, we will create an index for **chromosome 6 only** (and hope that it will work!). We already downloaded the **FASTA** and **GTF** files (in ~/rnaseq_course/reference_genome) needed for the indexing.
 <br>
 
-However, STAR requires **unzipped** .fa and .gtf files.
+However, STAR requires **unzipped** .fa and .gtf files. We need to unzip them.
 
 ```{bash}
 # go to reference_genome folder
@@ -31,16 +30,13 @@ zcat Homo_sapiens.GRCh38.dna.chrom6.fa.gz > Homo_sapiens.GRCh38.dna.chrom6.fa
 
 **Q. How much (in percentage) disk space is saved when those two files are kept zipped vs unzipped?**
 
-**Once index is built, we have to not forget to remove those unzipped files!**
+**Once the index is built, do not forget to remove those unzipped files!**
 
 
-To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** option needs to be specified for detecting possible splicing sites. 
-<br>
-It usually equals the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a spicing site. 
-<br>
-In our case, since the read size is 49 bases, we can accept maximum 48 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **48**. 
-<br>
-This also means that for every different read-length to be aligned a new STAR index needs to be generated. Otherwise a drop in aligned reads can be experienced.
+To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** option needs to be specified for detecting possible splicing sites:
+* It usually equals the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a spicing site. 
+* In our case, since the read size is 49 bases, we can accept maximum 48 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **48**. 
+* This also means that **for every different read-length to be aligned a new STAR index needs to be generated**. Otherwise a drop in aligned reads can be experienced.
 
 <br>
 Building the STAR index (option **--runMode genomeGenerate**):
@@ -52,11 +48,12 @@ cd ~/rnaseq_course/mapping
 # create sub-folder where index will be generated
 mkdir index_star_chr6
 
+# create the index and store it in ~/rnaseq_course/mapping/index_star_chr6
 $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
-            --genomeFastaFiles ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa \
-            --sjdbGTFfile ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf \
-            --sjdbOverhang 48 \
-	    --outFileNamePrefix Hsapiens_chr6
+		--genomeFastaFiles ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa \
+		--sjdbGTFfile ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf \
+		--sjdbOverhang 48 \
+		--outFileNamePrefix Hsapiens_chr6
 ```
 
 
@@ -68,13 +65,12 @@ To use **STAR** for the read alignment (default **--runMode** option), we have t
 * if reads are compressed or not (**--readFilesCommand**)
 
 The following options are optional:
-* **--outSAMtype**: type of output. Default is "BAM Unsorted"; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be directly used with downstream software such as HTseq, without the need of name sorting."*
+* **--outSAMtype**: type of output. Default is **BAM Unsorted**; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be directly used with downstream software such as HTseq, without the need of name sorting."* We therefore prefer the option **BAM SortedByCoordinate**
 * **--outFileNamePrefix**: the path for the output directory and prefix of all output files. By default, this parameter is ./, i.e. all output files are written in the current directory.
 * **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by the [**htseq-count**](https://htseq.readthedocs.io/en/release_0.11.1/count.html) tool with default parameters. **This option requires annotations (GTF or GFF with –sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf)) 
 
 <br>
-
-We can try to launch the mapping for one file:
+We can try and launch the mapping for one file:
 
 ```{bash}
 # go to mapping folder
@@ -107,13 +103,13 @@ done
 
 **BACKUP !!**
 
-If it is too resource consuming, you can download the aligned files in **BAM** format from:
+If it was indeed too resource consuming, you can download the aligned files in **BAM** format from:
 
 ```{bash}
 wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/bam_chr6.tar.gz
 ```
 
-Let's explore the output directory "alignments" (or "bam_chr6", if we used the backup).
+Let's explore the output directory "alignments" (or "bam_chr6", if we used the backup folder).
 
 ```{bash}
 ln -lh alignments
@@ -124,10 +120,14 @@ ln -lh alignments
 ## Read counts 
 
 STAR outputs read counts per gene into **PREFIX**ReadsPerGene.out.tab file with 4 columns which correspond to different **strandedness options**:
+
 |column 1 |gene ID |
+|:---:|:---:|
 |column 2 |counts for unstranded RNA-seq |
 |column 3 |counts for the 1st read strand aligned with RNA (htseq-count option -s yes) |
 |column 4 |counts for the 2nd read strand aligned with RNA (htseq-count option -s reverse)|
+
+Let's see what the **ReadsPerGene.out.tab** file looks like for sample **SRR3091420_1_chr6**:
 
 ```{bash}
 head alignments/SRR3091420_1_chr6ReadsPerGene.out.tab 
@@ -145,7 +145,8 @@ head alignments/SRR3091420_1_chr6ReadsPerGene.out.tab
 |ENSG00000170590 |2       |2       |0 |
 
 
-Select the output according to the strandedness of your data. Note, if you have stranded data and choose one of the columns 3 or 4, the other column (4 or 3) will give you the count of antisense reads. 
+Select the output according to **the strandedness** of your data. <br>
+Note, if you have stranded data and choose one of the columns 3 or 4, the other column (4 or 3) will give you the count of antisense reads. 
 <br>
 For example, in the stranded protocol shown in "Library preparation", Read 1 is mapped to the antisense strand (this is also true for single-end reads), while Read 2, to the sense strand.
 
@@ -160,7 +161,7 @@ grep -v "N_" head alignments/SRR3091420_1_chr6ReadsPerGene.out.tab
 # 725410 387129 367434
 ```
 
-It can be seen that 387,129 Reads 1 (forward) were mapped to known genes and 367,434 Reads 2 (reverse) were mapped to known genes.
+We see that 387,129 Reads 1 (forward) were mapped to known genes and 367,434 Reads 2 (reverse) were mapped to known genes.
 <br>
 These numbers are very similar, which indicates that the protocol used for this mRNA-Seq experiment is **unstranded**.
 <br>
@@ -264,8 +265,10 @@ rm alignments/*.sam
 
 ## Alignment QC
 
-The quality of the resulting alignment can be checked using the tool [**QualiMap**](http://qualimap.bioinfo.cipf.es/). To run QualiMap, we specify the kind of analysis (**rnaseq**), the presence of paired-end reads within the bam file (**-pe**) and the strand of the library (**-p strand-specific-reverse**). 
-
+The quality of the resulting alignment can be checked using the tool [**QualiMap**](http://qualimap.bioinfo.cipf.es/). To run QualiMap, we specify the kind of analysis (**rnaseq**), the **gtf** file, the strandness of the library (**-p unstranded**). 
+<br>
+*Note that if the library was paired-end, you would add the **-pe** option**.
+<br>
 **IMPORTANT**: before running QualiMap ensure enough disk space for a temporary directory ./tmp that the program is required, running the following command:
 ```{bash}
 export _JAVA_OPTIONS="-Djava.io.tmpdir=./tmp -Xmx6G"
@@ -282,8 +285,8 @@ mkdir qc_qualimap
 # run qualimap
 $RUN qualimap rnaseq -pe -bam alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam \
 	-gtf ~/rnaseq_course/reference_genome/Homo_sapiens.GRCh38.88.chr6.gtf \
-	-outdir qc_qualimap -p unstranded
-  
+	-outdir qc_qualimap \
+	-p unstranded
 ```
 
 We can check the final report in a browser:

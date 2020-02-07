@@ -20,6 +20,7 @@ mkdir rnaseq_course/trimming
 mkdir rnaseq_course/reference_genome
 mkdir rnaseq_course/mapping
 mkdir rnaseq_course/differential_expression
+mkdir rnaseq_course/functional_analysis
 ```
 
 

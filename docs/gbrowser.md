@@ -18,7 +18,7 @@ There are two kinds of genome browsers:
   * [GBrowse](http://gmod.org/wiki/GBrowse_2.0_HOWTO)
   * [IGV](https://software.broadinstitute.org/software/igv/)
   
-Small size data can be directly uploaded to the genome browser, while large files are normally placed on a web-server that is accessible to the browser. To explore BAM and CRAM files produced by the STAR mapper, we first need to sort and index the files. In our case, sorting has been already done by STAR because we output alignments to the BAM files sorted by coordinates. 
+Small size data can be directly uploaded to the genome browser, while large files are normally placed on a web-server that is accessible to the browser. To explore BAM and CRAM files produced by the STAR mapper, we first need to sort and index the files. In our case, sorting has been already done by STAR's **BAM SortedByCoordinate** option. 
 <br>
 The indexing can be done with samtools:
 
@@ -29,7 +29,7 @@ $RUN samtools index alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
 $RUN samtools index alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
 
 ```
-<br/>
+
 
 ## UCSC Genome Browser
 
@@ -41,7 +41,7 @@ Different genome browsers name chromosomes differently. UCSC names chromosomes a
 <br>
 When you map reads to a genome with a given convention you cannot directly display BAM/CRAM files in the genome browser that uses a different convention.
 <br>
-GENCODE uses the UCSC convention, while ENSEMBL doesn't: we need to change the chromsomes names before being able to load them in the UCSC Genome Browser. 
+**GENCODE** uses the **UCSC convention**, while **ENSEMBL doesn't**: we need to change the chromosomes names before being able to load them in the UCSC Genome Browser. 
 
 ```{bash}
 cd ~/rnaseq_course/mapping
@@ -55,16 +55,17 @@ $RUN samtools view -h alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam 
 # convert SAM to BAM
 $RUN samtools view -b -o bam_ucsc/SRR3091420_1_chr6_ucsc.bam bam_ucsc/SRR3091420_1_chr6_ucsc.sam
 
-# create index
+# create index for BAM file
 $RUN samtools index bam_ucsc/SRR3091420_1_chr6_ucsc.bam
 
-# remove SAM
+# remove SAM file
 rm bam_ucsc/SRR3091420_1_chr6_ucsc.sam
 ```
 
 First, you need to upload your sorted bam (or cram) file(s) **together with an index (.bai or .crai) file(s)** to a http server that is accessible from the Internet. 
 <br>
-The files for this project (chromosome 6 only) are found in:
+
+We uploaded the files for this project (chromosome 6 only) are in:
 
 ```{bash}
 https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/ucsc/bam
@@ -77,7 +78,7 @@ Now go to the [UCSC genome browser website](https://genome-euro.ucsc.edu/cgi-bin
 
 <img src="images/ucsc1.png"  align="middle" />
 
-Choose human genome version hg38 (that corresponds to the ENCODE annotation we used). Click **GO**. 
+Choose human genome version hg38 (that corresponds to the ENSEMBL annotation we used). Click **GO**. 
 
 <img src="images/ucsc2.png"  align="middle" />
 

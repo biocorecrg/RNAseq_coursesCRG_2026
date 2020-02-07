@@ -27,7 +27,7 @@ For this course, we will use public data sets from GEO data set **GSE76647**.
 
 * Data set **GSE76647** has 10 *Homo sapiens* samples from differentiated (5-day differentiation) and undifferentiated primary keratinocytes.
 <br>
-Some of the samples underwent a knockdown of the **FOXC1** gene:
+Some of the samples underwent a knock-down of the **FOXC1** gene:
 
 |GEO ID |SRA ID |Sample name |Differentiation |Condition |
 |GSM2031982 |SRR3091420 |5p4_25c |undiff |WT |
@@ -41,7 +41,7 @@ Some of the samples underwent a knockdown of the **FOXC1** gene:
 |GSM2031990 |SRR3091428 |5p4_34cfoxc1 |diff 5 days |WT |
 |GSM2031991 |SRR3091429 |5p4_35cfoxc1 |diff 5 days |WT |
 
-* The fastq files can be downloaded as follows
+* The raw data can be downloaded as follows, using **fastq-dump**
 
 ```{bash}
 # Go to the "raw_data" folder
@@ -56,7 +56,7 @@ done
 
 * **BACK UP**
 
-In case downloading those files is too slow, we have prepared fastq files that correspond to **chromosome 6 only**. Please download it for later usage:
+In case downloading those files is too slow, we have prepared fastq files that correspond to **chromosome 6 only**. Please download it:
 
 ```{bash}
 # go to raw data folder
