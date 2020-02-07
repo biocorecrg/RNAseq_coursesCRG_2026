@@ -13,6 +13,21 @@ navigation: 10
 
 <br/>
 
+## Well-designed experiment
+
+
+| Good experimental design|
+| :---:  |
+|<img src="images/good_exp_design.jpg" width="700" align="middle" />|
+|from [Cambridge University's Experimental Design Manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)|
+
+### Factorial design to address wide range of the result applicability
+
+factorial_design_1.jpg
+| Good experimental design|
+| :---:  |
+|<img src="images/factorial_design_1.jpg" width="700" align="middle" />|
+|from [Cambridge University's Experimental Design Manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)|
 
 
 ## Technical vs. biological replicates
@@ -71,7 +86,7 @@ Final recommendations from this paper:
 
 <br/>
 
-### [Larger sample sizes are needed when](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
+### Larger sample sizes are needed when (from [Cambridge University's Experimental Design Manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf))
 * There is a large number of uncontrolled variables which interact unpredictably.
 * The total sample set is going to be analysed as several sub-sets.
 * When the population under study has many variables.
@@ -81,7 +96,7 @@ Final recommendations from this paper:
 <br/>
 
 ## Power analysis
-text below was adapted from the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
+text below was adapted from the [Cambridge University's Experimental Design Manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
 
 Sample size calculations, power calculations and power analysis (the terms are used interchangeably) are a way of determining the appropriate number of replicates (the sample size) for a study.
 
