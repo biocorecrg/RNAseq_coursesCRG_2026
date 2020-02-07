@@ -1,6 +1,6 @@
 ---
 layout: page
-title: FASTQ format
+title: Raw data: FASTQ format
 navigation: 8
 ---
 

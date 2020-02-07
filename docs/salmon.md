@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Mapping with Salmon
+title: Salmon mapping
 navigation: 16
 ---
 
