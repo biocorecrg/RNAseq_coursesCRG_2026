@@ -13,9 +13,7 @@ navigation: 10
 
 <br/>
 
-[All-over very useful experimental design manual!](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf) It discusses what is a good experimental design, factorial design, choice of control, paired vs. unpaired desing, bias and confounding factors, randomization, block design, blinding, sample size, effect size and power, sample pooling.
 
-<br/>
 
 ## Technical vs. biological replicates
 
@@ -150,7 +148,7 @@ The obtained **n = 17**.
 ### Differential expression of gene isoforms and detection of new isoforms
 * 50-100M paired-end reads of size 100 bp or more
 
-### De novo transcriptome assembly
+### *De novo* transcriptome assembly
 * 100-200M paired-end reads of size 150 bp or more
 
 <br/>
@@ -162,6 +160,9 @@ The obtained **n = 17**.
 
 <br/>
 
+[All-over very useful experimental design manual!](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf) It discusses what is a good experimental design, factorial design, choice of control, paired vs. unpaired desing, bias and confounding factors, randomization, block design, blinding, sample size, effect size and power, sample pooling.
+
+<br/>
 ## Resources
 * [ENCODE Guidelines and Best Practices for RNA-Seq](https://www.encodeproject.org/documents/cede0cbe-d324-4ce7-ace4-f0c3eddf5972/@@download/attachment/ENCODE%20Best%20Practices%20for%20RNA_v2.pdf)
 * [https://eda.nc3rs.org.uk/experimental-design-variables](https://eda.nc3rs.org.uk/experimental-design-variables)
