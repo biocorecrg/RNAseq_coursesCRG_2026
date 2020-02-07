@@ -23,7 +23,7 @@ navigation: 10
 
 Technical variation of the sequencing protocols is very low: **hence technical replicates are nowadays considered unnecessary** (in the era of microarrays, it was more problematic).
 
-<br> 
+<br/> 
 
 **Biological replicates** are samples in which the starting biological material is different. It could include:
   * Different organisms
@@ -34,8 +34,16 @@ Why are **biological** replicates important?
 
 They are crucial to assess the **variability within an experimental group**: the more the number of replicates, the better this assessment, and thus the more precise the differential expression measurement.
 
-<br> 
+<br/> 
 
+**Questions:** Are those samples technical or biological replicates?
+* Three samples of blood were obtained from a healthy patient not under any treatment during three consecutive days at the same hour.
+* Three samples of blood were obtained from a healthy patient not under any treatment during a day in the morning, after lunch and after dinner.
+* Three samples of blood were obtained from three healthy patient not under any treatment.
+* Bone marrow was obtained from 12 mice. Cells from 6 mice were pooled to form sample 1; and cells from another 6 mice, to make sample 2.  
+
+
+<br/>
 
 From [ENCODE Guidelines and Best Practices for RNA-Seq](https://www.encodeproject.org/documents/cede0cbe-d324-4ce7-ace4-f0c3eddf5972/@@download/attachment/ENCODE%20Best%20Practices%20for%20RNA_v2.pdf):
 "In all cases, experiments should be performed with **two or more biological replicates**, unless there is a compelling reason why this is impractical or wasteful (e.g. overlapping time points with high temporal resolution). **A biological replicate is defined as an independent growth of cells/tissue** and subsequent analysis. **Technical replicates from the same RNA library are not required, except to evaluate cases where biological variability is abnormally high.** In such instances, separating technical and biological variation is critical. In general, detecting and quantifying low prevalence RNAs is inherently more variable than high abundance RNAs. As part of the ENCODE pipeline, annotated transcript and genes are quantified using RSEM and the values are made available for downstream correlation analysis. 
@@ -43,29 +51,23 @@ From [ENCODE Guidelines and Best Practices for RNA-Seq](https://www.encodeprojec
 
 <br/>
 
-Sequencing depth refers to the number of reads covering each genomic position, on average.
 
-It is calculated as **(total number of reads * average read length) / total length of genome**
+## Number of replicates in RNA-seq experiment
 
-Sequencing depth is a very important consideration for **rare events discovery** (e.g., some splicing events) or **lowly-expressed gene assessment** (e.g., lncRNAs).
+From [Schurch, et al., RNA, 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/):
+"RNA-seq is now the technology of choice for genome-wide differential gene expression experiments, but it is not clear how many biological replicates are needed to ensure valid biological interpretation of the results or which statistical tools are best for analyzing the data. An RNA-seq experiment with 48 biological replicates in each of two conditions was performed to answer these questions and provide guidelines for experimental design. **With three biological replicates, nine of the 11 tools evaluated found only 20%–40% of the significantly differentially expressed (SDE) genes identified with the full set of 42 clean replicates. This rises to >85% for the subset of SDE genes changing in expression by more than fourfold. To achieve >85% for all SDE genes regardless of fold change requires more than 20 biological replicates.**" 
 
-However, for regular mRNA gene expression, **biological replicates are of greater importance than sequencing depth**.
-
-
-## Number of replicates in RNA-Seq experiment
-
-
-| Recommendations for RNA-seq experiment design  for DGE|
+| Recommendations for RNA-seq experiment design for identifying differentially expressed (DE) genes|
 | :---:  |
 |<img src="images/fig2_schurch_2016.png" width="700" align="middle" />|
-| from [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)|
+| from [Schurch, et al., RNA, 2016; Fig 2.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)|
 
-
+Final recommendations from this paper:
 * At least 6 replicates per condition for all experiments.
-* At least 12 replicates per condition for experiments where identifying the majority of all DE genes is important.
+* At least 12 replicates per condition for experiments in which identifying of the majority of all DE genes is important.
 * For experiments with <12 replicates per condition; use edgeR (exact) or DESeq2.
 * For experiments with >12 replicates per condition; use DESeq.
-* Apply a fold-change threshold appropriate to the number of replicates per condition between 0.1≤T≤0.5.
+* Apply a fold-change threshold (T) appropriate to the number of replicates per condition between 0.1 ≤ abs(T) ≤ 0.5.
 
 <br/>
 
@@ -159,6 +161,16 @@ The obtained **n = 17**.
 | from [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/)|
 
 <br/>
+Sequencing depth refers to the number of reads covering each genomic position, on average.
+
+It is calculated as **(total number of reads * average read length) / total length of genome**
+
+Sequencing depth is a very important consideration for **rare events discovery** (e.g., some splicing events) or **lowly-expressed gene assessment** (e.g., lncRNAs).
+
+However, for regular mRNA gene expression, **biological replicates are of greater importance than sequencing depth**.
+
+
+
 
 [All-over very useful experimental design manual!](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf) It discusses what is a good experimental design, factorial design, choice of control, paired vs. unpaired desing, bias and confounding factors, randomization, block design, blinding, sample size, effect size and power, sample pooling.
 
