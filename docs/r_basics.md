@@ -314,33 +314,32 @@ BiocManager::install('GOstats')
 
 ## Exercise: warming up !
 
-1. 
-* Create a numeric vector y which contains the numbers from 2 to 11, both included. 
-* How many elements are in y? I.e what is the length of vector y ?
-* Show the 3rd and the 6th elements of y.
-* Show all elements of y that have a value inferior to 7.
+* Ex1.
+	* Create a numeric vector y which contains the numbers from 2 to 11, both included. 
+	* How many elements are in y? I.e what is the length of vector y ?
+	* Show the 3rd and the 6th elements of y.
+	* Show all elements of y that have a value inferior to 7.
 
-2.
-* Create the vector x of 1000 random numbers from the normal distribution (with rnorm).
-* What are the mean, median, minimum and maximum values of x?
+* Ex2.
+	* Create the vector x of 1000 random numbers from the normal distribution (with rnorm).
+	* What are the mean, median, minimum and maximum values of x?
 
-3.
-* Create vector y2 as: y2 <- c(1, 11, 5, 62,  NA, 18, 2, 8, NA)
-* What is the sum of all elements in y2 ?
-* Which elements of y2 are also present in y?
-* Remove NA values from y2.
+* Ex3.
+	* Create vector y2 as: y2 <- c(1, 11, 5, 62,  NA, 18, 2, 8, NA)
+	* What is the sum of all elements in y2 ?
+	* Which elements of y2 are also present in y?
+	* Remove NA values from y2.
 
-4. 
-* Create the following data frame:
+* Ex4. 
+	* Create the following data frame:
 |43|181|M|
 |34|172|F|
 |22|189|M|
 |27|167|F|
-with row names: John, Jessica, Steve, Rachel<br>
-and column names: Age, Height, Sex
-* Check the structure of df with str().
-* Calculate the average age and height in df.
-* Change the row names of df so the data becomes anonymous (use for example Patient1, Patient2, etc.)
-* Write **df** to the file **mydf.txt**. Explore parameters **sep**, **row.names**, **col.names**, **quote**.
-
+	with row names: John, Jessica, Steve, Rachel<br>
+	and column names: Age, Height, Sex
+	* Check the structure of df with str().
+	* Calculate the average age and height in df.
+	* Change the row names of df so the data becomes anonymous (use for example Patient1, Patient2, etc.)
+	* Write **df** to the file **mydf.txt**. Explore parameters **sep**, **row.names**, **col.names**, **quote**.
 
