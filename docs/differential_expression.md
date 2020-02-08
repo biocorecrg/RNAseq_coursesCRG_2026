@@ -116,7 +116,7 @@ Remember that the STAR count file contains **4 columns** depending on the librar
 * Create the sub-directory **counts_STAR_selected** inside the deseq2 directory:
 
 ```{bash}
-mkdir -p ~/rnaseq_course/counts_STAR_selected
+mkdir -p ~/rnaseq_course/differential_expression/counts_STAR_selected
 ```
 
 * Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (2nd column).
@@ -600,6 +600,8 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 * Check differential expression **resultsNames()**
   * How many genes are differentially expressed, when considering padj < 0.05?
 
+**Exercise 3**
+
 ##### Control for "Differentiation"
 
 While in Exercise 2 we tested **WT vs KO** on **undifferentiated** samples only, we can also use a more complex **design** formula. If we specify:
@@ -608,9 +610,8 @@ While in Exercise 2 we tested **WT vs KO** on **undifferentiated** samples only,
 ~ Differentiation + Condition
 ```
 
-it means that we want to test for the effect of the **FOXC1 knock out**, while controlling for the effect of differentiation.
-
-**Exercise 3**
+it means that we want to test for the effect of the **FOXC1 knock out**, while *controlling for the effect of differentiation*.
+In a way, we "discard" the expected changes due to differentiation to focus on the KO-specific changes.
 
 * Repeat the first analysis, changing the design **~ Condition** to **~ Differentiation + Condition**.
 * How many genes are now found differentially expressed, when filtering for padj < 0.05?

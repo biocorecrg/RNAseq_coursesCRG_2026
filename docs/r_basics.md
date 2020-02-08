@@ -302,7 +302,7 @@ All other packages:
 Install a CRAN package using **install.packages**:
 
 ```{r}
-install.packages('BiocManager', repos = 'http://cran.us.r-project.org', dependencies = TRUE)"
+install.packages('BiocManager', repos = 'http://cran.us.r-project.org', dependencies = TRUE)
 ```
 
 Install a Bioconductor package using **BiocManager::install**:
