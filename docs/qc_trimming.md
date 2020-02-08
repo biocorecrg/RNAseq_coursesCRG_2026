@@ -64,7 +64,7 @@ ls SRR3091420_1_chr6_fastqc
 File **fastqc_data.txt** contains the results in text format, for easier parsing of the results:
 
 ```{bash}
-less SRR3091420_1_fastqc/fastqc_data.txt
+less SRR3091420_1_chr6_fastqc/fastqc_data.txt
 ```
 
 
@@ -182,9 +182,10 @@ Let's use **skewer** to trim the Illumina 3' adapter.
 ```{bash}
 cd ~/rnaseq_course/trimming
 
-$RUN skewer ~/rnaseq_course/raw_data/SRR3091420_1.fastq.gz \
+$RUN skewer ~/rnaseq_course/raw_data/fastq_chr6/SRR3091420_1_chr6.fastq.gz \
 		-x TGGAATTCTCGGGTGCCAAGG \
-		-o SRR3091420_1
+		-o SRR3091420_1_chr6 \
+		-z
 ```
 
 ```
@@ -217,7 +218,9 @@ We can look at the read distribution after the trimming of the adapter by inspec
 
 ```{bash}
 cd ~/rnaseq_course/quality_control/
-$RUN fastqc ~/rnaseq_course/trimming/SRR3091420_1-trimmed.fastq -o .
+$RUN fastqc ~/rnaseq_course/trimming/SRR3091420_1_chr6-trimmed.fastq.gz -o .
+
+firefox SRR3091420_1_chr6-trimmed_fastqc.html &
 ```
 
 <img src="images/trimmed_sequence_length_distribution.png" width="800"/>
@@ -226,6 +229,17 @@ Example of a FastQC report for a trimmed **small-RNA** sample:
 
 <img src="images/size_dist_small.png" width="800"/>
 
+Now run **skewer** for all samples
+
+```{bash}
+for fastq in ~/rnaseq_course/raw_data/fastq_chr6/*fastq.gz
+do echo $fastq
+$RUN skewer $fastq \
+                -x TGGAATTCTCGGGTGCCAAGG \
+                -o $(basename $fastq .fastq.gz) \
+                -z
+done
+```
 
 ## EXERCISE
 

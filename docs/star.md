@@ -53,6 +53,7 @@ $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
 		--genomeFastaFiles ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa \
 		--sjdbGTFfile ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf \
 		--sjdbOverhang 48 \
+		--genomeSAindexNbases 12.6 \
 		--outFileNamePrefix Hsapiens_chr6
 ```
 
@@ -65,6 +66,7 @@ To use **STAR** for the read alignment (default **--runMode** option), we have t
 * if reads are compressed or not (**--readFilesCommand**)
 
 The following options are optional:
+* **--genomeSAindexNbases**: default 14. If genome is small, should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 * **--outSAMtype**: type of output. Default is **BAM Unsorted**; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be directly used with downstream software such as HTseq, without the need of name sorting."* We therefore prefer the option **BAM SortedByCoordinate**
 * **--outFileNamePrefix**: the path for the output directory and prefix of all output files. By default, this parameter is ./, i.e. all output files are written in the current directory.
 * **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by the [**htseq-count**](https://htseq.readthedocs.io/en/release_0.11.1/count.html) tool with default parameters. **This option requires annotations (GTF or GFF with –sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf)) 

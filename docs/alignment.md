@@ -177,14 +177,13 @@ rm reference_chr6_Hsapiens.tar.gz
 The genome is often stored as a **FASTA file** (.fa file): each header (that can be chromosomes, transcripts, proteins), starts with "**>**":
 
 ```{bash}
-zcat reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa.gz | head -n 5
-
+zcat reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa.gz | head -n 1
 ```
 
 The size of the chromosome (in bp) is already reported in the header, but we can check it as follows:
 
 ```{bash}
-zcat reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa.gz | grep -v ">" | tr -d '\n' | wc -m  
+zcat ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa.gz | grep -v ">" | tr -d '\n' | wc -m  
 
 # 170805979
 ```
@@ -220,14 +219,14 @@ Let's check how many genes are in the annotation file:
 
 ```{bash}
 zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | grep -v "#" | awk '$3=="gene"' | wc -l 
-2860
+
+# 2860
 ```
 
 And get a final counts of every feature:
 
 ```{bash}
 zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | grep -v "#" | cut -f3 | sort | uniq -c 
-
 ```
 
 <br>
