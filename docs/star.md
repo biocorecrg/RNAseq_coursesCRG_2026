@@ -79,27 +79,27 @@ We can try and launch the mapping for one file:
 cd ~/rnaseq_course/mapping
 
 # create sub-folder where we will store the alignments
-mkdir alignments
+mkdir alignments_STAR
 
 $RUN STAR --genomeDir index_star_chr6 \
-      --readFilesIn ~/rnaseq_course/raw_data/fastq_chr6/SRR3091420_1_chr6.fastq.gz \
+      --readFilesIn ~/rnaseq_course/trimming/SRR3091420_1_chr6-trimmed.fastq.gz \
       --readFilesCommand zcat \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
-      --outFileNamePrefix alignments/SRR3091420_1_chr6
+      --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6
 ```
 
 If this was successful and not too slow and resource consuming, you can do it for all samples, in a **loop**:
 
 ```{bash}
-for fastq in ~/rnaseq_course/raw_data/*chr6*fastq.gz
+for fastq in ~/rnaseq_course/trimming/*-trimmed.fastq.gz
 do echo $fastq
 $RUN STAR --genomeDir index_star_chr6 \
       --readFilesIn $fastq \
       --readFilesCommand zcat \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
-      --outFileNamePrefix alignments/$(basename $fastq .fastq.gz)
+      --outFileNamePrefix alignments_STAR/$(basename $fastq -trimmed.fastq.gz)
 done
 ```
 
@@ -108,13 +108,21 @@ done
 If it was indeed too resource consuming, you can download the aligned files in **BAM** format from:
 
 ```{bash}
+cd ~/rnaseq_course/mapping
+
+# get archive
 wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/bam_chr6.tar.gz
+
+# extract
+tar -xvzf bam_chr6.tar.gz
 ```
 
 Let's explore the output directory "alignments" (or "bam_chr6", if we used the backup folder).
 
 ```{bash}
-ln -lh alignments
+ls -lh alignments
+
+ls -lh bam_chr6
 ```
 
 <br/>
@@ -133,15 +141,16 @@ Let's see what the **ReadsPerGene.out.tab** file looks like for sample **SRR3091
 
 ```{bash}
 head alignments/SRR3091420_1_chr6ReadsPerGene.out.tab 
+head bam_chr6/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab
 ```
 
 | | | | |   
 | :----: | :----: | :----: |  :----: |
 |gene id| read counts per gene (unstranded) | read counts per gene (read 1)|read counts per gene (read 2)| 
-|N_unmapped      |1294    |1294    |1294 |
-|N_multimapping  |91464   |91464   |91464 |
-|N_noFeature     |33532   |393560  |413923 |
-|N_ambiguous     |29745   |7998    |7330 |
+|N_unmapped      |1589    |1589    |1589 |
+|N_multimapping  |45100   |45100   |45100 |
+|N_noFeature     |33480   |393427  |413797 |
+|N_ambiguous     |29733   |7977    |7339 |
 |ENSG00000271530 |0       |0       |0 |
 |ENSG00000220212 |0       |0       |0 |
 |ENSG00000170590 |2       |2       |0 |
@@ -157,13 +166,15 @@ For example, in the stranded protocol shown in "Library preparation", Read 1 is 
 We can count the number of reads mapped to each strand by using a simple awk script:
 
 ```{bash}
-grep -v "N_" head alignments/SRR3091420_1_chr6ReadsPerGene.out.tab 
- | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
+grep -v "N_" alignments/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
 
-# 725410 387129 367434
+# OR
+grep -v "N_" bam_chr6/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
+
+# 725267 387076 367344
 ```
 
-We see that 387,129 Reads 1 (forward) were mapped to known genes and 367,434 Reads 2 (reverse) were mapped to known genes.
+We see that 387,076 Reads 1 (forward) were mapped to known genes and 367,344 Reads 2 (reverse) were mapped to known genes.
 <br>
 These numbers are very similar, which indicates that the protocol used for this mRNA-Seq experiment is **unstranded**.
 <br>
@@ -177,7 +188,7 @@ If the protocol used was stranded, there would be a **strong imbalance** between
 The **BAM format** is a compressed version of the [**SAM format**](https://samtools.github.io/hts-specs/SAMv1.pdf) (which is a plain text) and cannot thus being seen as a text. To explore the BAM file, we have to convert it to the SAM format by using [**samtools**](http://samtools.sourceforge.net/). Note that we use the parameter **-h** to show also the header that is hidden by default. 
 
 ```{bash}
-$RUN samtools view -h alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam | head -n 10
+$RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam | head -n 10
 
 @HD     VN:1.4  SO:coordinate
 @SQ     SN:6    LN:170805979
@@ -240,7 +251,7 @@ definition.*
 Let's convert BAM to SAM:
 
 ```{bash}
-$RUN samtools view -h alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam > alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.sam
+$RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam > bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.sam
 ```
 
 You can see that the SAM file is **5 times larger** than the BAM file.
@@ -251,16 +262,16 @@ To convert **BAM** to **CRAM**, we have to provide unzipped and indexed version 
 
 
 ```{bash}
-$RUN samtools faidx ~/rnaseq_course/reference_genome/Homo_sapiens.GRCh38.dna.chrom6.fa
+$RUN samtools faidx ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa
 
-$RUN samtools view -C alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam -T ~/rnaseq_course/reference_genome/Homo_sapiens.GRCh38.dna.chrom6.fa > alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
+$RUN samtools view -C bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam -T ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa > bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
 ```
 
 You can see that a .cram file is twice as small as a .bam file.
 <br>
 Let's remove the .sam file:
 ```{bash}
-rm alignments/*.sam 
+rm bam_chr6/*.sam 
 ```
 
 <br/>
@@ -285,10 +296,10 @@ cd ~/rnaseq_course/mapping
 mkdir qc_qualimap
 
 # run qualimap
-$RUN qualimap rnaseq -pe -bam alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam \
-	-gtf ~/rnaseq_course/reference_genome/Homo_sapiens.GRCh38.88.chr6.gtf \
+$RUN qualimap rnaseq -bam bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam \
+	-gtf ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf \
 	-outdir qc_qualimap \
-	-p unstranded
+	-p non-strand-specific
 ```
 
 We can check the final report in a browser:
@@ -301,8 +312,6 @@ firefox qc_qualimap/qualimapReport.html
 The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or a protocol used). 
 
 <img src="images/qualimap2.png"  align="middle" />
-
-Looking at the gene coverage we can see a bias towards 5'-end that is compatible with the kind of stranded protocol used.
 
 <img src="images/qualimap4.png"  align="middle" />
 

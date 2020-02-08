@@ -25,8 +25,8 @@ The indexing can be done with samtools:
 ```{bash}
 cd ~/rnaseq_course/mapping
 
-$RUN samtools index alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
-$RUN samtools index alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
+$RUN samtools index bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam
+$RUN samtools index bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
 
 ```
 
@@ -50,7 +50,7 @@ cd ~/rnaseq_course/mapping
 mkdir bam_ucsc
 
 # convert chromosome naming (produce a SAM file)
-$RUN samtools view -h alignments/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam | awk -F "\t" 'BEGIN{OFS="\t"}{if($1 ~ /^@/){print $0} else {print $1,$2,"chr"$3,$4,$5,$6,$7,$8,$9,$10,$11,$12}}' | sed 's/chrMT/chrM/g' | sed 's/SN:/SN:chr/g' > bam_ucsc/SRR3091420_1_chr6_ucsc.sam
+$RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam | awk -F "\t" 'BEGIN{OFS="\t"}{if($1 ~ /^@/){print $0} else {print $1,$2,"chr"$3,$4,$5,$6,$7,$8,$9,$10,$11,$12}}' | sed 's/chrMT/chrM/g' | sed 's/SN:/SN:chr/g' > bam_ucsc/SRR3091420_1_chr6_ucsc.sam
 
 # convert SAM to BAM
 $RUN samtools view -b -o bam_ucsc/SRR3091420_1_chr6_ucsc.bam bam_ucsc/SRR3091420_1_chr6_ucsc.sam
@@ -67,8 +67,8 @@ First, you need to upload your sorted bam (or cram) file(s) **together with an i
 
 We uploaded the files for this project (chromosome 6 only) are in:
 
-```{bash}
-https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/ucsc/bam
+```
+https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/ucsc/
 ```
 
 Using the mouse's right click, copy one of the bam files URL address.
@@ -92,7 +92,7 @@ and provide information describing the data to be displayed:
 * **bigDataUrl** the URL where the BAM or CRAM file is located 
 
 ```{bash}
-track type=bam name="My BAM" bigDataUrl=https://public-docs.crg.es/biocore/projects/training/RNAseq_2019/A549_0_1Aligned.sortedByCoord.out.bam
+track type=bam name="test" bigDataUrl=https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/ucsc/SRR3091420_1_chr6_ucsc.bam
 ```
 
 Click "Submit".
