@@ -41,8 +41,9 @@ If all other parameters remain the same, a larger experiment will have more powe
 * Significance level (in biology, usually 0.05); that is, how certain we want to be to avoid type I error *(when the null hypothesis is incorrectly rejected)* 
 * The type of statistical test performed
 
-### Example 1
+### Example 
 We study the difference of some measurement in two populations (in which we assume this variable is normally distributed and variance of two poluations are the same). 
+
 <br/>
 
 We draw two samples (n=2) from each population independently and randomly and get
@@ -83,7 +84,8 @@ If we want to detect this effect size (difference in means of 8) with higher pow
 
 <br/>
 
-But what difference in means can we detect with just 2 samples at a sufficient enough power?
+**But what difference in means can we detect with just 2 samples at a sufficient enough power?**
+
 <br/>
 
 Now let's x and y be as
@@ -114,7 +116,6 @@ delta = (mean(y) - mean(x)) / sqrt(sd) = 15 / sqrt(2)
 The obtained **power = 0.94 !!!** 
 This is an **adequtely powered experiment**. That is if the true difference of means of two populations is 15, we can detect it drawing only 2 random and independent samples from each population. And while conducting the t-test we will commit Type II error in only 6% of tests; that is, the given effect size will be NOT seen as significant (p-value will be above 0.05). 
 
-
 If however the significance level alpha becomes more stringent, say 0.01, the power will decrease:
 ```
 > power.t.test(n = 2, delta = 15/sqrt(2), sd = sqrt(2), sig.level = 0.01)
@@ -131,27 +132,41 @@ If however the significance level alpha becomes more stringent, say 0.01, the po
 
 <br/>
 
-### Example 2
-We draw 6 samples (n=6) from each population independently and randomly and get
+We can calculate directly how many samples are needed to observe that effect size (difference in means =15) can be achieved at power=0.9 and significance level=0.01:
 ```
-x = (8, 10, 11, 11.8, 10.6, 8.6)
-y = (8, 10, 11, 11.8, 10.6, 8.6)
-```
-We run the t-test on difference of means and get **p-value=0.04**.
+> power.t.test(power = 0.9, delta = 15/sqrt(2), sd = sqrt(2), sig.level = 0.01)
 
-Since we know the variance for x and y, *sd(x) = 2; sd(y) = 2*, we can calculate the power of the t-test to detect the observed effect size
+     Two-sample t test power calculation
+
+              n = 2.539062
+          delta = 10.6066
+             sd = 1.414214
+      sig.level = 0.01
+          power = 0.9
+    alternative = two.sided
+
 ```
-delta = (mean(y) - mean(x)) / sqrt(sd) = 2 / sqrt(2)
+
+
+Or, for difference in means = 2 at power=0.8 and significance level=0.05:
+```
+> power.t.test(power = 0.8, delta = 2/sqrt(2), sd = sqrt(2), sig.level = 0.05)
+
+     Two-sample t test power calculation
+
+              n = 16.71477
+          delta = 1.414214
+             sd = 1.414214
+      sig.level = 0.05
+          power = 0.8
+    alternative = two.sided
+
+NOTE: n is number in *each* group
 ```
 
 <br/>
 
-The obtained **power = 0.35**. That means we have to increase n, and it can be calculated for the power=80% as
-*power.t.test(power=.80, delta=2/sqrt(2), sd=sqrt(2))*.
-<br/>
-The obtained **n = 17**.
-
-### Consider examples on page 36 of the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
+### Consider also examples on page 36 of the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
 
 <br/>
 
