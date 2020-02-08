@@ -15,15 +15,14 @@ Open the **RStudio** software.
 Everything that stores any kind of data in R is an **object**.
 
 * Assignment operators
-
-+ **<-** or **=**
-+ Essentially the same but, to avoid confusions:
-  + Use **<-** for assignments
-  + Keep **=** for functions arguments
-
-* Assigning a value to the object **B**:
+	+ **<-** or **=**
+	+ Essentially the same but, to avoid confusions:
+  		+ Use **<-** for assignments
+  	+ Keep **=** for functions arguments
+* Assigning a value to the object **B**: 
+```{r}
 B <- 10
-
+```
 * Reassigning: modifying the content of an object:
 ```{r}
 B + 10
@@ -83,6 +82,12 @@ b <- 3:8
 b[b %in% a]
 ```
  
+Check the length of (=number of elements in) a vector:
+
+```{r}
+length(b)
+```
+
 Create a data frame:
 
 ```{r}
@@ -91,6 +96,19 @@ d <- data.frame(Name=c("Maria", "Juan", "Alba"),
         Age=c(23, 25, 31),
         Vegetarian=c(TRUE, TRUE, FALSE),
         stringsAsFactors = FALSE)
+```
+
+Check dimensions of a dataframe:
+
+```{r}
+# Number of rows
+nrow(d)
+
+# Number of columns
+ncol(d)
+
+# Dimensions (first element is the number of rows, second element is the number of columns)
+dim(d)
 ```
 
 Select rows of the data frame **if the Age column is superior to 24**:
@@ -130,11 +148,6 @@ setwd("..")
 ```
 You are now in: "~/rnaseq_course"
 
-## Manipulate objects in R
-
-Length and dimensions
-
-Subset
 
 ## Missing values
 
@@ -319,20 +332,15 @@ BiocManager::install('GOstats')
 
 4. 
 * Create the following data frame:
-
 |43|181|M|
 |34|172|F|
 |22|189|M|
 |27|167|F|
-
 with row names: John, Jessica, Steve, Rachel<br>
 and column names: Age, Height, Sex
-
 * Check the structure of df with str().
 * Calculate the average age and height in df.
 * Change the row names of df so the data becomes anonymous (use for example Patient1, Patient2, etc.)
 * Write **df** to the file **mydf.txt**. Explore parameters **sep**, **row.names**, **col.names**, **quote**.
-
-
 
 
