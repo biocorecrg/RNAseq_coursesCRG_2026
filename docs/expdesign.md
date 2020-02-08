@@ -42,23 +42,39 @@ If all other parameters remain the same, a larger experiment will have more powe
 * The type of statistical test performed
 
 ### Example 1
-We study the difference of some measurement in two populations (in which we assume this variable is normally distributed). <br/>
+We study the difference of some measurement in two populations (in which we assume this variable is normally distributed and variance of two poluations are the same). 
+<br/>
+
 We draw two samples (n=2) from each population independently and randomly and get
 ```
-x=(9, 11)
-y=(17,19)
+x = c(9, 11)
+y = c(17,19)
 ```
 
-<br/>
+
 We run the *t-test on difference of means* and get **p-value=0.03** *( in R, use function t.test(x, y) )*.
 
 <br/>
-Since we know the variance for x and y, *sd(x) = 2; sd(y) = 2*, we can calculate the power of the t-test to detect the observed **effect size delta**  *( in R, use function power.t.test(n, delta, sd) )*
+
+Since we know the variance for x and y, *var(x) = 2; var(y) = 2*, we can calculate the power of the t-test to detect the observed **effect size delta**  *( in R, use function power.t.test(n, delta, sd, sig.level = 0.05) )*
 ```
-delta = (mean(y) - mean(x)) / sqrt(sd) = 8 / sqrt(2)
+delta = (mean(y) - mean(x)) / sqrt(var) = 8 / sqrt(2)
+
+> power.t.test(n = 2, delta = 8/sqrt(2), sd = sqrt(2))
+
+     Two-sample t test power calculation
+
+              n = 2
+          delta = 5.656854
+             sd = 1.414214
+      sig.level = 0.05
+          power = 0.5645141
+    alternative = two.sided
+
+NOTE: n is number in *each* group
 ```
 
-<br/>
+
 The obtained **power = 0.56**. This means that **Type II error** (or the probability of accepting a false null hypothesis, that is, concluding that there is NO difference when in fact there is the difference) **= 1 - power = 44% !!!!** – in roughly 44% of tests conducted with **these parameters for n and sd**, the given effect size delta will be NOT seen as significant even when it is significant. 
 
 It is a waist of resources to conduct such an **under-powered study**. 
@@ -69,30 +85,67 @@ If we want to detect this effect size (difference in means of 8) with higher pow
 
 But what difference in means can we detect with just 2 samples at a sufficient enough power?
 <br/>
+
 Now let's x and y be as
 ```
-x = (9, 11)
-y = (24, 26)
+x = c(9, 11)
+y = c(24, 26)
 ```
- We run the t-test on difference of means and get **p-value=0.009**.
-<br/>
-Since we know the variance for x and y, *sd(x) = 2; sd(y) = 2*, we can calculate the power of the t-test to detect the observed effect size
+We run the t-test on difference of means and get **p-value=0.009**.
+
+
+Since we know the variance for x and y, *var(x) = 2; var(y) = 2*, we can calculate the power of the t-test to detect the observed effect size
 ```
 delta = (mean(y) - mean(x)) / sqrt(sd) = 15 / sqrt(2)
+
+> power.t.test(n = 2, delta = 15/sqrt(2), sd = sqrt(2))
+
+     Two-sample t test power calculation
+
+              n = 2
+          delta = 10.6066
+             sd = 1.414214
+      sig.level = 0.05
+          power = 0.9387922
+    alternative = two.sided
+```
+
+
+The obtained **power = 0.94 !!!** 
+This is an **adequtely powered experiment**. That is if the true difference of means of two populations is 15, we can detect it drawing only 2 random and independent samples from each population. And while conducting the t-test we will commit Type II error in only 6% of tests; that is, the given effect size will be NOT seen as significant (p-value will be above 0.05). 
+
+
+If however the significance level alpha becomes more stringent, say 0.01, the power will decrease:
+```
+> power.t.test(n = 2, delta = 15/sqrt(2), sd = sqrt(2), sig.level = 0.01)
+
+     Two-sample t test power calculation
+
+              n = 2
+          delta = 10.6066
+             sd = 1.414214
+      sig.level = 0.01
+          power = 0.4343263
+    alternative = two.sided
 ```
 
 <br/>
-The obtained **power = 0.94 !!!** 
-This is 
 
 ### Example 2
 We draw 6 samples (n=6) from each population independently and randomly and get
-**x=(8, 10, 11, 11.8, 10.6, 8.6)** and **y=(8, 10, 11, 11.8, 10.6, 8.6)**. 
-<br/>
+```
+x = (8, 10, 11, 11.8, 10.6, 8.6)
+y = (8, 10, 11, 11.8, 10.6, 8.6)
+```
 We run the t-test on difference of means and get **p-value=0.04**.
+
+Since we know the variance for x and y, *sd(x) = 2; sd(y) = 2*, we can calculate the power of the t-test to detect the observed effect size
+```
+delta = (mean(y) - mean(x)) / sqrt(sd) = 2 / sqrt(2)
+```
+
 <br/>
-Since we know the variance for x and y (sd=sqrt(2)), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd) = 2/sqrt(2)* .
-<br/>
+
 The obtained **power = 0.35**. That means we have to increase n, and it can be calculated for the power=80% as
 *power.t.test(power=.80, delta=2/sqrt(2), sd=sqrt(2))*.
 <br/>
