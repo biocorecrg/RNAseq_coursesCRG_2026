@@ -6,13 +6,6 @@ navigation: 10
 
 # Experimental design
 
-| Things to consider|
-| :---:  |
-|<img src="images/exp_design.jpg" width="700" align="middle" />|
-|from [https://galaxyproject.org/tutorials/rb_rnaseq/](https://galaxyproject.org/tutorials/rb_rnaseq/)|
-
-<br/>
-
 ## Well-designed experiment
 
 
@@ -34,7 +27,9 @@ navigation: 10
 
 Sample size calculations, power calculations and power analysis (the terms are used interchangeably) are a way of determining the appropriate number of replicates (the sample size) for a study.
 
-**Power** is the probability of **not accepting a false null hypothesis**, or the probability of detecting a specified difference, or **effect size**, given it exists, within the population (e.g., a fold change in a microarray experiment or a change in the size of a tumour). The desired power of research experiment is usually above 80%; while for clinical studies, it might be required to be above 90%. 
+**Power** is the probability of **not accepting a false null hypothesis**, or the probability of detecting a specified difference, or **effect size**, given it exists, within the population *(e.g., a fold change in a microarray experiment or a change in the size of a tumour)*. 
+
+The desired power of research experiment is usually above 80%; while for clinical studies, it might be required to be above 90%. 
 
 **Power (aka, sensitivity of the statistical test) = 1 - (type II error)**,  *(type II error is an error of accepting a false null hypothesis)*
 
@@ -49,23 +44,46 @@ If all other parameters remain the same, a larger experiment will have more powe
 ### Example 1
 We study the difference of some measurement in two populations (in which we assume this variable is normally distributed). <br/>
 We draw two samples (n=2) from each population independently and randomly and get
-**x=(9, 11)** and **y=(17,19)**. 
+```
+x=(9, 11)
+y=(17,19)
+```
+
 <br/>
-We run the t-test on difference of means and get **p-value=0.03** *( in R, t.test(x, y) )*.
+We run the *t-test on difference of means* and get **p-value=0.03** *( in R, use function t.test(x, y) )*.
+
 <br/>
-Since we know the variance for x and y (sd=2), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd)*   *( in R, power.t.test(n, delta, sd) )*.
+Since we know the variance for x and y, *sd(x) = 2; sd(y) = 2*, we can calculate the power of the t-test to detect the observed **effect size delta**  *( in R, use function power.t.test(n, delta, sd) )*
+```
+delta = (mean(y) - mean(x)) / sqrt(sd) = 8 / sqrt(2)
+```
+
 <br/>
-The obtained **power = 0.56** - this means that Type II error (or the probability of accepting a false null hypothesis, or concluding that there is no difference when in fact there is the difference) = 44% !!!! – in roughly 44% of tests conducted with these parameters, the given effect size will be not seen as significant even when it is significant. It is a waist of resources to conduct such an under-powered study. That is, if we want to detect this effect size with higher power, we have to increase the number of samples (n).
+The obtained **power = 0.56**. This means that **Type II error** (or the probability of accepting a false null hypothesis, that is, concluding that there is NO difference when in fact there is the difference) **= 1 - power = 44% !!!!** – in roughly 44% of tests conducted with **these parameters for n and sd**, the given effect size delta will be NOT seen as significant even when it is significant. 
+
+It is a waist of resources to conduct such an **under-powered study**. 
+
+If we want to detect this effect size (difference in means of 8) with higher power, we have to increase the number of samples (n).
 
 <br/>
 
 But what difference in means can we detect with just 2 samples at a sufficient enough power?
 <br/>
-Assume **x=(9, 11)** and **y=(24, 26)**. We run the t-test on difference of means and get **p-value=0.009**.
+Now let's x and y be as
+```
+x = (9, 11)
+y = (24, 26)
+```
+ We run the t-test on difference of means and get **p-value=0.009**.
 <br/>
-Since we know the variance for x and y (sd=2), we can calculate the power of the t-test to detect the observed effect size, *delta=(mean(y)-mean(x))/sqrt(sd)= 15/sqrt(2)* .
+Since we know the variance for x and y, *sd(x) = 2; sd(y) = 2*, we can calculate the power of the t-test to detect the observed effect size
+```
+delta = (mean(y) - mean(x)) / sqrt(sd) = 15 / sqrt(2)
+```
+
 <br/>
 The obtained **power = 0.94 !!!** 
+This is 
 
 ### Example 2
 We draw 6 samples (n=6) from each population independently and randomly and get
@@ -83,6 +101,16 @@ The obtained **n = 17**.
 ### Consider examples on page 36 of the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
 
 <br/>
+
+## Design of RNA-seq experiment
+
+| Things to consider|
+| :---:  |
+|<img src="images/exp_design.jpg" width="700" align="middle" />|
+|from [https://galaxyproject.org/tutorials/rb_rnaseq/](https://galaxyproject.org/tutorials/rb_rnaseq/)|
+
+<br/>
+
 
 ## Technical vs. biological replicates
 
