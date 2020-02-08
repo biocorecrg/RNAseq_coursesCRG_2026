@@ -42,8 +42,7 @@ If all other parameters remain the same, a larger experiment will have more powe
 * The type of statistical test performed
 
 ### Example 
-We study the difference of some measurement in two populations (in which we assume this variable is normally distributed and variance of two poluations are the same). 
-
+We study the difference of some measurement in two populations (in which we assume this variable is normally distributed and variance of two populations are the same). 
 <br/>
 
 We draw two samples (n=2) from each population independently and randomly and get
@@ -86,9 +85,7 @@ If we want to detect this effect size (difference in means of 8) with higher pow
 
 **But what difference in means can we detect with just 2 samples at a sufficient enough power?**
 
-<br/>
 
-Now let's x and y be as
 ```
 x = c(9, 11)
 y = c(24, 26)
@@ -96,7 +93,7 @@ y = c(24, 26)
 We run the t-test on difference of means and get **p-value=0.009**.
 
 
-Since we know the variance for x and y, *var(x) = 2; var(y) = 2*, we can calculate the power of the t-test to detect the observed effect size
+Since we know the variance for x and y, *var(x) = 2; var(y) = 2*, we can calculate the power of the t-test to detect the observed effect size:
 ```
 delta = (mean(y) - mean(x)) / sqrt(sd) = 15 / sqrt(2)
 
@@ -132,7 +129,7 @@ If however the significance level alpha becomes more stringent, say 0.01, the po
 
 <br/>
 
-We can calculate directly how many samples are needed to observe that effect size (difference in means =15) can be achieved at power=0.9 and significance level=0.01:
+We can calculate directly how many samples are needed to observe that effect size (difference in means =15) at power=0.9 and significance level=0.01:
 ```
 > power.t.test(power = 0.9, delta = 15/sqrt(2), sd = sqrt(2), sig.level = 0.01)
 
@@ -166,7 +163,7 @@ NOTE: n is number in *each* group
 
 <br/>
 
-### Consider also examples on page 36 of the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
+Consider also examples on page 36 of the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
 
 <br/>
 
