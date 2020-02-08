@@ -36,6 +36,9 @@ Let's explore [this GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?a
 <br>
 ```{bash}
 fastq-dump --gzip --origfmt --split-files --skip-technical SRR-IDENTIFIER
+
+# For us, it would be:
+$RUN fastq-dump --gzip --origfmt --split-files --skip-technical SRR-IDENTIFIER
 ```
 
 The options used here are:
@@ -49,7 +52,7 @@ The options used here are:
 
 Going back to the previous [GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126535):
 * Where can you find the SRA identifiers (code SRR...), for each sample?
-* Try and download one sample locally using **fastq-dump**, and the latter command.
+* How large are the raw data files?
 
 <br/>
 

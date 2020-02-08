@@ -45,7 +45,8 @@ To access the image during the course, we will store the following command in th
 
 ```{bash}
 # Export the RUN variable
-export RUN="singularity exec -e ~/rnaseq_course/singularity_image/rnaseq2020-1.0.simg"
+export RUN="singularity exec -e FULL_PATH_TO_HOME/rnaseq_course/singularity_image/rnaseq2020-1.0.simg"
+	# Put the full path to your home directory (~ will not work properly)
 
 # Access the salmon program inside the image
 $RUN salmon --help

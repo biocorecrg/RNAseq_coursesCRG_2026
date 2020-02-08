@@ -11,10 +11,9 @@ For this course, we will use public data sets from GEO data set **GSE76647**.
 ## Exercise:
 
 * Go to the GEO page corresponding to entry **GSE76647**
-* Retrieve the **SRA codes** corresponding to the following samples (from the **SRA RUN Selector**): GSM2031982, GSM2031983, GSM2031984, GSM2031985, GSM2031986, GSM2031987, GSM2031988, GSM2031989, GSM2031990, GSM2031991.
-* What information can you retrieve about these samples?
-* Download the raw data for all these samples using **fastq-dump** (it can take a long time!).
-
+* What is the organism the samples come from? Which types of cells? What is the goal of the experiment?
+* What information do you get about the sequencing protocol?
+* Retrieve the **SRA codes** corresponding to **all samples**from the **SRA RUN Selector**)
 
 <br>
 <br>
@@ -71,4 +70,43 @@ tar -xvzf fastq_chr6.tar.gz
 # remove .tar.gz file
 rm fastq_chr6.tar.gz
 ```
+
+* How many reads are there per sample?
+* What is the read length?
+
+Number of reads:
+
+```{bash}
+cd ~/rnaseq_course/raw_data/fastq_chr6
+
+# With grep
+zcat SRR3091420_1_chr6.fastq.gz | grep "^@" | wc -l
+
+# With paste
+zcat SRR3091420_1_chr6.fastq.gz | paste - - - - | wc -l
+
+# With awk
+zcat SRR3091420_1_chr6.fastq.gz | awk 'BEGIN{i=0}{i++;}END{print i/4}'
+```
+
+For all samples:
+
+```{bash}
+for fastq in *fastq.gz
+do echo $fastq
+zcat $fastq | awk 'BEGIN{i=0}{i++;}END{print i/4}'
+done
+```
+
+Count read length:
+
+```{bash}
+# Count read length for all rows
+zcat SRR3091420_1_chr6.fastq.gz | paste - - - - | awk '{print length($2)}'
+
+# Summarize
+zcat SRR3091420_1_chr6.fastq.gz | paste - - - - | awk '{print length($2)}' | sort | uniq -c
+```
+
+
 

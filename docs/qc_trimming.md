@@ -26,10 +26,10 @@ FastQC calculates statistics about the composition and quality of raw sequences,
 cd ~/rnaseq_course/quality_control
 
 # Run FastQC for one sample
-$RUN fastqc ~/rnaseq_course/raw_data/SRR3091420_1.fastq.gz -o .
+$RUN fastqc ~/rnaseq_course/raw_data/fastq_chr6/SRR3091420_1_chr6.fastq.gz -o .
 
 # Run for all samples
-$RUN fastqc ~/rnaseq_course/raw_data/*fastq.gz -o .
+$RUN fastqc ~/rnaseq_course/raw_data/fastq_chr6/*fastq.gz -o .
 ```
 
 The output files are a **.zip** archive and an **.html** file
@@ -37,7 +37,7 @@ The output files are a **.zip** archive and an **.html** file
 
 We can display the results (.html file) with an Internet browser; e.g. Firefox:
 ```{bash}
-firefox SRR3091420_1_fastqc.html &
+firefox SRR3091420_1_chr6_fastqc.html &
 ```
 
 <img src="images/fastqc.png" width="800"/>
@@ -52,13 +52,13 @@ You can extract the files from the .zip archive:
 
 ```{bash}
 # extract
-unzip SRR3091420_1_fastqc.zip
+unzip SRR3091420_1_chr6_fastqc.zip
 
 # remove remaining .zip file
-rm SRR3091420_1_fastqc.zip
+rm SRR3091420_1_chr6_fastqc.zip
 
 # display content of directory
-ls SRR3091420_1_fastqc
+ls SRR3091420_1_chr6_fastqc
 ```
 
 File **fastqc_data.txt** contains the results in text format, for easier parsing of the results:
