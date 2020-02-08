@@ -80,19 +80,21 @@ We can proceed with the mapping.
 ```{bash}
 cd ~/rnaseq_course/mapping
 
+# create folder for salmon's output files
+mkdir alignments_salmon
+
 $RUN salmon quant -i index_salmon -l U \
     -r ~/rnaseq_course/raw_data/fastq_chr6/SRR3091420_1_chr6.fastq.gz \
-    -o alignments/SRR3091420_1_chr6_salmon \
-    -g ~/rnaseq_course/reference_genome/gencode.v33.annotation_chr6.gtf.gz \
+    -o alignments_salmon/SRR3091420_1_chr6_salmon \
+    -g ~/rnaseq_course/reference_genome/reference_chr6/gencode.v33.annotation_chr6.gtf.gz \
     --seqBias \
     --validateMappings
-
 ```
 
 We can check the results inside the folder "alignments".
 
 ```{bash}
-ls alignments/SRR3091420_1_chr6_salmon/
+ls alignments_salmon/SRR3091420_1_chr6_salmon/
 
 ```
 
@@ -110,7 +112,7 @@ The most interesting to us in this course is the file **quant.genes.sf**, that i
 |NumReads|Estimated number of reads considering both univocally and multimapping reads|
 
 ```{bash}
-head -n 5 alignments/SRR3091420_1_chr6_salmon/quant.genes.sf 
+head -n 5 alignments_salmon/SRR3091420_1_chr6_salmon/quant.genes.sf 
 
 Name	Length	EffectiveLength	TPM	NumReads
 ENSG00000285803.1	1152	1116.21	7.96961	15.764
@@ -122,7 +124,7 @@ ENSG00000285884.1	790	515.683	3.28285	3
 There is a similarly formatted file **quant.sf** that provides read counts for transcript:
 
 ```{bash}
-head -n 5 alignments/SRR3091420_1_chr6_salmon/quant.sf 
+head -n 5 alignments_salmon/SRR3091420_1_chr6_salmon/quant.sf 
 
 Name	Length	EffectiveLength	TPM	NumReads
 ENST00000016171.5	2356	1970.742	659.861626	2304.468
@@ -145,10 +147,12 @@ do echo $fastq
 
 $RUN salmon quant -i index_salmon -l U \
     -r ${fastq} \
-    -o alignments/$(basename $fastq .fastq.gz)_salmon \
-    -g ~/rnaseq_course/reference_genome/gencode.v33.annotation_chr6.gtf.gz \
+    -o alignments_salmon/$(basename $fastq .fastq.gz)_salmon \
+    -g ~/rnaseq_course/reference_genome/reference_chr6/gencode.v33.annotation_chr6.gtf.gz \
     --seqBias \
     --validateMappings
+
+done
 ```
 
 <br/>
