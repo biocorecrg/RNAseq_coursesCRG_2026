@@ -54,10 +54,19 @@ It is divided into [8 major collections](http://software.broadinstitute.org/gsea
 Tools based on a user-selection of genes usually require 2 inputs:
 
 * Gene Universe: in our example: all genes used in our analysis (after filtering out low counts in our case).
-* List of genes selected from the universe: our selection of genes, give the criteria we previously used: **padj < 0.05**, **&#124;log2FoldChange&#124; >= 0.5**.
+* List of genes selected from the universe: our selection of genes, give the criteria we previously used: **padj < 0.05**.
 
 They are often based on the **Hypergeometric test** or on the **Fisher's exact test**. You can have a look at this [page](http://pedagogix-tagc.univ-mrs.fr/courses/ASG1/practicals/go_statistics_td/go_statistics_td_2015.html) for some explanation of both tests.
+<br>
 
+Let's prepare this list from the file we saved before:
+
+```{bash}
+cd ~/rnaseq_course/functional_analysis
+
+# The gene symbol is in the 12th column
+cut -f 12 ~/rnaseq_course/differential_expression/deseq2_selection_padj005.txt | sed '1d' > deseq2_selection_padj005_symbol.txt
+```
 
 ### enrichR
 
@@ -99,14 +108,16 @@ The [main page of GO](http://geneontology.org/) provides a tool to test the enri
 The tool needs a selection of differentially expressed genes (supported IDs are: gene symbols, ENSEMBL IDs, HUGO IDs, UniGene, ..) and a gene universe.
 <br>
 
-Prepare files using the ENSEMBL IDs:
+Prepare files using s time the **ENSEMBL IDs**:
 
 ```{bash}
-# Extract all gene IDs used in our analysis and convert from Gencode (e.g ENSG00000057657.16) to ENSEMBL (e.g. ENSG00000057657) IDs
-cut -f1 deseq2_results.txt | sed '1d' | sed 's/\..//g' > deseq2_universe_ensemblIDs.txt
+cd ~/rnaseq_course/functional_analysis
 
-# Convert from Gencode to ENSEMBL IDs from selected gene list
-sed 's/\..//g' deseq2_results_padj0.05_log2fc0.5_IDs.txt > deseq2_results_padj0.05_log2fc0.5_ensemblIDs.txt
+# Extract all gene IDs used in our analysis
+cut -f 1 ~/rnaseq_course/differential_expression/normalized_counts_log2_star.txt | sed '1d' > deseq2_UNIVERSE_ENSEMBL.txt
+
+# Extract significant gene symbols only
+cut -f 1 ~/rnaseq_course/differential_expression/deseq2_selection_padj005.txt | sed '1d' > deseq2_selection_padj005_ENSEMBL.txt
 ```
 Paste our selection, and select **biological process** and **Homo sapiens**(file deseq2_results_padj0.05_log2fc0.5_IDs.txt):
 
@@ -118,15 +129,15 @@ Paste our selection, and select **biological process** and **Homo sapiens**(file
 
 **Analyzed List** is what we just uploaded (*deseq2_results_padj0.05_log2fc0.5_ensemblIDs.txt*).
 <br>
-In **Reference List**, we need to upload a file containg the **universe** (*deseq2_universe_ensemblIDs.txt*):  *Change -> Browse -> (select deseq2_universe_ensemblIDs.txt) -> Upload list*
+In **Reference List**, we need to upload a file containg the **universe** (*deseq2_UNIVERSE_ENSEMBL.txt*):  *Change -> Browse -> (select deseq2_UNIVERSE_ENSEMBL.txt) -> Upload list*
 <br>
 
 * Launch analysis
 <img src="images/GO_tool_results_ensembl.png" width="800" align="middle" />
 * Try the same analysis using the **gene symbols** instead of ENSEMBL IDs
 ```{bash}
-# Get universe with gene symbols (we already have the gene selection in deseq2_results_padj0.05_log2fc0.5_symbols.txt)
-cut -f2 deseq2_results.txt | sed '1d' > deseq2_universe_symbols.txt
+# Get universe with gene symbols (we already have the gene selection in deseq2_selection_padj005_symbol.txt
+cut -f16 ~/rnaseq_course/differential_expression/normalized_counts_log2_star.txt | sed '1d' > deseq2_UNIVERSE_symbol.txt
 ```
 * **Launch** !
 <img src="images/GO_tool_results_symbols.png" width="800" align="middle" />
@@ -135,23 +146,25 @@ cut -f2 deseq2_results.txt | sed '1d' > deseq2_universe_symbols.txt
 
 ### with R: GOstats
 
-Load the "GOstats" package
+In RStudio, load the "GOstats" package
 
 ```{r}
+setwd("~/rnaseq_course/functional_analysis")
+
 library("GOstats")
 ```
 
-Read in differentially expression data
+Read in differentially expressed genes
 ```{r}
-de_select <- read.table("deseq2_selection_diff_padj005.txt", header=T, as.is=T, sep="\t")
+de_select <- read.table("deseq2_selection_padj005_ENSEMBL.txt", header=T, as.is=T, sep="\t")
 ```
 
-The gene universe can be the list of genes **after filtering for low counts**:
-
+The gene universe can be the list of genes **after filtering for low counts**: we prepared it already: **deseq2_UNIVERSE_ENSEMBL.txt**
 ```{r}
-norm <- read.table("normalized_counts_log2_star.txt", header=T, as.is=T, sep="\t")
+de_univ <- read.table("deseq2_UNIVERSE_ENSEMBL.txt", header=T, as.is=T, sep="\t")
 ```
 
+<br>
 GOstats works only with **Entrez IDs**: we can get them with the **biomaRt** package, as we did for the differential expression analysis.
 
 
@@ -163,19 +176,22 @@ library(biomaRt)
 mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="mar2017.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
 
 # ENSEMBL IDs for differentially expressed genes
-ids <- rownames(de_select)
+ids <- de_select
 
 # get Entrez IDs
 entrez <- getBM(attributes=c('entrezgene', 'ensembl_gene_id'), filters ='ensembl_gene_id', values = ids, mart = mart)
 
 # get Entrez IDs for the universe
-ids_univ <- norm$ID
+ids_univ <- de_univ
 entrez_univ <- getBM(attributes=c('entrezgene', 'ensembl_gene_id'), filters ='ensembl_gene_id', values = ids_univ, mart = mart)
 ```
 
 We can proceed with the **hypergeometric test** (enrichment) for the **Biological Process** ontologies:
 
 ```{r}
+# install annotation package
+BiocManager::install("org.Hs.eg.db")
+
 # Set p-value cutoff
 hgCutoff <- 0.001
 
@@ -198,12 +214,13 @@ df <- summary(hgOver)
 
 |GOBPID|Pvalue|OddsRatio|ExpCounts|Counts|Size|Term|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-|GO:0031424| 6.315336e-12|  9.896492|  3.128680|    20|   57|keratinization|
-|GO:0008544| 1.838352e-10|  4.791667|  8.068702|    30| 147|epidermis development|
-|GO:0043588| 6.001794e-10|  5.007273|  6.970920|    27|  127|skin development|
-|GO:0009913| 3.565321e-09|  5.343814|  5.598691|    23|  102|epidermal cell differentiation|
-|GO:0030855| 4.750102e-09|  3.530075| 12.514722|    36|  228|epithelial cell differentiation|
-|GO:0030216| 7.362299e-09|  5.640151|  4.885133|    21|   89|keratinocyte differentiation|
+|GO:0016477 |4.322880e-05  |3.594820 |5.82993675    |17 |1098|cell migration|
+|GO:0010884 |7.630680e-05 |45.181065 |0.08495354     |3   |16|positive regulation of lipid storage|
+|GO:0097755 |8.408726e-05 |19.842188 |0.23362224     |4   |44|positive regulation of blood vessel diameter|
+|GO:0060485 |9.996919e-05  |7.305817 |1.08315765     |7  |204|mesenchyme development|
+|GO:0035150 |1.250790e-04 |11.541689 |0.48848286     |5   |92|regulation of tube size|
+|GO:0035296 |1.250790e-04 |11.541689 |0.48848286     |5   |92|regulation of tube diameter|
+
 
 
 **GOstats** also provides an **HTML report**:
@@ -229,10 +246,15 @@ KEGGprofile also works with **Entrez ID** (we got them for the GOstats analysis)
 
 ```{r}
 # KEGG pathway enrichment
-KEGGresult <- find_enriched_pathway(na.omit(unique(entrez$entrezgene)), returned_genenumber=10, species='hsa', download_latest = TRUE)
+KEGGresult <- find_enriched_pathway(na.omit(unique(entrez$entrezgene)), 
+	returned_genenumber=10, 
+	species='hsa', 
+	download_latest = TRUE)
 
 # Format file file
-kegg_final <- data.frame(KEGGresult$stastic, genes_entrezid=unlist(lapply(KEGGresult$detail, function(x)paste(x, collapse=",")), use.names=F), stringsAsFactors=F)
+kegg_final <- data.frame(KEGGresult$stastic, 
+	genes_entrezid=unlist(lapply(KEGGresult$detail, function(x)paste(x, collapse=",")), use.names=F), 
+	stringsAsFactors=F)
 
 # Write table to file
 write.table(kegg_final, "KEGGprofile_results.txt", sep="\t", row.names=F, col.names=T, quote=F)
@@ -304,7 +326,9 @@ Adjust the file **normalized_counts_log2_star.txt** so the first column is the g
 <br>
 
 ```{bash}
-awk 'BEGIN{OFS="\t"}{print $16,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11}' normalized_counts_log2_star.txt > gsea_normalized_counts.txt
+cd ~/rnaseq_course/functional_analysis
+
+awk -F "\t" 'BEGIN{OFS="\t"}{print $16,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11}' ~/rnaseq_course/differential_expression/normalized_counts_log2_star.txt > gsea_normalized_counts.txt
 
 ```
 
