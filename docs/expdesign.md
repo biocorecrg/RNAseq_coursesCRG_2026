@@ -233,14 +233,6 @@ Final recommendations from this paper:
 
 <br/>
 
-### Larger sample sizes are needed when (from [Cambridge University's Experimental Design Manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf))
-* There is a large number of uncontrolled variables which interact unpredictably.
-* The total sample set is going to be analysed as several sub-sets.
-* When the population under study has many variables.
-* The goal is to detect small effect sizes (the difference in gene expression, for example).
-* Some samples or subjects are expected to be lost by attrition.
-
-<br/>
 
 ## RNA-Seq: Paired-end vs. single-end reads, read size and sequencing depth
 
@@ -248,8 +240,14 @@ Final recommendations from this paper:
 | :---:  |
 |<img src="images/read.png" width="400" align="middle" />|
 
+<br/>
+Sequencing depth refers to the number of reads covering each genomic position, on average.
+
+It is calculated as **(total number of reads * average read length) / total length of genome**. However, since in RNA-seq experiments scientists are dealing with transcriptomes rather than genomes, it is conventinal to tak about **the number of reads**.
+
+
 ### General gene-level differential expression
-* For large genomes (human/mouse), ENCODE suggests to have per sample 30 million single-end (aligned to the genome) reads of size 50 bp and more (stranded protocol with polyA selection).
+* For large genomes (human/mouse), ENCODE suggests to have per sample 30 million single-end (mappable to the genome) reads of size 50 bp and more (and use stranded protocol with polyA selection).
 
 ### Gene-level differential expression with detection of low-expressed genes
 * For large genomes, 30-60M single-end (aligned to the genome) reads of size 50 bp and more (stranded protocol with polyA selection).
@@ -265,23 +263,12 @@ Final recommendations from this paper:
 | Adding more sequencing depth after 10 M reads gives diminishing returns on power to detect DE genes, whereas adding biological replicates improves power significantly regardless of sequencing depth |
 | :---:  |
 |<img src="images/seq_depth_Bioinformatics_2014.png" width="800" align="middle" />|
-| from [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/)|
+| from [Liu et al., RNA-seq differential expression studies: more sequence or more replication? Bioinformatics, 2014](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/)|
+
+
 
 <br/>
-Sequencing depth refers to the number of reads covering each genomic position, on average.
 
-It is calculated as **(total number of reads * average read length) / total length of genome**
-
-Sequencing depth is a very important consideration for **rare events discovery** (e.g., some splicing events) or **lowly-expressed gene assessment** (e.g., lncRNAs).
-
-However, for regular mRNA gene expression, **biological replicates are of greater importance than sequencing depth**.
-
-
-
-
-[All-over very useful experimental design manual!](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf) It discusses what is a good experimental design, factorial design, choice of control, paired vs. unpaired desing, bias and confounding factors, randomization, block design, blinding, sample size, effect size and power, sample pooling.
-
-<br/>
 ## Resources
 * [ENCODE Guidelines and Best Practices for RNA-Seq](https://www.encodeproject.org/documents/cede0cbe-d324-4ce7-ace4-f0c3eddf5972/@@download/attachment/ENCODE%20Best%20Practices%20for%20RNA_v2.pdf)
 * [The Experimental Design Assistant from NC3RS, UK](https://eda.nc3rs.org.uk/experimental-design)
