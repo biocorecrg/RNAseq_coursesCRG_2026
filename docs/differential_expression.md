@@ -28,12 +28,14 @@ In this tutorial, we will give you an overview of the **DESeq2** pipeline to fin
 
 [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) is an R/Bioconductor implemented method to detect differentially expressed features.
 <br>
-It uses the negative binomial generalized linear models.
+It tests for differential expression using **negative binomial generalized linear models**.
 <br>
 DESeq2 (as edgeR) is based on the hypothesis that **most genes are not differentially expressed**.
 <br><br>
 This DESeq2 tutorial is inspired by the [RNA-seq workflow](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) developped by the authors of the tool, and by the [differential gene expression course](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) from the [Harvard Chan Bioinformatics Core](http://bioinformatics.sph.harvard.edu/).
 <br><br>
+
+DESeq2 takes as an input **raw counts** (i.e. non normalized counts): the DESeq2 model internally **corrects for library size**, so giving as an input normalized count would be incorrect.
 
 ### DESeq2 steps:
 
@@ -43,6 +45,8 @@ This DESeq2 tutorial is inspired by the [RNA-seq workflow](http://master.biocond
   * GLM (Generalized Linear Model) fit for each gene.
 * Testing for differential expression (Wald test).
 <br> 
+DESeq2 uses the **median of ratio** method for **normalization**: briefly, the counts are divided by sample-specific **size factors**.<br>
+**Geometric mean** is calculated for each gene **across all samples**. The counts for a gene in each sample is then **divided** by this mean. The **median of these ratios** in a sample is the size factor for that sample.
 <br>
 For additional information regarding the tool and the algorithm, please refer to the [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4302049/) and the user-friendly package [vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html).
 
@@ -116,7 +120,7 @@ Remember that the STAR count file contains **4 columns** depending on the librar
 * Create the sub-directory **counts_STAR_selected** inside the deseq2 directory:
 
 ```{bash}
-mkdir -p ~/rnaseq_course/differential_expression/counts_STAR_selected
+mkdir ~/rnaseq_course/differential_expression/counts_STAR_selected
 ```
 
 * Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (2nd column).
@@ -182,6 +186,13 @@ The design indicates how to model the samples: in the model we need to specify w
 
 *Note that the same sample sheet will be used for both **the STAR and the Salmon** DESeq2 analysis. (with a slight modification that we will see later on)*
 
+<br>
+**BACK UP**<br>
+You can download create it the following way, in R:
+
+```{bash}
+
+```
 
 #### Analysis
 
@@ -203,9 +214,7 @@ setwd("~/rnaseq_course/differential_expression")
 library(DESeq2)
 ```
 
-##### Analysis from STAR
-
-###### Load raw counts into DESeq objects
+##### Import STAR counts
 
 * Read in the sample table that we prepared:
 
@@ -227,21 +236,20 @@ ncol(sampletable) # if this is not 4, also raise your hand !
 ```
 
 * Load the count data from **STAR** into an **DESeq** object:
-
+  * **sampleTable:** the sample sheet / metadata we created
+  * **directory:** path to the directory where the counts are stored (one file per sample)
+  * **design:** design formula describing which variables will be used to model the data. Here we want to compare the experimental groups in "Condition".
 ```{r}
 # Import STAR counts
-  # sampleTable is the sample sheet / metadata we created
-  # directory is the path to the directory where the counts are stored (one file per sample)
-  # design is how we wish to model the data: what we want to measure here is the difference between the treat
-ment times
 se_star <- DESeqDataSetFromHTSeqCount(sampleTable = sampletable,
                         directory = "counts_STAR_selected",
                         design = ~ Condition)
 ```
 
+**NOTE**: the design formula is used to estimate the dispersions and to estimate the log2 fold changes of the model!
 
 
-##### Analysis from Salmon counts
+##### Import Salmon counts
 
 * Load the count data from **SALMON** into an **DESeq** object:
 
@@ -286,12 +294,12 @@ se_salmon <- DESeqDataSetFromTximport(txi,
 * We will focus the rest of the analysis on the **se_star**.
 
 
-##### Filtering
+##### Filtering out lowly expressed genes
 
-* Remove lowly expressed genes: we want to remove genes that have no or very little expression. It will allow us to proceed with the statistical analysis using less genes. Working with less genes increases the **statistical power**.
-  * We choose to keep only those genes that have **more than 10 summed raw counts across the 6 samples**: this is not very stringent. You can refer to that [paper](https://f1000research.com/articles/5-1438/v2) for suggestions on how to filter out genes with low counts.
-  * **UPDATE** From DESeq2 vignette: *While it is not necessary to pre-filter low count genes before running the DESeq2 functions, there are two reasons which make pre-filtering useful: by removing rows in which there are very few reads, we reduce the memory size of the dds data object, and we increase the speed of the transformation and testing functions within DESeq2.*
-  * Let's filter:
+From DESeq2 vignette: *While it is not necessary to pre-filter low count genes before running the DESeq2 functions, there are two reasons which make pre-filtering useful: by removing rows in which there are very few reads, we reduce the memory size of the dds data object, and we increase the speed of the transformation and testing functions within DESeq2.*
+<br>
+
+Let's filter:
 
 ```{r}
 # Number of genes before filtering:
@@ -308,7 +316,7 @@ nrow(se_star)
 
 The **biomaRt** package is used for adding a more **detailed annotation** to our data sets.
 <br>
-Additionally to the ENSEMBL gene IDs we want:
+Additionally to the ENSEMBL gene IDs we want (for example):
 * The external gene name (symbol)
 * A more thorough gene description
 * Chromosome and coordinates
@@ -351,6 +359,14 @@ head(annot)
 ```
 
 ##### Fit statistical model
+
+All steps are wrapped up in the **DESeq** function:
+* estimating size factors
+* estimating dispersions
+* gene-wise dispersion estimates
+* mean-dispersion relationship
+* final dispersion estimates
+* fitting model and testing
 
 ```{r}
 se_star2 <- DESeq(se_star)
@@ -433,6 +449,10 @@ Do samples cluster how you would expect ?
 * **Principal Component Analysis** (PCA)
 
 Reduction of dimensionality to be able to retrieve main differences / underlying variance between samples.
+<br>
+It is used to bring out strong patterns from complex biological datasets.
+<br>
+More on PCA in [this post](https://blog.bioturing.com/2018/06/14/principal-component-analysis-explained-simply)
 
 ```{r}
 png("PCA_star.png")
@@ -498,6 +518,11 @@ resultsNames(se_star2)
 	# contrast: the column from the metadata that is used for the grouping of the samples (Condition), then WT is compared to the KO -> results will be as "WT vs KO"
 de <- results(object = se_star2, 
 		name="Condition_WT_vs_KO")
+# This is equivalent to:
+de <- results(object = se_star2, contrast=c("Condition", "WT", "KO"))
+
+# If you want the results to be expressed as "KO vs WT", you can run:
+# de <- results(object = se_star2, contrast=c("Condition", "KO", "WT"))
 
 # check first rows
 head(de)
@@ -599,6 +624,7 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
   * Plot PCA and sample-to-sample distances heatmap
 * Check differential expression **resultsNames()**
   * How many genes are differentially expressed, when considering padj < 0.05?
+**DON'T FORGET TO WRITE FILES DOWN AT EACH STEP!!**
 
 **Exercise 3**
 
@@ -610,8 +636,8 @@ While in Exercise 2 we tested **WT vs KO** on **undifferentiated** samples only,
 ~ Differentiation + Condition
 ```
 
-it means that we want to test for the effect of the **FOXC1 knock out**, while *controlling for the effect of differentiation*.
-In a way, we "discard" the expected changes due to differentiation to focus on the KO-specific changes.
+it means that we want to test for the effect of the **FOXC1 knock out**, while *controlling for the effect of differentiation*.<br>
+In a way, we "discard" the expected changes due to differentiation to focus on the changes specifically driven by the KO.
 
 * Repeat the first analysis, changing the design **~ Condition** to **~ Differentiation + Condition**.
 * How many genes are now found differentially expressed, when filtering for padj < 0.05?
