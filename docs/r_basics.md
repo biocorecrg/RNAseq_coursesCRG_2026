@@ -338,8 +338,7 @@ BiocManager::install('GOstats')
 |22|189|M|
 |27|167|F|
 
-	with row names: John, Jessica, Steve, Rachel<br>
-	and column names: Age, Height, Sex
+with row names: **John, Jessica, Steve, Rachel** and column names: **Age, Height, Sex**.
 	* Check the structure of df with str().
 	* Calculate the average age and height in df.
 	* Change the row names of df so the data becomes anonymous (use for example Patient1, Patient2, etc.)
