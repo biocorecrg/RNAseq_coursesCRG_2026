@@ -32,11 +32,14 @@ zcat Homo_sapiens.GRCh38.dna.chrom6.fa.gz > Homo_sapiens.GRCh38.dna.chrom6.fa
 
 **Once the index is built, do not forget to remove those unzipped files!**
 
-
 To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** option needs to be specified for detecting possible splicing sites:
 * It usually equals the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a spicing site. 
 * In our case, since the read size is 49 bases, we can accept maximum 48 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **48**. 
 * This also means that **for every different read-length to be aligned a new STAR index needs to be generated**. Otherwise a drop in aligned reads can be experienced.
+<br>
+* **--runThreadN** allows you to parallelize the job.
+<br>
+**NOTE** that for small genomes, parameter **--genomeSAindexNbases** (default 14) should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
 <br>
 Building the STAR index (option **--runMode genomeGenerate**):
@@ -54,8 +57,11 @@ $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
 		--sjdbGTFfile ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf \
 		--sjdbOverhang 48 \
 		--genomeSAindexNbases 12.6 \
-		--outFileNamePrefix Hsapiens_chr6
+		--outFileNamePrefix Hsapiens_chr6 \
+		--runThreadN 4
 ```
+
+* **--genomeSAindexNbases**: default 14. If genome is small, should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
 
 ## Aligning reads to the genome (and counting them at the same time!)
@@ -65,11 +71,10 @@ To use **STAR** for the read alignment (default **--runMode** option), we have t
 * the read files (**--readFilesIn**)
 * if reads are compressed or not (**--readFilesCommand**)
 
-The following options are optional:
-* **--genomeSAindexNbases**: default 14. If genome is small, should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
+The following parameters are optional:
 * **--outSAMtype**: type of output. Default is **BAM Unsorted**; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be directly used with downstream software such as HTseq, without the need of name sorting."* We therefore prefer the option **BAM SortedByCoordinate**
 * **--outFileNamePrefix**: the path for the output directory and prefix of all output files. By default, this parameter is ./, i.e. all output files are written in the current directory.
-* **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by the [**htseq-count**](https://htseq.readthedocs.io/en/release_0.11.1/count.html) tool with default parameters. **This option requires annotations (GTF or GFF with –sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf)) 
+* **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by the [**htseq-count**](https://htseq.readthedocs.io/en/release_0.11.1/count.html) tool with default parameters. **This option requires annotations (GTF or GFF with –-sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf)) 
 
 <br>
 We can try and launch the mapping for one file:
@@ -86,7 +91,8 @@ $RUN STAR --genomeDir index_star_chr6 \
       --readFilesCommand zcat \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
-      --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6
+      --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6 \
+      --runThreadN 4
 ```
 
 If this was successful and not too slow and resource consuming, you can do it for all samples, in a **loop**:

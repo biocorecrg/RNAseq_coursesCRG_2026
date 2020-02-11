@@ -51,7 +51,7 @@ To quantify reads with **Salmon**, we need to specify the type sequencing librar
 | :---: | :----: |:----: |
 |I|inward|-> ... <- |
 |O|outward|<- ... ->|
-|M|matching|> ... ->|
+|M|matching|-> ... ->|
 
 **The second:**
 
@@ -68,7 +68,9 @@ To quantify reads with **Salmon**, we need to specify the type sequencing librar
 |R|read 1 (or single-end read) comes from the reverse strand|
 
 <br/>
-From the STAR output for read counts we already know that for the analyzed experiment the **U** (**Untranded**) library was used. 
+From the STAR output for read counts we already know that for the analyzed experiment the **U** (**Unstranded**) library was used. 
+<br>
+If the library was **paired-end** and sequenced with a **stranded reverse** library, we would set the parameter to **ISR**.
 <br>
 If we want to assign the reads to the genes (option **-g**) in addition to transcripts we have to provide a **GTF file** corresponding to the transcript version which was used to build the Salmon index. 
 <br>
@@ -137,7 +139,7 @@ We will use information on read counts for genes from **quant.sf** files for the
 
 <br>
 
-Now if time and resources allows, proceed with the mapping of the **9  remaining samples**:
+Now if time and resources allows, proceed with the mapping of the **9 remaining samples**:
 
 ```{bash}
 cd ~/rnaseq_course/mapping
