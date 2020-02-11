@@ -332,14 +332,16 @@ BiocManager::install('GOstats')
 
 * Ex4. 
 	* Create the following data frame:
+
 |43|181|M|
 |34|172|F|
 |22|189|M|
 |27|167|F|
+
 	with row names: John, Jessica, Steve, Rachel<br>
 	and column names: Age, Height, Sex
 	* Check the structure of df with str().
 	* Calculate the average age and height in df.
 	* Change the row names of df so the data becomes anonymous (use for example Patient1, Patient2, etc.)
-	* Write **df** to the file **mydf.txt**. Explore parameters **sep**, **row.names**, **col.names**, **quote**.
+	* Write **df** to the file **mydf.txt** with **write.table()**. Explore parameters **sep**, **row.names**, **col.names**, **quote**.
 
