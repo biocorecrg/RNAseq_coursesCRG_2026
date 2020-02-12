@@ -191,7 +191,7 @@ The design indicates how to model the samples: in the model we need to specify w
 You can download create it the following way, in R:
 
 ```{bash}
-
+wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/sample_sheet_foxc1.txt
 ```
 
 #### Analysis
@@ -447,6 +447,13 @@ dev.off()
 Do samples cluster how you would expect ?
 
 **GET FILES WE COULD NOT CREATE YESTERDAY**
+
+```{bash}
+wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/normalized_counts_log2_star.txt
+wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/annotation_ens88.txt
+```
+
+Read them in R
 
 ```{r}
 # biomaRt annotations
