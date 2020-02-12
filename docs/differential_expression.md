@@ -267,7 +267,7 @@ files <- dir("~/rnaseq_course/differential_expression/counts_salmon", recursive=
 names(files) <- gsub("_quant.sf", "", dir("~/rnaseq_course/differential_expression/counts_salmon"))
 
 # Read in the two-column data.frame linking transcript id (column 1) to gene id (column 2)
-tx2gene <- read.table("tx2gene.gencode.v33.csv", 
+transcripts2genes <- read.table("tx2gene.gencode.v33.csv", 
 		sep="\t",
 		header=F)
 
@@ -275,7 +275,7 @@ tx2gene <- read.table("tx2gene.gencode.v33.csv",
 # here we summarize the transcript-level counts to gene-level counts
 txi <- tximport(files, 
 		type = "salmon", 
-		tx2gene = tx2gene)
+		tx2gene = transcripts2genes)
 
 # check the names of the "slots" of the txi object
 names(txi)
