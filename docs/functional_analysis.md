@@ -6,6 +6,19 @@ navigation: 19
 
 # Functional analysis
 
+First, get the files from the **undifferentiated only** DESeq2 analysis (in case we did not have time to do it):
+
+```{bash}
+# get file
+wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/undiff.tar.gz
+
+# extract archive
+tar -xvzf undiff.tar.gz
+
+# remove archive
+rm undiff.tar.gz
+```
+
 ## Data bases
 
 ### Gene Ontology
@@ -65,7 +78,7 @@ Let's prepare this list from the file we saved before:
 cd ~/rnaseq_course/functional_analysis
 
 # The gene symbol is in the 12th column
-cut -f 12 ~/rnaseq_course/differential_expression/deseq2_selection_padj005.txt | sed '1d' > deseq2_selection_padj005_symbol.txt
+cut -f 12 ~/rnaseq_course/differential_expression/undiff/deseq2_selection_padj005_undiff.txt | sed '1d' > deseq2_selection_padj005_symbols.txt
 ```
 
 ### enrichR
@@ -83,7 +96,7 @@ However, EnrichR also provides a [set of tools](https://amp.pharm.mssm.edu/modEn
 
 <img src="images/enrichr_interface2.png" width="600" align="middle" />
 
-In the [main page](http://amp.pharm.mssm.edu/Enrichr/), paste our list of selected **gene symbols** (*deseq2_results_padj0.05_log2fc0.5_symbols.txt*) and **Submit** !
+In the [main page](http://amp.pharm.mssm.edu/Enrichr/), paste our list of selected **gene symbols** (*deseq2_selection_padj005_symbols.txt*) and **Submit** !
 
 <img src="images/enrichr_results_all.png" width="600" align="middle" />
 
@@ -114,12 +127,12 @@ Prepare files using s time the **ENSEMBL IDs**:
 cd ~/rnaseq_course/functional_analysis
 
 # Extract all gene IDs used in our analysis
-cut -f 1 ~/rnaseq_course/differential_expression/normalized_counts_log2_star.txt | sed '1d' > deseq2_UNIVERSE_ENSEMBL.txt
+cut -f 1 ~/rnaseq_course/differential_expression/undiff/normalized_counts_log2_star_undiff.txt | sed '1d' > deseq2_UNIVERSE_ENSEMBL.txt
 
 # Extract significant gene symbols only
-cut -f 1 ~/rnaseq_course/differential_expression/deseq2_selection_padj005.txt | sed '1d' > deseq2_selection_padj005_ENSEMBL.txt
+cut -f 1 ~/rnaseq_course/differential_expression/undiff/deseq2_selection_padj005_undiff.txt | sed '1d' > deseq2_selection_padj005_ENSEMBL.txt
 ```
-Paste our selection, and select **biological process** and **Homo sapiens**(file deseq2_results_padj0.05_log2fc0.5_IDs.txt):
+Paste our selection, and select **biological process** and **Homo sapiens**:
 
 <img src="images/GO_tool_interface.png" width="500" align="middle" />
 
@@ -127,7 +140,7 @@ Paste our selection, and select **biological process** and **Homo sapiens**(file
 
 <img src="images/GO_tool_input1.png" width="800" align="middle" />
 
-**Analyzed List** is what we just uploaded (*deseq2_results_padj0.05_log2fc0.5_ensemblIDs.txt*).
+**Analyzed List** is what we just uploaded (*deseq2_selection_padj005_ENSEMBL.txt*).
 <br>
 In **Reference List**, we need to upload a file containg the **universe** (*deseq2_UNIVERSE_ENSEMBL.txt*):  *Change -> Browse -> (select deseq2_UNIVERSE_ENSEMBL.txt) -> Upload list*
 <br>
@@ -137,7 +150,7 @@ In **Reference List**, we need to upload a file containg the **universe** (*dese
 * Try the same analysis using the **gene symbols** instead of ENSEMBL IDs
 ```{bash}
 # Get universe with gene symbols (we already have the gene selection in deseq2_selection_padj005_symbol.txt
-cut -f16 ~/rnaseq_course/differential_expression/normalized_counts_log2_star.txt | sed '1d' > deseq2_UNIVERSE_symbol.txt
+cut -f11 ~/rnaseq_course/differential_expression/undiff/normalized_counts_log2_star_undiff.txt | sed '1d' > deseq2_UNIVERSE_symbols.txt
 ```
 * **Launch** !
 <img src="images/GO_tool_results_symbols.png" width="800" align="middle" />
@@ -167,7 +180,6 @@ de_univ <- read.table("deseq2_UNIVERSE_ENSEMBL.txt", header=T, as.is=T, sep="\t"
 <br>
 GOstats works only with **Entrez IDs**: we can get them with the **biomaRt** package, as we did for the differential expression analysis.
 
-
 ```{r}
 library(biomaRt)
 
@@ -185,6 +197,17 @@ entrez <- getBM(attributes=c('entrezgene', 'ensembl_gene_id'), filters ='ensembl
 ids_univ <- de_univ
 entrez_univ <- getBM(attributes=c('entrezgene', 'ensembl_gene_id'), filters ='ensembl_gene_id', values = ids_univ, mart = mart)
 ```
+
+**As biomaRt is causing trouble, you can get the files the following way**
+
+```{r}
+download.file("https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/deseq2_UNIVERSE_entrez.txt")
+download.file("https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/deseq2_selection_padj005_entrez.txt")
+
+entrez <- scan("deseq2_selection_padj005_entrez.txt")
+entrez_univ <- scan("deseq2_UNIVERSE_entrez.txt")
+```
+
 
 We can proceed with the **hypergeometric test** (enrichment) for the **Biological Process** ontologies:
 
