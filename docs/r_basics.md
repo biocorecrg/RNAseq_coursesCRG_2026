@@ -348,6 +348,7 @@ with row names: **John, Jessica, Steve, Rachel** and column names: **Age, Height
 **CORRECTION**
 
 ```{r}
+
 # Ex1.
 #Create a numeric vector y which contains the numbers from 2 to 11, both included.
 y <- 2:11
@@ -371,7 +372,8 @@ summary(x)
 #Create vector y2 as: y2 <- c(1, 11, 5, 62, NA, 18, 2, 8, NA)
 y2 <- c(1, 11, 5, 62, NA, 18, 2, 8, NA)
 #What is the sum of all elements in y2 ?
-sum(y2)
+sum(y2, na.rm = TRUE)
+# same as sum(na.omit(y2))
 #Which elements of y2 are also present in y?
 y2[y2 %in% y]
 #Remove NA values from y2.
@@ -390,6 +392,8 @@ str(df)
 #Calculate the average age and height in df.
 mean(df$Age) # same as mean(df[,"Age"])
 mean(df$Height) # same as mean(df[,"Height"])
+  # or
+colMeans(df[,c("Age", "Height")])
 #Change the row names of df so the data becomes anonymous 
   # (use for example Patient1, Patient2, etc.)
 rownames(df) <- c("Patient1", "Patient2", "Patient3", "Patient4")
