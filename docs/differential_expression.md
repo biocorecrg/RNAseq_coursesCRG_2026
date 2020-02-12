@@ -446,6 +446,15 @@ dev.off()
 
 Do samples cluster how you would expect ?
 
+**GET FILES WE COULD NOT CREATE YESTERDAY**
+
+```{r}
+# biomaRt annotations
+annot <- read.table("annotation_ens88.txt", sep="\t", header=T, as.is=T)
+# normalized counts, annotated
+norm_counts_symbols <- read.table("normalized_counts_log2_star.txt", sep="\t", header=T, as.is=T)
+```
+
 * **Principal Component Analysis** (PCA)
 
 Reduction of dimensionality to be able to retrieve main differences / underlying variance between samples.
