@@ -634,13 +634,110 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 |5p4_33cfoxc1 |SRR3091427_1_counts.txt |undiff |KO |
 
 * Read in data **DESeqDataSetFromHTSeqCount()**
-* Filter low counts
+* Filter out low counts (keep high counts)
 * Fit statistical model **DESeq()**
 * rlog-transform counts **rlog()**
   * Plot PCA and sample-to-sample distances heatmap
 * Check differential expression **resultsNames()**
   * How many genes are differentially expressed, when considering padj < 0.05?
 **DON'T FORGET TO WRITE FILES DOWN AT EACH STEP!!**
+
+<br>
+
+**STEP BY STEP CORRECTION**
+
+```{r}
+## DESeq2 analysis
+
+library(DESeq2)
+
+# Create sample sheet
+
+sampletable <- data.frame(SampleName=c("5p4_25c", "5p4_27c", "5p4_28c", "5p4_29c", "5p4_30c", "5p4_31cfoxc1", "5p4_32cfoxc1", "5p4_33cfoxc1", "5p4_34cfoxc1", "5p4_35cfoxc1"),
+                          FileName=c("SRR3091420_1_counts.txt", "SRR3091421_1_counts.txt", "SRR3091422_1_counts.txt", "SRR3091423_1_counts.txt", "SRR3091424_1_counts.txt", "SRR3091425_1_counts.txt", "SRR3091426_1_counts.txt", "SRR3091427_1_counts.txt", "SRR3091428_1_counts.txt", "SRR3091429_1_counts.txt"),
+                          Differentiation=c(rep("undiff", 2), rep("diff5days", 3), rep("undiff", 3), rep("diff5days", 2)),
+                          Condition=c(rep("WT", 5), rep("KO", 5)))
+rownames(sampletable) <- gsub("_counts.txt", "", sampletable$FileName)
+
+# Modify sample sheet to keep only "undiff" samples
+
+sampletable2 <- sampletable[sampletable$Differentiation=="undiff",]
+
+# Import STAR counts
+se_star <- DESeqDataSetFromHTSeqCount(sampleTable = sampletable2,
+                                      directory = "counts_STAR_selected",
+                                      design = ~ Condition)
+
+# Filter out lowly expressed genes 
+ # i.e. (keep genes for which sums of raw counts across experimental samples is > 10)
+
+se_star <- se_star[rowSums(counts(se_star)) > 10, ]
+
+# Annotate
+gene_ids <- rownames(se_star)
+
+library(biomaRt)
+
+mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="mar2017.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
+
+annot <- getBM(attributes=c('ensembl_gene_id', 'chromosome_name', 'start_position', 'end_position', 'description', 'external_gene_name'), filters ='ensembl_gene_id', values = gene_ids, mart = mart)
+
+# Fit statistical model
+
+se_star2 <- DESeq(se_star)
+
+# Compute normalized counts
+norm_counts <- log2(counts(se_star2, normalized = TRUE)+1)
+
+# add annotation to count table 
+norm_counts_symbols <- merge(data.frame(ID=rownames(norm_counts), norm_counts, check.names=FALSE), annot, by.x="ID", by.y="ensembl_gene_id", all=F)
+
+# write normalized counts to text file
+write.table(norm_counts_symbols, "normalized_counts_log2_star_undiff.txt", quote=F, col.names=T, row.names=F, sep="\t")
+
+# Transform counts for visualization
+se_rlog <- rlog(se_star2)
+
+# Build heatmap
+# load libraries pheatmap to create the heatmap plot
+library(pheatmap)
+
+# calculate between-sample distance matrix
+sampleDistMatrix <- as.matrix(dist(t(assay(se_rlog))))
+
+# prepare a "metadata" object to add a colored bar with the differentiation and condition information
+metadata <- sampletable[,c("Differentiation", "Condition")]
+rownames(metadata) <- sampletable$SampleName
+
+# create figure in PNG format
+png("sample_distance_heatmap_star_undiff.png")
+pheatmap(sampleDistMatrix, annotation_col=metadata)
+# close PNG file after writing figure in it
+dev.off() 
+
+# Principal component analysis
+png("PCA_star_undiff.png")
+plotPCA(object = se_rlog,
+        intgroup = c("Condition", "Differentiation"))
+dev.off()
+
+# Differential expression analysis
+de <- results(object = se_star2, 
+              name="Condition_WT_vs_KO")
+# add annotation
+de_symbols <- merge(data.frame(ID=rownames(de), de, check.names=FALSE), annot, by.x="ID", by.y="ensembl_gene_id", all=F)
+
+# write differential expression analysis result to a text file
+write.table(de_symbols, "deseq2_results_undiff.txt", quote=F, col.names=T, row.names=F, sep="\t")
+
+# Select genes for which padj < 0.05
+de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
+
+# save results in file for further usage
+write.table(de_select, "deseq2_selection_padj005_undiff.txt", quote=F, col.names=T, row.names=F, sep="\t")
+```
+
+
 
 **Exercise 3**
 
