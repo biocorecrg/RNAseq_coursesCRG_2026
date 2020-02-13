@@ -8,6 +8,8 @@ https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0881-8
 * [Inferential considerations for low-count RNA-seq transcripts: a case study on the dominant prairie grass Andropogon gerardii. BMC Genomics, 2016.](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-016-2442-7)
 * [consensusDE: an R package for assessing consensus of multiple RNA-seq algorithms with RUV correction. PeerJ. 2019.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6913255/)
 
+#### Adjusted p-value and multiple testing
+* [Why, When and How to Adjust Your P Values? Cell J. 2019.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6099145/)
 
 
 ### Online course materials
