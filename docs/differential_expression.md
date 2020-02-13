@@ -567,6 +567,13 @@ Standard error of the log2FoldChange.
 Wald statistic: the log2FoldChange divided by its standard error.
 
 
+**Note on p-values set to NA: some values in the results table can be set to NA for one of the following reasons: (from [Analyzing RNA-seq data with DESeq2 by M. Love et al., 2017](https://bioconductor.statistik.tu-dortmund.de/packages/3.5/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)**
+
+* If within a row, all samples have zero counts, the baseMean column will be zero, and the log2 fold change estimates, p value and adjusted p value will all be set to NA.
+* If a row contains a sample with an extreme count outlier then the p value and adjusted p value will be set to NA. These outlier counts are detected by Cook’s distance. If there are very many outliers (e.g. many hundreds or thousands) reported by summary(res), one might consider further exploration to see if a single sample or a few samples should be removed due to low quality.
+* If a row is filtered by automatic independent filtering, for having a low mean normalized count, then only the adjusted p value will be set to NA. This independent filtering can be customized or turned off in the DESeq2 function results(dds, independentFiltering=FALSE).
+
+
 
 #### Gene selection
 
