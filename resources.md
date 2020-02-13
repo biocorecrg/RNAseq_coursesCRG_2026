@@ -9,7 +9,8 @@ https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0881-8
 * [consensusDE: an R package for assessing consensus of multiple RNA-seq algorithms with RUV correction. PeerJ. 2019.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6913255/)
 
 #### Adjusted p-value and multiple testing
-* [Why, When and How to Adjust Your P Values? Cell J. 2019.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6099145/)
+* [Why, When and How to Adjust Your P Values? Cell J, 2019.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6099145/)
+* [How does multiple testing correction work? Nat Biotechnol, 2009.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2907892/)
 
 
 ### Online course materials
