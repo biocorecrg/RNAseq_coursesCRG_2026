@@ -1,4 +1,5 @@
-# RNAseq course COURSES@CRG 16-20 March 2026
+# RNAseq course COURSES@CRG 
+### 16-20 March 2026
 ## Decoding Transcriptomes: A Practical Course on RNA-seq
 https://courses.crg.eu/events/decoding-transcriptomes-practical-course-rna-seq
 
@@ -8,61 +9,31 @@ The course integrates laboratory practice with computational training, equipping
 
 **This repo covers only the computational part of the course**
 
-## The webpage is at https://biocorecrg.github.io/RNAseq_course_2019/ 
+### The webpage is at https://biocorecrg.github.io/RNAseq_coursesCRG_2026/ 
 
 ## Agenda
 ### Day 3 - Wed 18 March 2026
-* 11:00 - 11:30 **Talk:** Pre-processing of raw data and fastq format - What happens with data after the libraries were sequenced **(Anna Delgado)**
+* 11:00 - 11:30 **Talk: Pre-processing of raw data and fastq format - What happens with data after the libraries were sequenced (Anna Delgado)**
 * 11:30 - 12:00 _Coffee break_
-* 
+* 12:00 - 12:30 **Talk: FAIR & Reproducible practices in Bioinformatics - containers, public repos, git/GitHub (Toni Hermoso)**
+* 12:30 - 13:00 **Talk: RNA-seq data analysis: Workflow & Approaches (Luca Cozzuto)** _here or later to cover: Map reads to genome or transcriptome? Existing approaches/methods to read mapping in an RNA-seq experiment: pros and cons, which to choose?_
+* 13:00 - 14:00 _Lunch_
+* 14:00 - 14:30 Hands-on: Basics of Linux CLI
+* 14:30 - 16:00 Hands-on: Read QC: fastq format, FastQC, FastqScreen, kraken, MultiQC (Anna)
+* 16:00 - 16:15 _Coffee break_
+* 16:15 - 17:00 Hands-on: Read pre-processing: adapter trimming, riboPicker, MultiQC (Anna or Luca?)
+* 17:00 - 18:00 Hands-on: Finding reference genome/transcriptome and annotation (ENSEMBL, Gencode, UCSC Genome Browser), GTF/GFF format (Luca)
 
-Anna DelgadoIntroduction (lecture)
-  * goals of course
-  * SMALL INTRODUCTION ON HOW TO USE THE SINGULARITY IMAGE
-  * goals of RNA-seq experiments
-  * overview of platforms (Illumina, Nanopore, PacBio ?)
-  * polyA, ribo0, total RNA, microRNA
-  * stranded, unstranded
-  * adaptors
-  * read type: single, paired end; read length.
-  * experimental / sequencing design
-  * sequencing depth
-* Get raw data from public repository (Drosophila ?): check fastq file
-* Adaptor trimming
-* FastQC (compare what should be seen in genome versus transcriptome), FastqScreen, MultiQC
+### Day 4 - Thu 19 March 2026
+* 9:00 - 11:30 Hands-on: Read mapping to the reference genome/transcriptome and quntification (STAR, Salmon, SAM/BAM format, samtools, explore BAM/bigwig file in the UCSB Genome Browser, gene/transcript quantification, QualiMap) (Luca)
+* 11:30 - 12:00 _Coffee break_
+* 12:00 - 13:00 Hands-on: Review R basics (RStudio) (Julia/Fabian)
+* 13:00 - 14:00 _Lunch_
+* 14:00 - 16:00 Hands-on: DESeq2: import data from STAR and SALMON, filtering and normalization (vst, log2(deseq-native)), PCA, sample, clustering, boxplots for selected genes, batch correction using ComBat (for that we will need to use a different dataset) (Fabian/Julia)
+* 16:00 - 16:15 _Coffee break_
+* 16:15 - 18:00 Hands-on: DE analysis in DESeq2. Gene selection, volcano plots, hitmaps. Functional analysis: enrichR (gene sets), GSEA (all genes) (Fabian/Julia)
+* 18:00 - 21:00 Social activity
 
-### Day 2
-* Get reference genome or transcriptome: ENSEMBL, Gencode, UCSC
-* GTF format; a bit of exploration and excercises 
-* Map reads to genome or transcriptome? 
-* Existing approaches/methods to read mapping in an RNA-seq experiment: pros and cons, which to choose?
-* Map data to reference genome:
-  * STAR
-  * SALMON
-* SAM / BAM formats (play with samtools)
-* How to explore BAM files (e.g., using NCBI Genome Workbench https://www.ncbi.nlm.nih.gov/tools/gbench/tutorial6/; UCSC browser https://genome.ucsc.edu/goldenPath/help/bam.html - which http server can be used in the class for this?) other tools to view BAM file SeqMonk, RNAseqViewer, IGB,...
-* Make bigwig-files from BAMs and load into GenomeBrowser
-
-I suggest to move Genome Browser here to show its major functionality and to look at BAM and bigwig files. It can be ok to expand it to Day 3. Maybe, move SALMON to Day 3 and compare alignments from STAR ans SALMON using statistics on mapping and looking at bigwig-files in the borwser? 
-
-### Day 3
-* DESeq2: import data from STAR and SALMON
-* online tool that integrates DESeq2, edgeR, limma, and more: http://52.90.192.24:3838/rnaseq2g/
-* RSEM after SALMON?
-* Gene selection
-* PCA, heatmap
-
-### Day 4
-* Genome browser: ENSEMBL, UCSC or IGV
-* bigwig?
-* Conversion from UCSC chromosome naming convention to ENSEMBL's ?
-* Gene Ontology analysis:
-  * enrichR
-  * DAVID ?
-  * GSEA
-
-### Day 5
-* Mini project on small genome: provide link to public data
-
-link to CRG course:  https://public-docs.crg.es/rguigo/courses/rnaseq/2017
+### Day 5 - Fri 20 March 2026
+* Running the full analysis using nf-core 
 
