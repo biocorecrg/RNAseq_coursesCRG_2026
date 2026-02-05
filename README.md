@@ -1,14 +1,22 @@
-# RNAseq_course_2019
-Material for the RNAseq course
+# RNAseq course COURSES@CRG 16-20 March 2026
+## Decoding Transcriptomes: A Practical Course on RNA-seq
+https://courses.crg.eu/events/decoding-transcriptomes-practical-course-rna-seq
 
-## Prior to course
-Send survey to participants regarding cluster access and usage.
+This hands-on program provides a comprehensive introduction to RNA sequencing, guiding participants through the complete workflow from sample preparation to data analysis. Participants will gain practical experience in RNA quality control, mRNA library preparation for Next Generation Sequencing (NGS), and library quality control. On the computational side, they will work with real sequencing data to learn key steps including data quality assessment, alignment, quantification, differential expression analysis, and functional interpretation.
 
-## The plan (draft)
-The webpage is at https://biocorecrg.github.io/RNAseq_course_2019/ 
+The course integrates laboratory practice with computational training, equipping participants with the skills needed to design robust RNA-seq experiments and to apply reproducible analysis workflows following the FAIR practices. The program is complemented by theoretical lectures on state-of-the-art transcriptomics and bioinformatics, a guided visit to the CRG Genomics Unit, and networking activities.
 
-### Day 1
-* Introduction (lecture)
+**This repo covers only the computational part of the course**
+
+## The webpage is at https://biocorecrg.github.io/RNAseq_course_2019/ 
+
+## Agenda
+### Day 3 - Wed 18 March 2026
+* 11:00 - 11:30 **Talk:** Pre-processing of raw data and fastq format - What happens with data after the libraries were sequenced **(Anna Delgado)**
+* 11:30 - 12:00 _Coffee break_
+* 
+
+Anna DelgadoIntroduction (lecture)
   * goals of course
   * SMALL INTRODUCTION ON HOW TO USE THE SINGULARITY IMAGE
   * goals of RNA-seq experiments
