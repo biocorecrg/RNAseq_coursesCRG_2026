@@ -51,3 +51,11 @@ Previous public courses/repos with materials to re-use:
 * https://github.com/biocorecrg/nextflow-course-2024-alba
 * https://github.com/biocorecrg/contamination-nf
 * https://github.com/biocorecrg/PhD_course_containers_2024
+* https://github.com/biocorecrg/CoursesCRG_Containers_Nextflow_May_2022
+
+
+* https://github.com/biocorecrg/PHINDaccess_RNAseq_2020
+* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/expdesign.html
+* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/r_basics.html
+* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/functional_analysis.html
+* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/resources.html
