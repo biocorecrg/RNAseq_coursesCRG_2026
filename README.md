@@ -1,207 +1,61 @@
-# PHINDaccess RNAseq course
+# RNAseq course - international course for the programme COURSES@CRG 
+### 16-20 March 2026
+## Decoding Transcriptomes: A Practical Course on RNA-seq
+https://courses.crg.eu/events/decoding-transcriptomes-practical-course-rna-seq
 
-## Date & place
+This hands-on program provides a comprehensive introduction to RNA sequencing, guiding participants through the complete workflow from sample preparation to data analysis. Participants will gain practical experience in RNA quality control, mRNA library preparation for Next Generation Sequencing (NGS), and library quality control. On the computational side, they will work with real sequencing data to learn key steps including data quality assessment, alignment, quantification, differential expression analysis, and functional interpretation.
 
-### When ?
-From Monday 10th to Thursday 13th of February, 2020
+The course integrates laboratory practice with computational training, equipping participants with the skills needed to design robust RNA-seq experiments and to apply reproducible analysis workflows following the FAIR practices. The program is complemented by theoretical lectures on state-of-the-art transcriptomics and bioinformatics, a guided visit to the CRG Genomics Unit, and networking activities.
 
+**This repo covers only the computational part of the course**
 
-## Where ?
+### The webpage is at https://biocorecrg.github.io/RNAseq_coursesCRG_2026/ 
 
-IPT (Institut Pasteur Tunis)
+## Agenda
+### Day 3 - Wed 18 March 2026
+* 11:30 - 12:00 **Talk: Pre-processing of raw data and fastq format - What happens with data after the libraries were sequenced (Anna Delgado)**
+* 12:00 - 12:30 **Talk: FAIR & Reproducible practices in Bioinformatics - containers, public repos, git/GitHub (Toni Hermoso)**
+* 12:30 - 13:00 **Talk: RNA-seq data analysis: Workflow & Approaches (Luca Cozzuto)** _here or later to cover: Map reads to genome or transcriptome? Existing approaches/methods to read mapping in an RNA-seq experiment: pros and cons, which to choose?_
+* 13:00 - 14:00 _Lunch_
+* 14:00 - 14:30 Hands-on: Basics of Linux CLI **(Toni?)**
+* 14:30 - 16:00 Hands-on: Read QC: fastq format, FastQC, FastqScreen, kraken, MultiQC **(Anna)**
+* 16:00 - 16:15 _Coffee break_
+* 16:15 - 17:00 Hands-on: Read pre-processing: adapter trimming, riboPicker, MultiQC **(Anna or Luca?)**
+* 17:00 - 18:00 Hands-on: Getting reference genome/transcriptome and annotation (ENSEMBL, Gencode, UCSC Genome Browser), GTF/GFF format **(Luca)**
 
-## Duration
+### Day 4 - Thu 19 March 2026
+* 9:00 - 11:00 Hands-on: Read mapping to the reference genome/transcriptome and quantification (STAR, Salmon, SAM/BAM format, samtools, explore BAM/bigwig file in the UCSB Genome Browser, gene/transcript quantification, QualiMap) **(Luca)**
+* 11:00 - 11:30 _Coffee break_
+* 11:30 - 13:00 Hands-on: Review R basics (RStudio) **(Sarah Bonnin)**
+* 13:00 - 14:00 _Lunch_
+* 14:00 - 16:00 Hands-on: DESeq2: import data from STAR and SALMON, filtering and normalization (vst, log2(deseq-native)), PCA, sample clustering, boxplots for selected genes, batch correction using ComBat (for that we will need to use a different dataset) **(Fabian/Julia)**
+* 16:00 - 16:15 _Coffee break_
+* 16:15 - 18:00 Hands-on: DE analysis using DESeq2. Gene selection, volcano plots, heatmaps. Functional analysis using R packages (for gene sets) and the GSEA application (for all genes) **(Fabian/Julia)**
+* 18:00 - 21:00 _Social activity_
 
-4 full days (7-8h/day?)
-
-## Instructors
-
-[Sarah Bonnin](sarah.bonnin@crg.eu)
-
-[Julia Ponomarenko](julia.ponomarenko@crg.eu)
-
-## The plan (draft)
-The webpage is at https://biocorecrg.github.io/PHINDaccess_RNAseq_2020 
-
-### Day 1
-
-#### 9:00-10:15
-* Introduction of the course: goals of the course, outline
-* How to use the singularity image:
-  * Test with simple commands
-* Goals of RNA-seq experiments
-* Overview of platforms (Illumina, Nanopore, Pacbio)
-#### 10:45-12:00
-* Protocols: 
-  * polyA capture, ribo0, total RNA, microRNA, mRNA
-  * Stranded versus unstranded protocols
-  * Adaptors
-* Experimental / sequencing design
-  * Replicates
-  * Sequencing depth
-  * Read types: single, paired end. Read length
-#### 13:30-14:45
-* Get raw data from public repository
-  * Browse different repos
-  * Check fasta file and explain format
-* Get "toy" fastq from us (TBD: one chromosome from a small genome, to reduce computation)
-* FastQC (compare what should be seen in genome versus transcriptome), FastqScreen
-  * Explain details of reports
-#### 15:15-16:30
-* Adaptor trimming
-  * Run QC tools and adaptor trimming on one sample, give the second one as exercise
-  * Run QC tools on both "raw" and trimmed fastq files
-
-### Day 2
-
-#### 9:00-10:15
-* Get reference genome or transcriptome (fasta file): ENSEMBL, Gencode, UCSC
-  * Check fasta file, count sequences, grep headers, etc.
-* Get reference annotation (GTF)
-  * Explain GTF format
-  * Parsing GTF: retrieving only genes, only coordinates, only gene ID, etc.
-#### 10:45-12:00
-* Mapping theory
-  * Types of mappers
-  * Pros and con, which to choose ?
-* Map data to reference genome
-  * SALMON
-  * (STAR too computationally greedy)
-#### 13:30-14:45
-* Explain SAM and BAM format
-  * Fields in common with fastq format
-  * Fields specific to SAM/BAM
-  * Play with samtools: convert SAM to BAM, sort BAM, index BAM.
-#### 15:15-16:30
-* UCSC Genome browser
-  * Load BAM
-  * Explore annotations
-  * Convert bam to bigwig and load bigwig
-
-### Day 3
-
-#### 9:00-10:15
-* Refreshing R
-#### 10:45-12:00
-* Differential expression analysis
-  * Theory and popular tools
-* DESeq2
-  * Raw counts / input
-  * Import data from SALMON
-  * Import data from STAR even if we couldn't map it?
-  * Prepare transcript-to-gene annotation file for SALMON
-  * Sample sheet
-  * Analysis
-#### 13:30-14:45
-* DESeq2
-  * Prepare transcript-to-gene annotation file for SALMON
-  * Sample sheet
-  * Analysis
-  * Understanding output
-  * Filtering results, gene selection
-#### 15:15-16:30
-* Visualization of differential expression analysis
-  * PCA
-  * Dendrogram
-  * Heatmap
-  * Scatter plot?
-
-### Day 4
-
-#### 9:00-10:15
-* multiQC on FastQC, FastqScreen and mapped data
-* ?
-#### 10:45-12:00
-* Functional analysis
-  * Databases: GO, KEGG, MSigDB
-  * Run Enrichr
-  * Run GO/Panther tool
-#### 13:30-14:45
-* Functional analysis
-  * GSEA: theory and run
-#### 15:15-16:30
-* Keep this last session in case the course is running late.
-* BUT if time allows:
-  * GOstats? KEGGprofile?
-
-## Computers in training room
-
-Description: Ubuntu 18.04.3 LTS
-
-Release: 18.04
-
-Linux: 5.0.0-37-generic    
-
-RAM:  7.7 Go
-
-Storage: 480.08 Go
-
-Graphic Card: NIVIDIA Corporation GK208B (GeForce GT 710)
-
-Keyboard Layout: AZERTY
-
-### Requirements for the course:
-
-* Oracle VM virtual box installed on all computers
-* We will provide the virtual image necessary for the course (Scientific Linux, 5Go RAM, ? CPUs)
-* Access to websites, from the virtual machine: 
-  * https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/
-  * https://hub.docker.com/
-  * https://www.ncbi.nlm.nih.gov/geo/
-    * https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126535
-  * https://www.ebi.ac.uk/arrayexpress/
-  * https://www.encodeproject.org/
-    * https://www.encodeproject.org/experiments/ENCSR937WIG/
-    * https://www.encodeproject.org/experiments/ENCSR525HSH/
-  * https://www.ncbi.nlm.nih.gov/sra
-  * https://www.ebi.ac.uk/ena
-  * https://www.ddbj.nig.ac.jp/dra/index-e.html
-  * https://public-docs.crg.es/biocore/
-  * https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
-  * https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/
-  * https://github.com/relipmoc/skewer
-  * https://www.ensembl.org/index.html
-    * ftp://ftp.ensembl.org/pub/release-96/fasta/homo_sapiens/dna/
-    * http://ensemblgenomes.org/
-  * https://genome.ucsc.edu/
-    * https://genome-euro.ucsc.edu
-  * https://www.gencodegenes.org/human/release_29.html
-  * https://blast.ncbi.nlm.nih.gov/Blast.cgi
-  * http://bowtie-bio.sourceforge.net/index.shtml
-  * http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
-  * http://bio-bwa.sourceforge.net/
-  * https://github.com/smarco/gem3-mapper
-  * https://ccb.jhu.edu/software/tophat/index.shtml
-  * http://ccb.jhu.edu/software/hisat2/index.shtml
-  * https://github.com/alexdobin/STAR
-    * http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf
-  * http://www.cs.cmu.edu/~ckingsf/software/sailfish/
-  * https://salmon.readthedocs.io/en/latest/index.html
-  * https://pachterlab.github.io/kallisto/
-  * https://samtools.github.io/hts-specs/SAMv1.pdf
-  * http://samtools.sourceforge.net/
-  * http://blog.biochen.com/FlagExplain.html
-  * http://qualimap.bioinfo.cipf.es/
-  * https://www.ncbi.nlm.nih.gov/
-  * https://jbrowse.org/
-  * http://gmod.org/wiki/GBrowse_2.0_HOWTO
-  * https://software.broadinstitute.org/software/igv/
-  * https://multiqc.info/
-  * https://bioconductor.org
-    * https://bioconductor.org/packages/release/bioc/html/DESeq2.html
-    * https://bioconductor.org/packages/release/bioc/html/edgeR.html
-    * https://bioconductor.org/packages/release/bioc/html/limma.html
-  * http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html
-  * https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html
-  * http://bioinformatics.sph.harvard.edu/
-  * https://f1000research.com/articles/5-1438/v2
-  * http://geneontology.org/
-  * https://www.genome.jp/kegg/
-  * http://software.broadinstitute.org/gsea
-  * http://pedagogix-tagc.univ-mrs.fr/courses/ASG1/practicals/go_statistics_td/go_statistics_td_2015.html
-  * http://amp.pharm.mssm.edu/Enrichr/
-  
+### Day 5 - Fri 20 March 2026
+* 9:00 - 11:00 Hands-on: Running the full analysis using an nf-core pipeline **(Luca)**
+* 11:00 - 11:30 _Coffee break_
+* 11:30 - 12:00 **Talk: Design of RNA-seq experiment & Beyond bulk RNA-seq (Julia)**
+* 12:00 - 13:00 Q&A and General discussion
+* 13:00 - 14:00 _Lunch_
 
 
+Previous public courses/repos with materials to re-use:
+* https://github.com/biocorecrg/PhD_course_genomics_format
+* https://github.com/biocorecrg/R_GSEA_Docker
+* https://github.com/biocorecrg/CRG_RIntroduction
+* https://github.com/biocorecrg/CRG_RIntroduction_2021
+* https://github.com/biocorecrg/CRG_R_tidyverse_2021
+* https://github.com/biocorecrg/nextflow-course-2025-spring
+* https://github.com/biocorecrg/nextflow-course-2024-alba
+* https://github.com/biocorecrg/contamination-nf
+* https://github.com/biocorecrg/PhD_course_containers_2024
+* https://github.com/biocorecrg/CoursesCRG_Containers_Nextflow_May_2022
 
 
+* https://github.com/biocorecrg/PHINDaccess_RNAseq_2020
+* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/expdesign.html
+* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/r_basics.html
+* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/functional_analysis.html
+* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/resources.html
