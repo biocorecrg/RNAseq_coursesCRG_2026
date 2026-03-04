@@ -178,5 +178,5 @@ These values can be then used for generating a gene, or transcripts, matrix as:
 | BRCA1 | 856 | 923 | 789 |
 | MYC | 2134 | 2456 | 2089 |
 
-that can be fed to Differential Analysis tool such as EdgeR or DESEQ2.
+that can be fed to Differential Analysis tool such as **EdgeR** or **DESEQ2**.
 
