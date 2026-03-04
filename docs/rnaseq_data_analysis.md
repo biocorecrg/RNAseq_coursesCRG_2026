@@ -47,13 +47,12 @@ PCR (Polymerase Chain Reaction) is a technique invented in 1983 that amplifies s
 
 Using these technologies for sequencing libraries of Expressed Sequence Tags (EST) allows the analysis  of a large part of the transcriptome, or performing RNAseq analysis.   
 
-In 2006 and in 2008, two milestone papers were published using this concept:
+- In 2006 and in 2008, two milestone papers were published using this concept:
 
-- Bainbridge MN, et al. **Analysis of the prostate cancer cell line LNCaP transcriptome using a sequencing-by-synthesis approach**. BMC Genomics. 2006 Sep 29;7:246. [doi: 10.1186/1471-2164-7-246](https://doi.org/10.1186/1471-2164-7-246).
+1. Bainbridge MN, et al. **Analysis of the prostate cancer cell line LNCaP transcriptome using a sequencing-by-synthesis approach**. BMC Genomics. 2006 Sep 29;7:246. [doi: 10.1186/1471-2164-7-246](https://doi.org/10.1186/1471-2164-7-246).
+2. Mortazavi A, et al. **Mapping and quantifying mammalian transcriptomes by RNA-Seq**. Nat Methods. 2008 Jul;5(7):621-8. [doi: 10.1038/nmeth.1226](https://doi:10.1038/nmeth.1226). 
 
-- Mortazavi A, et al. **Mapping and quantifying mammalian transcriptomes by RNA-Seq**. Nat Methods. 2008 Jul;5(7):621-8. [doi: 10.1038/nmeth.1226](https://doi:10.1038/nmeth.1226). 
-
-The whole workflow is described in the following image:
+The whole mRNA seq workflow is described in the following image from Wang Z et al. **RNA-Seq: a revolutionary tool for transcriptomics**. Nat Rev Genet. 2009 Jan;10(1):57-63. [doi: 10.1038/nrg2484](https://doi:10.1038/nrg2484). 
 
 <p align="center">
   <img src="images/polyA_sequencing.jpg" width="400" />
@@ -69,12 +68,65 @@ From that moment, different labs tried to apply the same technique to different 
 | RIP sequencing | after RNA immunoprecipitation, detecting ribo-protein binding sites |
 | Meta-transcriptomics | for the whole transcriptome of a bacterial population |
 
-During this course, we will focus on bulk RNAseq, because is important for you to know that currently we are also able to detect the transcriptome of single cells and their spatial location.
+During this course, we will focus on bulk RNAseq, because it is important for you to know that currently we are also able to detect the transcriptome of single cells and their spatial location.
 
 <p align="center">
   <img src="images/all_rnaseqs.png" width="400" />
 </p>
 
+- Since the 2010s, a new generation of sequences able to produce reads longer than usual allowed us to improve the genome annotation and even to read the RNA directly without passing through the cDNA conversion. Again, this course will focus only on the use of short-read technology like Illumina's one.
 
-(Luca Cozzuto) here or later to cover: Map reads to genome or transcriptome? 
-Existing approaches/methods to read mapping in an RNA-seq experiment: pros and cons, which to choose?
+<p align="center">
+  <img src="images/pacbio.png" width="200" /><img src="images/nanopore.png" width="200" />
+</p>
+
+
+Aligning your NGS data
+----------------
+
+Once you get millions of short reads, you MUST inspect them for their quality, and then you can proceed to their alignment to the reference transcriptome. 
+
+Currently, two main methods are available for this purpose:
+- Splice-Aware Genome Aligners, such as STAR and Hisat2.
+- Pseudo-Alignment or quasi-mappers, such as Salmon or Kallisto.
+
+### Splice-Aware Genome Aligners
+
+This class of aligner relies on the indexing of the transcriptome, seen as a combination of the genomic sequence in FASTA format and its annotation in GTF or GFF format. The index for STAR is based on uncompressed suffix arrays, which allows ultra-fast access and lookup. The index of HISAT2 is based on a hierarchical graph-based FM-index (Burrows-Wheeler Transform, similar to BWA). It uses a graph-based approach and it incorporates information about SNPs too. 
+
+In brief, the aligner tries to align part of a read (seed), and then it checks for the presence of the rest of that sequence somewhere else in the genome. If some quality conditions are met, it will predict a splicing site or an aberrant alignment (like a gene fusion).
+
+<p align="center">
+  <img src="images/star1.png" width="400" />
+</p>
+
+From "Dobin A et al. **STAR: ultrafast universal RNA-seq aligner. Bioinformatics**. 2013 Jan 1;29(1):15-21. [doi: 10.1093/bioinformatics/bts635](https://10.1093/bioinformatics/bts635)."
+
+The usage of an annotation allows guiding the alignment for already known splicing sites. Their detection indicates which splicing site is in use and allows inferring which transcript is being transcribed, or at least which combination of exons. Notably, the method allows the detection of novel exons and splicing sites since it maps to the whole genome. 
+The aligned reads in SAM, BAM, or CRAM format can then be displayed in a genome browser and let scientists to manually validate the predictions and refine the novel annotations.
+
+
+### Pseudo-Alignment or quasi-mappers
+
+
+
+### Resume
+Here is a table resuming pros and cons.
+
+| **Aspect** | **Genome Aligners (STAR, HISAT2)** | **Pseudo-Aligners (Salmon, Kallisto)** |
+|------------|-----------------------------------|----------------------------------------|
+| **Mapping target** | Reference genome | Reference transcriptome |
+| **Speed** | Moderate (2-4 hours per sample) | Very fast (5-15 minutes per sample) |
+| **Memory required** | High (30-40 GB for human) | Low (4-8 GB) |
+| **Novel transcript discovery** | ✅ Yes - can find new genes/isoforms | ❌ No - limited to known annotations |
+| **Alternative splicing detection** | ✅ Excellent - detects splice junctions | ❌ Limited - annotation dependent |
+| **Gene fusion detection** | ✅ Yes - can identify fusions | ❌ No |
+| **Annotation dependency** | ✅ Can work without annotations | ❌ Requires high-quality transcriptome |
+| **Output format** | BAM/SAM alignment files | Count matrices, TPM values |
+| **Computational cost** | High - needs HPC cluster | Low - can run on laptop |
+| **Accuracy** | High for alignment | Good for quantification |
+| **Isoform quantification** | ⚠️ Challenging - needs other tool | ✅ Built-in probabilistic models |
+| **Best for** | Discovery, splicing studies, poorly annotated genomes | Differential expression, well-annotated organisms |
+| **Scalability** | Slower for many samples | Excellent - very fast |
+
+
