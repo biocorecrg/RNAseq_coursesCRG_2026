@@ -32,14 +32,14 @@ PCR (Polymerase Chain Reaction) is a technique invented in 1983 that amplifies s
 
 <p align="center"> <img src="images/pcr.jpg"  width="900" /> </p>
 
-`Image from: Bong D, Sohn J, Lee SV. Brief guide to RT-qPCR. Mol Cells. 2024 Dec;47(12):100141.`
+> Image from: Bong D, Sohn J, Lee SV. Brief guide to RT-qPCR. Mol Cells. 2024 Dec;47(12):100141.
 
 
 - In 2001, with the publication of the human genome, the whole list of protein genes became available. Some companies, like Agilent, started to manufacture chips containing thousands of DNA probes spotted in a grid pattern in what is known as a "microarray". Fluorescently-labeled RNA samples hybridize to complementary probes, allowing simultaneous measurement of expression levels for thousands of genes in a single experiment.
 
 <p align="center"> <img src="images/microarray.jpg"  width="300" /> </p>
 
-`Image from: https://bitesizebio.com/7206/introduction-to-dna-microarrays/`
+> Image from: https://bitesizebio.com/7206/introduction-to-dna-microarrays/
 
 - In 2005 and 2006, a new class of automatic sequencers entered the market, marking the beginning of the "next-generation sequencing" era. The 454 sequencer was based on pyrosequencing technology: a method that detects DNA synthesis by capturing flashes of light released each time a nucleotide is added to a growing DNA chain. A year later, the Solexa Genome Analyzer, later acquired by Illumina, used a different approach based on sequencing-by-synthesis with reversible terminators.
 
@@ -52,7 +52,9 @@ Using these technologies for sequencing libraries of Expressed Sequence Tags (ES
 1. Bainbridge MN, et al. **Analysis of the prostate cancer cell line LNCaP transcriptome using a sequencing-by-synthesis approach**. BMC Genomics. 2006 Sep 29;7:246. [doi: 10.1186/1471-2164-7-246](https://doi.org/10.1186/1471-2164-7-246).
 2. Mortazavi A, et al. **Mapping and quantifying mammalian transcriptomes by RNA-Seq**. Nat Methods. 2008 Jul;5(7):621-8. [doi: 10.1038/nmeth.1226](https://doi:10.1038/nmeth.1226). 
 
-The whole mRNA seq workflow is described in the following image from Wang Z et al. **RNA-Seq: a revolutionary tool for transcriptomics**. Nat Rev Genet. 2009 Jan;10(1):57-63. [doi: 10.1038/nrg2484](https://doi:10.1038/nrg2484). 
+The whole mRNA seq workflow is described in the following image 
+
+> From Wang Z et al. **RNA-Seq: a revolutionary tool for transcriptomics**. Nat Rev Genet. 2009 Jan;10(1):57-63. [doi: 10.1038/nrg2484](https://doi:10.1038/nrg2484). 
 
 <p align="center">
   <img src="images/polyA_sequencing.jpg" width="400" />
@@ -100,7 +102,7 @@ In brief, the aligner tries to align part of a read (seed), and then it checks f
   <img src="images/star1.png" width="400" />
 </p>
 
-From "Dobin A et al. **STAR: ultrafast universal RNA-seq aligner. Bioinformatics**. 2013 Jan 1;29(1):15-21. [doi: 10.1093/bioinformatics/bts635](https://10.1093/bioinformatics/bts635)."
+> From "Dobin A et al. **STAR: ultrafast universal RNA-seq aligner. Bioinformatics**. 2013 Jan 1;29(1):15-21. [doi: 10.1093/bioinformatics/bts635](https://10.1093/bioinformatics/bts635)."
 
 The usage of an annotation allows guiding the alignment for already known splicing sites. Their detection indicates which splicing site is in use and allows inferring which transcript is being transcribed, or at least which combination of exons. Notably, the method allows the detection of novel exons and splicing sites since it maps to the whole genome. 
 The aligned reads in SAM, BAM, or CRAM format can then be displayed in a genome browser and let scientists to manually validate the predictions and refine the novel annotations.
