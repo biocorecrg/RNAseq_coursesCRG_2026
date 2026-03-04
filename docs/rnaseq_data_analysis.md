@@ -59,6 +59,21 @@ The whole workflow is described in the following image:
   <img src="images/polyA_sequencing.jpg" width="400" />
 </p>
 
+From that moment, different labs tried to apply the same technique to different transcriptome data. So we were then able to analyze:
+
+| Method | Details |
+|--------|---------|
+| mRNA or better cDNA sequencing | after polyA enrichment |
+| Total RNA sequencing | after ribo depletion, to include also non-coding RNAs |
+| Small RNA sequencing | after size selection, snoRNAs, microRNAs, tRNAs… |
+| RIP sequencing | after RNA immunoprecipitation, detecting ribo-protein binding sites |
+| Meta-transcriptomics | for the whole transcriptome of a bacterial population |
+
+During this course, we will focus on bulk RNAseq, because is important for you to know that currently we are also able to detect the transcriptome of single cells and their spatial location.
+
+<p align="center">
+  <img src="images/all_rnaseqs.png" width="400" />
+</p>
 
 
 (Luca Cozzuto) here or later to cover: Map reads to genome or transcriptome? 
