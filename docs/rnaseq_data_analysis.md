@@ -50,11 +50,11 @@ Using these technologies for sequencing libraries of Expressed Sequence Tags (ES
 - In 2006 and in 2008, two milestone papers were published using this concept:
 
 1. Bainbridge MN, et al. **Analysis of the prostate cancer cell line LNCaP transcriptome using a sequencing-by-synthesis approach**. BMC Genomics. 2006 Sep 29;7:246. [doi: 10.1186/1471-2164-7-246](https://doi.org/10.1186/1471-2164-7-246).
-2. Mortazavi A, et al. **Mapping and quantifying mammalian transcriptomes by RNA-Seq**. Nat Methods. 2008 Jul;5(7):621-8. [doi: 10.1038/nmeth.1226](https://doi:10.1038/nmeth.1226). 
+2. Mortazavi A, et al. **Mapping and quantifying mammalian transcriptomes by RNA-Seq**. Nat Methods. 2008 Jul;5(7):621-8. [doi: 10.1038/nmeth.1226](https://doi.org/10.1038/nmeth.1226). 
 
 The whole mRNA seq workflow is described in the following image 
 
-> From Wang Z et al. **RNA-Seq: a revolutionary tool for transcriptomics**. Nat Rev Genet. 2009 Jan;10(1):57-63. [doi: 10.1038/nrg2484](https://doi:10.1038/nrg2484). 
+> From Wang Z et al. **RNA-Seq: a revolutionary tool for transcriptomics**. Nat Rev Genet. 2009 Jan;10(1):57-63. [doi: 10.1038/nrg2484](https://doi.org/10.1038/nrg2484). 
 
 <p align="center">
   <img src="images/polyA_sequencing.jpg" width="400" />
@@ -70,18 +70,29 @@ From that moment, different labs tried to apply the same technique to different 
 | RIP sequencing | after RNA immunoprecipitation, detecting ribo-protein binding sites |
 | Meta-transcriptomics | for the whole transcriptome of a bacterial population |
 
-During this course, we will focus on bulk RNAseq, because it is important for you to know that currently we are also able to detect the transcriptome of single cells and their spatial location.
-
-<p align="center">
-  <img src="images/all_rnaseqs.png" width="400" />
-</p>
-
-- Since the 2010s, a new generation of sequences able to produce reads longer than usual allowed us to improve the genome annotation and even to read the RNA directly without passing through the cDNA conversion. Again, this course will focus only on the use of short-read technology like Illumina's one.
+- Since the 2010s, a new generation of sequences able to produce reads longer than usual allowed us to improve the genome annotation and even to read the RNA directly without passing through the cDNA conversion. This course will focus only on the use of short-read technology like Illumina's one.
 
 <p align="center">
   <img src="images/pacbio.png" width="200" /><img src="images/nanopore.png" width="200" />
 </p>
 
+During this course, we will focus on bulk RNAseq, but it is important for you to know that currently we are also able to detect the transcriptome of single cells and their spatial location.
+
+<p align="center">
+  <img src="images/all_rnaseqs.png" width="400" />
+</p
+
+Here, for instance, you have a whole mouse embryo that is being "sequenced" and whose spatial expression is displayed.
+
+> Chen A, et al. **Spatiotemporal transcriptomic atlas of mouse organogenesis using DNA nanoball-patterned arrays**. Cell. 2022 May 12;185(10):1777-1792.e21. [doi:10.1016/j.cell.2022.04.003](https://doi.org/10.1016/j.cell.2022.04.003).
+
+<p align="center">
+  <img src="images/stereoseq.jpg" width="600" />
+</p
+
+-----------
+</br>
+</br>
 
 Aligning your NGS data
 ----------------
@@ -102,7 +113,7 @@ In brief, the aligner tries to align part of a read (seed), and then it checks f
   <img src="images/star1.png" width="400" />
 </p>
 
-> From "Dobin A et al. **STAR: ultrafast universal RNA-seq aligner. Bioinformatics**. 2013 Jan 1;29(1):15-21. [doi: 10.1093/bioinformatics/bts635](https://10.1093/bioinformatics/bts635)."
+> From "Dobin A et al. **STAR: ultrafast universal RNA-seq aligner. Bioinformatics**. 2013 Jan 1;29(1):15-21. [doi: 10.1093/bioinformatics/bts635](https://doi.org/10.1093/bioinformatics/bts635)."
 
 The usage of an annotation allows guiding the alignment for already known splicing sites. Their detection indicates which splicing site is in use and allows inferring which transcript is being transcribed, or at least which combination of exons. Notably, the method allows the detection of novel exons and splicing sites since it maps to the whole genome. 
 The aligned reads in SAM, BAM, or CRAM format can then be displayed in a genome browser and let scientists to manually validate the predictions and refine the novel annotations.
@@ -110,8 +121,20 @@ The aligned reads in SAM, BAM, or CRAM format can then be displayed in a genome 
 
 ### Pseudo-Alignment or quasi-mappers
 
+This class of tools takes a different approach by avoiding traditional alignment altogether. Instead of mapping to the genome, they work directly with the transcriptome as mature sequences. The index is built using k-mer hashing - breaking transcripts into short overlapping subsequences (a stretch of nucleotides) and creating a hash table that refers each k-mer to the transcripts containing it.
+
+During quantification, reads are decomposed into k-mers, and the tool rapidly looks up which transcripts share those k-mers to determine possible locations. This process is known as "pseudo-alignment" or "quasi-mapping" and it identifies which transcripts a read could have originated from without precise alignment. Reads that match multiple transcripts are assigned probabilistically using an Expectation-Maximization (EM) algorithm, which distributes fractional counts based on the likelihood of each transcript being the true source.
+
+This method delivers ultra-fast results with lower memory and CPU consumption while maintaining high accuracy for well-annotated genomes.
+
+<p align="center">
+  <img src="images/rapmap.png" width="600" />
+</p>
 
 
+> Srivastava A et al. **RapMap: a rapid, sensitive and accurate tool for mapping RNA-seq reads to transcriptomes. Bioinformatics**. 2016 Jun 15;32(12):i192-i200. [doi: 10.1093/bioinformatics/btw277]([https://doi.org/10.1093/bioinformatics/btw277)
+
+ 
 ### Resume
 Here is a table resuming pros and cons.
 
