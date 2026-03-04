@@ -157,4 +157,20 @@ Here is a table resuming pros and cons.
 | **Best for** | Discovery, splicing studies, poorly annotated genomes | Differential expression, well-annotated organisms |
 | **Scalability** | Slower for many samples | Excellent - very fast |
 
+Read counts and matrix generation
+----------------------------
+
+After the mapping some tools just generate files with aligned reads. You might want to use a specific tool for counting tags per gene / transcripts such as **htseq-count**, **featureCounts** or **RSEM**. Pseudo aligners, instead, just provide you with the read count transcript or with already normalized Transcripts Per Million (TPM).
+
+These values can be then used for generating a gene, or transcripts, matrix as:
+
+| Gene | Sample A | Sample B | Sample C |
+|------|----------|----------|----------|
+| GAPDH | 15234 | 14892 | 15567 |
+| ACTB | 12456 | 11923 | 12789 |
+| TP53 | 3421 | 3198 | 3567 |
+| BRCA1 | 856 | 923 | 789 |
+| MYC | 2134 | 2456 | 2089 |
+
+that can be fed to Differential Analysis tool such as EdgeR or DESEQ2.
 
