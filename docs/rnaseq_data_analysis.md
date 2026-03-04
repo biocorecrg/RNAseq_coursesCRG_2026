@@ -1,7 +1,7 @@
 RNA-seq data analysis: Workflow & Approaches 
 =================
 
-Luca Cozzuto
+This section will explain the history for the analysis of the transcriptome and the different strategies for aligning the sequencing reads.
 
 What is the transcriptome?
 ----------------
@@ -94,7 +94,7 @@ Here, for instance, you have a whole mouse embryo that is being "sequenced" and 
 </br>
 </br>
 
-Aligning your NGS data
+Aligning your short NGS data
 ----------------
 
 Once you get millions of short reads, you MUST inspect them for their quality, and then you can proceed to their alignment to the reference transcriptome. 
@@ -160,7 +160,13 @@ Here is a table resuming pros and cons.
 Read counts and matrix generation
 ----------------------------
 
-After the mapping some tools just generate files with aligned reads. You might want to use a specific tool for counting tags per gene / transcripts such as **htseq-count**, **featureCounts** or **RSEM**. Pseudo aligners, instead, just provide you with the read count transcript or with already normalized Transcripts Per Million (TPM).
+After the mapping some tools just generate files with aligned reads. You might want to use a specific tool for counting tags per gene / transcripts such as **HTSeq-count**, **featureCounts** or **RSEM**. Pseudo aligners, instead, just provide you with the read count transcript or with already normalized Transcripts Per Million (TPM).
+
+Here you have the way **HTSeq-count** deal with ambiguous reads. From the [documentation](https://htseq.readthedocs.io/en/release_0.11.1/count.html)
+
+<p align="center">
+  <img src="images/htseq_count.png" width="600" />
+</p>
 
 These values can be then used for generating a gene, or transcripts, matrix as:
 
