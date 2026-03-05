@@ -6,13 +6,13 @@
 ## Dates, time & location
 
 
-Dates:
+Dates of the computational session:
 
 | Day  | Date  | Time  |
 | :---:  | :---  | ---:  |
-| 1 | Wednesday 10th of February 2020|9:00-16:30|
-| 2 | Thursday 11th of February 2020|9:00-16:30| 
-| 3 | Friday 12th of February 2020|9:00-16:30| 
+| 1 | Wednesday 18th of February 2020|9:00-16:30|
+| 2 | Thursday 19th of February 2020|9:00-16:30| 
+| 3 | Friday 20th of February 2020|9:00-16:30| 
 
 
 Location:
@@ -55,6 +55,7 @@ At the end of the course, the participants will be able to:
 :hidden:
 :depth: 2
 
+reproducible.md
 linux_cli.md
 rnaseq_data_analysis.md
 ```
