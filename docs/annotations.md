@@ -32,7 +32,6 @@ The files you would need are:
 | :---:  |
 |<img src="images/gencode_human_gtf.png" width="800" align="middle" />|
 
-
 ```{bash}
 # genome
 wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/GRCh38.primary_assembly.genome.fa.gz
