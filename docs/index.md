@@ -1,12 +1,6 @@
----
-layout: page
-title: Home
-navigation: 1
----
-
 ![logo](https://raw.githubusercontent.com/CRG-CNAG/BioCoreMiscOpen/master/logo/biocore-logo_small.png) 
 
-# [PHINDaccess](http://phindaccess.org/) RNAseq course 2020
+# Decoding Transcriptomes: A Practical Course on RNA-seq 
 
 
 ## Dates, time & location
@@ -16,17 +10,14 @@ Dates:
 
 | Day  | Date  | Time  |
 | :---:  | :---  | ---:  |
-| 1 | Monday 10th of February 2020|9:00-16:30|
-| 2 | Tuesday 11th of February 2020|9:00-16:30| 
-| 3 | Wednesday 12th of February 2020|9:00-16:30| 
-| 4 | Thursday 13th of February 2020|9:00-16:30| 
+| 1 | Wednesday 10th of February 2020|9:00-16:30|
+| 2 | Thursday 11th of February 2020|9:00-16:30| 
+| 3 | Friday 12th of February 2020|9:00-16:30| 
 
 
 Location:
-[Institut Pasteur Tunis](http://www.pasteur.tn/)
+[Center for Genomic Regulation](https://www.crg.eu)
 
-<br/>
-<br/>
 
 ## Instructors
 
@@ -36,7 +27,6 @@ Location:
 
 from the [CRG](https://www.crg.eu/) [Bioinformatics core facility](https://biocore.crg.eu/) in Barcelona, Catalonia, Spain.
 
-Material available at https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/
 
 ##  Learning objectives
 At the end of the course, the participants will be able to:
@@ -61,9 +51,10 @@ At the end of the course, the participants will be able to:
 [Familiarity with the Linux command line](https://biocorecrg.github.io/advanced_linux_2019/)
 [Familiarity with the R language scripting](https://biocorecrg.github.io/CRG_RIntroduction/)
 
+```{toctree}
+:hidden:
+:depth: 2
 
-
-
-
-
-
+linux_cli.md
+rnaseq_data_analysis.md
+```
