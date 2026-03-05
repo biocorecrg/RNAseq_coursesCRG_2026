@@ -136,7 +136,7 @@ This method delivers ultra-fast results with lower memory and CPU consumption wh
 
 ```{note}
 Currently **Salmon** requires also the genomic sequence as "decoy" when generating the index. In this way reads that do not map to the transcriptome avoid being mis-aligned.
-\\```
+```
 
  
 ### Resume
