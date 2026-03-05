@@ -113,8 +113,8 @@ Once you get millions of short reads, you MUST inspect them for their quality, a
 
 
 Currently, two main methods are available for this purpose:
-- Splice-Aware Genome Aligners, such as STAR and Hisat2.
-- Pseudo-Alignment or quasi-mappers, such as Salmon or Kallisto.
+- Splice-Aware Genome Aligners, such as **STAR** and **Hisat2**.
+- Pseudo-Alignment or quasi-mappers, such as **Salmon** or **Kallisto**.
 
 ### Splice-Aware Genome Aligners
 
