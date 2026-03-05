@@ -31,7 +31,6 @@ The files you would need are:
 |GENCODE website|
 | :---:  |
 |<img src="images/gencode_human_gtf.png" width="800" align="middle" />|
-|<img src="images/gencode_human_fasta.png" width="800" align="middle" />|
 
 
 ```{bash}
@@ -57,7 +56,7 @@ The files you would need are:
 |GENCODE website|
 | :---:  |
 |<img src="images/ensembl_human_main.png" width="800" align="middle" />|
-|<img src="images/ensembl_mouse_ftp.png" width="800" align="middle" />|
+|<img src="images/ensembl_ftp.png" width="800" align="middle" />|
 
 ```{bash}
 # genome
