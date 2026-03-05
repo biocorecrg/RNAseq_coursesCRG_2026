@@ -72,8 +72,8 @@ wget ftp://ftp.ensembl.org/pub/release-115/gtf/homo_sapiens/Homo_sapiens.GRCh38.
 
 ## Our data set
 
-To speed up the mapping process, we retrieved a subset of the FASTA and GTF files that correspond **only to chromosome 6** [here](./data/annotation/reference_chr6_Hsapiens.tar.gz) 
-<br>
+To speed up the mapping process, we retrieved a subset of the FASTA and GTF files that correspond **only to chromosome 6** here: [reference_chr6_Hsapiens.tar.gz)](https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/reference_chr6_Hsapiens.tar.gz)
+
 You can download them from:
 
 ```{bash}
