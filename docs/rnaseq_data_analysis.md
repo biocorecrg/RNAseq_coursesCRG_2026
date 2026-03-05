@@ -19,7 +19,7 @@ Cells need to express specific genes to produce the proteins and RNA molecules n
 History of Transcriptome Analysis Techniques
 ----------------
 
-Prior to the 2000s, we were able to measure the expression of few genes using mainly to methods: the Northern Blot and the PCR.
+Prior to the 2000s, we were able to measure the expression of a few genes using mainly to methods: the Northern Blot and the PCR.
 
  - The Northern Blot (1977, James Alwine, David Kemp, and George Stark) is a technique for detecting specific RNA molecules that uses RNA separation by gel electrophoresis, followed by transfer to a membrane, and then hybridization with a probe with a labeled complementary DNA or RNA to visualize the target.
 
@@ -94,10 +94,23 @@ Here, for instance, you have a whole mouse embryo that is being "sequenced" and 
 </br>
 </br>
 
-Aligning your short NGS data
+The RNAseq data analysis
+----------------
+
+This is a schema of your whole data analysis workflow. In the next section, we will focus on the alignment part.
+
+<p align="center">
+  <img src="images/RNAseq_workflow.png" width="600" />
+</p
+
+</br>
+
+Aligning short NGS data
 ----------------
 
 Once you get millions of short reads, you MUST inspect them for their quality, and then you can proceed to their alignment to the reference transcriptome. 
+
+
 
 Currently, two main methods are available for this purpose:
 - Splice-Aware Genome Aligners, such as STAR and Hisat2.
