@@ -134,8 +134,9 @@ This method delivers ultra-fast results with lower memory and CPU consumption wh
 
 > Srivastava A et al. **RapMap: a rapid, sensitive and accurate tool for mapping RNA-seq reads to transcriptomes. Bioinformatics**. 2016 Jun 15;32(12):i192-i200. [doi: 10.1093/bioinformatics/btw277]([https://doi.org/10.1093/bioinformatics/btw277)
 
-> [!Note]
-Currently **Salmon** requires also the genomic sequence as "decoy" when generating the index. In this way reads that do not map to the transcriptome avoid being mis-aligned.  
+```{note}
+Currently **Salmon** requires also the genomic sequence as "decoy" when generating the index. In this way reads that do not map to the transcriptome avoid being mis-aligned.
+\\```
 
  
 ### Resume
