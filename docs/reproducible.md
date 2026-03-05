@@ -19,6 +19,131 @@
   - Little reward to data sharing
 
 
+## Version Control
+
+Management of changes to documents, computer programs and other collections of information
+
+- <mdi-arrow-right-thick class="c-teal" /> **when**, **who**, **what**
+
+
+### Why you should you use it?
+
+::left::
+
+![](/images/phd101212s.gif){class="h-100 rounded shadow"}
+
+::right::
+
+![](/images/phd052810s.png){class="h-80 rounded shadow mt-10"}
+
+---
+
+### Benefits
+
+- transparency
+- history of changes
+- backup and restore
+- recovery from errors
+- easier collaborative work
+- reproducibility
+
+
+### Uses
+
+(either alone or collaboratively)
+
+- papers
+- lectures
+- documentation
+- scripts (bash, Python, R or whatever else)
+- text/CSV/TSV files
+
+
+### Version Control Systems
+
+stand-alone tools that record changes to a file or set of files over time
+
+- <mdi-arrow-right-thick class="c-teal" /> often referred to as **VCSs**
+
+
+### Basic concept
+
+- <mdi-arrow-right-thick class="c-teal" /> `commit`
+
+Save files as logical sets of changes and write a good description of why you changed them
+
+### What you can do
+
+- review changes made over time
+- revert files/the entire project back to a previous state
+- see who last modified something
+- find out where and how things went wrong
+- remove content knowing that you can easily go back
+- sandboxing
+
+### Discussion: should we keep dates or versions in the filenames of a repo?
+
+- Redundant if we are already tracking changes using the repo
+- It can make sense when identifying a specific dataset
+
+### Quick history
+
+~ 40 years since first use
+
+- <mdi-arrow-right-thick class="c-teal" /> three main generations
+
+### Local
+
+<mdi-arrow-right-thick class="c-teal" /> e.g. `RCS`
+
+![local](/images/local.png){width=400px}
+
+### Centralized
+
+<mdi-arrow-right-thick class="c-teal" /> e.g. `SUBVERSION`
+
+![centralized](/images/centralized.png){width=400px}
+
+---
+
+### Distributed
+
+<mdi-arrow-right-thick class="c-teal" /> e.g. `GIT`
+
+![distributed](/images/distributed.png){width=250px}
+
+### What is Git?
+
+An **open source**, **distributed**, version control system
+
+<mdi-arrow-right-thick class="c-teal" /> most used thanks to its simplicity and GitHub
+
+![git-github](/images/Github2.png){class="h-40"}
+
+<mdi-arrow-right-thick class="c-teal" /> GitHub is a web-based Git repository hosting service, which offers all the functionalities of Git as well as adding its own features
+
+### Git Features
+
+- nearly every operation is local
+- integrity, everything is checksummed
+- generally only adds data
+- every local repository is a backup
+
+
+### Git hosting services
+
+- social coding
+- version control as a service
+- in-browser editing
+- additional collaborative features
+
+::left::
+![GitLab](/images/gitlab.png){class="w-50"}
+
+::right::
+![GitHub](/images/github-logo.png){class="w-50"}
+
+
 ## Computational reproducibility
 
 - Data
@@ -160,6 +285,7 @@ Other tools:
 
 ![FAIR data principles](https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/FAIR_data_principles.jpg/640px-FAIR_data_principles.jpg)
 
+10 years of FAIR ...
 
 ### Findable
 
@@ -181,3 +307,5 @@ Other tools:
 - **Example:** Dataset provided in a way that contained data can be used easily by third parties and regenerated if needed using available instructions.
 - **Counter-example:** Dataset without any documentation, instructions or even context.
 
+
+Reference: [FAIRification of an RNAseq dataset](https://training.galaxyproject.org/training-material/topics/fair/tutorials/fair-rna/tutorial.html)

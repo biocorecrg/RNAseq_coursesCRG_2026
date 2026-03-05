@@ -16,7 +16,7 @@ project = "RNA-seq Bioinformatics Course"
 copyright = "2022-2026, Centre for Genomic Regulation (CRG)"
 author = "Fabian Andrade, Sarah Bonnin, Luca Cozzuto, Anna Delgado, Toni Hermoso Pulido, Julia Ponomarenko"
 
-version = "2025"
+version = "2026"
 release = version
 
 # -- Matomo configuration ---------------------------------------------------
