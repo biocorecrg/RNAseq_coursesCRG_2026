@@ -21,9 +21,12 @@ Location:
 
 ## Instructors
 
-|[Julia Ponomarenko](mailto:julia.ponomarenko@crg.eu)| [Sarah Bonnin](mailto:sarah.bonnin@crg.eu) |
-| :---:  | :---:  | :---:  |
-|<a href="https://biocore.crg.eu/wiki/User:JPonomarenko"><img src="pics/ponomarenko.jpg" width="100"/> </a>|<a href="https://biocore.crg.eu/wiki/User:SBonnin"><img src="pics/sbonnin.jpg" width="100"/></a> | 
+
+|[Luca Cozzuto](mailto:luca.cozzuto@crg.eu) |[Toni Hermoso](mailto:toni.hermoso@crg.eu) | [Julia Ponomarenko](mailto:julia.ponomarenko@crg.eu)|
+| :--------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: |
+| <a href="https://biocore.crg.eu/wiki/User:Lcozzuto"><img src="images/pics/lcozzuto.jpg" width="200"/> </a> | <a href="https://biocore.crg.eu/wiki/User:Thermoso"><img src="images/pics/thermoso.jpg" width="200"/> </a> | <a href="https://biocore.crg.eu/wiki/User:Jponomarenko"><img src="images/pics/ponomarenko.jpg" width="200"/> </a> |
+
+TODO: Add Anna, Fabian, Sarah 
 
 from the [CRG](https://www.crg.eu/) [Bioinformatics core facility](https://biocore.crg.eu/) in Barcelona, Catalonia, Spain.
 
