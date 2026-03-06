@@ -141,6 +141,7 @@ $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
 
 * **--genomeSAindexNbases**: default 14. If genome is small, should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
+This should take around 3 to 4 minutes to complete.
 
 ## Aligning reads to the genome
 
