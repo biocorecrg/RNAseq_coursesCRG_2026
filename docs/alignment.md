@@ -97,7 +97,7 @@ As STAR is very resource-consuming, we will create an index for **chromosome 6 o
 
 However, STAR requires **unzipped** .fa and .gtf files. We need to unzip them.
 
-```{bash}
+```bash
 # go to reference_genome folder
 cd ~/rnaseq_course/reference_genome/reference_chr6
 
@@ -122,7 +122,7 @@ To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** opt
 <br>
 Building the STAR index (option **--runMode genomeGenerate**):
 
-```{bash}
+```bash
 # go to mapping folder
 cd ~/rnaseq_course/mapping
 
@@ -158,7 +158,7 @@ The following parameters are optional but very convenient:
 <br>
 We can try to launch the mapping for one file:
 
-```{bash}
+```bash
 # go to mapping folder
 cd ~/rnaseq_course/mapping
 
@@ -176,7 +176,7 @@ $RUN STAR --genomeDir index_star_chr6 \
 
 If this was successful and not too slow and resource consuming, you can do it for all samples, in a **loop**:
 
-```{bash}
+```bash
 for fastq in ~/rnaseq_course/trimming/*-trimmed.fastq.gz
 do echo $fastq
 $RUN STAR --genomeDir index_star_chr6 \
@@ -192,7 +192,7 @@ done
 
 If it was indeed too resource consuming, you can download the aligned files in **BAM** format from:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 # get archives
@@ -205,7 +205,7 @@ tar -xvzf all.tabs.tar.gz
 
 Let's explore the output directory "alignments" (or "bam_chr6", if we used the backup folder).
 
-```{bash}
+```bash
 ls -lh alignments
 
 ls -lh bam_chr6
@@ -225,7 +225,7 @@ STAR outputs read counts per gene into **PREFIX**ReadsPerGene.out.tab file with 
 
 Let's see what the **ReadsPerGene.out.tab** file looks like for sample **SRR3091420_1_chr6**:
 
-```{bash}
+```bash
 head alignments/SRR3091420_1_chr6ReadsPerGene.out.tab 
 head bam_chr6/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab
 ```
@@ -251,7 +251,7 @@ For example, in the stranded protocol shown in "Library preparation", Read 1 is 
 
 We can count the number of reads mapped to each strand by using a simple awk script:
 
-```{bash}
+```bash
 grep -v "N_" alignments/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
 
 # OR
@@ -273,7 +273,7 @@ If the protocol used was stranded, there would be a **strong imbalance** between
 
 The **BAM format** is a compressed version of the [**SAM format**](https://samtools.github.io/hts-specs/SAMv1.pdf) (which is a plain text) and cannot thus being seen as a text. To explore the BAM file, we have to convert it to the SAM format by using [**samtools**](http://samtools.sourceforge.net/). Note that we use the parameter **-h** to show also the header that is hidden by default. 
 
-```{bash}
+```bash
 $RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam | head -n 10
 
 @HD     VN:1.4  SO:coordinate
@@ -336,7 +336,7 @@ definition.*
 
 Let's convert BAM to SAM:
 
-```{bash}
+```bash
 $RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam > bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.sam
 ```
 
@@ -347,7 +347,7 @@ Yet, the more efficient way to store the alignment is to use the [**CRAM format*
 To convert **BAM** to **CRAM**, we have to provide unzipped and indexed version of the genome.
 
 
-```{bash}
+```bash
 $RUN samtools faidx ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa
 
 $RUN samtools view -C bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam -T ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa > bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
@@ -356,7 +356,7 @@ $RUN samtools view -C bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.ou
 You can see that a .cram file is twice as small as a .bam file.
 <br>
 Let's remove the .sam file:
-```{bash}
+```bash
 rm bam_chr6/*.sam 
 ```
 
@@ -369,13 +369,13 @@ The quality of the resulting alignment can be checked using the tool [**QualiMap
 *Note that if the library was paired-end, you would add the **-pe** option**.
 <br>
 **IMPORTANT**: before running QualiMap ensure enough disk space for a temporary directory ./tmp that the program is required, running the following command:
-```{bash}
+```bash
 export _JAVA_OPTIONS="-Djava.io.tmpdir=./tmp -Xmx6G"
 ```
 
 <br/>
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 # create folder
@@ -390,7 +390,7 @@ $RUN qualimap rnaseq -bam bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoor
 
 We can check the final report in a browser:
 
-```{bash}
+```bash
 firefox qc_qualimap/qualimapReport.html
 ```
 <img src="images/qualimap1.png"  align="middle" />
@@ -437,7 +437,7 @@ The transcript sequences corresponding to chromosome 6 was prepared and already 
 
 **Salmon** does not need any decompression of the input, so we can index by using this command:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 # index and store the index files in index_salmon folder
@@ -488,7 +488,7 @@ We have it already for chromosome 6, in **~/rnaseq_course/reference_genome/**
 <br>
 We can proceed with the mapping.
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 # create folder for salmon's output files
@@ -504,7 +504,7 @@ $RUN salmon quant -i index_salmon -l U \
 
 We can check the results inside the folder "alignments".
 
-```{bash}
+```bash
 ls alignments_salmon/SRR3091420_1_chr6_salmon/
 
 ```
@@ -522,7 +522,7 @@ The most interesting to us in this course is the file **quant.genes.sf**, that i
 |TPM|Transcripts Per Million|
 |NumReads|Estimated number of reads considering both univocally and multimapping reads|
 
-```{bash}
+```bash
 head -n 5 alignments_salmon/SRR3091420_1_chr6_salmon/quant.genes.sf 
 
 Name	Length	EffectiveLength	TPM	NumReads
@@ -534,7 +534,7 @@ ENSG00000285884.1	790	515.683	3.28285	3
 
 There is a similarly formatted file **quant.sf** that provides read counts for transcript:
 
-```{bash}
+```bash
 head -n 5 alignments_salmon/SRR3091420_1_chr6_salmon/quant.sf 
 
 Name	Length	EffectiveLength	TPM	NumReads
@@ -550,7 +550,7 @@ We will use information on read counts for genes from **quant.sf** files for the
 
 Now if time and resources allows, proceed with the mapping of the **9 remaining samples**:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 for fastq in ~/rnaseq_course/raw_data/fastq_chr6/SRR309142{1,2,3,4,5,6,7,8,9}_1_chr6.fastq.gz
