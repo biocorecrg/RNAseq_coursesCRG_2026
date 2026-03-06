@@ -34,6 +34,7 @@ The files you would need are:
   <img src="images/gencode_human_gtf.png" width="800" />
 </div>
 
+You can retrieve them via command line typing:
 
 ```bash
 # genome
@@ -64,7 +65,7 @@ The files you would need are:
   <img src="images/ensembl_ftp.png" width="800" />
 </div>
 
-```{bash}
+```bash
 # genome
 wget ftp://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_rm.primary_assembly.fa.gz
 
@@ -82,7 +83,7 @@ To speed up the mapping process, we retrieved a subset of the FASTA and GTF file
 
 You can download them from:
 
-```{bash}
+```bash
 # go to the appropriate folder
 cd ~/rnaseq_course/reference_genome
 
@@ -100,13 +101,13 @@ rm reference_chr6_Hsapiens.tar.gz
 
 The genome is often stored as a **FASTA file** (.fa file): each header (that can be chromosomes, transcripts, proteins), starts with "**>**":
 
-```{bash}
+```bash
 zcat reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa.gz | head -n 1
 ```
 
 The size of the chromosome (in bp) is already reported in the header, but we can check it as follows:
 
-```{bash}
+```bash
 zcat ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa.gz | grep -v ">" | tr -d '\n' | wc -m  
 
 # 170805979
@@ -129,19 +130,19 @@ The annotation is stored in **G**eneral **T**ransfer **F**ormat (**GTF**) format
 | 9 | attribute | A semicolon-separated list of tag-value pairs, providing additional information about each feature. |
 
 
-```{bash}
+```bash
 zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | head -n 10
 ```
 
 Let's check the 9th field:
 
-```{bash}
+```bash
 zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | cut -f9 | head
 ```
 
 Let's check how many genes are in the annotation file:
 
-```{bash}
+```bash
 zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | grep -v "#" | awk '$3=="gene"' | wc -l 
 
 # 2860
@@ -149,7 +150,7 @@ zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | grep -v "#" | awk '$3==
 
 And get a final counts of every feature:
 
-```{bash}
+```bash
 zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | grep -v "#" | cut -f3 | sort | uniq -c 
 ```
 
@@ -173,7 +174,7 @@ Small size data can be directly uploaded to the genome browser, while large file
 <br>
 The indexing can be done with samtools:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 $RUN samtools index bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam
@@ -194,7 +195,7 @@ When you map reads to a genome with a given convention you cannot directly displ
 <br>
 **GENCODE** uses the **UCSC convention**, while **ENSEMBL doesn't**: we need to change the chromosomes names before being able to load them in the UCSC Genome Browser. 
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 # create new sub-directory
@@ -242,7 +243,7 @@ and provide information describing the data to be displayed:
 * **name** of the track 
 * **bigDataUrl** the URL where the BAM or CRAM file is located 
 
-```{bash}
+```bash
 track type=bam name="test" bigDataUrl=https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/ucsc/SRR3091420_1_chr6_ucsc.bam
 ```
 
