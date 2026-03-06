@@ -51,10 +51,9 @@ The files you would need are:
 * FASTA file corresponding to the [**CDS regions / transcripts**](ftp://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/cds/Homo_sapiens.GRCh38.cds.all.fa.gz)
 * GTF file for the [**annotation**](ftp://ftp.ensembl.org/pub/release-115/gtf/homo_sapiens/Homo_sapiens.GRCh38.99.chr.gtf.gz)
 
-|GENCODE website|
-| :---:  |
-|<img src="images/ensembl_human_main.png" width="800" align="middle" />|
-|<img src="images/ensembl_ftp.png" width="800" align="middle" />|
+
+<img src="images/ensembl_human_main.png" width="800" align="middle" /
+<img src="images/ensembl_ftp.png" width="800" align="middle" />
 
 ```{bash}
 # genome
