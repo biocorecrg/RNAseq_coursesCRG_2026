@@ -29,9 +29,13 @@ The files you would need are:
 * GTF file of the [**Comprehensive gene annotation**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz)
 
 
+test
 
-<img src="images/gencode_human_gtf.png" width="800" align="middle" />
+<img src="images/gencode_human_gtf.png" width="800" />
+
 <img src="images/gencode_human_gtf.jpg" width="800" align="middle" />
+
+test
 
 ```{bash}
 # genome
