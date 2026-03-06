@@ -7,8 +7,6 @@
 - Fosters a culture of accountability and trust
 - Contributes to saving resources. No need to reinvent the wheel
 
----
-
 ## Challenges to reproducibility
 
 - Complex methodologies that can be difficult to fit into a reproducible environment
@@ -35,8 +33,6 @@ Management of changes to documents, computer programs and other collections of i
 ::right::
 
 ![](/images/phd052810s.png){class="h-80 rounded shadow mt-10"}
-
----
 
 ### Benefits
 
@@ -104,7 +100,6 @@ Save files as logical sets of changes and write a good description of why you ch
 
 ![centralized](/images/centralized.png){width=400px}
 
----
 
 ### Distributed
 
@@ -186,8 +181,6 @@ RUN set -x; \
 
 ```
 
----
-
 ## Conda
 
 - env.yaml
@@ -200,10 +193,6 @@ conda env export > myenv.yaml
 ```
 
 
----
-
-## Conda
-
 ```
 name: pod5
 channels:
@@ -213,16 +202,11 @@ dependencies:
   - jannessp::pod5==0.2.4
 ```
 
----
-
-## Conda
-
 Other tools:
 
 - [Mamba](https://mamba.readthedocs.io/en/latest/) -> Faster Conda
 - [Pixi](https://prefix.dev/) -> Another faster Conda
 
----
 
 ## Python
 
@@ -235,18 +219,11 @@ pip freeze > requirements.txt
 
 ```
 
----
-
-## Python
 
 ```
 pandas==1.5.3
 ena-upload-cli==0.6.2
 ```
-
----
-
-## Python
 
 Other tools:
 
@@ -260,15 +237,11 @@ Other tools:
 
 - [Working with R projects](https://communicate-data-with-r.netlify.app/docs/baser/workingprojects/)
 
----
-
-## R
 
 - Renv (renv.lock, along with .Rprofile and renv/activate.R)
 
 - [Collaborating with Renv](https://rstudio.github.io/renv/articles/collaborating.html)
 
----
 
 ## Workflows
 
@@ -306,6 +279,5 @@ Other tools:
 
 - **Example:** Dataset provided in a way that contained data can be used easily by third parties and regenerated if needed using available instructions.
 - **Counter-example:** Dataset without any documentation, instructions or even context.
-
 
 Reference: [FAIRification of an RNAseq dataset](https://training.galaxyproject.org/training-material/topics/fair/tutorials/fair-rna/tutorial.html)

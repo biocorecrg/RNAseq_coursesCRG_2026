@@ -150,5 +150,20 @@ TODO: Review what we have in the course
 
 Mention to PATH
 
-Running containers to be used later on in the course
 
+### Running containers
+
+We will use already pre-made containers with Apptainer.
+
+Why Apptainer/Singularity?
+
+- Not as popular as Docker, but very convenient for Bioinformatics
+    - You don't need to worry about different kind of permissions
+
+
+```
+apptainer pull ...
+
+apptainer exec -e ...
+
+```
