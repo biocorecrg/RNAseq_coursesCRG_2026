@@ -22,11 +22,11 @@ Location:
 ## Instructors
 
 
-| {link}`Fabian Andrade <mailto:fabian.andrade@crg.eu>` | Sarah Bonnin | {link}`Anna Delgado <mailto:anna.delgado@crg.eu>` |
-| :----------------------------------------------------: | :----------: | :------------------------------------------------: |
-| {link}`<https://biocore.crg.eu/wiki/User:Fandrade>` {img}`images/pics/fandrade.jpg;width=200` | {img}`images/pics/sbonnin.jpg;width=200` | {link}`<https://biocore.crg.eu/wiki/User:Adelgado>` {img}`images/pics/adelgado.jpg;width=200` |
-| {link}`Luca Cozzuto <mailto:luca.cozzuto@crg.eu>` | {link}`Toni Hermoso <mailto:toni.hermoso@crg.eu>` | {link}`Julia Ponomarenko <mailto:julia.ponomarenko@crg.eu>` |
-| {link}`<https://biocore.crg.eu/wiki/User:Lcozzuto>` {img}`images/pics/lcozzuto.jpg;width=200` | {link}`<https://biocore.crg.eu/wiki/User:Thermoso>` {img}`images/pics/thermoso.jpg;width=200` | {link}`<https://biocore.crg.eu/wiki/User:Jponomarenko>` {img}`images/pics/ponomarenko.jpg;width=200` |
+| [Fabian Andrade](mailto:fabian.andrade@crg.eu) | Sarah Bonnin | [Anna Delgado](mailto:anna.delgado@crg.eu) |
+| :---------------------------------------------: | :----------: | :------------------------------------------: |
+| [![Fabian Andrade](images/pics/fandrade.jpg)](https://biocore.crg.eu/wiki/User:Fandrade) | ![Sarah Bonnin](images/pics/sbonnin.jpg) | [![Anna Delgado](images/pics/adelgado.jpg)](https://biocore.crg.eu/wiki/User:Adelgado) |
+| [Luca Cozzuto](mailto:luca.cozzuto@crg.eu) | [Toni Hermoso](mailto:toni.hermoso@crg.eu) | [Julia Ponomarenko](mailto:julia.ponomarenko@crg.eu) |
+| [![Luca Cozzuto](images/pics/lcozzuto.jpg)](https://biocore.crg.eu/wiki/User:Lcozzuto) | [![Toni Hermoso](images/pics/thermoso.jpg)](https://biocore.crg.eu/wiki/User:Thermoso) | [![Julia Ponomarenko](images/pics/ponomarenko.jpg)](https://biocore.crg.eu/wiki/User:Jponomarenko) |
 
 
 ##  Learning objectives
