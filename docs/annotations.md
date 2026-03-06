@@ -157,20 +157,5 @@ zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | grep -v "#" | cut -f3 |
 
 <br>
 
-# Genome Browser
-
-Genome browsers are programs that allow users to browse, search, retrieve, and analyze genomic sequences and annotation data using a graphical interface. User data like aligned reads or genomic annotation can be displayed in a genome browser.
-
-There are two kinds of genome browsers:
-* Web-based genome browsers:
-  * [UCSC Genome Broswer](https://genome.ucsc.edu/)
-  * [Ensembl Genome Browser](https://www.ensembl.org/index.html)
-  * [NCBI Genome Data Viewer](https://www.ncbi.nlm.nih.gov/genome/gdv/)
-
-* Desktop applications (some can also be used for generating a web-based genome browser):
-  * [JBrowse2](https://jbrowse.org/)
-  * [IGV](https://igv.org/)
-  
-## UCSC Genome Browser
 
 
