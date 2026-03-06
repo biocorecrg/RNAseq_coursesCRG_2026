@@ -34,11 +34,6 @@ The files you would need are:
   <img src="images/gencode_human_gtf.png" width="800" />
 </div>
 
-<img src="images/gencode_human_gtf.png" width="800" />
-
-<img src="images/gencode_human_gtf.jpg" width="800" align="middle" />
-
-test
 
 ```{bash}
 # genome
@@ -61,8 +56,13 @@ The files you would need are:
 * GTF file for the [**annotation**](ftp://ftp.ensembl.org/pub/release-115/gtf/homo_sapiens/Homo_sapiens.GRCh38.99.chr.gtf.gz)
 
 
-<img src="images/ensembl_human_main.png" width="800" align="middle" />
-<img src="images/ensembl_ftp.png" width="800" align="middle" />
+<div align="center">
+  <img src="images/ensembl_human_main.png" width="800" />
+</div>
+
+<div align="center">
+  <img src="images/ensembl_ftp.png" width="800" />
+</div>
 
 ```{bash}
 # genome
