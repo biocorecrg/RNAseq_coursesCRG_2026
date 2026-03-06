@@ -177,6 +177,8 @@ The indexing can be done with samtools:
 
 ```bash
 
+wget -r -np -nH --cut-dirs=5 -A "*.gz" https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/reads
+
 
 
 cd ~/rnaseq_course/mapping
