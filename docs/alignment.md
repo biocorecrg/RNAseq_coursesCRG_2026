@@ -5,7 +5,7 @@
 What does it mean to map reads to a transcriptome? During sequencing, we read both ends of each RNA fragment—these are called "paired-end reads." Mapping to the transcriptome means finding where these paired reads match in our database of known transcript sequences. Since transcripts already have introns removed and exons joined together, the reads align directly without needing to "jump" across gaps like they would when mapping to the genome.
 
 <div align="center">
-<img src="images/800px-Mapping_Reads.png" width="500" align="middle" />
+<img src="images/800px-Mapping_Reads.png" width="500"  />
 </div>
 
 ## Tools for read mapping
@@ -97,7 +97,7 @@ As STAR is very resource-consuming, we will create an index for **chromosome 6 o
 
 However, STAR requires **unzipped** .fa and .gtf files. We need to unzip them.
 
-```{bash}
+```bash
 # go to reference_genome folder
 cd ~/rnaseq_course/reference_genome/reference_chr6
 
@@ -111,9 +111,9 @@ zcat Homo_sapiens.GRCh38.dna.chrom6.fa.gz > Homo_sapiens.GRCh38.dna.chrom6.fa
 **Once the index is built, do not forget to remove those unzipped files!**
 
 To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** option needs to be specified for detecting possible splicing sites:
-* It usually equals the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a spicing site. 
-* In our case, since the read size is 49 bases, we can accept maximum 48 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **48**. 
-* This also means that **for every different read-length to be aligned a new STAR index needs to be generated**. Otherwise a drop in aligned reads can be experienced.
+* It usually equals the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a splicing site. 
+* In our case, since the read size is 49 bases, we can accept a maximum of 48 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **48**. 
+* This also means that **for every different read-length to be aligned, a new STAR index needs to be generated**. Otherwise, a drop in aligned reads can be experienced.
 <br>
 * **--runThreadN** allows you to parallelize the job.
 <br>
@@ -122,11 +122,11 @@ To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** opt
 <br>
 Building the STAR index (option **--runMode genomeGenerate**):
 
-```{bash}
+```bash
 # go to mapping folder
 cd ~/rnaseq_course/mapping
 
-# create sub-folder where index will be generated
+# create a sub-folder where the index will be generated
 mkdir index_star_chr6
 
 # create the index and store it in ~/rnaseq_course/mapping/index_star_chr6
@@ -139,7 +139,7 @@ $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
 		--runThreadN 1
 ```
 
-* **--genomeSAindexNbases**: default 14. If genome is small, should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
+* **--genomeSAindexNbases**: default 14. If the genome is small, it should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
 This should take around 3 to 4 minutes to complete.
 
@@ -158,7 +158,7 @@ The following parameters are optional but very convenient:
 <br>
 We can try to launch the mapping for one file:
 
-```{bash}
+```bash
 # go to mapping folder
 cd ~/rnaseq_course/mapping
 
@@ -171,12 +171,12 @@ $RUN STAR --genomeDir index_star_chr6 \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
       --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6 \
-      --runThreadN 4
+      --runThreadN 1
 ```
 
-If this was successful and not too slow and resource consuming, you can do it for all samples, in a **loop**:
+If this was successful and not too slow and resource-consuming, you can do it for all samples, in a **loop**:
 
-```{bash}
+```bash
 for fastq in ~/rnaseq_course/trimming/*-trimmed.fastq.gz
 do echo $fastq
 $RUN STAR --genomeDir index_star_chr6 \
@@ -190,24 +190,24 @@ done
 
 **BACKUP !!**
 
-If it was indeed too resource consuming, you can download the aligned files in **BAM** format from:
+If it was indeed too resource-consuming, you can download the aligned files in **BAM** format from:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
-# get archive
-wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/bam_chr6.tar.gz
+# get archives
+wget -r -np -nH --cut-dirs=5 -A "*.gz" https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln
 
-# extract
-tar -xvzf bam_chr6.tar.gz
+# extract the counts and the logs 
+tar -xvzf all.logs.tar.gz
+tar -xvzf all.tabs.tar.gz
 ```
 
-Let's explore the output directory "alignments" (or "bam_chr6", if we used the backup folder).
+Let's explore the output directory "alignments" or the backup folder.
 
-```{bash}
+```bash
 ls -lh alignments
 
-ls -lh bam_chr6
 ```
 
 <br/>
@@ -217,21 +217,20 @@ ls -lh bam_chr6
 STAR outputs read counts per gene into **PREFIX**ReadsPerGene.out.tab file with 4 columns which correspond to different **strandedness options**:
 
 |column 1 |gene ID |
-|:---:|:---:|
+|:---:|:---|
 |column 2 |counts for unstranded RNA-seq |
 |column 3 |counts for the 1st read strand aligned with RNA (htseq-count option -s yes) |
 |column 4 |counts for the 2nd read strand aligned with RNA (htseq-count option -s reverse)|
 
 Let's see what the **ReadsPerGene.out.tab** file looks like for sample **SRR3091420_1_chr6**:
 
-```{bash}
+```bash
 head alignments/SRR3091420_1_chr6ReadsPerGene.out.tab 
 head bam_chr6/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab
 ```
 
-| | | | |   
-| :----: | :----: | :----: |  :----: |
 |gene id| read counts per gene (unstranded) | read counts per gene (read 1)|read counts per gene (read 2)| 
+|:--------|----------:|---------:|---------:|
 |N_unmapped      |1589    |1589    |1589 |
 |N_multimapping  |45100   |45100   |45100 |
 |N_noFeature     |33480   |393427  |413797 |
@@ -250,7 +249,7 @@ For example, in the stranded protocol shown in "Library preparation", Read 1 is 
 
 We can count the number of reads mapped to each strand by using a simple awk script:
 
-```{bash}
+```bash
 grep -v "N_" alignments/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
 
 # OR
@@ -272,13 +271,13 @@ If the protocol used was stranded, there would be a **strong imbalance** between
 
 The **BAM format** is a compressed version of the [**SAM format**](https://samtools.github.io/hts-specs/SAMv1.pdf) (which is a plain text) and cannot thus being seen as a text. To explore the BAM file, we have to convert it to the SAM format by using [**samtools**](http://samtools.sourceforge.net/). Note that we use the parameter **-h** to show also the header that is hidden by default. 
 
-```{bash}
+```bash
 $RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam | head -n 10
 
 @HD     VN:1.4  SO:coordinate
 @SQ     SN:6    LN:170805979
 @PG     ID:STAR PN:STAR VN:STAR_2.5.3a  CL:STAR   --genomeDir index_chr6   --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts   
-@CO     user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6
+@CO     user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6
 10416098        0       6       113167  255     49M     *       0       0       GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAAA        bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiiih       NH:i:1   HI:i:1  AS:i:48 nM:i:0
 8553177 272     6       119288  3       1S48M   *       0       0       TGAAATCCAGTGGGACAGTCAAATCTTAAAGCTCCAAAATGATCTCCTT        hiiiiiiiiiiiiigiiiiiiiihiihiiiiihhiigggggeeeeebbb       NH:i:2  HI:i:2   AS:i:47 nM:i:0
 4630026 272     6       128432  3       49M     *       0       0       AGCACTAACCATTGTAGCATGCCAATATACTCAAAATTCAATGAAATTC        hfgehhggiihhhiiihhiihhhhffffghdihhiifggggeeeeebbb       NH:i:2  HI:i:2   AS:i:48 nM:i:0
@@ -294,12 +293,12 @@ The first part indicated by the first character **@** in each row is the header:
 | **@HD** header line	| **VN:1.4** version of the SAM format|	**SO:coordinate** sorting order|
 | **@SQ** reference sequence dictionary 	| **SN:6** sequence name|	**LN:170805979** sequence length|
 | **@PG** program used|	**ID:STAR** **PN:STAR**	**VN:2.5.3a** version| **CL:STAR   --genomeDir index_chr6   --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts** command line|
-|**@CO** One-line text comment||**user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6**|
+|**@CO** One-line text comment||**user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6**|
 
 The rest is a read alignment. 
 
 | Field|Value |   
-| :----: | :---- |
+| :----: | ----: |
 |Query name 	|8553177|
 |FLAG 	|272 * |
 |Reference name 	|6|
@@ -335,7 +334,7 @@ definition.*
 
 Let's convert BAM to SAM:
 
-```{bash}
+```bash
 $RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam > bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.sam
 ```
 
@@ -346,7 +345,7 @@ Yet, the more efficient way to store the alignment is to use the [**CRAM format*
 To convert **BAM** to **CRAM**, we have to provide unzipped and indexed version of the genome.
 
 
-```{bash}
+```bash
 $RUN samtools faidx ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa
 
 $RUN samtools view -C bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam -T ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa > bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
@@ -355,7 +354,7 @@ $RUN samtools view -C bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.ou
 You can see that a .cram file is twice as small as a .bam file.
 <br>
 Let's remove the .sam file:
-```{bash}
+```bash
 rm bam_chr6/*.sam 
 ```
 
@@ -368,13 +367,13 @@ The quality of the resulting alignment can be checked using the tool [**QualiMap
 *Note that if the library was paired-end, you would add the **-pe** option**.
 <br>
 **IMPORTANT**: before running QualiMap ensure enough disk space for a temporary directory ./tmp that the program is required, running the following command:
-```{bash}
+```bash
 export _JAVA_OPTIONS="-Djava.io.tmpdir=./tmp -Xmx6G"
 ```
 
 <br/>
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 # create folder
@@ -389,20 +388,20 @@ $RUN qualimap rnaseq -bam bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoor
 
 We can check the final report in a browser:
 
-```{bash}
+```bash
 firefox qc_qualimap/qualimapReport.html
 ```
-<img src="images/qualimap1.png"  align="middle" />
+<img src="images/qualimap1.png"   />
 
 The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or a protocol used). 
 
-<img src="images/qualimap2.png"  align="middle" />
+<img src="images/qualimap2.png"   />
 
-<img src="images/qualimap4.png"  align="middle" />
+<img src="images/qualimap4.png"   />
 
 Finally, we can see that the majority of reads map to the exons.
 
-<img src="images/qualimap3.png"  align="middle" />
+<img src="images/qualimap3.png"   />
 
 <br/>
 
@@ -436,7 +435,7 @@ The transcript sequences corresponding to chromosome 6 was prepared and already 
 
 **Salmon** does not need any decompression of the input, so we can index by using this command:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 # index and store the index files in index_salmon folder
@@ -487,7 +486,7 @@ We have it already for chromosome 6, in **~/rnaseq_course/reference_genome/**
 <br>
 We can proceed with the mapping.
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 # create folder for salmon's output files
@@ -503,7 +502,7 @@ $RUN salmon quant -i index_salmon -l U \
 
 We can check the results inside the folder "alignments".
 
-```{bash}
+```bash
 ls alignments_salmon/SRR3091420_1_chr6_salmon/
 
 ```
@@ -521,7 +520,7 @@ The most interesting to us in this course is the file **quant.genes.sf**, that i
 |TPM|Transcripts Per Million|
 |NumReads|Estimated number of reads considering both univocally and multimapping reads|
 
-```{bash}
+```bash
 head -n 5 alignments_salmon/SRR3091420_1_chr6_salmon/quant.genes.sf 
 
 Name	Length	EffectiveLength	TPM	NumReads
@@ -533,7 +532,7 @@ ENSG00000285884.1	790	515.683	3.28285	3
 
 There is a similarly formatted file **quant.sf** that provides read counts for transcript:
 
-```{bash}
+```bash
 head -n 5 alignments_salmon/SRR3091420_1_chr6_salmon/quant.sf 
 
 Name	Length	EffectiveLength	TPM	NumReads
@@ -549,7 +548,7 @@ We will use information on read counts for genes from **quant.sf** files for the
 
 Now if time and resources allows, proceed with the mapping of the **9 remaining samples**:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 for fastq in ~/rnaseq_course/raw_data/fastq_chr6/SRR309142{1,2,3,4,5,6,7,8,9}_1_chr6.fastq.gz
