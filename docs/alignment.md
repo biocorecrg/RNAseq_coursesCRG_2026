@@ -93,8 +93,7 @@ For the **STAR** running options, see [STAR Manual](http://labshare.cshl.edu/sha
 
 To make an index for STAR, we need both the genome sequence in FASTA format and the annotation in GTF format. 
 <br>
-As STAR is very resource consuming, we will create an index for **chromosome 6 only** (and hope that it will work!). We already downloaded the **FASTA** and **GTF** files (in ~/rnaseq_course/reference_genome) needed for the indexing.
-<br>
+As STAR is very resource-consuming, we will create an index for **chromosome 6 only**, and let's hope it will work! :). <br>
 
 However, STAR requires **unzipped** .fa and .gtf files. We need to unzip them.
 
@@ -137,26 +136,26 @@ $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
 		--sjdbOverhang 48 \
 		--genomeSAindexNbases 12.6 \
 		--outFileNamePrefix Hsapiens_chr6 \
-		--runThreadN 4
+		--runThreadN 1
 ```
 
 * **--genomeSAindexNbases**: default 14. If genome is small, should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
 
-## Aligning reads to the genome (and counting them at the same time!)
+## Aligning reads to the genome
 
 To use **STAR** for the read alignment (default **--runMode** option), we have to specify the following options:
 * the index directory (**--genomeDir**)
 * the read files (**--readFilesIn**)
 * if reads are compressed or not (**--readFilesCommand**)
 
-The following parameters are optional:
-* **--outSAMtype**: type of output. Default is **BAM Unsorted**; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be directly used with downstream software such as HTseq, without the need of name sorting."* We therefore prefer the option **BAM SortedByCoordinate**
+The following parameters are optional but very convenient:
+* **--outSAMtype**: type of output. Default is **BAM Unsorted**; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be indexed or directly used with downstream software such as HTseq, without the need for sorting."* We therefore prefer the option **BAM SortedByCoordinate**
 * **--outFileNamePrefix**: the path for the output directory and prefix of all output files. By default, this parameter is ./, i.e. all output files are written in the current directory.
-* **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by the [**htseq-count**](https://htseq.readthedocs.io/en/release_0.11.1/count.html) tool with default parameters. **This option requires annotations (GTF or GFF with –-sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf)) 
+* **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In the case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by **htseq-count** with default parameters. **This option requires annotations (in GTF format or GFF with –-sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf)) 
 
 <br>
-We can try and launch the mapping for one file:
+We can try to launch the mapping for one file:
 
 ```{bash}
 # go to mapping folder
