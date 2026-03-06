@@ -6,6 +6,7 @@ After sequencing, reads are pre-processed and quality-checked. The next step is 
 
 ## Reference sequences
 
+
 Before proceeding, we need to retrieve a **reference genome** or **transcriptome** from a public database, along with its **annotation**:
 * A **FASTA file** contains the actual genome/transcriptome sequence.
 * A **GTF/GFF file** contains the corresponding annotation.
