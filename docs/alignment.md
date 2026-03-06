@@ -190,7 +190,7 @@ done
 
 **BACKUP !!**
 
-If it was indeed too resource consuming, you can download the aligned files in **BAM** format from:
+If it was indeed too resource-consuming, you can download the aligned files in **BAM** format from:
 
 ```bash
 cd ~/rnaseq_course/mapping
@@ -217,7 +217,7 @@ ls -lh alignments
 STAR outputs read counts per gene into **PREFIX**ReadsPerGene.out.tab file with 4 columns which correspond to different **strandedness options**:
 
 |column 1 |gene ID |
-|:---:|:---:|
+|:---:|:---|
 |column 2 |counts for unstranded RNA-seq |
 |column 3 |counts for the 1st read strand aligned with RNA (htseq-count option -s yes) |
 |column 4 |counts for the 2nd read strand aligned with RNA (htseq-count option -s reverse)|
@@ -298,7 +298,7 @@ The first part indicated by the first character **@** in each row is the header:
 The rest is a read alignment. 
 
 | Field|Value |   
-| :----: | :---- |
+| :----: | ----: |
 |Query name 	|8553177|
 |FLAG 	|272 * |
 |Reference name 	|6|
