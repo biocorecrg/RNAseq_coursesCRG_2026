@@ -22,17 +22,19 @@ Location:
 ## Instructors
 
 
-|[Luca Cozzuto](mailto:luca.cozzuto@crg.eu) |[Toni Hermoso](mailto:toni.hermoso@crg.eu) | [Julia Ponomarenko](mailto:julia.ponomarenko@crg.eu)|
-| :--------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: |
-| <a href="https://biocore.crg.eu/wiki/User:Lcozzuto"><img src="images/pics/lcozzuto.jpg" width="200"/> </a> | <a href="https://biocore.crg.eu/wiki/User:Thermoso"><img src="images/pics/thermoso.jpg" width="200"/> </a> | <a href="https://biocore.crg.eu/wiki/User:Jponomarenko"><img src="images/pics/ponomarenko.jpg" width="200"/> </a> |
-
-TODO: Add Anna, Fabian, Sarah 
-
-from the [CRG](https://www.crg.eu/) [Bioinformatics core facility](https://biocore.crg.eu/) in Barcelona, Catalonia, Spain.
+| {link}`Fabian Andrade <mailto:fabian.andrade@crg.eu>` | Sarah Bonnin | {link}`Anna Delgado <mailto:anna.delgado@crg.eu>` |
+| :----------------------------------------------------: | :----------: | :------------------------------------------------: |
+| {link}`<https://biocore.crg.eu/wiki/User:Fandrade>` {img}`images/pics/fandrade.jpg;width=200` | {img}`images/pics/sbonnin.jpg;width=200` | {link}`<https://biocore.crg.eu/wiki/User:Adelgado>` {img}`images/pics/adelgado.jpg;width=200` |
+| {link}`Luca Cozzuto <mailto:luca.cozzuto@crg.eu>` | {link}`Toni Hermoso <mailto:toni.hermoso@crg.eu>` | {link}`Julia Ponomarenko <mailto:julia.ponomarenko@crg.eu>` |
+| {link}`<https://biocore.crg.eu/wiki/User:Lcozzuto>` {img}`images/pics/lcozzuto.jpg;width=200` | {link}`<https://biocore.crg.eu/wiki/User:Thermoso>` {img}`images/pics/thermoso.jpg;width=200` | {link}`<https://biocore.crg.eu/wiki/User:Jponomarenko>` {img}`images/pics/ponomarenko.jpg;width=200` |
 
 
 ##  Learning objectives
+
+TODO: Update
+
 At the end of the course, the participants will be able to:
+
 *	Understand the analysis steps from raw reads to expression counts, differential expression and interpretation of DE genes using the gene set enrichment analysis.
 * Find RNA-seq data in public repositories.
 *	Define a good experimental design, including sequencing parameters and quality control steps.
@@ -42,15 +44,13 @@ At the end of the course, the participants will be able to:
 *	Perform gene differential expression analysis.
 
 
-##  Course Program
-* Day 1: Introduction to RNA-seq,  experimental design, Start analyzing RNA-seq data: raw data download, quality control, prepare sequencing reads for mapping.
-* Day 2: Read mapping to reference genome/transcriptome, UCSC Genome Browser.
-* Day 3: Refreshing basics in R. Gene differential expression analysis.
-* Day 4: Functional analysis. Independent exercise. 
+##  Course Programme
 
+TODO: Update
 
 
 ## Prerequisites
+TODO: Update
 [Familiarity with the Linux command line](https://biocorecrg.github.io/advanced_linux_2019/)
 [Familiarity with the R language scripting](https://biocorecrg.github.io/CRG_RIntroduction/)
 
