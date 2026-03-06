@@ -5,7 +5,7 @@
 What does it mean to map reads to a transcriptome? During sequencing, we read both ends of each RNA fragment—these are called "paired-end reads." Mapping to the transcriptome means finding where these paired reads match in our database of known transcript sequences. Since transcripts already have introns removed and exons joined together, the reads align directly without needing to "jump" across gaps like they would when mapping to the genome.
 
 <div align="center">
-<img src="images/800px-Mapping_Reads.png" width="500" align="middle" />
+<img src="images/800px-Mapping_Reads.png" width="500"  />
 </div>
 
 ## Tools for read mapping
@@ -171,10 +171,10 @@ $RUN STAR --genomeDir index_star_chr6 \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
       --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6 \
-      --runThreadN 4
+      --runThreadN 1
 ```
 
-If this was successful and not too slow and resource consuming, you can do it for all samples, in a **loop**:
+If this was successful and not too slow and resource-consuming, you can do it for all samples, in a **loop**:
 
 ```bash
 for fastq in ~/rnaseq_course/trimming/*-trimmed.fastq.gz
@@ -203,12 +203,11 @@ tar -xvzf all.logs.tar.gz
 tar -xvzf all.tabs.tar.gz
 ```
 
-Let's explore the output directory "alignments" (or "bam_chr6", if we used the backup folder).
+Let's explore the output directory "alignments" or the backup folder.
 
 ```bash
 ls -lh alignments
 
-ls -lh bam_chr6
 ```
 
 <br/>
@@ -230,9 +229,8 @@ head alignments/SRR3091420_1_chr6ReadsPerGene.out.tab
 head bam_chr6/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab
 ```
 
-| | | | |   
-| :----: | :----: | :----: |  :----: |
 |gene id| read counts per gene (unstranded) | read counts per gene (read 1)|read counts per gene (read 2)| 
+|:--------|----------:|---------:|---------:|
 |N_unmapped      |1589    |1589    |1589 |
 |N_multimapping  |45100   |45100   |45100 |
 |N_noFeature     |33480   |393427  |413797 |
@@ -279,7 +277,7 @@ $RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.ou
 @HD     VN:1.4  SO:coordinate
 @SQ     SN:6    LN:170805979
 @PG     ID:STAR PN:STAR VN:STAR_2.5.3a  CL:STAR   --genomeDir index_chr6   --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts   
-@CO     user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6
+@CO     user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6
 10416098        0       6       113167  255     49M     *       0       0       GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAAA        bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiiih       NH:i:1   HI:i:1  AS:i:48 nM:i:0
 8553177 272     6       119288  3       1S48M   *       0       0       TGAAATCCAGTGGGACAGTCAAATCTTAAAGCTCCAAAATGATCTCCTT        hiiiiiiiiiiiiigiiiiiiiihiihiiiiihhiigggggeeeeebbb       NH:i:2  HI:i:2   AS:i:47 nM:i:0
 4630026 272     6       128432  3       49M     *       0       0       AGCACTAACCATTGTAGCATGCCAATATACTCAAAATTCAATGAAATTC        hfgehhggiihhhiiihhiihhhhffffghdihhiifggggeeeeebbb       NH:i:2  HI:i:2   AS:i:48 nM:i:0
@@ -295,7 +293,7 @@ The first part indicated by the first character **@** in each row is the header:
 | **@HD** header line	| **VN:1.4** version of the SAM format|	**SO:coordinate** sorting order|
 | **@SQ** reference sequence dictionary 	| **SN:6** sequence name|	**LN:170805979** sequence length|
 | **@PG** program used|	**ID:STAR** **PN:STAR**	**VN:2.5.3a** version| **CL:STAR   --genomeDir index_chr6   --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts** command line|
-|**@CO** One-line text comment||**user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6**|
+|**@CO** One-line text comment||**user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6**|
 
 The rest is a read alignment. 
 
@@ -393,17 +391,17 @@ We can check the final report in a browser:
 ```bash
 firefox qc_qualimap/qualimapReport.html
 ```
-<img src="images/qualimap1.png"  align="middle" />
+<img src="images/qualimap1.png"   />
 
 The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or a protocol used). 
 
-<img src="images/qualimap2.png"  align="middle" />
+<img src="images/qualimap2.png"   />
 
-<img src="images/qualimap4.png"  align="middle" />
+<img src="images/qualimap4.png"   />
 
 Finally, we can see that the majority of reads map to the exons.
 
-<img src="images/qualimap3.png"  align="middle" />
+<img src="images/qualimap3.png"   />
 
 <br/>
 
