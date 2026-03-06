@@ -22,12 +22,11 @@ Location:
 ## Instructors
 
 
-|[Fabian Andrade](mailto:fabian.andrade@crg.eu) |Sarah Bonnin | [Anna Delgado](mailto:anna.delgado@crg.eu)|
-| :--------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: |
-| <a href="https://biocore.crg.eu/wiki/User:Fandrade"><img src="images/pics/fandrade.jpg" width="200"/> </a> | <img src="images/pics/sbonnin.jpg" width="200"/> </a> | <a href="https://biocore.crg.eu/wiki/User:Adelgado"><img src="images/pics/adelgado.jpg" width="200"/> </a> |
-|[Luca Cozzuto](mailto:luca.cozzuto@crg.eu) |[Toni Hermoso](mailto:toni.hermoso@crg.eu) | [Julia Ponomarenko](mailto:julia.ponomarenko@crg.eu)|
-| :--------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: |
-| <a href="https://biocore.crg.eu/wiki/User:Lcozzuto"><img src="images/pics/lcozzuto.jpg" width="200"/> </a> | <a href="https://biocore.crg.eu/wiki/User:Thermoso"><img src="images/pics/thermoso.jpg" width="200"/> </a> | <a href="https://biocore.crg.eu/wiki/User:Jponomarenko"><img src="images/pics/ponomarenko.jpg" width="200"/> </a> |
+| {link}`Fabian Andrade <mailto:fabian.andrade@crg.eu>` | Sarah Bonnin | {link}`Anna Delgado <mailto:anna.delgado@crg.eu>` |
+| :----------------------------------------------------: | :----------: | :------------------------------------------------: |
+| {link}`<https://biocore.crg.eu/wiki/User:Fandrade>` {img}`images/pics/fandrade.jpg;width=200` | {img}`images/pics/sbonnin.jpg;width=200` | {link}`<https://biocore.crg.eu/wiki/User:Adelgado>` {img}`images/pics/adelgado.jpg;width=200` |
+| {link}`Luca Cozzuto <mailto:luca.cozzuto@crg.eu>` | {link}`Toni Hermoso <mailto:toni.hermoso@crg.eu>` | {link}`Julia Ponomarenko <mailto:julia.ponomarenko@crg.eu>` |
+| {link}`<https://biocore.crg.eu/wiki/User:Lcozzuto>` {img}`images/pics/lcozzuto.jpg;width=200` | {link}`<https://biocore.crg.eu/wiki/User:Thermoso>` {img}`images/pics/thermoso.jpg;width=200` | {link}`<https://biocore.crg.eu/wiki/User:Jponomarenko>` {img}`images/pics/ponomarenko.jpg;width=200` |
 
 
 ##  Learning objectives
