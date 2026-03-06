@@ -15,7 +15,6 @@ Multiples **aligners** were developed over the last decades, using different **a
 |Read mappers timeline|
 | :---:  |
 |<img src="images/mappers_timeline.jpeg" width="800" />|
-|from [https://www.ebi.ac.uk/~nf/hts_mappers/](https://www.ebi.ac.uk/~nf/hts_mappers/)|
 
 
 ## Index
