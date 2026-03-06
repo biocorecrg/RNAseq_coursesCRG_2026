@@ -63,11 +63,26 @@ These tools are way faster than the previous ones because they don't need to rep
 <br/>
 
 
-# Reference genome: FASTA and GTF/GFF
-
 Before proceeding, we need to retrieve a **reference genome or transcriptome** from a public database, along with its **annotation**:
 * A **FASTA file** contains the actual genome/transcriptome sequence.
 * A **GTF/GFF file** contains the corresponding annotation.
+
+We already have them here:
+
+```bash
+# go to the appropriate folder
+cd ~/rnaseq_course/reference_genome
+
+# download reference files for chromosome 6
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/annotation/reference_chr6_Hsapiens.tar.gz
+
+# extract archive
+tar -xvzf reference_chr6_Hsapiens.tar.gz
+
+# remove remaining .tar.gz archive
+rm reference_chr6_Hsapiens.tar.gz
+
+```
 
 # Mapping using STAR
 
