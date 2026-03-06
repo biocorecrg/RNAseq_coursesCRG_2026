@@ -59,4 +59,6 @@ reproducible.md
 linux_cli.md
 rnaseq_data_analysis.md
 annotations.md
+alignment.md
+
 ```
