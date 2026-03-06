@@ -111,9 +111,9 @@ zcat Homo_sapiens.GRCh38.dna.chrom6.fa.gz > Homo_sapiens.GRCh38.dna.chrom6.fa
 **Once the index is built, do not forget to remove those unzipped files!**
 
 To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** option needs to be specified for detecting possible splicing sites:
-* It usually equals the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a spicing site. 
-* In our case, since the read size is 49 bases, we can accept maximum 48 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **48**. 
-* This also means that **for every different read-length to be aligned a new STAR index needs to be generated**. Otherwise a drop in aligned reads can be experienced.
+* It usually equals the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a splicing site. 
+* In our case, since the read size is 49 bases, we can accept a maximum of 48 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **48**. 
+* This also means that **for every different read-length to be aligned, a new STAR index needs to be generated**. Otherwise, a drop in aligned reads can be experienced.
 <br>
 * **--runThreadN** allows you to parallelize the job.
 <br>
@@ -126,7 +126,7 @@ Building the STAR index (option **--runMode genomeGenerate**):
 # go to mapping folder
 cd ~/rnaseq_course/mapping
 
-# create sub-folder where index will be generated
+# create a sub-folder where the index will be generated
 mkdir index_star_chr6
 
 # create the index and store it in ~/rnaseq_course/mapping/index_star_chr6
@@ -139,7 +139,7 @@ $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
 		--runThreadN 1
 ```
 
-* **--genomeSAindexNbases**: default 14. If genome is small, should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
+* **--genomeSAindexNbases**: default 14. If the genome is small, it should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
 This should take around 3 to 4 minutes to complete.
 
@@ -195,11 +195,12 @@ If it was indeed too resource consuming, you can download the aligned files in *
 ```{bash}
 cd ~/rnaseq_course/mapping
 
-# get archive
-wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/bam_chr6.tar.gz
+# get archives
+wget -r -np -nH --cut-dirs=5 -A "*.gz" https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln
 
-# extract
-tar -xvzf bam_chr6.tar.gz
+# extract the counts and the logs 
+tar -xvzf all.logs.tar.gz
+tar -xvzf all.tabs.tar.gz
 ```
 
 Let's explore the output directory "alignments" (or "bam_chr6", if we used the backup folder).
