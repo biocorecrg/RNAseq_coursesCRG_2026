@@ -58,6 +58,7 @@ At the end of the course, the participants will be able to:
 :hidden:
 :depth: 2
 
+sequencing_preprocessing.md
 reproducible.md
 linux_cli.md
 rnaseq_data_analysis.md
