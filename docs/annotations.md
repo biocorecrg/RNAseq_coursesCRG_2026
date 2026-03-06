@@ -35,7 +35,7 @@ The files you would need are:
 </div>
 
 
-```{bash}
+```bash
 # genome
 wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/GRCh38.primary_assembly.genome.fa.gz
 
