@@ -175,6 +175,9 @@ Small size data can be directly uploaded to the genome browser, while large file
 The indexing can be done with samtools:
 
 ```bash
+
+
+
 cd ~/rnaseq_course/mapping
 
 $RUN samtools index bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam
