@@ -28,9 +28,8 @@ The files you would need are:
 * FASTA file corresponding to the [**transcripts**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.transcripts.fa.gz)
 * GTF file of the [**Comprehensive gene annotation**](ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz)
 
-|GENCODE website|
-| :---:  |
-|<img src="images/gencode_human_gtf.png" width="800" align="middle" />|
+
+<img src="images/gencode_human_gtf.png" width="800" align="middle" 
 
 ```{bash}
 # genome
