@@ -18,14 +18,13 @@ Multiples **aligners** were developed over the last decades, using different **a
 
 
 ## Index
-
 Before doing the mapping, we have to prepare an **index** from the reference DNA sequence that a chosen algorithm will use. 
 <br>
 Like the index at the end of a book, an index of a large DNA sequence allows one to **rapidly find shorter sequences embedded in it**. Different tools use different approaches at genome/transcriptome indexing.
 
 |k-mer index|
 | :---:  |
-|<img src="images/index_kmer.png" width="300" align="middle" />|
+|<img src="images/index_kmer.png" width="300" />|
 |from [https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index](https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index)|
 
 
