@@ -1,6 +1,6 @@
-# Pre-processing of raw data and fastq format - What happens with data after the libraries were sequenced
+# Pre-processing of raw data and fastq format
 
-## 1.1. Flowcells, lanes, and library structure
+## Flowcells, lanes, and library structure
 
 Illumina sequencing happens on a **flowcell** —a glass slide with billions of oligos (short DNA sequences) covalently attached to its surface. There are two types of oligos attached named P7 and P5. Many flowcells are divided into **lanes** (typically 2, 4, or 8), which can act like independent *tracks* that sequence separate library pools. Lane information appears in run metadata, FASTQ headers, and output filenames (e.g., L001 for lane 1, L002 for lane 2). Before diving in into the sequencing per se, what is a library and how does interact with these surface oligos?
 
@@ -30,7 +30,7 @@ Its key regions are:
 
 Now that the library structure is clear, let's see what occurs once our molecules enter the flowcell and covalently bind to oligos P7/P5.
 
-## 1.2. Cluster generation and sequencing by syntehsis (SBS)
+## Cluster generation and sequencing by syntehsis (SBS)
 
 Libraries bind to the flow cell via either P5-to-P5 OR P7-to-P7 hybridization. Then, the bridge amplification process starts and it is identical for both orientations:
 
@@ -119,7 +119,7 @@ If several early R1 cycles contain G (no fluorescence), the camera only sees bac
 
 All limitations described above result in a **quality score decline** towards the end of the read.
 
-## 2. From Images to FASTQ: RTA → BCL → FastQ
+## From Images to FASTQ: RTA → BCL → FastQ
 Every imaging step described in the previous section produces a massive amount of image data to analyse. The **RTA software**, which is executed on the instrument itself, processes them in real-time during the sequencing run. Briefly, it does:
 1. Cluster position tracking (from early R1 cycles)
 2. Intensity extraction per cluster (red, green values)
@@ -165,7 +165,7 @@ In this scenario, known as **barcode collision**, bcl2fastq will raise an error 
 
 If no collision occurs, **bcl2fastq** generates the demultiplexed **fastq** files, which can then be trimmed, aligned, among other downstream analysis. 
 
-## 3. FASTQ Format: The Universal NGS Standard
+## FASTQ Format: The Universal NGS Standard
 
 Short (and long) sequencing reads coming from the sequencers are stored in **FASTQ** format files (with the extension **.fastq** / **.fq**).
 This format contains the information about the sequence and the quality of each sequenced base. The quality encodes the **probability that the corresponding base call is incorrect**.
@@ -208,7 +208,7 @@ These are the thresholds that we usually see in our sequencing data:
 | 30 | 0.001  | 1 per 1000  | 99.9%  | Good quality |
 | 40 | 0.0001 | 1 per 10000 | 99.99% | Excellent quality |
 
-## 4. Further reading materials
+## Further reading materials
 
 In case you would like to read more about the topics covered in this section, please find below a publicly available list of reference materials:
 
