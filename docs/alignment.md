@@ -1,5 +1,6 @@
 # Read mapping (Hands on)
 
+
 <img src="images/RNAseq_workflow.png" width="1000"/>
 
 What does it mean to map reads to a transcriptome? During sequencing, we read both ends of each RNA fragment—these are called "paired-end reads." Mapping to the transcriptome means finding where these paired reads match in our database of known transcript sequences. Since transcripts already have introns removed and exons joined together, the reads align directly without needing to "jump" across gaps as they would when mapping to the genome.
