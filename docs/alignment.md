@@ -459,7 +459,7 @@ If you cannot, you can reach it [here](https://biocorecrg.github.io/RNAseq_cours
 The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns, or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or the protocol used). 
 
 <div align="center">
-<img src="images/qualimap.jpg" width="500"  />
+<img src="images/qualimap.jpg" width="800"  />
 </div>
 
 
