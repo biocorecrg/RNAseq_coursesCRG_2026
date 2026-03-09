@@ -300,19 +300,17 @@ For example, in the stranded protocol shown in "Library preparation", Read 1 is 
 We can count the number of reads mapped to each strand by using a simple awk script:
 
 ```bash
-grep -v "N_" alignments/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
+grep -v "N_" SRR3091420_1_chr6ReadsPerGene.out.tab | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
+688715 389342 372527
 
-# OR
-grep -v "N_" bam_chr6/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
-
-# 725267 387076 367344
+# 688715 389342 372527
 ```
 
-We see that 387,076 Reads 1 (forward) were mapped to known genes and 367,344 Reads 2 (reverse) were mapped to known genes.
+We see that 389,342 Reads 1 (forward) were mapped to known genes and 372,527 Reads 2 (reverse) were mapped to known genes.
 <br>
 These numbers are very similar, which indicates that the protocol used for this mRNA-Seq experiment is **unstranded**.
 <br>
-If the protocol used was stranded, there would be a **strong imbalance** between number of reads mapped to known genes in forward versus reverse strands.
+If the protocol used was stranded, there would be a **strong imbalance** between the number of reads mapped to known genes in forward versus reverse strands.
 
 
 <br/>
@@ -322,48 +320,56 @@ If the protocol used was stranded, there would be a **strong imbalance** between
 The **BAM format** is a compressed version of the [**SAM format**](https://samtools.github.io/hts-specs/SAMv1.pdf) (which is a plain text) and cannot thus being seen as a text. To explore the BAM file, we have to convert it to the SAM format by using [**samtools**](http://samtools.sourceforge.net/). Note that we use the parameter **-h** to show also the header that is hidden by default. 
 
 ```bash
-$RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam | head -n 10
+$RUN samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam | head -n 10
 
-@HD     VN:1.4  SO:coordinate
-@SQ     SN:6    LN:170805979
-@PG     ID:STAR PN:STAR VN:STAR_2.5.3a  CL:STAR   --genomeDir index_chr6   --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts   
-@CO     user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6
-10416098        0       6       113167  255     49M     *       0       0       GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAAA        bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiiih       NH:i:1   HI:i:1  AS:i:48 nM:i:0
-8553177 272     6       119288  3       1S48M   *       0       0       TGAAATCCAGTGGGACAGTCAAATCTTAAAGCTCCAAAATGATCTCCTT        hiiiiiiiiiiiiigiiiiiiiihiihiiiiihhiigggggeeeeebbb       NH:i:2  HI:i:2   AS:i:47 nM:i:0
-4630026 272     6       128432  3       49M     *       0       0       AGCACTAACCATTGTAGCATGCCAATATACTCAAAATTCAATGAAATTC        hfgehhggiihhhiiihhiihhhhffffghdihhiifggggeeeeebbb       NH:i:2  HI:i:2   AS:i:48 nM:i:0
-4630026 272     6       128432  3       49M     *       0       0       AGCACTAACCATTGTAGCATGCCAATATACTCAAAATTCAATGAAATTC        hfgehhggiihhhiiihhiihhhhffffghdihhiifggggeeeeebbb       NH:i:2  HI:i:2   AS:i:48 nM:i:0
-10689795        0       6       135934  255     49M     *       0       0       AAGGCTGCAATGAGCTGTGATCGCACCACCGCACCCAAGCCTGGGTGGT        bbbeeeeeggggfiiiighiiiiiiiiiiiiiihiihfhhiiiii_ega       NH:i:1   HI:i:1  AS:i:44 nM:i:2
-10416101        0       6       136561  255     49M     *       0       0       CCCAACGTTTAGACTACACAATGAGTTAAGAACGACAAAAATAAGCTCA        ___ecccceeeeghhhhhhhhgfgiihfhhhhfhffffgghhhidfffh       NH:i:1   HI:i:1  AS:i:48 nM:i:0
+@HD	VN:1.4	SO:coordinate
+@SQ	SN:6	LN:170805979
+@PG	ID:STAR	PN:STAR	VN:2.7.11b	CL:/opt/conda/bin/STAR-avx2   --genomeDir index_star_chr6   --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts   
+@PG	ID:samtools	PN:samtools	PP:STAR	VN:1.17	CL:/usr/local/bin/samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
+@CO	user command line: /opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6
+10416098	0	6	113167	255	48M	*	0	0	GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAA	bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiii	NH:i:1	HI:i:1	AS:i:47	nM:i:0
+8553177	272	6	119288	3	48M	*	0	0	GAAATCCAGTGGGACAGTCAAATCTTAAAGCTCCAAAATGATCTCCTT	iiiiiiiiiiiiigiiiiiiiihiihiiiiihhiigggggeeeeebbb	NH:i:2	HI:i:2	AS:i:47	nM:i:0
+4630026	272	6	128432	3	49M	*	0	0	AGCACTAACCATTGTAGCATGCCAATATACTCAAAATTCAATGAAATTC	hfgehhggiihhhiiihhiihhhhffffghdihhiifggggeeeeebbb	NH:i:2	HI:i:2	AS:i:48	nM:i:0
+10689795	0	6	135934	255	49M	*	0	0	AAGGCTGCAATGAGCTGTGATCGCACCACCGCACCCAAGCCTGGGTGGT	bbbeeeeeggggfiiiighiiiiiiiiiiiiiihiihfhhiiiii_ega	NH:i:1	HI:i:1	AS:i:44	nM:i:2
+10416101	0	6	136561	255	48M	*	0	0	CCCAACGTTTAGACTACACAATGAGTTAAGAACGACAAAAATAAGCTC	___ecccceeeeghhhhhhhhgfgiihfhhhhfhffffgghhhidfff	NH:i:1	HI:i:1	AS:i:47	nM:i:0
+
 ```
 
 The first part indicated by the first character **@** in each row is the header:
 
-| Symbol|  |  |   
-| :----: | :---- | :---- |
-| **@HD** header line	| **VN:1.4** version of the SAM format|	**SO:coordinate** sorting order|
-| **@SQ** reference sequence dictionary 	| **SN:6** sequence name|	**LN:170805979** sequence length|
-| **@PG** program used|	**ID:STAR** **PN:STAR**	**VN:2.5.3a** version| **CL:STAR   --genomeDir index_chr6   --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts** command line|
-|**@CO** One-line text comment||**user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6**|
+| Tag | Field | Value |
+|-----|-------|-------|
+| @HD | VN | 1.4 |
+| @HD | SO | coordinate |
+| @SQ | SN | 6 |
+| @SQ | LN | 170805979 |
+| @PG | ID | STAR |
+| @PG | PN | STAR |
+| @PG | VN | 2.7.11b |
+| @PG | CL | `/opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6 --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts` |
+| @PG | ID | samtools |
+| @PG | PN | samtools |
+| @PG | PP | STAR |
+| @PG | VN | 1.17 |
+| @PG | CL | `/usr/local/bin/samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam` |
+| @CO | - | user command line: `/opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6` |
 
 The rest is a read alignment. 
 
-| Field|Value |   
-| :----: | ----: |
-|Query name 	|8553177|
-|FLAG 	|272 * |
-|Reference name 	|6|
-|Leftmost mapping position (1-based)	|119288|
-|Mapping quality 	|3 *(p=0.5)* |
-|CIGAR string |1S48M *|
-|Reference sequence name of the primary alignment of the mate | * = no mate	(= *same chromosome*)|
-|Position of the primary alignment of the mate| 	0|
-|observed fragment length| 	0|
-|Sequence |TGAAATCCAGTGGGACAGTCAAATCTTAAAGCTCCAAAATGATCTCCTT|
-|Quality	|hiiiiiiiiiiiiigiiiiiiiihiihiiiiihhiigggggeeeeebbb|
+| Field | Value |
+|-------|-------|
+| Read ID | 10416098 |
+| FLAG | 0 |
+| Chromosome | 6 |
+| Position | 113167 |
+| Mapping Quality | 255 (uniquely mapped) |
+| CIGAR | 48M (48 bp match) |
+| Sequence | `GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAA` |
+| Quality | `bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiii` |
 
-\* **FLAG 272** means that the read is non paired, and that it maps on the reverse strand.
+\* **FLAG 0** means that the read is mapped on forward strand.
 <br>
-**CIGAR string 1S48M** means that 1 base was soft clip (S) and 48 bases were mapped to the reference (M). N would correspond to bases unmapped.
+**CIGAR string 48M** means that 48 bases were mapped to the reference (M).
 <br>
 You can use [this website for the translation of SAM FLAG values](https://www.samformat.info/sam-format-flag) and [this one for interpreting CIGAR strings](https://www.drive5.com/usearch/manual/cigar.html).
 
@@ -372,20 +378,20 @@ Extra fields are often present and differ between aligners [https://samtools.git
 
 | Field|Meaning |   
 | :----: | :---- |
-|NH:i:2|number of mapping to the reference|
-|HI:i:2|which alignment is the reported one (in this case is the second one)|	
-|AS:i:74|Alignment score calculate by the aligner|
-|nM:i:9|number of difference with the reference*|
+|NH:i:1|number of mappings to the reference|
+|HI:i:1|which alignment is the reported one (in this case is the second one)|	
+|AS:i:47|Alignment score calculated by the aligner|
+|nM:i:0|number of difference with the reference*|
 
-\* *Note that historically this has been ill-defined and both data and tools exist that disagree with this
-definition.*
+```{note} Careful that sometimes tools can disagree on some definition, from time to time the standard is "changed" depending on the community, new data to show
+```
 
 <br/>
 
 Let's convert BAM to SAM:
 
 ```bash
-$RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam > bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.sam
+$RUN samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam  > SRR3091420_1_chr6Aligned.sortedByCoord.out.sam
 ```
 
 You can see that the SAM file is **5 times larger** than the BAM file.
@@ -398,14 +404,18 @@ To convert **BAM** to **CRAM**, we have to provide unzipped and indexed version 
 ```bash
 $RUN samtools faidx ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa
 
-$RUN samtools view -C bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam -T ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa > bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
+$RUN samtools view -C SRR3091420_1_chr6Aligned.sortedByCoord.out.bam -T ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa -o SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
 ```
 
 You can see that a .cram file is twice as small as a .bam file.
 <br>
-Let's remove the .sam file:
+
 ```bash
-rm bam_chr6/*.sam 
+ls  SRR3091420_1_chr6Aligned.sortedByCoord.out.* -alht
+.rw-r----- lcozzuto Bioinformatics_Unit  15 MB Mon Mar  9 19:27:00 2026  SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
+.rw-r----- lcozzuto Bioinformatics_Unit 139 MB Mon Mar  9 19:26:05 2026  SRR3091420_1_chr6Aligned.sortedByCoord.out.sam
+.rw-r----- lcozzuto Bioinformatics_Unit  27 MB Mon Mar  9 18:58:07 2026  SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
+
 ```
 
 <br/>
