@@ -198,8 +198,8 @@ If it was indeed too resource-consuming, you can download the aligned files in *
 ```bash
 cd ~/rnaseq_course/mapping
 
-# get archives
-wget -r -np -nH --cut-dirs=5 -A "*.gz" https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln
+# get alignments and indexes ending with bam or bai
+wget -r -np -nH --cut-dirs=5 -A "*.bam*" https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln
 
 # extract the counts and the logs 
 tar -xvzf all.logs.tar.gz
