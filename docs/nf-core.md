@@ -331,3 +331,20 @@ Duration    : 16m 21s
 CPU hours   : 1.7
 Succeeded   : 363
 ```
+
+Let's inspect the output.
+
+- fastqc (QC)
+  - raw
+  - trim
+- fq_lint (validator)
+- multiqc (reporting)
+- pipeline_info 
+- star_salmon: output of several tools:
+  - bam files
+  - salmon quantification on star aligned results
+  - qualimap QC
+  - ...   
+- trimgalore (report of trimgalore execution)
+
+
