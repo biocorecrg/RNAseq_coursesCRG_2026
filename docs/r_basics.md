@@ -6,7 +6,13 @@ navigation: 17
 
 # Reviewing some R basics
 
-Open the **RStudio** software.
+In this section, we will review the RStudio/POSIT software usage, and the R basics.
+
+
+## RStudio panels
+
+Open **RStudio** on your local computer.
+
 
 ## Basics
 
@@ -14,11 +20,11 @@ Open the **RStudio** software.
 
 Everything that stores any kind of data in R is an **object**.
 
-* Assignment operators
+* Assignment operators (how to store data in an object)
 	+ **<-** or **=**
 	+ Essentially the same but, to avoid confusions:
   		+ Use **<-** for assignments
-  	+ Keep **=** for functions arguments
+  	  +  Keep **=** for functions arguments
 * Assigning a value to the object **B**: 
 ```{r}
 B <- 10
@@ -44,6 +50,7 @@ Each object has a data type:
 * Numeric (number - integer or double)
 * Character (text)
 * Logical (TRUE / FALSE)
+* Factors (categorical variables)
 
 Number:
 ```{r}
@@ -60,6 +67,8 @@ mode(b)
 typeof(b)
 str(b)
 ```
+
+TBU: logical and factors.
 
 The main data structures in R are:
 
