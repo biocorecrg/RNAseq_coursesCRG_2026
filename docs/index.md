@@ -66,5 +66,6 @@ raw_data_qc.md
 trimmed_data_qc.md
 annotations.md
 alignment.md
+gbrowser.md
 
 ```
