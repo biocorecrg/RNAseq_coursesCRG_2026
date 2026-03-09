@@ -1,4 +1,4 @@
-# Running the full analysis using the RNAseq nf-core pipeline 
+# Running the full analysis using the nf-core pipelines
 
 All the previous steps can be chained together in what bioinformaticians call a pipeline.
 Historically, each lab developed its own pipelines using custom code tailored to its specific IT infrastructure. 
@@ -29,7 +29,9 @@ Most nf-core pipelines rely on container images from [Biocontainers](https://bio
 <img src="images/biocontainers_screen.png" width="300"  />
 </div>
 
-For our data analysis, we will use the [nf-core RNAseq pipeline](https://nf-co.re/rnaseq/3.23.0/). The whole analysis is described in this fancy diagram:
+## RNAseq nf-core pipeline 
+
+For our data analysis, we will use the [nf-core RNAseq pipeline](https://nf-co.re/rnaseq/3.23.0/). The whole pipeline is described in this fancy diagram:
 
 <div align="center">
 <img src="images/nf-core-rnaseq_metro_map_grey_animated.svg" width="800"  />
@@ -38,10 +40,148 @@ For our data analysis, we will use the [nf-core RNAseq pipeline](https://nf-co.r
 As you can see, we have almost 40 tools that are chained and available. This level of complexity was nearly impossible in the past without the use of an orchestrator.
 
 We can identify 5 macro areas:
-- Preprocessing: merge different sequencing runs, infer strandness, QC, UMI extraction, adapter trimming and contaminants and rRNA removal.  
+- Preprocessing: merge different sequencing runs, infer strandness, QC, UMI extraction, adapter trimming and contaminants, and rRNA removal.  
 - Genome alignment using either Star, Hisat2 or bowtie2. Quantification with Rsem or Salmon. (Hisat2 has no quantification method)
 - Transcriptome pseudo-alignment with either Salmon or Kallisto.
-- Post-processing after genome alignmentgnment: sorting, umi and read deduplication, transcriptome assembly, and quantification. Generation of read coverage files (bigWig) for displaying in genome browsers.
+- Post-processing after genome alignment: sorting, umi and read deduplication, transcriptome assembly, and quantification. Generation of read coverage files (bigWig) for displaying in genome browsers.
 - Quality control and reporting after post-processing: QC on alignment, such as RSeQC, qualimap, etc. Detection of contamination and final reporting with MultiQC 
 
+We can use the nf-core tools by installing them using **pip**.  
+
+```{note}
+You might also think of getting it from Biocontainers, but this won't work when executing the pipeline with other containers!
+```
+
+```bash
+# -r indicates the exact version to fetch
+nf-core pipelines download  nf-core/rnaseq -r dev
+
+
+                                          ,--./,-.
+          ___     __   __   __   ___     /,-._.--~\ 
+    |\ | |__  __ /  ` /  \ |__) |__         }  {
+    | \| |       \__, \__/ |  \ |___     \`-._,-`-,
+                                          `._,._,'
+
+    nf-core/tools version 3.5.2 - https://nf-co.re
+
+
+WARNING  Could not find GitHub authentication token. Some API requests may fail.                                                                                    
+
+In addition to the pipeline code, this tool can download software containers.
+? Download software container images: (Use arrow keys)
+ » none
+   singularity
+   docker
+```
+
+In this way, you can also pre-download the containers. This can be useful if your HPC has no internet connection and needs to run the pipeline offline.
+
+```bash
+In addition to the pipeline code, this tool can download software containers.
+? Download software container images: none
+
+If transferring the downloaded files to another system, it can be convenient to have everything compressed in a single file.
+? Choose compression type: (Use arrow keys)
+ » none
+   tar.gz
+   tar.bz2
+   zip
+```
+
+After that, a new folder named **nf-core-rnaseq_dev** appears with the whole pipeline. You can navigate inside and see all the files:
+
+```bash
+ls nf-core-rnaseq_dev/dev/
+
+tests
+subworkflows
+ro-crate-metadata.json
+nf-test.config
+nextflow_schema.json
+nextflow.config
+modules
+modules.json
+main.nf
+docs
+conf
+bin
+assets
+README.md
+LICENSE
+CODE_OF_CONDUCT.md
+CITATIONS.md
+CHANGELOG.md
+
+```
+
+You don't need to change anything except the file **base.config** inside **conf** folder. Inside are described the resources needed for the different processes, and some can be really too big.
+
+```groovy
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    nf-core/rnaseq Nextflow base config file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    A 'blank slate' config file, appropriate for general use on most high performance
+    compute environments. Assumes that all software is installed and available on
+    the PATH. Runs in `local` mode - all jobs will be run on the logged in environment.
+----------------------------------------------------------------------------------------
+*/
+
+process {
+
+    // TODO nf-core: Check the defaults for all processes
+    cpus   = { 1      * task.attempt }
+    memory = { 6.GB   * task.attempt }
+    time   = { 4.h    * task.attempt }
+
+    errorStrategy = { task.exitStatus in ((130..145) + 104 + 175) ? 'retry' : 'finish' }
+    maxRetries    = 1
+    maxErrors     = '-1'
+
+    // Process-specific resource requirements
+    // NOTE - Please try and reuse the labels below as much as possible.
+    //        These labels are used and recognised by default in DSL2 files hosted on nf-core/modules.
+    //        If possible, it would be nice to keep the same label naming convention when
+    //        adding in your local modules too.
+    // See https://www.nextflow.io/docs/latest/config.html#config-process-selectors
+    withLabel:process_single {
+        cpus   = { 1                   }
+        memory = { 6.GB * task.attempt }
+        time   = { 4.h  * task.attempt }
+    }
+    withLabel:process_low {
+        cpus   = { 2     * task.attempt }
+        memory = { 12.GB * task.attempt }
+        time   = { 4.h   * task.attempt }
+    }
+    withLabel:process_medium {
+        cpus   = { 6     * task.attempt }
+        memory = { 36.GB * task.attempt }
+        time   = { 8.h   * task.attempt }
+    }
+    withLabel:process_high {
+        cpus   = { 12    * task.attempt }
+        memory = { 72.GB * task.attempt }
+        time   = { 16.h  * task.attempt }
+    }
+    withLabel:process_long {
+        time   = { 20.h  * task.attempt }
+    }
+    withLabel:process_high_memory {
+        memory = { 200.GB * task.attempt }
+    }
+    withLabel:error_ignore {
+        errorStrategy = 'ignore'
+    }
+    withLabel:error_retry {
+        errorStrategy = 'retry'
+        maxRetries    = 2
+    }
+    withLabel: process_gpu {
+        accelerator      = 1
+        containerOptions = { params.gpu_container_options ?: (workflow.containerEngine in ['singularity', 'apptainer'] ? '--nv' : '--gpus all') }
+    }
+}
+```
 
