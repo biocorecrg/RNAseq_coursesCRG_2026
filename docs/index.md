@@ -68,4 +68,5 @@ annotations.md
 alignment.md
 gbrowser.md
 multiqc.md
+nf-core.md
 ```
