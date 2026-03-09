@@ -102,7 +102,7 @@ However, STAR requires **unzipped** .fa and .gtf files. We need to unzip them.
 cd ~/rnaseq_course/reference_genome/reference_chr6
 
 # unzip files (keep original zipped file)
-zcat Homo_sapiens.GRCh38.88.chr6.gtf.gz > Homo_sapiens.GRCh38.88.chr6.gtf
+zcat Homo_sapiens.GRCh38.115.chr6.gtf.gz > Homo_sapiens.GRCh38.115.chr6.gtf
 zcat Homo_sapiens.GRCh38.dna.chrom6.fa.gz > Homo_sapiens.GRCh38.dna.chrom6.fa
 ```
 
@@ -135,7 +135,7 @@ export RUN="singularity exec -e $YOURPATH=fastq-screen_fastqc_kraken_multiqc_pru
 # create the index and store it in ~/rnaseq_course/mapping/index_star_chr6
 $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
 		--genomeFastaFiles ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa \
-		--sjdbGTFfile ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf \
+		--sjdbGTFfile ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf \
 		--sjdbOverhang 48 \
 		--genomeSAindexNbases 12.6 \
 		--outFileNamePrefix Hsapiens_chr6 \
