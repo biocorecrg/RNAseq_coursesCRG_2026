@@ -315,3 +315,19 @@ Nextflow 26.02.0-edge is available - Please consider updating your version to it
 Launching `/users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-core-rnaseq_dev/dev/main.nf` [special_lamarck] DSL2 - revision: ff377cb1d2
 ```
 
+After some minute we got:
+
+```bash
+[fd/068789] NFCORE_RNASEQ:RNASEQ:BAM_RSEQC:RSEQC_INFEREXPERIMENT (SRR3091426)                                                  [100%] 10 of 10 ✔
+[d3/c4cf70] NFCORE_RNASEQ:RNASEQ:BAM_RSEQC:RSEQC_JUNCTIONANNOTATION (SRR3091426)                                               [100%] 10 of 10 ✔
+[90/34d2d5] NFCORE_RNASEQ:RNASEQ:BAM_RSEQC:RSEQC_JUNCTIONSATURATION (SRR3091426)                                               [100%] 10 of 10 ✔
+[b1/4ebfc3] NFCORE_RNASEQ:RNASEQ:BAM_RSEQC:RSEQC_READDISTRIBUTION (SRR3091426)                                                 [100%] 10 of 10 ✔
+[0d/599b93] NFCORE_RNASEQ:RNASEQ:BAM_RSEQC:RSEQC_READDUPLICATION (SRR3091426)                                                  [100%] 10 of 10 ✔
+[f1/c62ae3] NFCORE_RNASEQ:RNASEQ:MULTIQC (1)                                                                                   [100%] 1 of 1 ✔
+-[nf-core/rnaseq] Pipeline completed successfully -
+-[nf-core/rnaseq] Please check MultiQC report: 10/10 samples failed strandedness check.-
+Completed at: 09-Mar-2026 17:24:00
+Duration    : 16m 21s
+CPU hours   : 1.7
+Succeeded   : 363
+```

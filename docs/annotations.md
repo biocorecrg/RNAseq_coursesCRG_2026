@@ -132,27 +132,27 @@ The annotation is stored in **G**eneral **T**ransfer **F**ormat (**GTF**) format
 
 
 ```bash
-zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | head -n 10
+zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | head -n 10
 ```
 
 Let's check the 9th field:
 
 ```bash
-zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | cut -f9 | head
+zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | cut -f9 | head
 ```
 
 Let's check how many genes are in the annotation file:
 
 ```bash
-zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | grep -v "#" | awk '$3=="gene"' | wc -l 
+zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | grep -v "#" | awk '$3=="gene"' | wc -l 
 
-# 2860
+# 4230
 ```
 
 And get a final counts of every feature:
 
 ```bash
-zcat reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf.gz | grep -v "#" | cut -f3 | sort | uniq -c 
+zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | grep -v "#" | cut -f3 | sort | uniq -c 
 ```
 
 <br>
