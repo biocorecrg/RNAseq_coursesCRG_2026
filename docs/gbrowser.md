@@ -1,11 +1,5 @@
----
-layout: page
-title: Genome Browser 
-navigation: 15
----
-
 # Genome Browser
-Read alignments (in the BAM, CRAM or BigWig formats) can be displayed in a genome browser, which is a program allowing users to browse, search, retrieve and analyze genomic sequences and annotation data using a graphical interface.
+Read alignments (in BAM, CRAM, or BigWig formats) can be displayed in a genome browser, which is a program that allows users to browse, search, retrieve, and analyze genomic sequences and annotation data using a graphical interface.
 
 There are two kinds of genome browsers:
 * Web-based genome browsers:
@@ -13,12 +7,12 @@ There are two kinds of genome browsers:
   * [Ensembl Genome Browser](https://www.ensembl.org/index.html)
   * [NCBI Genome Data Viewer](https://www.ncbi.nlm.nih.gov/genome/gdv/)
 
-* Desktop applications (some can also be used for generatig a web-based genome browser):
+* Desktop applications (some can also be used for generating a web-based genome browser):
   * [JBrowse](https://jbrowse.org/)
   * [GBrowse](http://gmod.org/wiki/GBrowse_2.0_HOWTO)
   * [IGV](https://software.broadinstitute.org/software/igv/)
   
-Small size data can be directly uploaded to the genome browser, while large files are normally placed on a web-server that is accessible to the browser. To explore BAM and CRAM files produced by the STAR mapper, we first need to sort and index the files. In our case, sorting has been already done by STAR's **BAM SortedByCoordinate** option. 
+Small-sized data can be directly uploaded to the genome browser, while large files are normally placed on a web server that is accessible to the browser. To explore BAM and CRAM files produced by the STAR mapper, we first need to sort and index the files. In our case, sorting has already been done by STAR's **BAM SortedByCoordinate** option.
 <br>
 The indexing can be done with samtools:
 
@@ -39,7 +33,7 @@ Be careful with the **chromosome name conventions**!
 <br>
 Different genome browsers name chromosomes differently. UCSC names chromosomes as **chr1**, **chr2**,...**chrM**; while Ensembl, **1**, **2**, ... **MT**. 
 <br>
-When you map reads to a genome with a given convention you cannot directly display BAM/CRAM files in the genome browser that uses a different convention.
+When you map reads to a genome with a given convention, you cannot directly display BAM/CRAM files in the genome browser that uses a different convention.
 <br>
 **GENCODE** uses the **UCSC convention**, while **ENSEMBL doesn't**: we need to change the chromosomes names before being able to load them in the UCSC Genome Browser. 
 
@@ -62,16 +56,16 @@ $RUN samtools index bam_ucsc/SRR3091420_1_chr6_ucsc.bam
 rm bam_ucsc/SRR3091420_1_chr6_ucsc.sam
 ```
 
-First, you need to upload your sorted bam (or cram) file(s) **together with an index (.bai or .crai) file(s)** to a http server that is accessible from the Internet. 
+First, you need to upload your sorted BAM (or cram) file(s) **together with an index (.bai or .crai) file(s)** to a http server that is accessible from the Internet. 
 <br>
 
-We uploaded the files for this project (chromosome 6 only) are in:
+We uploaded the files for this project (chromosome 6 only) to:
 
 ```
 https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/ucsc/
 ```
 
-Using the mouse's right click, copy one of the bam files URL address.
+Using the mouse's right click, copy the URL address of one of the BAM files.
 <br>  
 
 Now go to the [UCSC genome browser website](https://genome-euro.ucsc.edu/cgi-bin/hgGateway?redirect=manual&source=genome.ucsc.edu).
@@ -110,7 +104,7 @@ The default view can be changed by clicking on the grey bar on the left of the "
 
 <img src="images/ucsc7.png"  align="middle" />
 
-This will change how data are displayed. We can now see single reads aligned to the forward and reverse DNA strands (blue is to **+strand** and red, to **-strand**).  You can also see that many reads are broken; that is, they are mapped to splice junctions.
+This will change how data is displayed. We can now see single reads aligned to the forward and reverse DNA strands (blue is to **+strand** and red, to **-strand**).  You can also see that many reads are broken; that is, they are mapped to splice junctions.
 
 <img src="images/ucsc8.png"  align="middle" />
 
