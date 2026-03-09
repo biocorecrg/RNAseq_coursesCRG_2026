@@ -28,11 +28,11 @@ Management of changes to documents, computer programs and other collections of i
 
 ::left::
 
-![](/images/phd101212s.gif){class="h-100 rounded shadow"}
+![](./images/phd101212s.gif)
 
 ::right::
 
-![](/images/phd052810s.png){class="h-80 rounded shadow mt-10"}
+![](./images/phd052810s.png)
 
 ### Benefits
 
@@ -92,20 +92,20 @@ Save files as logical sets of changes and write a good description of why you ch
 
 <mdi-arrow-right-thick class="c-teal" /> e.g. `RCS`
 
-![local](/images/local.png){width=400px}
+![local](./images/vcs_local.png)
 
 ### Centralized
 
 <mdi-arrow-right-thick class="c-teal" /> e.g. `SUBVERSION`
 
-![centralized](/images/centralized.png){width=400px}
+![centralized](./images/vcs_centralized.png)
 
 
 ### Distributed
 
 <mdi-arrow-right-thick class="c-teal" /> e.g. `GIT`
 
-![distributed](/images/distributed.png){width=250px}
+![distributed](./images/vcs_distributed.png)
 
 ### What is Git?
 
@@ -113,7 +113,7 @@ An **open source**, **distributed**, version control system
 
 <mdi-arrow-right-thick class="c-teal" /> most used thanks to its simplicity and GitHub
 
-![git-github](/images/Github2.png){class="h-40"}
+![git-github](./images/Github2.png)
 
 <mdi-arrow-right-thick class="c-teal" /> GitHub is a web-based Git repository hosting service, which offers all the functionalities of Git as well as adding its own features
 
@@ -133,10 +133,10 @@ An **open source**, **distributed**, version control system
 - additional collaborative features
 
 ::left::
-![GitLab](/images/gitlab.png){class="w-50"}
+![GitLab](./images/gitlab.png)
 
 ::right::
-![GitHub](/images/github-logo.png){class="w-50"}
+![GitHub](./images/github-logo.png)
 
 
 ## Computational reproducibility
