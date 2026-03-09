@@ -525,11 +525,13 @@ Then, we index again
 ```bash
 cd ~/rnaseq_course/mapping
 
-# index and store the index files in index_salmon folder
+# index and store the index files in index_salmon folder. More threads are needed, it is quite slow!
 $RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v49.transcripts.genome.fa.gz \
 	-i index_salmon \
-	--gencode
+	--gencode -p 4
 ```
+
+This step takes around 10 minutes with 4 cpus.
 
 ## Quantifying transcript expression
 
