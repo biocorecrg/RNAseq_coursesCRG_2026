@@ -190,6 +190,7 @@ You can either manually change them or make a new profile and override some of t
 
 ```{code-block} groovy
 :emphasize-lines: 30,34,35,42
+
 process {
 
     // TODO nf-core: Check the defaults for all processes
