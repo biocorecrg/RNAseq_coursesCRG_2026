@@ -60,9 +60,10 @@ TODO: Update
 
 sequencing_preprocessing.md
 reproducible.md
+rnaseq_data_analysis.md
 linux_cli.md
 raw_data_qc.md
-rnaseq_data_analysis.md
+trimmed_data_qc.md
 annotations.md
 alignment.md
 
