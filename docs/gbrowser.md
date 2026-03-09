@@ -16,7 +16,7 @@ Small-sized data can be directly uploaded to the genome browser, while large fil
 <br>
 The indexing can be done with samtools:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 $RUN samtools index bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam
@@ -37,7 +37,7 @@ When you map reads to a genome with a given convention, you cannot directly disp
 <br>
 **GENCODE** uses the **UCSC convention**, while **ENSEMBL doesn't**: we need to change the chromosomes names before being able to load them in the UCSC Genome Browser. 
 
-```{bash}
+```bash
 cd ~/rnaseq_course/mapping
 
 # create new sub-directory
@@ -62,7 +62,7 @@ First, you need to upload your sorted BAM (or cram) file(s) **together with an i
 We uploaded the files for this project (chromosome 6 only) to:
 
 ```
-https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/ucsc/
+[https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/ucsc/](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/index.html)
 ```
 
 Using the mouse's right click, copy the URL address of one of the BAM files.
@@ -76,7 +76,7 @@ Choose human genome version hg38 (that corresponds to the ENSEMBL annotation we 
 
 <img src="images/ucsc2.png"  align="middle" />
 
-At the bottom of the image click **ADD CUSTOM TRACK** 
+At the bottom of the image, click **ADD CUSTOM TRACK** 
 
 <img src="images/ucsc_add_custom_track.png"  align="middle" />
 
@@ -85,8 +85,8 @@ and provide information describing the data to be displayed:
 * **name** of the track 
 * **bigDataUrl** the URL where the BAM or CRAM file is located 
 
-```{bash}
-track type=bam name="test" bigDataUrl=https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/ucsc/SRR3091420_1_chr6_ucsc.bam
+```bash
+track type=bam name="test" bigDataUrl=https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam
 ```
 
 Click "Submit".
