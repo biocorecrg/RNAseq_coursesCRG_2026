@@ -347,4 +347,4 @@ Let's inspect the output.
   - ...   
 - trimgalore (report of trimgalore execution)
 
-
+The final report can be seen [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/nf-core/ multiqc_report.html)
