@@ -452,14 +452,15 @@ We can check the final report in a browser:
 firefox qc_qualimap/qualimapReport.html
 ```
 
-If you cannot you can reach it [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/qc_qualimap/qualimapReport.html)
+If you cannot, you can reach it [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/qc_qualimap/qualimapReport.html)
 
 
-The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or a protocol used). 
+The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns, or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or the protocol used). 
 
-<img src="images/qualimap.png"   />
+<div align="center">
+<img src="images/qualimap.jpg" width="500"  />
+</div>
 
-<img src="images/qualimap4.png"   />
 
 Finally, we can see that the majority of reads map to the exons.
 
@@ -468,9 +469,9 @@ Finally, we can see that the majority of reads map to the exons.
 <br/>
 
 **IMPORTANT for running QualiMap on many samples (for detail, see [QualiMap documentation](http://qualimap.bioinfo.cipf.es/doc_html/command_line.html#rna-seq-qc)**
-* Make sure to give to the output folder the name corresponding to a running sample; e.g., ./QC/SRR3091420_1_chr6; otherwise output files will be overwritten. 
+* Make sure to give to the output folder the name corresponding to a running sample; e.g., ./QC/SRR3091420_1_chr6; otherwise, output files will be overwritten. 
 * If you run QualiMap in parallel for many samples, make sure to create a different tmp-folder for each sample; e.g., ./tmp/SRR3091420_1_chr6Aligned.
-* QualiMap sorts BAM files by read names. To speed up this part of the program execution, you can use samtools to sort the BAM files in parallel and using multiple CPUs and then to give to QualiMap a BAM file sorted by read names and provide an option --sorted.
+* QualiMap sorts BAM files by read names. To speed up this part of the program execution, you can use samtools to sort the BAM files in parallel and using multiple CPUs, and then give QualiMap a BAM file sorted by read names and provide an option --sorted.
 
 <br/>
 
@@ -480,7 +481,7 @@ Finally, we can see that the majority of reads map to the exons.
 
 [**Salmon**](https://combine-lab.github.io/salmon/) is a tool for quantifying the expression of transcripts using RNA-seq data. 
 <br>
-It is a **quasi-mapper**: it doesn't produce the read alignments (and doesn't output BAM/SAM files). Salmon "quasi-maps" reads to the transcriptome rather than to the genome. 
+It is a **quasi-mapper**: it doesn't produce the read alignments (and doesn't output BAM/SAM files). Salmon "quasi-maps" read to the transcriptome rather than to the genome. 
 <br>
 Salmon can also make use of pre-computed alignments (in the form of a SAM/BAM file) instead of the FASTQ files.
 
@@ -512,7 +513,7 @@ We add the parameter **--gencode** as our data come from **Gencode version 33** 
 
 ## Quantifying transcript expression
 
-To quantify reads with **Salmon**, we need to specify the type sequencing library, aka [**Fragment Library Types** in Salmon](https://salmon.readthedocs.io/en/latest/library_type.html), using three letters:
+To quantify reads with **Salmon**, we need to specify the type of sequencing library, aka [**Fragment Library Types** in Salmon](https://salmon.readthedocs.io/en/latest/library_type.html), using three letters:
 
 **The first:**
 
@@ -537,11 +538,11 @@ To quantify reads with **Salmon**, we need to specify the type sequencing librar
 |R|read 1 (or single-end read) comes from the reverse strand|
 
 <br/>
-From the STAR output for read counts we already know that for the analyzed experiment the **U** (**Unstranded**) library was used. 
+From the STAR output for read counts we already know that for the analyzed experiment, the **U** (**Unstranded**) library was used. 
 <br>
-If the library was **paired-end** and sequenced with a **stranded reverse** library, we would set the parameter to **ISR**.
+If the library were **paired-end** and sequenced with a **stranded reverse** library, we would set the parameter to **ISR**.
 <br>
-If we want to assign the reads to the genes (option **-g**) in addition to transcripts we have to provide a **GTF file** corresponding to the transcript version which was used to build the Salmon index. 
+If we want to assign the reads to the genes (option **-g**) in addition to transcripts, we have to provide a **GTF file** corresponding to the transcript version that was used to build the Salmon index. 
 <br>
 We have it already for chromosome 6, in **~/rnaseq_course/reference_genome/**
 
@@ -569,9 +570,9 @@ ls alignments_salmon/SRR3091420_1_chr6_salmon/
 
 ```
 
-For explanation of all output files, see the [Salmon documentation](https://salmon.readthedocs.io/en/latest/file_formats.html).
+For an explanation of all output files, see the [Salmon documentation](https://salmon.readthedocs.io/en/latest/file_formats.html).
 <br>
-The most interesting to us in this course is the file **quant.genes.sf**, that is a tab-separated file containing the read counts for genes:
+The most interesting to us in this course is the file **quant.genes.sf**, which is a tab-separated file containing the read counts for genes:
 
 
 |Column |Meaning |   
@@ -608,7 +609,7 @@ We will use information on read counts for genes from **quant.sf** files for the
 
 <br>
 
-Now if time and resources allows, proceed with the mapping of the **9 remaining samples**:
+Now, if time and resources allow, proceed with the mapping of the **9 remaining samples**:
 
 ```bash
 cd ~/rnaseq_course/mapping
