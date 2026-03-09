@@ -169,7 +169,7 @@ cd ~/rnaseq_course/mapping
 mkdir alignments_STAR
 
 $RUN STAR --genomeDir index_star_chr6 \
-      --readFilesIn ~/rnaseq_course/trimming/SRR3091420_1_chr6-trimmed.fastq.gz \
+      --readFilesIn ~/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz \
       --readFilesCommand zcat \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
@@ -180,14 +180,14 @@ $RUN STAR --genomeDir index_star_chr6 \
 If this was successful and not too slow and resource-consuming, you can do it for all samples, in a **loop**:
 
 ```bash
-for fastq in ~/rnaseq_course/trimming/*-trimmed.fastq.gz
+for fastq in ~/rnaseq_course/trimming/*_trimmed.fq.gz
 do echo $fastq
 $RUN STAR --genomeDir index_star_chr6 \
       --readFilesIn $fastq \
       --readFilesCommand zcat \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
-      --outFileNamePrefix alignments_STAR/$(basename $fastq -trimmed.fastq.gz)
+      --outFileNamePrefix alignments_STAR/$(basename $fastq _trimmed.fq.gz)
 done
 ```
 
@@ -215,6 +215,50 @@ ls -lh alignments
 
 <br/>
 
+Inspecting the log file can give you a hint about the quality of the mapping:
+
+```bash
+cat SRR3091420_1_chr6Log.final.out 
+                                 Started job on |	Mar 09 17:57:58
+                             Started mapping on |	Mar 09 17:57:59
+                                    Finished on |	Mar 09 17:58:07
+       Mapping speed, Million of reads per hour |	375.83
+
+                          Number of input reads |	835168
+                      Average input read length |	48
+                                    UNIQUE READS:
+                   Uniquely mapped reads number |	786944
+                        Uniquely mapped reads % |	94.23%
+                          Average mapped length |	48.38
+                       Number of splices: Total |	91355
+            Number of splices: Annotated (sjdb) |	90653
+                       Number of splices: GT/AG |	90810
+                       Number of splices: GC/AG |	431
+                       Number of splices: AT/AC |	15
+               Number of splices: Non-canonical |	99
+                      Mismatch rate per base, % |	0.20%
+                         Deletion rate per base |	0.00%
+                        Deletion average length |	1.59
+                        Insertion rate per base |	0.00%
+                       Insertion average length |	1.17
+                             MULTI-MAPPING READS:
+        Number of reads mapped to multiple loci |	46554
+             % of reads mapped to multiple loci |	5.57%
+        Number of reads mapped to too many loci |	98
+             % of reads mapped to too many loci |	0.01%
+                                  UNMAPPED READS:
+  Number of reads unmapped: too many mismatches |	0
+       % of reads unmapped: too many mismatches |	0.00%
+            Number of reads unmapped: too short |	1570
+                 % of reads unmapped: too short |	0.19%
+                Number of reads unmapped: other |	2
+                     % of reads unmapped: other |	0.00%
+                                  CHIMERIC READS:
+                       Number of chimeric reads |	0
+                            % of chimeric reads |	0.00%
+
+```
+
 ## Read counts 
 
 STAR outputs read counts per gene into **PREFIX**ReadsPerGene.out.tab file with 4 columns which correspond to different **strandedness options**:
@@ -228,19 +272,22 @@ STAR outputs read counts per gene into **PREFIX**ReadsPerGene.out.tab file with 
 Let's see what the **ReadsPerGene.out.tab** file looks like for sample **SRR3091420_1_chr6**:
 
 ```bash
-head alignments/SRR3091420_1_chr6ReadsPerGene.out.tab 
-head bam_chr6/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab
+head SRR3091420_1_chr6ReadsPerGene.out.tab 
+
 ```
 
 |gene id| read counts per gene (unstranded) | read counts per gene (read 1)|read counts per gene (read 2)| 
 |:--------|----------:|---------:|---------:|
-|N_unmapped      |1589    |1589    |1589 |
-|N_multimapping  |45100   |45100   |45100 |
-|N_noFeature     |33480   |393427  |413797 |
-|N_ambiguous     |29733   |7977    |7339 |
-|ENSG00000271530 |0       |0       |0 |
-|ENSG00000220212 |0       |0       |0 |
-|ENSG00000170590 |2       |2       |0 |
+|N_unmapped|1670|1670|1670|
+|N_multimapping|46554|46554|46554|
+|N_noFeature|24060|376484|397091|
+|N_ambiguous|74169|21118|17326|
+|ENSG00000219375|1|1|0|
+|ENSG00000270174|0|0|0|
+|ENSG00000261730|0|0|0|
+|ENSG00000176515|0|0|0|
+|ENSG00000286368|0|0|0|
+|ENSG00000217239|31|22|9|
 
 
 Select the output according to **the strandedness** of your data. <br>
@@ -253,19 +300,17 @@ For example, in the stranded protocol shown in "Library preparation", Read 1 is 
 We can count the number of reads mapped to each strand by using a simple awk script:
 
 ```bash
-grep -v "N_" alignments/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
+grep -v "N_" SRR3091420_1_chr6ReadsPerGene.out.tab | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
+688715 389342 372527
 
-# OR
-grep -v "N_" bam_chr6/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab | awk '{unst+=$2;forw+=$3;rev+=$4}END{print unst,forw,rev}'
-
-# 725267 387076 367344
+# 688715 389342 372527
 ```
 
-We see that 387,076 Reads 1 (forward) were mapped to known genes and 367,344 Reads 2 (reverse) were mapped to known genes.
+We see that 389,342 Reads 1 (forward) were mapped to known genes and 372,527 Reads 2 (reverse) were mapped to known genes.
 <br>
 These numbers are very similar, which indicates that the protocol used for this mRNA-Seq experiment is **unstranded**.
 <br>
-If the protocol used was stranded, there would be a **strong imbalance** between number of reads mapped to known genes in forward versus reverse strands.
+If the protocol used was stranded, there would be a **strong imbalance** between the number of reads mapped to known genes in forward versus reverse strands.
 
 
 <br/>
@@ -275,48 +320,56 @@ If the protocol used was stranded, there would be a **strong imbalance** between
 The **BAM format** is a compressed version of the [**SAM format**](https://samtools.github.io/hts-specs/SAMv1.pdf) (which is a plain text) and cannot thus being seen as a text. To explore the BAM file, we have to convert it to the SAM format by using [**samtools**](http://samtools.sourceforge.net/). Note that we use the parameter **-h** to show also the header that is hidden by default. 
 
 ```bash
-$RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam | head -n 10
+$RUN samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam | head -n 10
 
-@HD     VN:1.4  SO:coordinate
-@SQ     SN:6    LN:170805979
-@PG     ID:STAR PN:STAR VN:STAR_2.5.3a  CL:STAR   --genomeDir index_chr6   --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts   
-@CO     user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6
-10416098        0       6       113167  255     49M     *       0       0       GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAAA        bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiiih       NH:i:1   HI:i:1  AS:i:48 nM:i:0
-8553177 272     6       119288  3       1S48M   *       0       0       TGAAATCCAGTGGGACAGTCAAATCTTAAAGCTCCAAAATGATCTCCTT        hiiiiiiiiiiiiigiiiiiiiihiihiiiiihhiigggggeeeeebbb       NH:i:2  HI:i:2   AS:i:47 nM:i:0
-4630026 272     6       128432  3       49M     *       0       0       AGCACTAACCATTGTAGCATGCCAATATACTCAAAATTCAATGAAATTC        hfgehhggiihhhiiihhiihhhhffffghdihhiifggggeeeeebbb       NH:i:2  HI:i:2   AS:i:48 nM:i:0
-4630026 272     6       128432  3       49M     *       0       0       AGCACTAACCATTGTAGCATGCCAATATACTCAAAATTCAATGAAATTC        hfgehhggiihhhiiihhiihhhhffffghdihhiifggggeeeeebbb       NH:i:2  HI:i:2   AS:i:48 nM:i:0
-10689795        0       6       135934  255     49M     *       0       0       AAGGCTGCAATGAGCTGTGATCGCACCACCGCACCCAAGCCTGGGTGGT        bbbeeeeeggggfiiiighiiiiiiiiiiiiiihiihfhhiiiii_ega       NH:i:1   HI:i:1  AS:i:44 nM:i:2
-10416101        0       6       136561  255     49M     *       0       0       CCCAACGTTTAGACTACACAATGAGTTAAGAACGACAAAAATAAGCTCA        ___ecccceeeeghhhhhhhhgfgiihfhhhhfhffffgghhhidfffh       NH:i:1   HI:i:1  AS:i:48 nM:i:0
+@HD	VN:1.4	SO:coordinate
+@SQ	SN:6	LN:170805979
+@PG	ID:STAR	PN:STAR	VN:2.7.11b	CL:/opt/conda/bin/STAR-avx2   --genomeDir index_star_chr6   --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts   
+@PG	ID:samtools	PN:samtools	PP:STAR	VN:1.17	CL:/usr/local/bin/samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
+@CO	user command line: /opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6
+10416098	0	6	113167	255	48M	*	0	0	GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAA	bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiii	NH:i:1	HI:i:1	AS:i:47	nM:i:0
+8553177	272	6	119288	3	48M	*	0	0	GAAATCCAGTGGGACAGTCAAATCTTAAAGCTCCAAAATGATCTCCTT	iiiiiiiiiiiiigiiiiiiiihiihiiiiihhiigggggeeeeebbb	NH:i:2	HI:i:2	AS:i:47	nM:i:0
+4630026	272	6	128432	3	49M	*	0	0	AGCACTAACCATTGTAGCATGCCAATATACTCAAAATTCAATGAAATTC	hfgehhggiihhhiiihhiihhhhffffghdihhiifggggeeeeebbb	NH:i:2	HI:i:2	AS:i:48	nM:i:0
+10689795	0	6	135934	255	49M	*	0	0	AAGGCTGCAATGAGCTGTGATCGCACCACCGCACCCAAGCCTGGGTGGT	bbbeeeeeggggfiiiighiiiiiiiiiiiiiihiihfhhiiiii_ega	NH:i:1	HI:i:1	AS:i:44	nM:i:2
+10416101	0	6	136561	255	48M	*	0	0	CCCAACGTTTAGACTACACAATGAGTTAAGAACGACAAAAATAAGCTC	___ecccceeeeghhhhhhhhgfgiihfhhhhfhffffgghhhidfff	NH:i:1	HI:i:1	AS:i:47	nM:i:0
+
 ```
 
 The first part indicated by the first character **@** in each row is the header:
 
-| Symbol|  |  |   
-| :----: | :---- | :---- |
-| **@HD** header line	| **VN:1.4** version of the SAM format|	**SO:coordinate** sorting order|
-| **@SQ** reference sequence dictionary 	| **SN:6** sequence name|	**LN:170805979** sequence length|
-| **@PG** program used|	**ID:STAR** **PN:STAR**	**VN:2.5.3a** version| **CL:STAR   --genomeDir index_chr6   --readFilesIn ../RNAseq/output_nextflow/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts** command line|
-|**@CO** One-line text comment||**user command line: STAR --genomeDir index_chr6 --readFilesIn ../RNAseq/Alignments/selection_chr6/SRR3091420_1_chr6.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments/SRR3091420_1_chr6**|
+| Tag | Field | Value |
+|-----|-------|-------|
+| @HD | VN | 1.4 |
+| @HD | SO | coordinate |
+| @SQ | SN | 6 |
+| @SQ | LN | 170805979 |
+| @PG | ID | STAR |
+| @PG | PN | STAR |
+| @PG | VN | 2.7.11b |
+| @PG | CL | `/opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6 --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts` |
+| @PG | ID | samtools |
+| @PG | PN | samtools |
+| @PG | PP | STAR |
+| @PG | VN | 1.17 |
+| @PG | CL | `/usr/local/bin/samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam` |
+| @CO | - | user command line: `/opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6` |
 
 The rest is a read alignment. 
 
-| Field|Value |   
-| :----: | ----: |
-|Query name 	|8553177|
-|FLAG 	|272 * |
-|Reference name 	|6|
-|Leftmost mapping position (1-based)	|119288|
-|Mapping quality 	|3 *(p=0.5)* |
-|CIGAR string |1S48M *|
-|Reference sequence name of the primary alignment of the mate | * = no mate	(= *same chromosome*)|
-|Position of the primary alignment of the mate| 	0|
-|observed fragment length| 	0|
-|Sequence |TGAAATCCAGTGGGACAGTCAAATCTTAAAGCTCCAAAATGATCTCCTT|
-|Quality	|hiiiiiiiiiiiiigiiiiiiiihiihiiiiihhiigggggeeeeebbb|
+| Field | Value |
+|-------|-------|
+| Read ID | 10416098 |
+| FLAG | 0 |
+| Chromosome | 6 |
+| Position | 113167 |
+| Mapping Quality | 255 (uniquely mapped) |
+| CIGAR | 48M (48 bp match) |
+| Sequence | `GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAA` |
+| Quality | `bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiii` |
 
-\* **FLAG 272** means that the read is non paired, and that it maps on the reverse strand.
+\* **FLAG 0** means that the read is mapped on forward strand.
 <br>
-**CIGAR string 1S48M** means that 1 base was soft clip (S) and 48 bases were mapped to the reference (M). N would correspond to bases unmapped.
+**CIGAR string 48M** means that 48 bases were mapped to the reference (M).
 <br>
 You can use [this website for the translation of SAM FLAG values](https://www.samformat.info/sam-format-flag) and [this one for interpreting CIGAR strings](https://www.drive5.com/usearch/manual/cigar.html).
 
@@ -325,47 +378,51 @@ Extra fields are often present and differ between aligners [https://samtools.git
 
 | Field|Meaning |   
 | :----: | :---- |
-|NH:i:2|number of mapping to the reference|
-|HI:i:2|which alignment is the reported one (in this case is the second one)|	
-|AS:i:74|Alignment score calculate by the aligner|
-|nM:i:9|number of difference with the reference*|
+|NH:i:1|number of mappings to the reference|
+|HI:i:1|which alignment is the reported one (in this case is the second one)|	
+|AS:i:47|Alignment score calculated by the aligner|
+|nM:i:0|number of difference with the reference*|
 
-\* *Note that historically this has been ill-defined and both data and tools exist that disagree with this
-definition.*
+```{note} Careful that sometimes tools can disagree on some definition, from time to time the standard is "changed" depending on the community, new data to show
+```
 
 <br/>
 
 Let's convert BAM to SAM:
 
 ```bash
-$RUN samtools view -h bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam > bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.sam
+$RUN samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam  > SRR3091420_1_chr6Aligned.sortedByCoord.out.sam
 ```
 
 You can see that the SAM file is **5 times larger** than the BAM file.
 <br> 
-Yet, the more efficient way to store the alignment is to use the [**CRAM format**](https://samtools.github.io/hts-specs/CRAMv3.pdf). CRAM is fully compatible with BAM, and main repositories, such as GEO and SRA, accept alignments in the CRAM format. [UCSC Genome Browser can visualize both BAM and CRAM files](https://genome.ucsc.edu/goldenPath/help/cram.html). It is now a widly recommended format for storing alignments.
+Yet, the more efficient way to store the alignment is to use the [**CRAM format**](https://samtools.github.io/hts-specs/CRAMv3.pdf). CRAM is fully compatible with BAM, and main repositories, such as GEO and SRA, accept alignments in the CRAM format. [UCSC Genome Browser can visualize both BAM and CRAM files](https://genome.ucsc.edu/goldenPath/help/cram.html). It is now a widely recommended format for storing alignments.
 <br>
-To convert **BAM** to **CRAM**, we have to provide unzipped and indexed version of the genome.
+To convert **BAM** to **CRAM**, we have to provide an unzipped and indexed version of the genome.
 
 
 ```bash
 $RUN samtools faidx ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa
 
-$RUN samtools view -C bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam -T ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa > bam_chr6/SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
+$RUN samtools view -C SRR3091420_1_chr6Aligned.sortedByCoord.out.bam -T ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa -o SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
 ```
 
 You can see that a .cram file is twice as small as a .bam file.
 <br>
-Let's remove the .sam file:
+
 ```bash
-rm bam_chr6/*.sam 
+ls  SRR3091420_1_chr6Aligned.sortedByCoord.out.* -alht
+.rw-r----- lcozzuto Bioinformatics_Unit  15 MB Mon Mar  9 19:27:00 2026  SRR3091420_1_chr6Aligned.sortedByCoord.out.cram
+.rw-r----- lcozzuto Bioinformatics_Unit 139 MB Mon Mar  9 19:26:05 2026  SRR3091420_1_chr6Aligned.sortedByCoord.out.sam
+.rw-r----- lcozzuto Bioinformatics_Unit  27 MB Mon Mar  9 18:58:07 2026  SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
+
 ```
 
 <br/>
 
 ## Alignment QC
 
-The quality of the resulting alignment can be checked using the tool [**QualiMap**](http://qualimap.bioinfo.cipf.es/). To run QualiMap, we specify the kind of analysis (**rnaseq**), the **gtf** file, the strandness of the library (**-p unstranded**). 
+The quality of the resulting alignment can be checked using the tool [**QualiMap**](http://qualimap.bioinfo.cipf.es/). To run QualiMap, we specify the kind of analysis (**rnaseq**), the **gtf** file, and the strandness of the library (**-p unstranded**). 
 <br>
 *Note that if the library was paired-end, you would add the **-pe** option**.
 <br>
@@ -383,8 +440,8 @@ cd ~/rnaseq_course/mapping
 mkdir qc_qualimap
 
 # run qualimap
-$RUN qualimap rnaseq -bam bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam \
-	-gtf ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf \
+$RUN qualimap rnaseq -bam SRR3091420_1_chr6Aligned.sortedByCoord.out.bam \
+	-gtf ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf \
 	-outdir qc_qualimap \
 	-p non-strand-specific
 ```
@@ -394,13 +451,16 @@ We can check the final report in a browser:
 ```bash
 firefox qc_qualimap/qualimapReport.html
 ```
-<img src="images/qualimap1.png"   />
 
-The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or a protocol used). 
+If you cannot, you can reach it [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/qc_qualimap/qualimapReport.html)
 
-<img src="images/qualimap2.png"   />
 
-<img src="images/qualimap4.png"   />
+The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns, or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or the protocol used). 
+
+<div align="center">
+<img src="images/qualimap.jpg" width="500"  />
+</div>
+
 
 Finally, we can see that the majority of reads map to the exons.
 
@@ -409,9 +469,9 @@ Finally, we can see that the majority of reads map to the exons.
 <br/>
 
 **IMPORTANT for running QualiMap on many samples (for detail, see [QualiMap documentation](http://qualimap.bioinfo.cipf.es/doc_html/command_line.html#rna-seq-qc)**
-* Make sure to give to the output folder the name corresponding to a running sample; e.g., ./QC/SRR3091420_1_chr6; otherwise output files will be overwritten. 
+* Make sure to give to the output folder the name corresponding to a running sample; e.g., ./QC/SRR3091420_1_chr6; otherwise, output files will be overwritten. 
 * If you run QualiMap in parallel for many samples, make sure to create a different tmp-folder for each sample; e.g., ./tmp/SRR3091420_1_chr6Aligned.
-* QualiMap sorts BAM files by read names. To speed up this part of the program execution, you can use samtools to sort the BAM files in parallel and using multiple CPUs and then to give to QualiMap a BAM file sorted by read names and provide an option --sorted.
+* QualiMap sorts BAM files by read names. To speed up this part of the program execution, you can use samtools to sort the BAM files in parallel and using multiple CPUs, and then give QualiMap a BAM file sorted by read names and provide an option --sorted.
 
 <br/>
 
@@ -421,7 +481,7 @@ Finally, we can see that the majority of reads map to the exons.
 
 [**Salmon**](https://combine-lab.github.io/salmon/) is a tool for quantifying the expression of transcripts using RNA-seq data. 
 <br>
-It is a **quasi-mapper**: it doesn't produce the read alignments (and doesn't output BAM/SAM files). Salmon "quasi-maps" reads to the transcriptome rather than to the genome. 
+It is a **quasi-mapper**: it doesn't produce the read alignments (and doesn't output BAM/SAM files). Salmon "quasi-maps" read to the transcriptome rather than to the genome. 
 <br>
 Salmon can also make use of pre-computed alignments (in the form of a SAM/BAM file) instead of the FASTQ files.
 
@@ -453,7 +513,7 @@ We add the parameter **--gencode** as our data come from **Gencode version 33** 
 
 ## Quantifying transcript expression
 
-To quantify reads with **Salmon**, we need to specify the type sequencing library, aka [**Fragment Library Types** in Salmon](https://salmon.readthedocs.io/en/latest/library_type.html), using three letters:
+To quantify reads with **Salmon**, we need to specify the type of sequencing library, aka [**Fragment Library Types** in Salmon](https://salmon.readthedocs.io/en/latest/library_type.html), using three letters:
 
 **The first:**
 
@@ -478,11 +538,11 @@ To quantify reads with **Salmon**, we need to specify the type sequencing librar
 |R|read 1 (or single-end read) comes from the reverse strand|
 
 <br/>
-From the STAR output for read counts we already know that for the analyzed experiment the **U** (**Unstranded**) library was used. 
+From the STAR output for read counts we already know that for the analyzed experiment, the **U** (**Unstranded**) library was used. 
 <br>
-If the library was **paired-end** and sequenced with a **stranded reverse** library, we would set the parameter to **ISR**.
+If the library were **paired-end** and sequenced with a **stranded reverse** library, we would set the parameter to **ISR**.
 <br>
-If we want to assign the reads to the genes (option **-g**) in addition to transcripts we have to provide a **GTF file** corresponding to the transcript version which was used to build the Salmon index. 
+If we want to assign the reads to the genes (option **-g**) in addition to transcripts, we have to provide a **GTF file** corresponding to the transcript version that was used to build the Salmon index. 
 <br>
 We have it already for chromosome 6, in **~/rnaseq_course/reference_genome/**
 
@@ -510,9 +570,9 @@ ls alignments_salmon/SRR3091420_1_chr6_salmon/
 
 ```
 
-For explanation of all output files, see the [Salmon documentation](https://salmon.readthedocs.io/en/latest/file_formats.html).
+For an explanation of all output files, see the [Salmon documentation](https://salmon.readthedocs.io/en/latest/file_formats.html).
 <br>
-The most interesting to us in this course is the file **quant.genes.sf**, that is a tab-separated file containing the read counts for genes:
+The most interesting to us in this course is the file **quant.genes.sf**, which is a tab-separated file containing the read counts for genes:
 
 
 |Column |Meaning |   
@@ -549,7 +609,7 @@ We will use information on read counts for genes from **quant.sf** files for the
 
 <br>
 
-Now if time and resources allows, proceed with the mapping of the **9 remaining samples**:
+Now, if time and resources allow, proceed with the mapping of the **9 remaining samples**:
 
 ```bash
 cd ~/rnaseq_course/mapping
