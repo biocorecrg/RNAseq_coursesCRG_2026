@@ -369,7 +369,7 @@ The rest is a read alignment.
 | Sequence | `GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAA` |
 | Quality | `bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiii` |
 
-\* **FLAG 0** means that the read is mapped on forward strand.
+\* **FLAG 0** means that the read is mapped on the forward strand.
 <br>
 **CIGAR string 48M** means that 48 bases were mapped to the reference (M).
 <br>
@@ -457,7 +457,7 @@ firefox qc_qualimap/qualimapReport.html
 If you cannot, you can reach it [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/qc_qualimap/qualimapReport.html)
 
 
-The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns, or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or the protocol used). 
+The report gives a lot of useful information, such as the total number of mapped reads, the number of reads mapped to exons, introns, or intergenic regions, and the bias towards one of the ends of mRNA (which can give information about RNA integrity or the protocol used). 
 
 <div align="center">
 <img src="images/qualimap.jpg" width="800"  />
@@ -466,9 +466,6 @@ The report gives a lot of useful information, such as the total number of mapped
 
 Finally, we can see that the majority of reads map to the exons.
 
-<img src="images/qualimap3.png"   />
-
-<br/>
 
 **IMPORTANT for running QualiMap on many samples (for detail, see [QualiMap documentation](http://qualimap.bioinfo.cipf.es/doc_html/command_line.html#rna-seq-qc)**
 * Make sure to give to the output folder the name corresponding to a running sample; e.g., ./QC/SRR3091420_1_chr6; otherwise, output files will be overwritten. 
@@ -504,14 +501,35 @@ The transcript sequences corresponding to chromosome 6 was prepared and already 
 cd ~/rnaseq_course/mapping
 
 # index and store the index files in index_salmon folder
-$RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v33.transcripts.chr6.fa.gz \
+$RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v49.transcripts.chr6.fa.gz \
 	-i index_salmon \
 	--gencode
 ```
 
-We add the parameter **--gencode** as our data come from **Gencode version 33** and their header contains several identifiers separated by the character **&#x7c;**. This parameter allows the program to parse the header and keep only the transcript identifier.
+We add the parameter **--gencode** as our data come from **Gencode** and their header contains several identifiers separated by the character **&#x7c;**. This parameter allows the program to parse the header and keep only the transcript identifier.
 
 <br/>
+
+But as we commented in the previous presentation, Salmon works better by avoiding the misplacement of DNA to actual transcripts. So we create a "joint" reference by concatenating transcripts, and the genome and a decoy.txt file with the list of sequences to e considered as **decoy**.
+
+```bash
+cd ~/rnaseq_course/reference_genome/reference_chr6/
+cp gencode.v49.transcripts.fa.gz gencode.v49.transcripts.genome.fa.gz
+cat Homo_sapiens.GRCh38.dna.chrom6.fa.gz >> gencode.v49.transcripts.genome.fa.gz 
+
+echo "6" > decoys.txt
+```
+
+Then, we index again
+
+```bash
+cd ~/rnaseq_course/mapping
+
+# index and store the index files in index_salmon folder
+$RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v49.transcripts.genome.fa.gz \
+	-i index_salmon \
+	--gencode
+```
 
 ## Quantifying transcript expression
 
