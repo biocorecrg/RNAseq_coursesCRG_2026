@@ -1,4 +1,4 @@
-# FAIR and Reproducible practices in science
+# Talk: FAIR and Reproducible practices in science
 
 ## Why reproducibility
 
@@ -21,16 +21,12 @@
 
 Management of changes to documents, computer programs and other collections of information
 
-- <mdi-arrow-right-thick class="c-teal" /> **when**, **who**, **what**
+- **when**, **who**, **what**
 
 
 ### Why you should you use it?
 
-::left::
-
 ![](./images/phd101212s.gif)
-
-::right::
 
 ![](./images/phd052810s.png)
 
@@ -86,24 +82,24 @@ Save files as logical sets of changes and write a good description of why you ch
 
 ~ 40 years since first use
 
-- <mdi-arrow-right-thick class="c-teal" /> three main generations
+- Three main generations
 
 ### Local
 
-<mdi-arrow-right-thick class="c-teal" /> e.g. `RCS`
+e.g. `RCS`
 
 ![local](./images/vcs_local.png)
 
 ### Centralized
 
-<mdi-arrow-right-thick class="c-teal" /> e.g. `SUBVERSION`
+e.g. `SUBVERSION`
 
 ![centralized](./images/vcs_centralized.png)
 
 
 ### Distributed
 
-<mdi-arrow-right-thick class="c-teal" /> e.g. `GIT`
+e.g. `GIT`
 
 ![distributed](./images/vcs_distributed.png)
 
@@ -111,11 +107,11 @@ Save files as logical sets of changes and write a good description of why you ch
 
 An **open source**, **distributed**, version control system
 
-<mdi-arrow-right-thick class="c-teal" /> most used thanks to its simplicity and GitHub
+It is the most used thanks to its simplicity and GitHub
 
 ![git-github](./images/Github2.png)
 
-<mdi-arrow-right-thick class="c-teal" /> GitHub is a web-based Git repository hosting service, which offers all the functionalities of Git as well as adding its own features
+GitHub is a web-based Git repository hosting service, which offers all the functionalities of Git as well as adding its own features
 
 ### Git Features
 
@@ -132,11 +128,9 @@ An **open source**, **distributed**, version control system
 - in-browser editing
 - additional collaborative features
 
-::left::
-![GitLab](./images/gitlab.png)
+An alternative of GitHub is GitLab, used mostly in-premise for private projects.
 
-::right::
-![GitHub](./images/github-logo.png)
+![GitLab](./images/gitlab.png)
 
 
 ## Computational reproducibility
