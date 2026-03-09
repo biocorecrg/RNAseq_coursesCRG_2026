@@ -2,7 +2,7 @@
 
 <img src="images/RNAseq_workflow.png" width="1000"/>
 
-What does it mean to map reads to a transcriptome? During sequencing, we read both ends of each RNA fragment—these are called "paired-end reads." Mapping to the transcriptome means finding where these paired reads match in our database of known transcript sequences. Since transcripts already have introns removed and exons joined together, the reads align directly without needing to "jump" across gaps like they would when mapping to the genome.
+What does it mean to map reads to a transcriptome? During sequencing, we read both ends of each RNA fragment—these are called "paired-end reads." Mapping to the transcriptome means finding where these paired reads match in our database of known transcript sequences. Since transcripts already have introns removed and exons joined together, the reads align directly without needing to "jump" across gaps as they would when mapping to the genome.
 
 <div align="center">
 <img src="images/800px-Mapping_Reads.png" width="500"  />
@@ -128,6 +128,9 @@ cd ~/rnaseq_course/mapping
 
 # create a sub-folder where the index will be generated
 mkdir index_star_chr6
+
+# remember to have defined the environmental variable RUN to access your singularity image
+export RUN="singularity exec -e $YOURPATH=fastq-screen_fastqc_kraken_multiqc_pruned_c1cc2fe6e981fe2c.sif"
 
 # create the index and store it in ~/rnaseq_course/mapping/index_star_chr6
 $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
