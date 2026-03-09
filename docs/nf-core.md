@@ -115,7 +115,7 @@ CHANGELOG.md
 
 ```
 
-You don't need to change anything except the file **base.config** inside **conf** folder. Inside are described the resources needed for the different processes, and some can be really too big.
+You don't need to change anything except the file **base.config** inside **conf** folder. Inside are described the resources needed for the different processes, and some of them can be really too generous.
 
 ```groovy
 /*
@@ -184,4 +184,65 @@ process {
     }
 }
 ```
+
+You can either manually change them or make a new profile and override some of them. Let's modify the processes with too much RAM or cpus.
+
+```groovy
+process {
+
+    // TODO nf-core: Check the defaults for all processes
+    cpus   = { 1      * task.attempt }
+    memory = { 6.GB   * task.attempt }
+    time   = { 4.h    * task.attempt }
+
+    errorStrategy = { task.exitStatus in ((130..145) + 104 + 175) ? 'retry' : 'finish' }
+    maxRetries    = 1
+    maxErrors     = '-1'
+
+    // Process-specific resource requirements
+    // NOTE - Please try and reuse the labels below as much as possible.
+    //        These labels are used and recognised by default in DSL2 files hosted on nf-core/modules.
+    //        If possible, it would be nice to keep the same label naming convention when
+    //        adding in your local modules too.
+    // See https://www.nextflow.io/docs/latest/config.html#config-process-selectors
+    withLabel:process_single {
+        cpus   = { 1                   }
+        memory = { 6.GB * task.attempt }
+        time   = { 4.h  * task.attempt }
+    }
+    withLabel:process_low {
+        cpus   = { 2     * task.attempt }
+        memory = { 12.GB * task.attempt }
+        time   = { 4.h   * task.attempt }
+    }
+    withLabel:process_medium {
+        cpus   = { 6     * task.attempt }
+        memory = { 24.GB * task.attempt }
+        time   = { 8.h   * task.attempt }
+    }
+    withLabel:process_high {
+        cpus   = { 8    * task.attempt }
+        memory = { 48.GB * task.attempt }
+        time   = { 16.h  * task.attempt }
+    }
+    withLabel:process_long {
+        time   = { 20.h  * task.attempt }
+    }
+    withLabel:process_high_memory {
+        memory = { 96.GB * task.attempt }
+    }
+    withLabel:error_ignore {
+        errorStrategy = 'ignore'
+    }
+    withLabel:error_retry {
+        errorStrategy = 'retry'
+        maxRetries    = 2
+    }
+    withLabel: process_gpu {
+        accelerator      = 1
+        containerOptions = { params.gpu_container_options ?: (workflow.containerEngine in ['singularity', 'apptainer'] ? '--nv' : '--gpus all') }
+    }
+}
+```
+
 
