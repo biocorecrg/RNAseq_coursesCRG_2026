@@ -454,7 +454,7 @@ We can check the final report in a browser:
 firefox qc_qualimap/qualimapReport.html
 ```
 
-If you cannot, you can reach it [here](qc_qualimap/qualimapReport.html)
+If you cannot, you can reach it [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/qc_qualimap/qualimapReport.html)
 
 
 The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns, or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or the protocol used). 
