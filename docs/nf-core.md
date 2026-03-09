@@ -19,3 +19,15 @@ All nf-core pipelines follow strict guidelines for structure, documentation, and
 <div align="center">
 <img src="images/nf-core.png" width="800"  />
 </div>
+
+These pipelines use tools stored inside linux containers such as singularity/Apptainer or docker, in particular they rely on the images stored ad [quay.io](https://quay.io/) by [Biocontainers](https://biocontainers.pro/). This guarantee their reproducibility and portability.
+
+<div align="center">
+<img src="images/biocontainers_screen.png" width="300"  />
+</div>
+
+
+<div align="center">
+<img src="images/nf-core-rnaseq_metro_map_grey_animated.svg" width="800"  />
+</div>
+
