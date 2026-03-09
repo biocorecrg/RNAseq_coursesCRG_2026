@@ -7,7 +7,7 @@ This hands-on program provides a comprehensive introduction to RNA sequencing, g
 
 The course integrates laboratory practice with computational training, equipping participants with the skills needed to design robust RNA-seq experiments and to apply reproducible analysis workflows following the FAIR practices. The program is complemented by theoretical lectures on state-of-the-art transcriptomics and bioinformatics, a guided visit to the CRG Genomics Unit, and networking activities.
 
-**This repo covers only the computational part of the course**
+**This repo covers only the computational part of the course.**
 
 ### The webpage is at https://biocorecrg.github.io/RNAseq_coursesCRG_2026/ 
 
@@ -17,10 +17,10 @@ The course integrates laboratory practice with computational training, equipping
 * 12:00 - 12:30 **Talk: FAIR & Reproducible practices in Bioinformatics - containers, public repos, git/GitHub (Toni Hermoso)**
 * 12:30 - 13:00 **Talk: RNA-seq data analysis: Workflow & Approaches (Luca Cozzuto)** _here or later to cover: Map reads to genome or transcriptome? Existing approaches/methods to read mapping in an RNA-seq experiment: pros and cons, which to choose?_
 * 13:00 - 14:00 _Lunch_
-* 14:00 - 14:30 Hands-on: Basics of Linux CLI **(Toni?)**
+* 14:00 - 14:30 Hands-on: Basics of Linux CLI **(Toni Hermoso)**
 * 14:30 - 16:00 Hands-on: Read QC: fastq format, FastQC, FastqScreen, kraken, MultiQC **(Anna)**
 * 16:00 - 16:15 _Coffee break_
-* 16:15 - 17:00 Hands-on: Read pre-processing: adapter trimming, riboPicker, MultiQC **(Anna or Luca?)**
+* 16:15 - 17:00 Hands-on: Read pre-processing: adapter trimming, riboPicker, MultiQC **(Luca)**
 * 17:00 - 18:00 Hands-on: Getting reference genome/transcriptome and annotation (ENSEMBL, Gencode, UCSC Genome Browser), GTF/GFF format **(Luca)**
 
 ### Day 4 - Thu 19 March 2026
@@ -28,9 +28,9 @@ The course integrates laboratory practice with computational training, equipping
 * 11:00 - 11:30 _Coffee break_
 * 11:30 - 13:00 Hands-on: Review R basics (RStudio) **(Sarah Bonnin)**
 * 13:00 - 14:00 _Lunch_
-* 14:00 - 16:00 Hands-on: DESeq2: import data from STAR and SALMON, filtering and normalization (vst, log2(deseq-native)), PCA, sample clustering, boxplots for selected genes, batch correction using ComBat (for that we will need to use a different dataset) **(Fabian/Julia)**
+* 14:00 - 16:00 Hands-on: DESeq2: import data from STAR and SALMON, filtering and normalization (vst, log2(deseq-native)), PCA, sample clustering, boxplots for selected genes, batch correction using ComBat (for that we will need to use a different dataset) **(Fabian)**
 * 16:00 - 16:15 _Coffee break_
-* 16:15 - 18:00 Hands-on: DE analysis using DESeq2. Gene selection, volcano plots, heatmaps. Functional analysis using R packages (for gene sets) and the GSEA application (for all genes) **(Fabian/Julia)**
+* 16:15 - 18:00 Hands-on: DE analysis using DESeq2. Gene selection, volcano plots, heatmaps. Functional analysis using R packages (for gene sets) and the GSEA application (for all genes) **(Fabian)**
 * 18:00 - 21:00 _Social activity_
 
 ### Day 5 - Fri 20 March 2026
