@@ -169,7 +169,7 @@ cd ~/rnaseq_course/mapping
 mkdir alignments_STAR
 
 $RUN STAR --genomeDir index_star_chr6 \
-      --readFilesIn ~/rnaseq_course/trimming/SRR3091420_1_chr6-trimmed.fastq.gz \
+      --readFilesIn ~/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz \
       --readFilesCommand zcat \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
@@ -180,14 +180,14 @@ $RUN STAR --genomeDir index_star_chr6 \
 If this was successful and not too slow and resource-consuming, you can do it for all samples, in a **loop**:
 
 ```bash
-for fastq in ~/rnaseq_course/trimming/*-trimmed.fastq.gz
+for fastq in ~/rnaseq_course/trimming/*_trimmed.fq.gz
 do echo $fastq
 $RUN STAR --genomeDir index_star_chr6 \
       --readFilesIn $fastq \
       --readFilesCommand zcat \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
-      --outFileNamePrefix alignments_STAR/$(basename $fastq -trimmed.fastq.gz)
+      --outFileNamePrefix alignments_STAR/$(basename $fastq _trimmed.fq.gz)
 done
 ```
 
@@ -215,6 +215,50 @@ ls -lh alignments
 
 <br/>
 
+Inspecting the log file can give you a hint about the quality of the mapping:
+
+```bash
+cat SRR3091420_1_chr6Log.final.out 
+                                 Started job on |	Mar 09 17:57:58
+                             Started mapping on |	Mar 09 17:57:59
+                                    Finished on |	Mar 09 17:58:07
+       Mapping speed, Million of reads per hour |	375.83
+
+                          Number of input reads |	835168
+                      Average input read length |	48
+                                    UNIQUE READS:
+                   Uniquely mapped reads number |	786944
+                        Uniquely mapped reads % |	94.23%
+                          Average mapped length |	48.38
+                       Number of splices: Total |	91355
+            Number of splices: Annotated (sjdb) |	90653
+                       Number of splices: GT/AG |	90810
+                       Number of splices: GC/AG |	431
+                       Number of splices: AT/AC |	15
+               Number of splices: Non-canonical |	99
+                      Mismatch rate per base, % |	0.20%
+                         Deletion rate per base |	0.00%
+                        Deletion average length |	1.59
+                        Insertion rate per base |	0.00%
+                       Insertion average length |	1.17
+                             MULTI-MAPPING READS:
+        Number of reads mapped to multiple loci |	46554
+             % of reads mapped to multiple loci |	5.57%
+        Number of reads mapped to too many loci |	98
+             % of reads mapped to too many loci |	0.01%
+                                  UNMAPPED READS:
+  Number of reads unmapped: too many mismatches |	0
+       % of reads unmapped: too many mismatches |	0.00%
+            Number of reads unmapped: too short |	1570
+                 % of reads unmapped: too short |	0.19%
+                Number of reads unmapped: other |	2
+                     % of reads unmapped: other |	0.00%
+                                  CHIMERIC READS:
+                       Number of chimeric reads |	0
+                            % of chimeric reads |	0.00%
+
+```
+
 ## Read counts 
 
 STAR outputs read counts per gene into **PREFIX**ReadsPerGene.out.tab file with 4 columns which correspond to different **strandedness options**:
@@ -228,19 +272,22 @@ STAR outputs read counts per gene into **PREFIX**ReadsPerGene.out.tab file with 
 Let's see what the **ReadsPerGene.out.tab** file looks like for sample **SRR3091420_1_chr6**:
 
 ```bash
-head alignments/SRR3091420_1_chr6ReadsPerGene.out.tab 
-head bam_chr6/SRR3091420_1_chr6-trimmedReadsPerGene.out.tab
+head SRR3091420_1_chr6ReadsPerGene.out.tab 
+
 ```
 
 |gene id| read counts per gene (unstranded) | read counts per gene (read 1)|read counts per gene (read 2)| 
 |:--------|----------:|---------:|---------:|
-|N_unmapped      |1589    |1589    |1589 |
-|N_multimapping  |45100   |45100   |45100 |
-|N_noFeature     |33480   |393427  |413797 |
-|N_ambiguous     |29733   |7977    |7339 |
-|ENSG00000271530 |0       |0       |0 |
-|ENSG00000220212 |0       |0       |0 |
-|ENSG00000170590 |2       |2       |0 |
+|N_unmapped|1670|1670|1670|
+|N_multimapping|46554|46554|46554|
+|N_noFeature|24060|376484|397091|
+|N_ambiguous|74169|21118|17326|
+|ENSG00000219375|1|1|0|
+|ENSG00000270174|0|0|0|
+|ENSG00000261730|0|0|0|
+|ENSG00000176515|0|0|0|
+|ENSG00000286368|0|0|0|
+|ENSG00000217239|31|22|9|
 
 
 Select the output according to **the strandedness** of your data. <br>
