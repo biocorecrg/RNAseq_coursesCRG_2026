@@ -247,10 +247,70 @@ process {
 }
 ```
 
+We need to define the input files inside a sample sheet.  
+
+```
+vi sample_sheet.csv 
+
+sample,fastq_1,fastq_2,strandedness
+SRR3091423,./reads/SRR3091423_1_chr6.fastq.gz,,reverse
+SRR3091427,./reads/SRR3091427_1_chr6.fastq.gz,,reverse
+SRR3091420,./reads/SRR3091420_1_chr6.fastq.gz,,reverse
+SRR3091424,./reads/SRR3091424_1_chr6.fastq.gz,,reverse
+SRR3091428,./reads/SRR3091428_1_chr6.fastq.gz,,reverse
+SRR3091421,./reads/SRR3091421_1_chr6.fastq.gz,,reverse
+SRR3091425,./reads/SRR3091425_1_chr6.fastq.gz,,reverse
+SRR3091429,./reads/SRR3091429_1_chr6.fastq.gz,,reverse
+SRR3091422,./reads/SRR3091422_1_chr6.fastq.gz,,reverse
+SRR3091426,./reads/SRR3091426_1_chr6.fastq.gz,,reverse
+```
+
 Now we can run the wizard:
 
 ```bash
+nf-core pipelines launch nf-core-rnaseq_dev/dev/
 
 
+
+                                          ,--./,-.
+          ___     __   __   __   ___     /,-._.--~\ 
+    |\ | |__  __ /  ` /  \ |__) |__         }  {
+    | \| |       \__, \__/ |  \ |___     \`-._,-`-,
+                                          `._,._,'
+
+    nf-core/tools version 3.5.2 - https://nf-co.re
+
+
+INFO     NOTE: This tool ignores any pipeline parameter defaults overwritten by Nextflow config files or profiles                                                   
+                                                                                                                                                                    
+INFO     [✓] Default parameters match schema validation                                                                                                             
+INFO     [✓] Pipeline schema looks valid (found 129 params)                                                                                                         
+INFO     Would you like to enter pipeline parameters using a web-based interface or a command-line wizard?                                                          
+? Choose launch method (Use arrow keys)
+   Web based
+ » Command line
+
+```
+We choose the command line, we choose **-profile  [singularity]**, as input **sample_sheet.csv**, **outfolder** as output. We provide the fasta file as **--fasta** and the gtf as **--gtf**.
+
+
+```bash
+
+ Continue >>
+INFO     [✓] Input parameters look valid                                                                                                                            
+fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+INFO     Nextflow command:                                                                                                                                          
+         nextflow run /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-core-rnaseq_dev/dev -profile "singularity" -params-file                                      
+         "/users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-params.json"                                                                                             
+                                                                                                                                                          
+                                                                                                                                                                    
+Do you want to run this command now?  [y/n] (y): y
+INFO     Launching workflow! 🚀                                                                                                                                     
+Nextflow 26.02.0-edge is available - Please consider updating your version to it
+
+ N E X T F L O W   ~  version 25.11.0-edge
+
+Launching `/users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-core-rnaseq_dev/dev/main.nf` [special_lamarck] DSL2 - revision: ff377cb1d2
 ```
 
