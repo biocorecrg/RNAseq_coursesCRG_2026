@@ -117,7 +117,7 @@ CHANGELOG.md
 
 You don't need to change anything except the file **base.config** inside **conf** folder. Inside are described the resources needed for the different processes, and some of them can be really too generous.
 
-```groovy
+```{code-block} groovy
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -188,7 +188,7 @@ process {
 
 You can either manually change them or make a new profile and override some of them. Let's modify the processes with too much RAM or cpus.
 
-```groovy
+```{code-block} groovy
 :emphasize-lines: 30,34,35,42
 process {
 
