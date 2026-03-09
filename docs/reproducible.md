@@ -55,12 +55,12 @@ Management of changes to documents, computer programs and other collections of i
 
 stand-alone tools that record changes to a file or set of files over time
 
-- <mdi-arrow-right-thick class="c-teal" /> often referred to as **VCSs**
+- often referred to as **VCSs**
 
 
 ### Basic concept
 
-- <mdi-arrow-right-thick class="c-teal" /> `commit`
+- `commit`
 
 Save files as logical sets of changes and write a good description of why you changed them
 
@@ -151,11 +151,22 @@ An alternative of GitHub is GitLab, used mostly in-premise for private projects.
 
 ## Containers
 
-- Dockerfile (Docker, Podman)
-  - For Apptainer/Singularity not direct
+
+![Container lashing with rods](./images/Container_lashing_with_rods.jpg)
+
+https://commons.wikimedia.org/wiki/File:Container_lashing_with_rods.jpg
+
+Software solutions:
+
+- Docker (most popular)
+- Podman
+- Singularity/Apptainer
 
 
-## Containers
+TODO: Logo Docker, Podman, Singularity/Apptainer
+
+Docker recipe example, Dockerfile:
+
 
 ```
 FROM debian:bookworm
@@ -175,9 +186,18 @@ RUN set -x; \
 
 ```
 
+### Where to find Docker images
+
+* [Docker Hub](https://hub.docker.com/)
+* [Biocontainers](https://biocontainers.pro)
+
+
 ## Conda
 
-- env.yaml
+Convenient package management system to set up environments
+
+
+- env.yaml. Recipe for conda environments
 
 ```
 conda env create -f myenv.yaml
@@ -196,13 +216,19 @@ dependencies:
   - jannessp::pod5==0.2.4
 ```
 
-Other tools:
 
+
+
+Tools for installing Conda:
+
+- [Miniforge](https://conda-forge.org/download/) -> Free version of Conda tool
 - [Mamba](https://mamba.readthedocs.io/en/latest/) -> Faster Conda
 - [Pixi](https://prefix.dev/) -> Another faster Conda
 
 
 ## Python
+
+TODO: Logo Python here
 
 - requirements.txt
 
@@ -227,6 +253,8 @@ Other tools:
 
 ## R
 
+TODO: Logo R here
+
 - RStudio (.Rproj files)
 
 - [Working with R projects](https://communicate-data-with-r.netlify.app/docs/baser/workingprojects/)
@@ -247,12 +275,14 @@ Other tools:
       - Provenance (tracking data transformation along used software)
         - [nf-prov](https://github.com/nextflow-io/nf-prov)
 
+TODO: Logo Nextflow here
+
 
 ## FAIR
 
-![FAIR data principles](https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/FAIR_data_principles.jpg/640px-FAIR_data_principles.jpg)
+![FAIR data principles](./images/FAIR_data_principles.svg.png)
 
-10 years of FAIR ...
+https://commons.wikimedia.org/wiki/File:FAIR_data_principles.svg
 
 ### Findable
 
