@@ -1,5 +1,6 @@
 # Read mapping (Hands on)
 
+
 <img src="images/RNAseq_workflow.png" width="1000"/>
 
 What does it mean to map reads to a transcriptome? During sequencing, we read both ends of each RNA fragment—these are called "paired-end reads." Mapping to the transcriptome means finding where these paired reads match in our database of known transcript sequences. Since transcripts already have introns removed and exons joined together, the reads align directly without needing to "jump" across gaps as they would when mapping to the genome.
@@ -46,6 +47,7 @@ They can be much faster than traditional aligners like [**Blast**](https://blast
 These aligners are able to map to the **splicing junctions** described in the annotation and even to detect novel ones. 
 <br>
 Some of them can detect **gene fusions** and **SNPs** and also **RNA editing**. For some of these tools, the downstream analysis requires the assignation of the aligned reads to a given gene/transcript.
+
 
 * [**HISAT2**](http://ccb.jhu.edu/software/hisat2/index.shtml) is **the next generation of spliced aligner from the same group that have developed TopHat**. It is a fast and sensitive alignment program for mapping next-generation sequencing reads (both DNA and RNA) to a population of human genomes (as well as to a single reference genome). The indexing scheme is called a **Hierarchical Graph FM index (HGFM)**. 
 * [**STAR**](https://github.com/alexdobin/STAR) is an ultrafast universal RNA-seq aligner. It uses **sequential maximum mappable seed search** in uncompressed suffix arrays followed by seed clustering and stitching procedure. It is also able to search for gene fusions.
@@ -452,13 +454,13 @@ We can check the final report in a browser:
 firefox qc_qualimap/qualimapReport.html
 ```
 
-If you cannot, you can reach it [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/qc_qualimap/qualimapReport.html)
+If you cannot, you can reach it [here](qc_qualimap/qualimapReport.html)
 
 
 The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns, or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or the protocol used). 
 
 <div align="center">
-<img src="images/qualimap.jpg" width="500"  />
+<img src="images/qualimap.jpg" width="800"  />
 </div>
 
 
