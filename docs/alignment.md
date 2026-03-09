@@ -396,9 +396,9 @@ $RUN samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam  > SRR30914
 
 You can see that the SAM file is **5 times larger** than the BAM file.
 <br> 
-Yet, the more efficient way to store the alignment is to use the [**CRAM format**](https://samtools.github.io/hts-specs/CRAMv3.pdf). CRAM is fully compatible with BAM, and main repositories, such as GEO and SRA, accept alignments in the CRAM format. [UCSC Genome Browser can visualize both BAM and CRAM files](https://genome.ucsc.edu/goldenPath/help/cram.html). It is now a widly recommended format for storing alignments.
+Yet, the more efficient way to store the alignment is to use the [**CRAM format**](https://samtools.github.io/hts-specs/CRAMv3.pdf). CRAM is fully compatible with BAM, and main repositories, such as GEO and SRA, accept alignments in the CRAM format. [UCSC Genome Browser can visualize both BAM and CRAM files](https://genome.ucsc.edu/goldenPath/help/cram.html). It is now a widely recommended format for storing alignments.
 <br>
-To convert **BAM** to **CRAM**, we have to provide unzipped and indexed version of the genome.
+To convert **BAM** to **CRAM**, we have to provide an unzipped and indexed version of the genome.
 
 
 ```bash
@@ -422,7 +422,7 @@ ls  SRR3091420_1_chr6Aligned.sortedByCoord.out.* -alht
 
 ## Alignment QC
 
-The quality of the resulting alignment can be checked using the tool [**QualiMap**](http://qualimap.bioinfo.cipf.es/). To run QualiMap, we specify the kind of analysis (**rnaseq**), the **gtf** file, the strandness of the library (**-p unstranded**). 
+The quality of the resulting alignment can be checked using the tool [**QualiMap**](http://qualimap.bioinfo.cipf.es/). To run QualiMap, we specify the kind of analysis (**rnaseq**), the **gtf** file, and the strandness of the library (**-p unstranded**). 
 <br>
 *Note that if the library was paired-end, you would add the **-pe** option**.
 <br>
@@ -440,8 +440,8 @@ cd ~/rnaseq_course/mapping
 mkdir qc_qualimap
 
 # run qualimap
-$RUN qualimap rnaseq -bam bam_chr6/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam \
-	-gtf ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.88.chr6.gtf \
+$RUN qualimap rnaseq -bam SRR3091420_1_chr6Aligned.sortedByCoord.out.bam \
+	-gtf ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf \
 	-outdir qc_qualimap \
 	-p non-strand-specific
 ```
@@ -451,11 +451,13 @@ We can check the final report in a browser:
 ```bash
 firefox qc_qualimap/qualimapReport.html
 ```
-<img src="images/qualimap1.png"   />
+
+If you cannot you can reach it [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/qc_qualimap/qualimapReport.html)
+
 
 The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or a protocol used). 
 
-<img src="images/qualimap2.png"   />
+<img src="images/qualimap.png"   />
 
 <img src="images/qualimap4.png"   />
 
