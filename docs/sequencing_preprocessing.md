@@ -1,4 +1,4 @@
-# Pre-processing of raw data and fastq format
+# Talk: Pre-processing of raw data and fastq format
 
 ## Flowcells, lanes, and library structure
 
