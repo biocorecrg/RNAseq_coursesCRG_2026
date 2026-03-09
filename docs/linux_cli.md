@@ -150,6 +150,10 @@ TODO: Review what we have in the course
 
 Mention to PATH
 
+```
+echo $PATH
+```
+
 
 ### Running containers
 
@@ -167,3 +171,12 @@ apptainer pull ...
 apptainer exec -e ...
 
 ```
+
+```
+export RUN="singularity exec -e containername.sif"
+$RUN myprogram
+
+```
+
+Mention to `.bashrc`
+
