@@ -67,6 +67,7 @@ Now go to the [UCSC genome browser website](https://genome-euro.ucsc.edu/cgi-bin
 
 <img src="images/ucsc1.png" />
 
+
 Choose human genome version hg38 (that corresponds to the ENSEMBL annotation we used). Click **GO**. 
 
 <img src="images/ucsc2.png" />
