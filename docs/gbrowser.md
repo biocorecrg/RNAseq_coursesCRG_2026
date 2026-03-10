@@ -65,15 +65,16 @@ Using the mouse's right click, copy the URL address of one of the BAM files.
 
 Now go to the [UCSC genome browser website](https://genome-euro.ucsc.edu/cgi-bin/hgGateway?redirect=manual&source=genome.ucsc.edu).
 
-<img src="images/ucsc1.png"  align="middle" />
+<img src="images/ucsc1.png" />
+
 
 Choose human genome version hg38 (that corresponds to the ENSEMBL annotation we used). Click **GO**. 
 
-<img src="images/ucsc2.png"  align="middle" />
+<img src="images/ucsc2.png" />
 
 At the bottom of the image, click **ADD CUSTOM TRACK** 
 
-<img src="images/ucsc_add_custom_track.png"  align="middle" />
+<img src="images/ucsc_add_custom_track.png"  />
 
 and provide information describing the data to be displayed:
 * **track type** indicates the kind of file: **bam** (same is used for uploading .cram)
@@ -81,34 +82,32 @@ and provide information describing the data to be displayed:
 * **bigDataUrl** the URL where the BAM or CRAM file is located 
 
 ```bash
-track type=bam name="test" bigDataUrl=https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam
+track type=bam name="test" bigDataUrl=https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
+
 ```
 
 Click "Submit".
 
-<img src="images/ucsc4.png"  align="middle" />
+<img src="images/ucsc4.png"   />
 
 This indicates that everything went ok and we can now display the data. Since our data are restricted to chromosome 6 we have to display that chromosome. For example, let's select the gene **QRSL1** then **go**.
 
-<img src="images/ucsc_search_gene.png"  align="middle" />
+<img src="images/ucsc_search_gene.png"  />
 
 And we can display it. 
-<img src="images/ucsc_gene_view.png.png"  align="middle" />
 
 The default view can be changed by clicking on the grey bar on the left of the "My BAM" track. You can open a window with different settings; for example, you can change the **Display mode** to **Squish**.
 
-<img src="images/ucsc7.png"  align="middle" />
-
 This will change how data is displayed. We can now see single reads aligned to the forward and reverse DNA strands (blue is to **+strand** and red, to **-strand**).  You can also see that many reads are broken; that is, they are mapped to splice junctions.
 
-<img src="images/ucsc8.png"  align="middle" />
+<img src="images//ucsc5.png"  />
 
 We can also display only the coverage by selecting in "My BAM Track Settings" **Display data as a density graph** and  **Display mode: full**. 
 
-<img src="images/ucsc9.png"  align="middle" />
+<img src="images/ucsc9.png"   />
 
 These expression signal plots can be helpful for comparing different samples (in this case, make sure to set comparable scales on the Y-axes). 
 
-<img src="images/ucsc_profile_view.png"  align="middle" />
+<img src="images/ucsc8.png"  />
 
 <br/>
