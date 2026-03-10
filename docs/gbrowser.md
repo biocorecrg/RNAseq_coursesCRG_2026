@@ -94,10 +94,9 @@ This indicates that everything went ok and we can now display the data. Since ou
 <img src="images/ucsc_search_gene.png"  />
 
 And we can display it. 
-<img src="images/ucsc_gene_view.png"   />
 
 
-The default view can be changed by clicking on the grey bar on the left of the "My BAM" track. You can open a window with different settings; for example, you can change the **Display mode** to **Squish**.
+The default view can be changed by clicking on the grey bar on the left of the "My BAM" track. You can open a window with different settings; for example, you can change the **Display mode** to **Full**.
 
 <img src="images/ucsc7.png"   />
 
