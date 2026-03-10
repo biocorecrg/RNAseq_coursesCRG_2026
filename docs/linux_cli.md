@@ -111,14 +111,14 @@ tldr ls
 
 To create file and folders in linux is quite simple. You can use a number of programs for creating an empty file (`touch`) or an empty directory (`mkdir`)
 
-```{bash}
+```bash
 touch my_beautiful_file.txt
 mkdir my_beautiful_folder
 ```
 
-To display the list of files and folder we can use the command **ls**
+To display the list of files and folder we can use the command `ls`
 
-```{bash}
+```bash
 ls
 
 my_beautiful_file.txt  my_beautiful_folder
@@ -126,7 +126,7 @@ my_beautiful_file.txt  my_beautiful_folder
 
 To change the name of a file (or a directory) you can use the command `mv` while for copying the file you can use `cp`. Adding the option **-r** (recursive) to `cp` allows to copy a whole folder and its content. 
 
-```{bash}
+```bash
 mv my_beautiful_file.txt my_ugly_file.txt
 mv my_beautiful_folder my_ugly_folder
 
@@ -135,7 +135,7 @@ cp my_ugly_folder -r my_beautiful_folder
 ```
 If you omit the **-r** option the system will complain
 
-```{bash}
+```bash
 cp my_ugly_folder my_other_folder
 
 cp: omitting directory ‘my_ugly_folder’
@@ -143,7 +143,7 @@ cp: omitting directory ‘my_ugly_folder’
 
 You can use `mv` also for moving a file (or a directory) inside a folder. Also `cp` will allow you to make a copy inside a folder.
 
-```{bash}
+```bash
 mv my_beautiful_file.txt my_beautiful_folder
 cp my_ugly_file.txt my_ugly_folder
 
@@ -152,9 +152,9 @@ ls
 my_beautiful_folder  my_ugly_file.txt  my_ugly_folder
 ```
 
-For entering in a folder we can use the tool **cd**
+For entering in a folder we can use the tool `cd`
 
-```{bash}
+```bash
 cd my_ugly_folder
 
 ls
@@ -163,7 +163,7 @@ my_ugly_file.txt
 ```
 
 For going out we can move one level out 
-```{bash}
+```bash
 cd ../
 
 ls
@@ -175,13 +175,13 @@ Sometimes we get lost and would like to know where we are. We can use the comman
 
 We can write to a file using the character **>**, that means output redirection.
 
-```{bash}
+```bash
 echo "ATGTACTGACTGCATGCATGCCATGCA" > my_dna.txt
 ```
 
 And display the content of the file using the program **cat**
 
-```{bash}
+```bash
 cat my_dna.txt
 
 ATGTACTGACTGCATGCATGCCATGCA
@@ -191,7 +191,7 @@ To convert this sequence to a RNA one we can just replace the **T** base with **
 
 You can add a **g** at the end if you want to replace every character found ```s/<TO BE REPLACED>/<TO REPLACE>/g```.
 
-```{bash}
+```bash
 
 sed s/T/U/g my_dna.txt > my_rna.txt
 
@@ -241,6 +241,38 @@ curl -o my_readme.txt ftp://ftp.ensemblgenomes.org/pub/bacteria/release-42/fasta
 ```
 
 `curl` is more powerful and you can do more stuff than simply download files (e.g., test API services)
+
+## Piping
+
+ADD IMAGE
+https://commons.wikimedia.org/wiki/File:Stdstreams-notitle.svg
+
+**Pipe stdout to another command:**
+```
+ls | grep ".txt"
+```
+Lists files, then filters for `.txt` files.
+
+
+**Redirect stdout to a file (overwrite):**
+```
+echo "Hello" > output.txt
+```
+
+**Append stdout to a file:**
+```
+echo "World" >> output.txt
+```
+
+**Redirect stderr to a file:**
+```
+ls non_existing_file 2> error.log
+```
+
+**Redirect both stdout and stderr to a file:**
+```
+command > all_output.log 2>&1
+```
 
 
 * more
