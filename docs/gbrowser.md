@@ -58,11 +58,7 @@ rm *.sam
 First, you need to upload your sorted BAM (or cram) file(s) **together with an index (.bai or .crai) file(s)** to a HTTP server that is accessible from the Internet. 
 <br>
 
-We uploaded the files for this project (chromosome 6 only) to:
-
-```
-[https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/index.html](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/index.html)
-```
+We uploaded the files for this project (chromosome 6 only) to:[https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/index.html](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/index.html)
 
 Using the mouse's right click, copy the URL address of one of the BAM files.
 <br>  
