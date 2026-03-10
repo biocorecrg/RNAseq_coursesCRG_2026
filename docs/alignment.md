@@ -1,4 +1,4 @@
-# Read mapping (Hands on)
+# Hands-on: Read mapping 
 
 
 <img src="images/RNAseq_workflow.png" width="1000"/>
