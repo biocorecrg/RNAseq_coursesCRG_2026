@@ -88,7 +88,7 @@ rm reference_chr6_Hsapiens.tar.gz
 
 # Mapping using STAR
 
-For the **STAR** running options, see [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf).
+For the **STAR** running options, see [STAR Manual](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf).
 
 
 ## Building the STAR index
