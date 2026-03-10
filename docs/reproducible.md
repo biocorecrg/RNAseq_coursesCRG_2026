@@ -188,9 +188,9 @@ RUN set -x; \
 
 ### Where to find Docker images
 
-* [Docker Hub](https://hub.docker.com/)
-* [Biocontainers](https://biocontainers.pro)
-
+* [Docker Hub](https://hub.docker.com/) - Most popular and first registry
+* [Biocontainers](https://biocontainers.pro) - Based on bioconda (more on it later)
+* [Seqera Containers](https://seqera.io/containers/) - Creation of containers on demand
 
 ## Conda
 
@@ -280,9 +280,12 @@ TODO: Logo Nextflow here
 
 ## FAIR
 
-![FAIR data principles](./images/FAIR_data_principles.svg.png)
+![FAIR data principles][fair-image][^1]
 
-https://commons.wikimedia.org/wiki/File:FAIR_data_principles.svg
+[fair-image]: ./images/FAIR_data_principles.svg.png
+
+[^1]: [Source: Wikimedia Commons](https://commons.wikimedia.org/wiki/File:FAIR_data_principles.svg)
+
 
 ### Findable
 
