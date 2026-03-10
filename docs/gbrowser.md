@@ -96,14 +96,11 @@ This indicates that everything went ok and we can now display the data. Since ou
 
 And we can display it. 
 
-
-The default view can be changed by clicking on the grey bar on the left of the "My BAM" track. You can open a window with different settings; for example, you can change the **Display mode** to **Full**.
-
-<img src="images/ucsc7.png"   />
+The default view can be changed by clicking on the grey bar on the left of the "My BAM" track. You can open a window with different settings; for example, you can change the **Display mode** to **Squish**.
 
 This will change how data is displayed. We can now see single reads aligned to the forward and reverse DNA strands (blue is to **+strand** and red, to **-strand**).  You can also see that many reads are broken; that is, they are mapped to splice junctions.
 
-<img src="images/ucsc8.png"  />
+<img src="images//ucsc5.png"  />
 
 We can also display only the coverage by selecting in "My BAM Track Settings" **Display data as a density graph** and  **Display mode: full**. 
 
@@ -111,6 +108,6 @@ We can also display only the coverage by selecting in "My BAM Track Settings" **
 
 These expression signal plots can be helpful for comparing different samples (in this case, make sure to set comparable scales on the Y-axes). 
 
-<img src="images/ucsc_profile_view.png"  />
+<img src="images/ucsc8.png"  />
 
 <br/>
