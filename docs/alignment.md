@@ -158,7 +158,7 @@ To use **STAR** for the read alignment (default **--runMode** option), we have t
 The following parameters are optional but very convenient:
 * **--outSAMtype**: type of output. Default is **BAM Unsorted**; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be indexed or directly used with downstream software such as HTseq, without the need for sorting."* We therefore prefer the option **BAM SortedByCoordinate**
 * **--outFileNamePrefix**: the path for the output directory and prefix of all output files. By default, this parameter is ./, i.e. all output files are written in the current directory.
-* **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In the case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by **htseq-count** with default parameters. **This option requires annotations (in GTF format or GFF with –-sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf)) 
+* **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In the case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by **htseq-count** with default parameters. **This option requires annotations (in GTF format or GFF with –-sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual] (https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf)) 
 
 <br>
 We can try to launch the mapping for one file:
@@ -373,7 +373,7 @@ The rest is a read alignment.
 <br>
 **CIGAR string 48M** means that 48 bases were mapped to the reference (M).
 <br>
-You can use [this website for the translation of SAM FLAG values](https://www.samformat.info/sam-format-flag) and [this one for interpreting CIGAR strings](https://www.drive5.com/usearch/manual/cigar.html).
+You can use [this website for the translation of SAM FLAG values](https://broadinstitute.github.io/picard/explain-flags.html) and [this one for interpreting CIGAR strings](https://jef.works/blog/2017/03/28/CIGAR-strings-for-dummies/).
 
 <br>
 Extra fields are often present and differ between aligners [https://samtools.github.io/hts-specs/SAMtags.pdf](https://samtools.github.io/hts-specs/SAMtags.pdf). In our case we have:
