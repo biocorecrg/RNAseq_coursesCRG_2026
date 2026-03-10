@@ -21,11 +21,9 @@ else
 fi
 
 singularity exec \
-    --bind /etc/passwd:/etc/passwd \
-    --bind /etc/group:/etc/group \
     --workdir $TMPDIR/home \
     -B $TMPDIR/var/lib:/var/lib/rstudio-server \
     -B $TMPDIR/var/run:/var/run/rstudio-server \
     -B $TMPDIR/tmp:/tmp \
     $SIF \
-    rserver --www-address=127.0.0.1 --server-user=$(whoami)
+    bash -c "useradd -u $(id -u) -g $(id -g) -m $(whoami) 2>/dev/null || true; rserver --www-address=127.0.0.1 --server-user=$(whoami)"
