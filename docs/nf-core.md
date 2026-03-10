@@ -1,4 +1,4 @@
-# Running the full analysis using the nf-core pipelines
+# Hands-on: Running the full analysis using the nf-core pipelines
 
 All the previous steps can be chained together in what bioinformaticians call a pipeline.
 Historically, each lab developed its own pipelines using custom code tailored to its specific IT infrastructure. 
