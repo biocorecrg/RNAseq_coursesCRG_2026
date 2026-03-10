@@ -1,4 +1,4 @@
-# Read mapping (Hands on)
+# Hands-on: Read mapping 
 
 
 <img src="images/RNAseq_workflow.png" width="1000"/>
@@ -369,7 +369,7 @@ The rest is a read alignment.
 | Sequence | `GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAA` |
 | Quality | `bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiii` |
 
-\* **FLAG 0** means that the read is mapped on forward strand.
+\* **FLAG 0** means that the read is mapped on the forward strand.
 <br>
 **CIGAR string 48M** means that 48 bases were mapped to the reference (M).
 <br>
@@ -385,7 +385,7 @@ Extra fields are often present and differ between aligners [https://samtools.git
 |AS:i:47|Alignment score calculated by the aligner|
 |nM:i:0|number of difference with the reference*|
 
-```{note} Careful that sometimes tools can disagree on some definition, from time to time the standard is "changed" depending on the community, new data to show
+```{note} Careful that sometimes tools can disagree on some definition, from time to time, the standard is "changed" depending on the community, new data to show
 ```
 
 <br/>
@@ -457,7 +457,7 @@ firefox qc_qualimap/qualimapReport.html
 If you cannot, you can reach it [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/qc_qualimap/qualimapReport.html)
 
 
-The report gives a lot of useful information, such as the total number of mapped reads, the amount of reads mapped to exons, introns, or intergenic regions, and the bias towards one of the ends of mRNA (that can give information about RNA integrity or the protocol used). 
+The report gives a lot of useful information, such as the total number of mapped reads, the number of reads mapped to exons, introns, or intergenic regions, and the bias towards one of the ends of mRNA (which can give information about RNA integrity or the protocol used). 
 
 <div align="center">
 <img src="images/qualimap.jpg" width="800"  />
@@ -466,9 +466,6 @@ The report gives a lot of useful information, such as the total number of mapped
 
 Finally, we can see that the majority of reads map to the exons.
 
-<img src="images/qualimap3.png"   />
-
-<br/>
 
 **IMPORTANT for running QualiMap on many samples (for detail, see [QualiMap documentation](http://qualimap.bioinfo.cipf.es/doc_html/command_line.html#rna-seq-qc)**
 * Make sure to give to the output folder the name corresponding to a running sample; e.g., ./QC/SRR3091420_1_chr6; otherwise, output files will be overwritten. 
@@ -495,7 +492,7 @@ To make an index for **Salmon**, we need transcript sequences in the FASTA forma
 <br>
 This can be found easily in **GENCODE**.
 <br>
-The transcript sequences corresponding to chromosome 6 was prepared and already downloaded in **~/rnaseq_course/reference_genome/**
+The transcript sequences corresponding to chromosome 6 were prepared and already downloaded in **~/rnaseq_course/reference_genome/**
 <br>
 
 **Salmon** does not need any decompression of the input, so we can index by using this command:
@@ -503,15 +500,38 @@ The transcript sequences corresponding to chromosome 6 was prepared and already 
 ```bash
 cd ~/rnaseq_course/mapping
 
-# index and store the index files in index_salmon folder
-$RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v33.transcripts.chr6.fa.gz \
+# index and store the index files in the index_salmon folder
+$RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v49.transcripts.chr6.fa.gz \
 	-i index_salmon \
 	--gencode
 ```
 
-We add the parameter **--gencode** as our data come from **Gencode version 33** and their header contains several identifiers separated by the character **&#x7c;**. This parameter allows the program to parse the header and keep only the transcript identifier.
+We add the parameter **--gencode** as our data come from **Gencode** and their header contains several identifiers separated by the character **&#x7c;**. This parameter allows the program to parse the header and keep only the transcript identifier.
 
 <br/>
+
+But as we commented in the previous presentation, Salmon works better by avoiding the misplacement of DNA to actual transcripts. So we create a "joint" reference by concatenating transcripts, and the genome and a decoy.txt file with the list of sequences to e considered as **decoy**.
+
+```bash
+cd ~/rnaseq_course/reference_genome/reference_chr6/
+cp gencode.v49.transcripts.fa.gz gencode.v49.transcripts.genome.fa.gz
+cat Homo_sapiens.GRCh38.dna.chrom6.fa.gz >> gencode.v49.transcripts.genome.fa.gz 
+
+echo "6" > decoy.txt
+```
+
+Then, we index again
+
+```bash
+cd ~/rnaseq_course/mapping
+
+# index and store the index files in the index_salmon folder. More threads are needed; it is quite slow!
+$RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v49.transcripts.genome.fa.gz \
+	-i index_salmon \
+	--gencode -p 4 -d decoy.txt
+```
+
+This step takes around 10 minutes with 4 cpus.
 
 ## Quantifying transcript expression
 
@@ -557,12 +577,12 @@ cd ~/rnaseq_course/mapping
 # create folder for salmon's output files
 mkdir alignments_salmon
 
+# again here using more cpus is better
 $RUN salmon quant -i index_salmon -l U \
     -r ~/rnaseq_course/raw_data/fastq_chr6/SRR3091420_1_chr6.fastq.gz \
     -o alignments_salmon/SRR3091420_1_chr6_salmon \
-    -g ~/rnaseq_course/reference_genome/reference_chr6/gencode.v33.annotation_chr6.gtf.gz \
     --seqBias \
-    --validateMappings
+    --validateMappings -p 4 
 ```
 
 We can check the results inside the folder "alignments".
@@ -574,58 +594,38 @@ ls alignments_salmon/SRR3091420_1_chr6_salmon/
 
 For an explanation of all output files, see the [Salmon documentation](https://salmon.readthedocs.io/en/latest/file_formats.html).
 <br>
-The most interesting to us in this course is the file **quant.genes.sf**, which is a tab-separated file containing the read counts for genes:
+The most interesting to us in this course is the file **quant.sf**, which is a tab-separated file containing the read counts for transcripts:
 
-
-|Column |Meaning |   
-| :----: | :---- |
-|Name| Gene name|
-|Length| Gene length|
-|EffectiveLength| Effective length after considering biases|
-|TPM|Transcripts Per Million|
-|NumReads|Estimated number of reads considering both univocally and multimapping reads|
 
 ```bash
-head -n 5 alignments_salmon/SRR3091420_1_chr6_salmon/quant.genes.sf 
-
+awk '{if ($4>0) print}' quant.sf| head
 Name	Length	EffectiveLength	TPM	NumReads
-ENSG00000285803.1	1152	1116.21	7.96961	15.764
-ENSG00000285712.1	1590	1545.58	2.19064	6
-ENSG00000285824.1	1120	860.855	6.91601	10.551
-ENSG00000285884.1	790	515.683	3.28285	3
+ENST00000466430.5	2748	2815.573	0.384361	1.091
+ENST00000424587.7	5603	6195.161	0.635870	3.972
+ENST00000743878.1	737	509.108	11.858146	6.087
+ENST00000416931.1	372	226.773	5.674886	1.298
+ENST00000457540.1	1044	1378.147	1.891150	2.628
+ENST00000427426.1	682	558.366	1.979782	1.115
+ENST00000514057.1	681	678.963	4.016001	2.749
+ENST00000487214.1	865	562.716	1.762567	1.000
+ENST00000959612.1	3051	4260.652	0.232787	1.000
 ```
 
-There is a similarly formatted file **quant.sf** that provides read counts for transcript:
-
-```bash
-head -n 5 alignments_salmon/SRR3091420_1_chr6_salmon/quant.sf 
-
-Name	Length	EffectiveLength	TPM	NumReads
-ENST00000016171.5	2356	1970.742	659.861626	2304.468
-ENST00000020673.5	4183	5925.497	0.000000	0.000
-ENST00000173785.4	925	868.802	0.000000	0.000
-ENST00000181796.6	3785	3216.057	0.000000	0.000
-```
-
-We will use information on read counts for genes from **quant.sf** files for the differential expression (DE) analysis.
+We will use information on read counts for transcripts from **quant.sf** files for the differential expression (DE) analysis.
 
 <br>
 
 Now, if time and resources allow, proceed with the mapping of the **9 remaining samples**:
 
 ```bash
-cd ~/rnaseq_course/mapping
-
-for fastq in ~/rnaseq_course/raw_data/fastq_chr6/SRR309142{1,2,3,4,5,6,7,8,9}_1_chr6.fastq.gz
+for fastq in ~/rnaseq_course/ ~/rnaseq_course/trimming/SRR309142*.gz;
 do echo $fastq
 
 $RUN salmon quant -i index_salmon -l U \
     -r ${fastq} \
-    -o alignments_salmon/$(basename $fastq .fastq.gz)_salmon \
-    -g ~/rnaseq_course/reference_genome/reference_chr6/gencode.v33.annotation_chr6.gtf.gz \
+    -o alignments_salmon/$(basename $fastq _trimmed.fq.gz)_salmon \
     --seqBias \
-    --validateMappings
-
+    --validateMappings;
 done
 ```
 

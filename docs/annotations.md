@@ -1,4 +1,4 @@
-# Reference genome/transcriptome and annotation
+# Hands-on: Reference genome/transcriptome and annotation
 
 <img src="images/RNAseq_workflow.png" width="1000"/>
 

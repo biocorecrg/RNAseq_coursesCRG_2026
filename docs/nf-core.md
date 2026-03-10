@@ -1,4 +1,4 @@
-# Running the full analysis using the nf-core pipelines
+# Hands-on: Running the full analysis using the nf-core pipelines
 
 All the previous steps can be chained together in what bioinformaticians call a pipeline.
 Historically, each lab developed its own pipelines using custom code tailored to its specific IT infrastructure. 
@@ -331,3 +331,20 @@ Duration    : 16m 21s
 CPU hours   : 1.7
 Succeeded   : 363
 ```
+
+Let's inspect the output.
+
+- fastqc (QC)
+  - raw
+  - trim
+- fq_lint (validator)
+- multiqc (reporting)
+- pipeline_info 
+- star_salmon: output of several tools:
+  - bam files
+  - salmon quantification on star aligned results
+  - qualimap QC
+  - ...   
+- trimgalore (report of trimgalore execution)
+
+The final report can be seen [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/nf-core/multiqc_report.html)
