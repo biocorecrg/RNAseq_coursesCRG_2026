@@ -26,7 +26,7 @@ The current version for *Homo sapiens* genome is release [**49**](https://www.ge
 <br>
 The files you would need are:
 * FASTA file for the [**Genome sequence, primary assembly**](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/GRCh38.primary_assembly.genome.fa.gz)
-* FASTA file corresponding to the [**transcripts**]([ftp](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.transcripts.fa.gz)
+* FASTA file corresponding to the [**transcripts**](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.transcripts.fa.gz)
 * GTF file of the [**Comprehensive gene annotation**](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz)
 
 
