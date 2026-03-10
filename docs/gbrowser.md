@@ -81,7 +81,8 @@ and provide information describing the data to be displayed:
 * **bigDataUrl** the URL where the BAM or CRAM file is located 
 
 ```bash
-track type=bam name="test" bigDataUrl=https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/SRR3091420_1_chr6-trimmedAligned.sortedByCoord.out.bam
+track type=bam name="test" bigDataUrl=https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
+
 ```
 
 Click "Submit".
