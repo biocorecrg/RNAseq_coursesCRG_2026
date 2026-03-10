@@ -69,11 +69,11 @@ Now go to the [UCSC genome browser website](https://genome-euro.ucsc.edu/cgi-bin
 
 Choose human genome version hg38 (that corresponds to the ENSEMBL annotation we used). Click **GO**. 
 
-<img src="images/ucsc2.png"  align="middle" />
+<img src="images/ucsc2.png" />
 
 At the bottom of the image, click **ADD CUSTOM TRACK** 
 
-<img src="images/ucsc_add_custom_track.png"   />
+<img src="images/ucsc_add_custom_track.png"  />
 
 and provide information describing the data to be displayed:
 * **track type** indicates the kind of file: **bam** (same is used for uploading .cram)
