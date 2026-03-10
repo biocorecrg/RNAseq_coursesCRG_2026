@@ -307,24 +307,26 @@ echo $PATH
 
 ### Running containers
 
-We will use already pre-made containers with Apptainer.
+We will use already pre-made containers, so we will not need installing so many programs.
+
+For executing the tools from the container images, we will use Apptainer/Singularity?
 
 Why Apptainer/Singularity?
 
-- Not as popular as Docker, but very convenient for Bioinformatics
-    - You don't need to worry about different kind of permissions
+- Not as popular as Docker, but very convenient for Bioinformatics and HPC environments
+    - You don't need to worry so much about different kind of UNIX permissions
 
 
 ```
-apptainer pull ...
+singularity pull RNAseq_course.sif docker://community.wave.seqera.io/library/fastq-screen_fastqc_kraken_multiqc_pruned:c1cc2fe6e981fe2c
 
-apptainer exec -e ...
-
-```
+singularity exec -e RNAseq_course.sif fastqc --version
 
 ```
-export RUN="singularity exec -e containername.sif"
-$RUN myprogram
+
+```
+export RUN="singularity exec -e RNAseq_course.sif"
+$RUN fastqc --version
 
 ```
 
