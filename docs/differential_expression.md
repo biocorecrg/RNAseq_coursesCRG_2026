@@ -7,7 +7,6 @@ navigation: 18
 
 # Differential expression analysis
 
-
 The goal of differential expression analysis is to perform statistical analysis to try and discover **changes in expression levels** of defined features (genes, transcripts, exons) between experimental groups with **replicated samples**.<br>
 
 ## Popular tools
@@ -16,11 +15,30 @@ Most of the popular tools for differential expression analysis are available as 
 Bioconductor is an R project and repository that provides a set of packages and methods for omics data analysis.<br>
 
 The best performing tools for differential expression analysis tend to be:
+
 * [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
 * [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html)
 * [limma (voom)](https://bioconductor.org/packages/release/bioc/html/limma.html)
 
-See [Schurch et al, 2015; arXiv:1505.02017](https://arxiv.org/abs/1505.02017) and [the Biostars thread about the main differences between the methods](https://www.biostars.org/p/284775/).
+| Aspect                              | **DESeq2**                                              | **edgeR**                                          | **limma-voom**                                     |
+| ----------------------------------- | ------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- |
+| **Core statistical model**          | Negative Binomial GLM                                   | Negative Binomial GLM                              | Linear model after **voom** transformation         |
+| **Key statistical idea**            | Empirical Bayes shrinkage of dispersion and fold change | Empirical Bayes shrinkage of dispersion            | Mean-variance modeling with precision weights      |
+| **Data type used directly**         | Raw count data                                          | Raw count data                                     | Counts transformed to log-CPM via voom             |
+| **Variance modeling**               | Dispersion estimated and shrunk toward trend            | Dispersion estimated (common, trended, tagwise)    | Variance estimated from mean-variance relationship |
+| **Normalization method**            | Median-of-ratios size factors                           | TMM normalization                                  | Usually TMM (edgeR) before voom                    |
+| **Statistical test**                | Wald test (default) or LRT                              | Exact test, GLM likelihood ratio, quasi-likelihood | Moderated t-tests                                  |
+| **Handling small sample sizes**     | Good                                                    | Excellent                                          | Moderate                                           |
+| **Handling large datasets**         | Good                                                    | Good                                               | Excellent                                          |
+| **Speed / computational cost**      | Moderate                                                | Fast                                               | Very fast                                          |
+| **Ease of use**                     | Very beginner-friendly                                  | Intermediate                                       | Intermediate                                       |
+| **Flexibility for complex designs** | Good                                                    | Very good                                          | Excellent                                          |
+| **Low-count genes**                 | Conservative handling                                   | Handles low counts well                            | Less ideal for extremely low counts                |
+
+[NOTE]: For more information see [Schurch et al, 2015; arXiv:1505.02017](https://arxiv.org/abs/1505.02017) and [the Biostars thread about the main differences between the methods](https://www.biostars.org/p/284775/).
+<br><br>
+
+Main differences between the tools rely on the **statistical modeling** of counts and different normalization approaches. They capture different biological meaning and their results are not mutually exclusive.
 <br><br>
 In this tutorial, we will give you an overview of the **DESeq2** pipeline to find differentially expressed **genes** between two conditions.
 
@@ -28,7 +46,7 @@ In this tutorial, we will give you an overview of the **DESeq2** pipeline to fin
 
 [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) is an R/Bioconductor implemented method to detect differentially expressed features.
 <br>
-It tests for differential expression using **negative binomial generalized linear models**.
+It tests for differential expression using [**negative binomial generalized linear models**](https://bioramble.wordpress.com/2016/01/30/why-sequencing-data-is-modeled-as-negative-binomial/).
 <br>
 DESeq2 (as edgeR) is based on the hypothesis that **most genes are not differentially expressed**.
 <br><br>
@@ -37,22 +55,24 @@ This DESeq2 tutorial is inspired by the [RNA-seq workflow](http://master.biocond
 
 DESeq2 takes as an input **raw counts** (i.e. non normalized counts): the DESeq2 model internally **corrects for library size**, so giving as an input normalized count would be incorrect.
 
-### DESeq2 steps:
+### DESeq2 steps
 
 * Modeling raw counts for each gene:
-  * Estimate size factors (accounts for differences in library size).
-  * Estimate dispersions.
-  * GLM (Generalized Linear Model) fit for each gene.
+  * Estimate size factors (accounts for differences in library size): estimateSizeFactors()
+  * Estimate dispersions: etimateDispersions()
+  * GLM (Generalized Linear Model) fit for each gene: nbinomWaldTest()
 * Testing for differential expression (Wald test).
-<br> 
-DESeq2 uses the **median of ratio** method for **normalization**: briefly, the counts are divided by sample-specific **size factors**.<br>
+<br>
+
+DESeq2 uses the **median of ratio** method for **normalization**: briefly, the raw counts are divided by sample-specific **size factors**.<br>
 **Geometric mean** is calculated for each gene **across all samples**. The counts for a gene in each sample is then **divided** by this mean. The **median of these ratios** in a sample is the size factor for that sample.
 <br>
+
 For additional information regarding the tool and the algorithm, please refer to the [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4302049/) and the user-friendly package [vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html).
 
 ### Tutorial on basic DESeq2 usage for differential analysis of gene expression
 
-* In this tutorial, we will use the counts calculated from the mapping on **all chromosomes** (we practiced so far QC and mapping for data of only one chromosome but here we consider all chromosomes), for the 10 samples previously selected from **GEO**:
+* In this tutorial, we will use the counts calculated from the mapping on **all chromosomes** (we practiced so far QC and mapping for data of only one chromosome but here we consider all chromosomes), for the 10 samples previously selected from [**GEO**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE76647):
 
 |GEO ID |SRA ID |Sample name |Differentiation |Condition |
 |GSM2031982 |SRR3091420 |5p4_25c |undiff |WT |
@@ -89,10 +109,10 @@ rm full_data_counts.tar.gz
 ### Raw count matrices
 
 **DESeq2** takes as an input raw (non normalized) counts, in various forms:
-* A matrix for all sample
-* One file per sample (our option for STAR)
-* A **txi** object (our option for Salmon)
 
+* A matrix for all sample: DESeqDataSetFromMatrix()
+* One file per sample (our option for STAR): DESeqDataSetFromMatrix()
+* A **txi** object (our option for Salmon): DESeqDataSetFromTximport()
 
 #### Prepare data from STAR
 
@@ -116,6 +136,7 @@ Remember that the STAR count file contains **4 columns** depending on the librar
 <br><br>
 
 **Exercise**
+
 * Prepare the 10 files needed for our analysis, from the STAR output, and save them in the <b>counts_selected</b> directory: knowing that our libraries are **unstranded**, which column will you pick?
 * Create the sub-directory **counts_STAR_selected** inside the deseq2 directory:
 
@@ -139,7 +160,7 @@ done
 
 #### Prepare transcript-to-gene annotation file
 
-Prepare the annotation file needed to import the **Salmon** counts: a two-column data frame linking transcript id (column 1) to gene id (column 2). 
+Prepare the annotation file needed to import the **Salmon** counts: a two-column data frame linking transcript id (column 1) to gene id (column 2).
 <br>
 We will add the gene symbol in column 3, for a more comprehensive annotation.
 <br>
@@ -148,8 +169,8 @@ Process from the **GTF file**:<br>
 ```{bash}
 cd ~/rnaseq_course/differential_expression
 
-# Download annotation for all chromosomes
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_33/gencode.v33.annotation.gtf.gz
+# Gencode anotation for all chromosomes 
+https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.chr_patch_hapl_scaff.basic.annotation.gtf.gz
 
 # first column is the transcript ID, second column is the gene ID, third column is the gene symbol
 zcat gencode.v33.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transcript"){split($9, a, "\""); print a[4],a[2],a[8]}}' > tx2gene.gencode.v33.csv
@@ -172,7 +193,6 @@ Additionally, DESeq2 needs a <b>sample sheet</b> that describes the samples char
 |5p4_33cfoxc1 |SRR3091427_1_counts.txt |undiff |KO |
 |5p4_34cfoxc1 |SRR3091428_1_counts.txt |diff5days |KO |
 |5p4_35cfoxc1 |SRR3091429_1_counts.txt |diff5days |KO |
-
 
 <br>
 The first column is the **sample name**, the second column the **file name** of the count file generated by STAR (after selection of the appropriate column as we just did), and the remaining columns are description of the samples, some of which will be used in the **statistical design**.
@@ -206,7 +226,7 @@ Note that in the R code boxes below **\#** is followed by comments, i.e. words n
 * Go to the **differential_expression** working directory and load the **DESeq2** package (loading a package in R allows to use specific sets of functions developped as part of this package).
 
 ```{bash}
-# setwd = set working directory; equivalent to the Linux "cd".
+# setwd = set working directory; equivalent to the Linux "cd". All the files you will write will be in this directory.
 # the R equivalent to the Linux pwd is getwd() = get working directory.
 setwd("~/rnaseq_course/differential_expression")
 
@@ -220,8 +240,8 @@ library(DESeq2)
 
 ```{r}
 # read in the sample sheet
-	# header = TRUE: the first row is the "header", i.e. it contains the column names.
-	# sep = "\t": the columns/fields are separated with tabs.
+ # header = TRUE: the first row is the "header", i.e. it contains the column names.
+ # sep = "\t": the columns/fields are separated with tabs.
 sampletable <- read.table("sample_sheet_foxc1.txt", header=T, sep="\t")
 
 # add the SRA codes as row names (it is needed for some of the DESeq functions)
@@ -235,10 +255,13 @@ nrow(sampletable) # if this is not 10, please raise your hand !
 ncol(sampletable) # if this is not 4, also raise your hand !
 ```
 
+DESeq will process only the counts for the files listed in the sample table (keep in mind for future exercises).
+
 * Load the count data from **STAR** into an **DESeq** object:
   * **sampleTable:** the sample sheet / metadata we created
   * **directory:** path to the directory where the counts are stored (one file per sample)
   * **design:** design formula describing which variables will be used to model the data. Here we want to compare the experimental groups in "Condition".
+
 ```{r}
 # Import STAR counts
 se_star <- DESeqDataSetFromHTSeqCount(sampleTable = sampletable,
@@ -247,7 +270,7 @@ se_star <- DESeqDataSetFromHTSeqCount(sampleTable = sampletable,
 ```
 
 **NOTE**: the design formula is used to estimate the dispersions and to estimate the log2 fold changes of the model!
-
+For more information on how to build a design formula, see [here](https://www.atakanekiz.com/technical/a-guide-to-designs-and-contrasts-in-DESeq2/)
 
 ##### Import Salmon counts
 
@@ -261,21 +284,21 @@ setwd("~/rnaseq_course/differential_expression")
 library(tximport)
 
 # List the quantification files from Salmon: one quant.sf file per sample
-	# dir is list all files in "~/rnaseq_course/differential_expression/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
+ # dir is list all files in "~/rnaseq_course/differential_expression/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
 files <- dir("~/rnaseq_course/differential_expression/counts_salmon", recursive=TRUE, pattern="quant.sf", full.names=TRUE)
-	# files is a vector of file paths. we will name each element of this vector with a simplified corresponding sample name
+ # files is a vector of file paths. we will name each element of this vector with a simplified corresponding sample name
 names(files) <- gsub("_quant.sf", "", dir("~/rnaseq_course/differential_expression/counts_salmon"))
 
 # Read in the two-column data.frame linking transcript id (column 1) to gene id (column 2)
 transcripts2genes <- read.table("tx2gene.gencode.v33.csv", 
-		sep="\t",
-		header=F)
+  sep="\t",
+  header=F)
 
 # tximport can import data from Salmon, Kallisto, Sailfish, RSEM, Stringtie
 # here we summarize the transcript-level counts to gene-level counts
 txi <- tximport(files, 
-		type = "salmon", 
-		tx2gene = transcripts2genes)
+  type = "salmon", 
+  tx2gene = transcripts2genes)
 
 # check the names of the "slots" of the txi object
 names(txi)
@@ -285,14 +308,13 @@ head(txi$counts)
 
 # Create a DESeq2 object based on Salmon per-gene counts
 se_salmon <- DESeqDataSetFromTximport(txi,
-			colData = sampletable, 
-			design = ~ Condition)
+   colData = sampletable, 
+   design = ~ Condition)
 
 ```
 
-* From that step on, you can proceed __the same way__ with se_star and se_salmon ! The only thing that differs slightly is the annotation *(remember that for STAR we used ENSEMBL annotation while we used GENCODE annotation for Salmon)*
+* From that step on, you can proceed **the same way** with se_star and se_salmon ! The only thing that differs slightly is the annotation *(remember that for STAR we used ENSEMBL annotation while we used GENCODE annotation for Salmon)*
 * We will focus the rest of the analysis on the **se_star**.
-
 
 ##### Filtering out lowly expressed genes
 
@@ -317,6 +339,7 @@ nrow(se_star)
 The **biomaRt** package is used for adding a more **detailed annotation** to our data sets.
 <br>
 Additionally to the ENSEMBL gene IDs we want (for example):
+
 * The external gene name (symbol)
 * A more thorough gene description
 * Chromosome and coordinates
@@ -327,7 +350,7 @@ library(biomaRt)
 
 # list ENSEMBL archives
 listEnsemblArchives()
-	# We used version 88 of ENSEMBL, which corresponds to URL http://mar2017.archive.ensembl.org
+ # We used version 88 of ENSEMBL, which corresponds to URL http://mar2017.archive.ensembl.org
 
 # we can load the corresponding database
 mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="mar2017.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
@@ -361,6 +384,7 @@ head(annot)
 ##### Fit statistical model
 
 All steps are wrapped up in the **DESeq** function:
+
 * estimating size factors
 * estimating dispersions
 * gene-wise dispersion estimates
@@ -387,9 +411,9 @@ write.table(norm_counts_symbols, "normalized_counts_log2_star.txt", quote=F, col
 ```
 
 **Exercise**
-* What are the normalized counts corresponding to genes "ENSG00000169813" and "ENSG00000182898" ?
-* Calculate the average and the standard deviation of these genes normalized counts. How do they differ ? What can you tell about them ? 
 
+* What are the normalized counts corresponding to genes "ENSG00000169813" and "ENSG00000182898" ?
+* Calculate the average and the standard deviation of these genes normalized counts. How do they differ ? What can you tell about them ?
 
 #### Visualization
 
@@ -397,10 +421,12 @@ write.table(norm_counts_symbols, "normalized_counts_log2_star.txt", quote=F, col
 
 DESeq2 developpers advice to use **transformed counts**, rather than normalized counts, for anything involving a distance (e.g. visualization).
 <br>
-They offer to choose between two transformation methods, both of which stabilize the variance across the mean: 
+They offer to choose between two transformation methods, both of which stabilize the variance across the mean:
+
 * **rlog** (Regularized log)
 * **VST** (Variance Stabilizing Transformation)
 <br>
+
 Both options produce **log2 scale data** which has been normalized by the DESeq2 method with respect to library size.
 <br>
 From [this tutorial](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog):<br>
@@ -410,8 +436,6 @@ From [this tutorial](http://master.bioconductor.org/packages/release/workflows/v
 We have a 10 sample dataset: Let's use the **rlog** transformation.
 <br>
 *As a homework, you can try and use the VST transformation (function vst)*.
-
-
 
 ```{r}
 # Try with the rlog transformation
@@ -473,7 +497,7 @@ More on PCA in [this post](https://blog.bioturing.com/2018/06/14/principal-compo
 ```{r}
 png("PCA_star.png")
 plotPCA(object = se_rlog,
-		intgroup = c("Condition", "Differentiation"))
+  intgroup = c("Condition", "Differentiation"))
 dev.off()
 ```
 
@@ -523,7 +547,6 @@ pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differenti
 
 <img src="images/counts_foxc1_nice.png" width="700"/>
 
-
 ##### Differential expression analysis
 
 ```{r}
@@ -531,9 +554,9 @@ pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differenti
 resultsNames(se_star2)
 
 # extract results for WT vs KO
-	# contrast: the column from the metadata that is used for the grouping of the samples (Condition), then WT is compared to the KO -> results will be as "WT vs KO"
+ # contrast: the column from the metadata that is used for the grouping of the samples (Condition), then WT is compared to the KO -> results will be as "WT vs KO"
 de <- results(object = se_star2, 
-		name="Condition_WT_vs_KO")
+  name="Condition_WT_vs_KO")
 # This is equivalent to:
 de <- results(object = se_star2, contrast=c("Condition", "WT", "KO"))
 
@@ -566,14 +589,11 @@ Standard error of the log2FoldChange.
 * **stat**:
 Wald statistic: the log2FoldChange divided by its standard error.
 
-
 **Note on p-values set to NA: some values in the results table can be set to NA for one of the following reasons: (from [Analyzing RNA-seq data with DESeq2 by M. Love et al., 2017](https://bioconductor.statistik.tu-dortmund.de/packages/3.5/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)**
 
 * If within a row, all samples have zero counts, the baseMean column will be zero, and the log2 fold change estimates, p value and adjusted p value will all be set to NA.
 * If a row contains a sample with an extreme count outlier then the p value and adjusted p value will be set to NA. These outlier counts are detected by Cook’s distance. If there are very many outliers (e.g. many hundreds or thousands) reported by summary(res), one might consider further exploration to see if a single sample or a few samples should be removed due to low quality.
 * If a row is filtered by automatic independent filtering, for having a low mean normalized count, then only the adjusted p value will be set to NA. This independent filtering can be customized or turned off in the DESeq2 function results(dds, independentFiltering=FALSE).
-
-
 
 #### Gene selection
 
@@ -582,7 +602,7 @@ Wald statistic: the log2FoldChange divided by its standard error.
 
 <br>
 the log2FoldChange gives a **quantitative** information about the expression changes, but does not give an information on the **within-group variability**, hence the reliability of the information:
-<br><br> 
+<br><br>
 In the picture below, fold changes for gene A and for gene B between groups **t25** and **t0** (from another data set) are the same, however the variability between the replicated samples in gene B is higher, so the result for gene A will be more reliable (i.e. the p-value will be smaller).
 
 <img src="images/RNAseq_dispersion.png" width="450"/>
@@ -624,13 +644,15 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 <br>
 
 **Exercise 1**
+
 * Is **FOXC1** differentially expressed? What are the corresponding adjusted-value and log2FoldChanges?
 * How many genes are found differentially expressed if you change the log2FoldChange threshold to 0.8 / -0.8 and the padj threshold to 0.01 ?
 
 **Exercise 2**
+
 * Repeat the analysis comparing WT vs KO for the **undifferentiated samples** only!
 * Steps are:
-	* Modify the "sampletable" so that it contains only samples corresponding to "undiff" Differentiation state.
+  * Modify the "sampletable" so that it contains only samples corresponding to "undiff" Differentiation state.
 
 |SampleName |FileName |Differentiation |Condition |
 | :---: | :---: | :---: | :---: |
@@ -744,8 +766,6 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
 write.table(de_select, "deseq2_selection_padj005_undiff.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
 
-
-
 **Exercise 3**
 
 ##### Control for "Differentiation"
@@ -762,10 +782,7 @@ In a way, we "discard" the expected changes due to differentiation to focus on t
 * Repeat the first analysis, changing the design **~ Condition** to **~ Differentiation + Condition**.
 * How many genes are now found differentially expressed, when filtering for padj < 0.05?
 
-
 **Homework**
 
-Do the same using the **Salmon counts** (object *se_salmon*): how many genes are found differentially expressed when using the Salmon counts ?<br> 
+Do the same using the **Salmon counts** (object *se_salmon*): how many genes are found differentially expressed when using the Salmon counts ?<br>
 How do results overlap between STAR and Salmon ?
-
-
