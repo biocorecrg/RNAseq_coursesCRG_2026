@@ -1,51 +1,47 @@
 ![logo](https://raw.githubusercontent.com/CRG-CNAG/BioCoreMiscOpen/master/logo/biocore-logo_small.png)
 
-# Decoding Transcriptomes: A Practical Course on RNA-seq
+# RNAseq course - international course for the programme COURSES@CRG 
+### 16-20 March 2026
+## Decoding Transcriptomes: A Practical Course on RNA-seq
+https://courses.crg.eu/events/decoding-transcriptomes-practical-course-rna-seq
 
-## Dates, time & location
+This hands-on program provides a comprehensive introduction to RNA sequencing, guiding participants through the complete workflow from sample preparation to data analysis. Participants will gain practical experience in RNA quality control, mRNA library preparation for Next Generation Sequencing (NGS), and library quality control. On the computational side, they will work with real sequencing data to learn key steps including data quality assessment, alignment, quantification, differential expression analysis, and functional interpretation.
 
-Dates of the computational session:
+The course integrates laboratory practice with computational training, equipping participants with the skills needed to design robust RNA-seq experiments and to apply reproducible analysis workflows following the FAIR practices. The program is complemented by theoretical lectures on state-of-the-art transcriptomics and bioinformatics, a guided visit to the CRG Genomics Unit, and networking activities.
 
-| Day  | Date  | Time  |
-| :---:  | :---  | ---:  |
-| 1 | Wednesday 18th of February 2020|9:00-16:30|
-| 2 | Thursday 19th of February 2020|9:00-16:30|
-| 3 | Friday 20th of February 2020|9:00-16:30|
+**This repository covers only the computational part of the course.**
 
-Location:
-[Center for Genomic Regulation](https://www.crg.eu)
+### The webpage is at https://biocorecrg.github.io/RNAseq_coursesCRG_2026/ 
 
-## Instructors
+## Agenda
+### Day 3 - Wed 18 March 2026
+* 11:30 - 12:00 **Talk: Pre-processing of raw data and fastq format - What happens with data after the libraries were sequenced (Anna Delgado)**
+* 12:00 - 12:30 **Talk: FAIR & Reproducible practices in Bioinformatics - containers, public repos, git/GitHub (Toni Hermoso)**
+* 12:30 - 13:00 **Talk: RNA-seq data analysis: Workflow & Approaches (Luca Cozzuto)** _here or later to cover: Map reads to genome or transcriptome? Existing approaches/methods to read mapping in an RNA-seq experiment: pros and cons, which to choose?_
+* 13:00 - 14:00 _Lunch_
+* 14:00 - 14:30 Hands-on: Basics of Linux CLI **(Toni Hermoso)**
+* 14:30 - 16:00 Hands-on: Read QC: fastq format, FastQC, FastqScreen, kraken, MultiQC **(Anna)**
+* 16:00 - 16:15 _Coffee break_
+* 16:15 - 17:00 Hands-on: Read pre-processing: adapter trimming, riboPicker, MultiQC **(Luca)**
+* 17:00 - 18:00 Hands-on: Getting reference genome/transcriptome and annotation (ENSEMBL, Gencode, UCSC Genome Browser), GTF/GFF format **(Luca)**
 
-| [Fabian Andrade](mailto:fabian.andrade@crg.eu) | Sarah Bonnin | [Anna Delgado](mailto:anna.delgado@crg.eu) |
-| :---------------------------------------------: | :----------: | :------------------------------------------: |
-| [![Fabian Andrade](images/pics/fandrade.jpg)](https://biocore.crg.eu/wiki/User:Fandrade) | ![Sarah Bonnin](images/pics/sbonnin.jpg) | [![Anna Delgado](images/pics/adelgado.jpg)](https://biocore.crg.eu/wiki/User:Adelgado) |
-| [Luca Cozzuto](mailto:luca.cozzuto@crg.eu) | [Toni Hermoso](mailto:toni.hermoso@crg.eu) | [Julia Ponomarenko](mailto:julia.ponomarenko@crg.eu) |
-| [![Luca Cozzuto](images/pics/lcozzuto.jpg)](https://biocore.crg.eu/wiki/User:Lcozzuto) | [![Toni Hermoso](images/pics/thermoso.jpg)](https://biocore.crg.eu/wiki/User:Thermoso) | [![Julia Ponomarenko](images/pics/ponomarenko.jpg)](https://biocore.crg.eu/wiki/User:Jponomarenko) |
+### Day 4 - Thu 19 March 2026
+* 9:00 - 11:00 Hands-on: Read mapping to the reference genome/transcriptome and quantification (STAR, Salmon, SAM/BAM format, samtools, explore BAM/bigwig file in the UCSB Genome Browser, gene/transcript quantification, QualiMap) **(Luca)**
+* 11:00 - 11:30 _Coffee break_
+* 11:30 - 13:00 Hands-on: Review R basics (RStudio) **(Sarah Bonnin)**
+* 13:00 - 14:00 _Lunch_
+* 14:00 - 16:00 Hands-on: DESeq2: import data from STAR and SALMON, filtering and normalization (vst, log2(deseq-native)), PCA, sample clustering, boxplots for selected genes, batch correction using ComBat (for that we will need to use a different dataset) **(Fabian)**
+* 16:00 - 16:15 _Coffee break_
+* 16:15 - 18:00 Hands-on: DE analysis using DESeq2. Gene selection, volcano plots, heatmaps. Functional analysis using R packages (for gene sets) and the GSEA application (for all genes) **(Fabian)**
+* 18:00 - 21:00 _Social activity_
 
-## Learning objectives
+### Day 5 - Fri 20 March 2026
+* 9:00 - 11:00 Hands-on: Running the full analysis using an nf-core pipeline **(Luca)**
+* 11:00 - 11:30 _Coffee break_
+* 11:30 - 12:00 **Talk: Design of RNA-seq experiment & Beyond bulk RNA-seq (Julia)**
+* 12:00 - 13:00 Q&A and General discussion
+* 13:00 - 14:00 _Lunch_
 
-TODO: Update
-
-At the end of the course, the participants will be able to:
-
-* Understand the analysis steps from raw reads to expression counts, differential expression and interpretation of DE genes using the gene set enrichment analysis.
-* Find RNA-seq data in public repositories.
-* Define a good experimental design, including sequencing parameters and quality control steps.
-* Perform quality assessment of RNA-seq data, both raw and computed.
-* Understand file formats commonly used in RNA-seq data analysis.
-* Gain an overview on common software tools for RNA-seq data analysis and their limitations.
-* Perform gene differential expression analysis.
-
-## Course Programme
-
-TODO: Update
-
-## Prerequisites
-
-TODO: Update
-[Familiarity with the Linux command line](https://biocorecrg.github.io/advanced_linux_2019/)
-[Familiarity with the R language scripting](https://biocorecrg.github.io/CRG_RIntroduction/)
 
 ```{toctree}
 :hidden:
@@ -63,4 +59,5 @@ gbrowser.md
 nf-core.md
 differential_expression.md
 functional_analysis.md
+expdesign.md
 ```
