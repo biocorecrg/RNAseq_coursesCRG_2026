@@ -35,8 +35,9 @@ The best performing tools for differential expression analysis tend to be:
 | **Flexibility for complex designs** | Good                                                    | Very good                                          | Excellent                                          |
 | **Low-count genes**                 | Conservative handling                                   | Handles low counts well                            | Less ideal for extremely low counts                |
 
-[!NOTE]
+:::{note}
 For more information see [Schurch et al, 2015; arXiv:1505.02017](https://arxiv.org/abs/1505.02017) and [the Biostars thread about the main differences between the methods](https://www.biostars.org/p/284775/).
+:::
 <br><br>
 
 Main differences between the tools rely on the **statistical modeling** of counts and different normalization approaches. They capture different biological meaning and their results are not mutually exclusive.
@@ -96,27 +97,17 @@ Get the count data for the full data set, output of both STAR and Salmon:
 
 ```
 
-# Create a directory for differential expression analysis
+# Navigate to your course directory
 
-mkdir ~/rnaseq_course/differential_expression
-
-cd ~/rnaseq_course/differential_expression
+cd ~/rnaseq_course/
 
 # Download the full count data folder from the course repository
 
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/full_data_counts.tar.gz
-
-# Gunzip
-
-tar -zxvf full_data_counts.tar.gz
-
-# Remove full_data.tar.gz once extraction is completed
-
-rm full_data_counts.tar.gz
+wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/
 
 ```
 
-### Raw count matrices
+### Raw count matriceswget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz
 
 **DESeq2** takes as an input raw (non normalized) counts, in various forms:
 
@@ -130,6 +121,7 @@ We need to create one file per sample, each file containing the raw counts of al
 
 File **SRR3091420_1_chr6_counts.txt**:
 
+| gene_id | count |
 | ------ | ------- |
 | ENSG00000260370.1 | 0 |
 | ENSG00000237297.1 | 10 |
@@ -137,6 +129,7 @@ File **SRR3091420_1_chr6_counts.txt**:
 
 File **SRR3091421_1_chr6_counts.txt**:
 
+| gene_id | count |
 | ------ | ------- |
 | ENSG00000260370.1 | 0 |
 | ENSG00000237297.1 | 8 |
@@ -152,15 +145,14 @@ Remember that the STAR count file contains **4 columns** depending on the librar
 * Prepare the 10 files needed for our analysis, from the STAR output, and save them in the <b>counts_selected</b> directory: knowing that our libraries are **unstranded**, which column will you pick?
 * Create the sub-directory **counts_STAR_selected** inside the deseq2 directory:
 
-```{bash}
-mkdir ~/rnaseq_course/differential_expression/counts_STAR_selected
+```
+cd ~/rnaseq_course/differential_expression/
+mkdir counts_STAR_selected
 ```
 
 * Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (2nd column).
 
 ```
-cd ~/rnaseq_course/differential_expression
-
 for i in counts_STAR/*ReadsPerGene.out.tab
 do echo $i
 # retrieve the first (gene name) and second column (raw reads for unstranded protocol)
