@@ -9,6 +9,74 @@ navigation: 18
 
 The goal of differential expression analysis is to perform statistical analysis to try and discover **changes in expression levels** of defined features (genes, transcripts, exons) between experimental groups with **replicated samples**.<br>
 
+**Flowchart with the steps in RNAseq differential expression analysis.**
+
+```
+Read quantification
+ ┌───────────────────────────────┐
+ │ STAR alignment → gene counts  │
+ │        or                     │
+ │ Salmon → transcript counts    │
+ └───────────────────────────────┘
+            │
+            │
+            ▼
+    Import counts into R
+    (counts + sample metadata)
+            │
+            │
+            ▼
+    Create DESeq2 dataset
+    DESeqDataSetFromMatrix()
+    or
+    tximport (for Salmon)
+            │
+            │
+            ▼
+    Filtering
+    (remove very low count genes)
+            │
+            │
+            ▼
+    Normalization
+    (size factor estimation)
+            │
+            │
+            ▼
+    Exploratory analysis
+    VST / rlog transformation
+    PCA / sample correlation
+    (outlier detection)
+            │
+            │
+            ▼
+    Differential expression model
+    Run DESeq()
+    • dispersion estimation
+    • GLM fitting
+    • statistical testing
+            │
+            │
+            ▼
+    Results extraction
+    results()
+    (log2FoldChange, p-value, padj)
+            │
+            │
+            ▼
+    Identify DE genes
+    (padj < 0.05, |log2FC| threshold)
+            │
+            │
+            ▼
+    Downstream analysis
+    • heatmaps
+    • volcano plots
+    • pathway enrichment
+    • GO analysis
+
+```
+
 ## Popular tools
 
 Most of the popular tools for differential expression analysis are available as **R / Bioconductor** packages. <br>
@@ -103,12 +171,14 @@ cd ~/rnaseq_course/differential_expression
 
 # Download the full count data folder from the course repository
 
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/docs/data/differential_expression/full_data_counts.tar.gz
+wget <https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/docs/data/differential_expression/full_data_counts.tar.gz>
 
 # Gunzip
+
 tar -zxvf full_data_counts.tar.gz
 
 # Remove full_data.tar.gz once extraction is completed
+
 rm full_data_counts.tar.gz
 
 ```
@@ -152,18 +222,24 @@ Remember that the STAR count file contains **4 columns** depending on the librar
 * Create the sub-directory **counts_STAR_selected** inside the deseq2 directory:
 
 ```
-cd ~/rnaseq_course/differential_expression/
+
+cd ~/rnaseq_course/differential_expression/full_data_counts
 mkdir counts_STAR_selected
+
 ```
 
 * Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (2nd column).
 
 ```
+
 for i in counts_STAR/*ReadsPerGene.out.tab
 do echo $i
+
 # retrieve the first (gene name) and second column (raw reads for unstranded protocol)
-cut -f1,2 $i | grep -v "_" > counts_STAR_selected/$(basename $i ReadsPerGene.out.tab)_counts.txt
+
+cut -f1,2 $i | grep -v "_" > counts_STAR_selected/$(basename $i .ReadsPerGene.out.tab)_counts.txt
 done
+
 ```
 
 <br>
@@ -177,12 +253,15 @@ We will add the gene symbol in column 3, for a more comprehensive annotation.
 Process from the **GTF file**:<br>
 
 ```
+
 cd ~/rnaseq_course/differential_expression
 
-# Gencode anotation for all chromosomes 
+# Gencode anotation for all chromosomes
+
 wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz
 
 # first column is the transcript ID, second column is the gene ID, third column is the gene symbol
+
 zcat gencode.v49.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transcript"){split($9, a, "\""); print a[4],a[2],a[8]}}' > tx2gene.gencode.v49.csv
 
 ```
@@ -221,7 +300,9 @@ The design indicates how to model the samples: in the model we need to specify w
 You can download create it the following way, in R:
 
 ```
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/sample_sheet_foxc1.txt
+
+wget <https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/sample_sheet_foxc1.txt>
+
 ```
 
 #### Analysis
@@ -231,8 +312,10 @@ The analysis is done in R ! <br>
 We will use a local Rstudio server runing a singularity container.
 
 ```
+
 ## Download the bash script that installs the singularity container and run it in the localserver
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/run_rstudio.sh
+
+wget <https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/run_rstudio.sh>
 bash run_rstudio.sh
 
 ```
@@ -247,13 +330,10 @@ Note that in the R code boxes below **\#** is followed by comments, i.e. words n
 * Go to the **differential_expression** working directory and install and load the required packages (loading a package in R allows to use specific sets of functions developped as part of this package).
 
 ```
-# setwd = set working directory; equivalent to the Linux "cd". All the files you will write will be in this directory.
-# the R equivalent to the Linux pwd is getwd() = get working directory.
-setwd("~/rnaseq_course/differential_expression")
 
 library(BiocManager)
 
-BiocManager::install("DESeq2") ## Installation of the package for differential expression analysis, only needed the first time in Rstudio local installation. 
+BiocManager::install("DESeq2") ## Installation of the package for differential expression analysis, only needed the first time in Rstudio local installation.
 library("DESeq2") ## Loading the package.
 
 BiocManager::install("EnhancedVolcano")
@@ -261,6 +341,12 @@ BiocManager::install("tximport")
 BiocManager::install("biomaRt")
 BiocManager::install("pheatmap")
 install.packages("reshape2")
+
+# setwd = set working directory; equivalent to the Linux "cd". All the files you will write will be in this directory
+
+# the R equivalent to the Linux pwd is getwd() = get working directory
+
+setwd("~/rnaseq_course/differential_expression")
 
 ```
 
@@ -316,10 +402,13 @@ setwd("~/rnaseq_course/differential_expression")
 library(tximport)
 
 # List the quantification files from Salmon: one quant.sf file per sample
- # dir is list all files in "~/rnaseq_course/differential_expression/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
-files <- dir("~/rnaseq_course/differential_expression/counts_salmon", recursive=TRUE, pattern="quant.sf", full.names=TRUE)
- # files is a vector of file paths. we will name each element of this vector with a simplified corresponding sample name
-names(files) <- gsub("_quant.sf", "", dir("~/rnaseq_course/differential_expression/counts_salmon"))
+# dir is list all files in "~/rnaseq_course/differential_expression/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
+files <- dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon", recursive=TRUE, pattern="quant.sf", full.names=TRUE)
+files
+# files is a vector of file paths. we will name each element of this vector with a simplified corresponding sample name
+names(files) <- gsub("_quant.sf", "", dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon"))
+
+names(files)
 
 # Read in the two-column data.frame linking transcript id (column 1) to gene id (column 2)
 transcripts2genes <- read.table("tx2gene.gencode.v49.csv", 
@@ -409,13 +498,13 @@ head(listAttributes(mart))
 
 # list of ENSEMBL IDs we want to annotate
 gene_ids <- rownames(se_star)
-  # 18025 IDs
+  # 18084 IDs
 
 # annotate!
 annot <- getBM(attributes=c('ensembl_gene_id', 'chromosome_name', 'start_position', 'end_position', 'description', 'external_gene_name'), filters ='ensembl_gene_id', values = gene_ids, mart = mart)
   
 dim(annot)
-  # 18025 rows
+  # 18084 rows
 
 head(annot)
 ```
@@ -441,7 +530,8 @@ se_star2 <- DESeq(se_star)
 
 ##### Normalized counts
 
-Log2 on transformed counts compresssed large values and expands small values, thus making distributions more symmetric.
+The main objective of Normalization is to adjust raw reads in roder that samples become comparable. We will extract de Deseq normalized counts, which are calculated dividing the raw counts between the size factor (that represents the sequencing depth).
+Then we will Log2 transforme this normalized counts in order to compresssed large values and expands small values, thus making distributions more symmetric.
 
 ```
 # compute normalized counts (log2 transformed); + 1 is a count added to avoid errors during the log2 transformation: log2(0) gives an infinite number, but log2(1) is 0.
@@ -455,20 +545,21 @@ norm_counts_symbols <- merge(data.frame(ID=rownames(norm_counts), norm_counts, c
 write.table(norm_counts_symbols, "normalized_counts_log2_star.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
 
-:::{warning}
-This normalized counts use when you interpretable expression levels. (to compare how chgange the expression between samples and genes). Do not use for visualization and exploratory analysis.  
-:::
+This normalized counts serves as interpretable expression levels, to compare how change the expression between samples and genes.
 
 **Exercise**
 
 * What are the normalized counts corresponding to genes "ENSG00000169813" and "ENSG00000182898" ?
 * Calculate the average and the standard deviation of these genes normalized counts. How do they differ ? What can you tell about them ?
 
-#### Visualization
+#### Sample QC and Data exploration
 
 * Transform raw counts to be able to visualize the data
 
 DESeq2 developpers advice to use **transformed counts**, rather than normalized counts, for anything involving a distance (e.g. visualization).
+
+Because RNA-seq data typically contain many genes with very low counts and a small number of genes with extremely high counts, the variance of the data depends strongly on the mean expression level. To make the data more suitable for visualization and exploratory analyses, a variance stabilizing transformation (VST) is applied to the normalized counts.
+
 <br>
 They offer to choose between two transformation methods, both of which stabilize the variance across the mean:
 
@@ -489,7 +580,7 @@ So let's use the **vst** transformation.
 *As a homework, you can try and use the rlog transformation (function rlog)*.
 
 ```
-# Try with the rlog transformation
+# Try with the vst transformation
 se_vst <- vst(se_star2)
 ```
 
@@ -497,6 +588,10 @@ se_vst <- vst(se_star2)
 
 The aim of this plot is to compare the expression of all genes for each pair of samples, so if gene expression behaves similarly between two samples, their correlation will be high. The most common measure is Pearson correlation, but you can use others such as eucledian distance or spearman correlation.
 We expect that replicates shows a high correlation, and they will cluster together.
+
+:::{tip}
+Good replicate concordance has a pearson correlation value > 0.9.
+:::
 
 Calculate the sample-to-sample distances:
 
@@ -508,7 +603,7 @@ library(pheatmap)
 vst_counts <- assay(se_vst) 
 
 # Correlation matrix
-sampleDists  <- cor(, method = "pearson")
+sampleDists  <- cor(vst_counts, method = "pearson")
 sampleDistMatrix <- as.matrix(sampleDists )
 
 # prepare a "metadata" object to add a colored bar with the differentiation and condition information
@@ -522,29 +617,10 @@ png("sample_distance_heatmap_star.png")
 dev.off() 
 ```
 
-############ Change this IMAGEEEEE #################
 <img src="images/sample_distance_heatmap_star.png" width="900"/>
 
-Do samples cluster how you would expect ?
-
-#################### Not needed
-**GET FILES WE COULD NOT CREATE YESTERDAY**
-
-```{bash}
-wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/normalized_counts_log2_star.txt
-wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/annotation_ens88.txt
-```
-
-Read them in R
-
-```{r}
-# biomaRt annotations
-annot <- read.table("annotation_ens88.txt", sep="\t", header=T, as.is=T)
-# normalized counts, annotated
-norm_counts_symbols <- read.table("normalized_counts_log2_star.txt", sep="\t", header=T, as.is=T)
-```
-
-####################
+Are the samples clustering as expected ?
+Are they clustering better by differentiation or by condition ?
 
 * **Principal Component Analysis** (PCA)
 
@@ -563,13 +639,18 @@ plotPCA(object = se_rlog,
 dev.off()
 ```
 
-### Change image
-
 <img src="images/PCA_star.png" width="700"/>
 
 The horizontal axis (PC1 = Principal Component 1) represents the highest variation between the samples. Differences along PC1 are more important than differences along PC2.
 
+For the PC1 axis, do samples separated by differentiation or by condition ?
+
+:::{note}
+At this stage, the PCA plot allows us to evaluate whether samples belonging to the same experimental condition cluster together. Ideally, biological replicates should appear close to each other in the plot, indicating similar global gene expression profiles. If a sample does not cluster with the other replicates of its condition, it may indicate a potential technical problem, such as low library complexity, RNA degradation, contamination, or a sample labeling error. In such cases, the sample should be carefully evaluated using reviewing quality control metrics before deciding whether it should be retained or excluded from further analysis.
+:::
 <br>
+
+* **Gene expression plots**
 
 We can also plot the **normalized counts** of a gene per sample / experimental group:
 
@@ -611,8 +692,6 @@ pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differenti
 
 <img src="images/counts_foxc1_nice.png" width="700"/>
 
-* **Volcano plot**
-
 ##### Differential expression analysis
 
 ```{r}
@@ -637,6 +716,29 @@ de_symbols <- merge(data.frame(ID=rownames(de), de, check.names=FALSE), annot, b
 
 # write differential expression analysis result to a text file
 write.table(de_symbols, "deseq2_results.txt", quote=F, col.names=T, row.names=F, sep="\t")
+```
+
+* **Volcano plot**
+
+### Volcano plot
+
+Is a representation of the Log2 folchange data against the pvalue data. The aim of this plot is to see the number of downregulated and upregulated genes for a defined cutoffs.
+
+```
+## Let's select the columns with the gene.name, Log2 foldchange and padjusted value information. 
+colnames(de_symbols)
+res_for_volc<-de_symbols[, c("external_gene_name","log2FoldChange","padj")]
+
+myplot <-EnhancedVolcano(res_for_volc,
+                         lab = res_for_volc$external_gene_name, #column with the gene names for the points out of the defined thresholds for Log2fc and pvalue
+                         x = 'log2FoldChange',
+                         pCutoff = 0.05, ## padjusted threshold 
+                         FCcutoff = 2,   ## Log2 fold change threshold to select upregulated and downregulated genes. 
+                         y = 'padj')
+
+pdf("Volcano_plot_of_WT_vs_KO.pdf", width = 10, height = 8)
+print(myplot)
+dev.off()
 ```
 
 #### DESeq2 output
