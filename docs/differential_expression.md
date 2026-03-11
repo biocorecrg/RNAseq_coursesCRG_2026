@@ -27,7 +27,7 @@ The best performing tools for differential expression analysis tend to be:
 | **Data type used directly**         | Raw count data                                          | Raw count data                                     | Counts transformed to log-CPM via voom             |
 | **Variance modeling**               | Dispersion estimated and shrunk toward trend            | Dispersion estimated (common, trended, tagwise)    | Variance estimated from mean-variance relationship |
 | **Normalization method**            | Median-of-ratios size factors                           | TMM normalization                                  | Usually TMM (edgeR) before voom                    |
-| **Statistical test**                | Wald test (default) or LRT                              | Exact test, GLM likelihood ratio, quasi-likelihood | Moderated t-tests                                  |
+| **Statistical test**                | Wald test (defslurm-22431530.outault) or LRT                              | Exact test, GLM likelihood ratio, quasi-likelihood | Moderated t-tests                                  |
 | **Handling small sample sizes**     | Good                                                    | Excellent                                          | Moderate                                           |
 | **Handling large datasets**         | Good                                                    | Good                                               | Excellent                                          |
 | **Speed / computational cost**      | Moderate                                                | Fast                                               | Very fast                                          |
@@ -35,7 +35,8 @@ The best performing tools for differential expression analysis tend to be:
 | **Flexibility for complex designs** | Good                                                    | Very good                                          | Excellent                                          |
 | **Low-count genes**                 | Conservative handling                                   | Handles low counts well                            | Less ideal for extremely low counts                |
 
-[NOTE]: For more information see [Schurch et al, 2015; arXiv:1505.02017](https://arxiv.org/abs/1505.02017) and [the Biostars thread about the main differences between the methods](https://www.biostars.org/p/284775/).
+[!NOTE]
+For more information see [Schurch et al, 2015; arXiv:1505.02017](https://arxiv.org/abs/1505.02017) and [the Biostars thread about the main differences between the methods](https://www.biostars.org/p/284775/).
 <br><br>
 
 Main differences between the tools rely on the **statistical modeling** of counts and different normalization approaches. They capture different biological meaning and their results are not mutually exclusive.
@@ -75,6 +76,7 @@ For additional information regarding the tool and the algorithm, please refer to
 * In this tutorial, we will use the counts calculated from the mapping on **all chromosomes** (we practiced so far QC and mapping for data of only one chromosome but here we consider all chromosomes), for the 10 samples previously selected from [**GEO**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE76647):
 
 |GEO ID |SRA ID |Sample name |Differentiation |Condition |
+| ------ | ------- | ------- | ------- | ------- |
 |GSM2031982 |SRR3091420 |5p4_25c |undiff |WT |
 |GSM2031983 |SRR3091421 |5p4_27c |undiff |WT |
 |GSM2031984 |SRR3091422 |5p4_28c |diff 5 days |WT |
@@ -92,25 +94,33 @@ The FOXC1 protein is also involved in the normal development of other parts of t
 
 Get the count data for the full data set, output of both STAR and Salmon:
 
-```{bash}
-# Go to the differential expression directory
+```
+
+# Create a directory for differential expression analysis
+
+mkdir ~/rnaseq_course/differential_expression
+
 cd ~/rnaseq_course/differential_expression
 
-# Get the folder containing all the data
-wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/full_data_counts.tar.gz
+# Download the full count data folder from the course repository
+
+wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/full_data_counts.tar.gz
 
 # Gunzip
+
 tar -zxvf full_data_counts.tar.gz
 
 # Remove full_data.tar.gz once extraction is completed
+
 rm full_data_counts.tar.gz
+
 ```
 
 ### Raw count matrices
 
 **DESeq2** takes as an input raw (non normalized) counts, in various forms:
 
-* A matrix for all sample: DESeqDataSetFromMatrix()
+* A matrix for all sample, very typical in microarrays: DESeqDataSetFromMatrix()
 * One file per sample (our option for STAR): DESeqDataSetFromMatrix()
 * A **txi** object (our option for Salmon): DESeqDataSetFromTximport()
 
@@ -120,12 +130,14 @@ We need to create one file per sample, each file containing the raw counts of al
 
 File **SRR3091420_1_chr6_counts.txt**:
 
+| ------ | ------- |
 | ENSG00000260370.1 | 0 |
 | ENSG00000237297.1 | 10 |
 | ENSG00000261456.5 | 210 |
 
 File **SRR3091421_1_chr6_counts.txt**:
 
+| ------ | ------- |
 | ENSG00000260370.1 | 0 |
 | ENSG00000237297.1 | 8 |
 | ENSG00000261456.5 | 320 |
@@ -146,7 +158,7 @@ mkdir ~/rnaseq_course/differential_expression/counts_STAR_selected
 
 * Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (2nd column).
 
-```{bash}
+```
 cd ~/rnaseq_course/differential_expression
 
 for i in counts_STAR/*ReadsPerGene.out.tab
@@ -166,7 +178,7 @@ We will add the gene symbol in column 3, for a more comprehensive annotation.
 <br>
 Process from the **GTF file**:<br>
 
-```{bash}
+```
 cd ~/rnaseq_course/differential_expression
 
 # Gencode anotation for all chromosomes 
@@ -182,7 +194,7 @@ zcat gencode.v33.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transc
 Additionally, DESeq2 needs a <b>sample sheet</b> that describes the samples characteristics: treatment, knock-out / wild type, replicates, time points, etc. in the form:
 
 |SampleName |FileName |Differentiation |Condition |
-| :---: | :---: | :---: | :---: |
+| ----|----|----|----|
 |5p4_25c |SRR3091420_1_counts.txt |undiff |WT |
 |5p4_27c |SRR3091421_1_counts.txt |undiff |WT |
 |5p4_28c |SRR3091422_1_counts.txt |diff5days |WT |
@@ -547,6 +559,8 @@ pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differenti
 
 <img src="images/counts_foxc1_nice.png" width="700"/>
 
+* **Volcano plot**
+
 ##### Differential expression analysis
 
 ```{r}
@@ -786,3 +800,7 @@ In a way, we "discard" the expected changes due to differentiation to focus on t
 
 Do the same using the **Salmon counts** (object *se_salmon*): how many genes are found differentially expressed when using the Salmon counts ?<br>
 How do results overlap between STAR and Salmon ?
+
+**Exercise 4**
+
+##### Batch effect in the data
