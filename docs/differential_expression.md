@@ -99,11 +99,17 @@ Get the count data for the full data set, output of both STAR and Salmon:
 
 # Navigate to your course directory
 
-cd ~/rnaseq_course/
+cd ~/rnaseq_course/differential_expression
 
 # Download the full count data folder from the course repository
 
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/
+wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/docs/data/differential_expression/full_data_counts.tar.gz
+
+# Gunzip
+tar -zxvf full_data_counts.tar.gz
+
+# Remove full_data.tar.gz once extraction is completed
+rm full_data_counts.tar.gz
 
 ```
 
@@ -383,10 +389,10 @@ library(biomaRt)
 
 # list ENSEMBL archives
 listEnsemblArchives()
- # We used version 88 of ENSEMBL, which corresponds to URL http://mar2017.archive.ensembl.org
+# We used version 115 of ENSEMBL, which corresponds to URL https://sep2025.archive.ensembl.org
 
 # we can load the corresponding database
-mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="mar2017.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
+mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="https://sep2025.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
 
 # "filters" correspond to the input WE want to retrieve more annotation for
   # a list of available filters can be obtained with listFilters(mart)
@@ -418,20 +424,26 @@ head(annot)
 
 All steps are wrapped up in the **DESeq** function:
 
-* estimating size factors
-* estimating dispersions
-* gene-wise dispersion estimates
-* mean-dispersion relationship
-* final dispersion estimates
-* fitting model and testing
+* estimating size factors:<br >
+Correct for differences in sequencing depth between samples.
+* estimating dispersions:<br>
+Measure how variable gene expression is across replicates.
+* gene-wise dispersion estimates:<br>
+Calculate an initial dispersion estimate for each gene individually.
+* mean-dispersion relationship: learn the amount of variability expected at each expression level.
+* final dispersion estimates: taking into account gene-specific estimate and global mean dispersion Genes with unreliable estimates are pulled toward the global trend.
+* fitting model and testing:
+fits a generalized linear model (GLM) for each gene using your design formula and performs a statistical test (usually Wald test) to check if the effect of the condition significantly different from zero.
 
-```{r}
+```
 se_star2 <- DESeq(se_star)
 ```
 
-* Save the normalized counts for further usage (functional analysis, tomorrow...)
+##### Normalized counts
 
-```{bash}
+Log2 on transformed counts compresssed large values and expands small values, thus making distributions more symmetric.
+
+```
 # compute normalized counts (log2 transformed); + 1 is a count added to avoid errors during the log2 transformation: log2(0) gives an infinite number, but log2(1) is 0.
 # normalized = TRUE: divide the counts by the size factors calculated by the DESeq function
 norm_counts <- log2(counts(se_star2, normalized = TRUE)+1)
@@ -442,6 +454,10 @@ norm_counts_symbols <- merge(data.frame(ID=rownames(norm_counts), norm_counts, c
 # write normalized counts to text file
 write.table(norm_counts_symbols, "normalized_counts_log2_star.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
+
+:::{warning}
+This normalized counts use when you interpretable expression levels. (to compare how chgange the expression between samples and genes). Do not use for visualization and exploratory analysis.  
+:::
 
 **Exercise**
 
@@ -463,21 +479,24 @@ They offer to choose between two transformation methods, both of which stabilize
 Both options produce **log2 scale data** which has been normalized by the DESeq2 method with respect to library size.
 <br>
 From [this tutorial](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog):<br>
-*The VST is* **much faster** *to compute and is* **less sensitive to high count outliers** *than the rlog. The rlog tends to work well on* **small datasets (n < 30)**, *potentially outperforming the VST when there is a wide range of sequencing depth across samples (an order of magnitude difference). We therefore* **recommend the VST for medium-to-large datasets (n > 30)**.*
+*The VST is* **much faster** *to compute and is* **less sensitive to high count outliers** *than the rlog. The rlog tends to work well on* **small datasets (n < 30)**, *potentially outperforming the VST when there is a wide range of sequencing depth across samples (an order of magnitude difference).
+
+However, authors of DESeq2 generally recommend [vst() for most analysis](https://support.bioconductor.org/p/9140052/#:~:text=Sorry%20I%20missed,this%20into%20account.), because it gives almost identical results to rlog and is much faster, on the other hand rlog becomes impractical when we have more than 30 samples.*
 
 <br>
-We have a 10 sample dataset: Let's use the **rlog** transformation.
+So let's use the **vst** transformation.
 <br>
-*As a homework, you can try and use the VST transformation (function vst)*.
+*As a homework, you can try and use the rlog transformation (function rlog)*.
 
-```{r}
+```
 # Try with the rlog transformation
-se_rlog <- rlog(se_star2)
-
-# You can also try the same with the rlog transformation as a homework, running: rld <- rlog(se_star2)
+se_vst <- vst(se_star2)
 ```
 
 * Samples correlation
+
+The aim of this plot is to compare the expression of all genes for each pair of samples, so if gene expression behaves similarly between two samples, their correlation will be high. The most common measure is Pearson correlation, but you can use others such as eucledian distance or spearman correlation.
+We expect that replicates shows a high correlation, and they will cluster together.
 
 Calculate the sample-to-sample distances:
 
@@ -485,8 +504,12 @@ Calculate the sample-to-sample distances:
 # load libraries pheatmap to create the heatmap plot
 library(pheatmap)
 
-# calculate between-sample distance matrix
-sampleDistMatrix <- as.matrix(dist(t(assay(se_rlog))))
+# Retrieves the vst counts table
+vst_counts <- assay(se_vst) 
+
+# Correlation matrix
+sampleDists  <- cor(, method = "pearson")
+sampleDistMatrix <- as.matrix(sampleDists )
 
 # prepare a "metadata" object to add a colored bar with the differentiation and condition information
 metadata <- sampletable[,c("Differentiation", "Condition")]
@@ -499,10 +522,12 @@ png("sample_distance_heatmap_star.png")
 dev.off() 
 ```
 
+############ Change this IMAGEEEEE #################
 <img src="images/sample_distance_heatmap_star.png" width="900"/>
 
 Do samples cluster how you would expect ?
 
+#################### Not needed
 **GET FILES WE COULD NOT CREATE YESTERDAY**
 
 ```{bash}
@@ -519,20 +544,26 @@ annot <- read.table("annotation_ens88.txt", sep="\t", header=T, as.is=T)
 norm_counts_symbols <- read.table("normalized_counts_log2_star.txt", sep="\t", header=T, as.is=T)
 ```
 
+####################
+
 * **Principal Component Analysis** (PCA)
 
 Reduction of dimensionality to be able to retrieve main differences / underlying variance between samples.
 <br>
 It is used to bring out strong patterns from complex biological datasets.
 <br>
-More on PCA in [this post](https://blog.bioturing.com/2018/06/14/principal-component-analysis-explained-simply)
+:::{seealso}
+<https://www.youtube.com/watch?v=FgakZw6K1QQ>
+:::
 
-```{r}
+```
 png("PCA_star.png")
 plotPCA(object = se_rlog,
   intgroup = c("Condition", "Differentiation"))
 dev.off()
 ```
+
+### Change image
 
 <img src="images/PCA_star.png" width="700"/>
 
