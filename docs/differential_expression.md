@@ -157,7 +157,7 @@ The FOXC1 protein is also involved in the normal development of other parts of t
 
 Get the count data for the full data set, output of both STAR and Salmon:
 
-```
+```{bash}
 # Navigate to your course directory
 cd ~/rnaseq_course/differential_expression
 
@@ -202,14 +202,14 @@ Remember that the STAR count file contains **4 columns** depending on the librar
 * Prepare the 10 files needed for our analysis, from the STAR output, and save them in the **counts_selected** directory: knowing that our libraries are **unstranded**, which column will you pick?
 * Create the sub-directory **counts_STAR_selected** inside the deseq2 directory:
 
-```
+```{bash}
 cd ~/rnaseq_course/differential_expression
 mkdir counts_STAR_selected
 ```
 
 * Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (2nd column).
 
-```
+```{bash}
 for i in counts_STAR/*ReadsPerGene.out.tab
 do echo $i
 
@@ -226,7 +226,7 @@ We will add the gene symbol in column 3, for a more comprehensive annotation.
 
 Process from the **GTF file**:
 
-```
+```{bash}
 cd ~/rnaseq_course/differential_expression
 
 # Gencode annotation for all chromosomes
@@ -267,7 +267,7 @@ The design indicates how to model the samples: in the model we need to specify w
 
 You can download it the following way, in R:
 
-```
+```{bash}
 wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/sample_sheet_foxc1.txt
 ```
 
@@ -277,13 +277,10 @@ The analysis is done in R!
 
 We will use a local Rstudio server running a singularity container.
 
-``
-
-## Download the bash script that installs the singularity container and run it in the localserver
-
-wget <https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/run_rstudio.sh>
+```{bash}
+# Download the bash script that installs the singularity container and run it in the localserver
+wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/run_rstudio.sh
 bash run_rstudio.sh
-
 ```
 
 Start **R Studio**.
@@ -294,7 +291,7 @@ Note that in the R code boxes below **\#** is followed by comments, i.e. words n
 
 * Go to the **differential_expression** working directory and install and load the required packages (loading a package in R allows to use specific sets of functions developed as part of this package).
 
-```
+```{r}
 
 library(BiocManager)
 
@@ -319,7 +316,7 @@ setwd("~/rnaseq_course/differential_expression")
 
 * Read in the sample table that we prepared:
 
-```
+```{r}
 
 # read in the sample sheet
 
@@ -351,7 +348,7 @@ DESeq will process only the counts for the files listed in the sample table (kee
   * **directory:** path to the directory where the counts are stored (one file per sample)
   * **design:** design formula describing which variables will be used to model the data. Here we want to compare the experimental groups in "Condition".
 
-```
+```{r}
 
 # Import STAR counts
 
@@ -372,7 +369,7 @@ For more information on how to build a design formula, see [here](https://www.at
 
 * Load the count data from **SALMON** into a **DESeq** object:
 
-```
+```{r}
 
 # Go to the deseq2 directory
 
@@ -441,7 +438,7 @@ From DESeq2 vignette: *While it is not necessary to pre-filter low count genes b
 
 Let's filter:
 
-```
+```{r}
 
 # Number of genes before filtering
 
@@ -473,7 +470,7 @@ Additionally to the ENSEMBL gene IDs we want (for example):
 * A more thorough gene description
 * Chromosome and coordinates
 
-```
+```{r}
 
 # load library
 
@@ -497,7 +494,7 @@ head(listFilters(mart))
 
 # let's see what is available in terms of ensembl ID
 
-grep("ensembl", listFilters[mart](,1), value=TRUE)
+grep("ensembl", listFilters(mart)[,1], value=TRUE)
 
 # ensembl_gene_id is what we want
 
@@ -531,7 +528,7 @@ head(annot)
 
 All steps are wrapped up in a single call to **`DESeq()`**, which runs three phases: normalization, dispersion estimation, and statistical testing.
 
-```
+```{r}
 
 se_star2 <- DESeq(se_star)
 
@@ -557,7 +554,7 @@ se_star2 <- DESeq(se_star)
 The main objective of normalization is to adjust raw reads so that samples become comparable. We will extract the DESeq normalized counts, which are calculated by dividing the raw counts by the size factor (that represents the sequencing depth).
 Then we will log2-transform these normalized counts in order to compress large values and expand small values, thus making distributions more symmetric.
 
-```
+```{r}
 
 # compute normalized counts (log2 transformed); + 1 is a count added to avoid errors during the log2 transformation: log2(0) gives an infinite number, but log2(1) is 0
 
@@ -605,7 +602,7 @@ So let's use the **vst** transformation.
 
 *As a homework, you can try and use the rlog transformation (function rlog)*.
 
-```
+```{r}
 
 # Try with the vst transformation
 
@@ -626,7 +623,7 @@ Good replicate concordance has a Pearson correlation value > 0.9.
 
 Calculate the sample-to-sample distances:
 
-```
+```{r}
 
 # load libraries pheatmap to create the heatmap plot
 
@@ -673,7 +670,7 @@ It is used to bring out strong patterns from complex biological datasets.
 <https://www.youtube.com/watch?v=FgakZw6K1QQ>
 :::
 
-```
+```{r}
 
 png("PCA_star.png")
 plotPCA(object = se_rlog,
@@ -700,7 +697,7 @@ At this stage, the PCA plot allows us to evaluate whether samples belonging to t
 
 We can also plot the **normalized counts** of a gene per sample / experimental group:
 
-```
+```{r}
 
 # FOXC1 is ENSG00000054598
 
@@ -715,7 +712,7 @@ plotCounts(se_star2, gene="ENSG00000054598", intgroup="Condition")
 Let's produce a more comprehensive plot: we can **add the sample names and the differentiation status**.
 To do so, we can use the **ggplot2** package.
 
-```
+```{r}
 
 library(ggplot2)
 library(reshape2)
@@ -753,7 +750,7 @@ pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differenti
 
 We can represent it as a boxplot:
 
-```
+```{r}
 
 # Boxplot
 
@@ -778,7 +775,7 @@ Here we can see clearly that in KO this gene was expressed 2^1.5 times higher in
 Also, we can compare the expression of our study gene with a control gene (GADPH).
 GAPDH ensembl id ENSG00000111640
 
-```
+```{r}
 
 # Retrieve the normalized counts per sample for FOXC1 and GAPDH genes
 
@@ -807,7 +804,7 @@ pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differenti
   ylab(label="Normalized expression (log2)") +
   facet_wrap(~ gene) +
   theme_bw()
-``
+```
 
 | |
 |:---:|
@@ -821,7 +818,7 @@ From results we will obtain the following columns each one with a value for each
 
   baseMean log2FoldChange     lfcSE       stat    pvalue      padj
 
-```
+```{r}
 # check results names: depends on what was modeled. Here it was the "Condition"
 resultsNames(se_star2)
 
@@ -875,7 +872,7 @@ Some values in the results table can be set to NA for one of the following reaso
 
 A volcano plot combines **effect size** and **statistical significance** into a single view, making it one of the most widely used plots in differential expression analysis.
 
-```
+```{r}
 ## Let's select the columns with the gene.name, Log2 foldchange and padjusted value information. 
 colnames(de_symbols)
 res_for_volc <- de_symbols[, c("external_gene_name","log2FoldChange","padj")]
@@ -914,7 +911,7 @@ Focus on the **top corners** — genes that are both far from zero on the X-axis
 
 | |
 |:---:|
-| ![Volcano plot](images/volcano_plot_WT_vs_KO.png) |
+| ![Volcano plot](images/Volcano_plot_of_WT_vs_KO.png) |
 
 Do we see FOXC1 in the top corners?
 
@@ -944,7 +941,7 @@ A FDR adjusted p-value of 0.05 implies that 5% of **significant tests according 
 
 * Selection of differentially expressed genes between WT and KO based on padj < 0.05.
 
-```
+```{r}
 # how many genes are differentially expressed, taking into account "padj < 0.05"?
   # contains NAs... Filter them out
 de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
@@ -956,7 +953,7 @@ write.table(de_select, "deseq2_selection_padj005.txt", quote=F, col.names=T, row
 
 * Selection of differentially expressed genes between WT and KO based on padj < 0.05 **AND** log2FC > 0.5 or log2FC < -0.5 (However, note that *selecting by log2FoldChange is not required if the selection is done using the padj*).
 
-```
+```{r}
 # how many genes are differentially expressed, taking into account "padj < 0.05" and log2FoldChange < -0.5 or > 0.5?
   # contains NAs... Filter them out
 de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(de_symbols$log2FoldChange) > 0.5,]
@@ -994,7 +991,7 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 
 **STEP BY STEP CORRECTION**
 
-```
+```{r}
 ## DESeq2 analysis
 
 library(DESeq2)
@@ -1091,7 +1088,7 @@ write.table(de_select, "deseq2_selection_padj005_undiff.txt", quote=F, col.names
 
 While in Exercise 2 we tested **WT vs KO** on **undifferentiated** samples only, we can also use a more complex **design** formula. If we specify:
 
-```
+```{r}
 ~ Differentiation + Condition
 ```
 
@@ -1149,8 +1146,8 @@ wget https://github.com/fabian-andrade/RNAseq_coursesCRG_2026/raw/main/docs/data
 wget https://github.com/fabian-andrade/RNAseq_coursesCRG_2026/raw/main/docs/data/differential_expression/rnaseq_batch_example_sample_table.txt
 ```
 
-```
-#### Batch Effect Correction 
+```{r}
+# Batch Effect Correction
 
 batch_counts <- read.csv("rnaseq_batch_example_raw_counts.txt",header = TRUE, sep="\t")
 head(batch_counts) ## this are annotated raw counts.
@@ -1216,11 +1213,23 @@ dev.off()
 
 ```
 
+PCA before correction
+
+| | |
+|:---:|:---:|
+| ![PCA before correction](images/PCA_batch.png) | ![PCA after correction](images/PCA_batch_corrected.png) |  
+
+PCA after correction
+
+| |
+|:---:|
+| ![PCA after correction](images/PCA_batch_corrected.png) |
+
 ##### Homework: Strategy 2: Include batch in the DESeq2 design formula
 
 The simplest and most statistically rigorous approach is to include the **Batch** variable in the DESeq2 design formula. This tells DESeq2 to model and account for the batch effect when estimating fold changes and p-values, without modifying the raw count data.
 
-```
+```{r}
 # Re-create the DESeq2 object with Batch in the design
 se_star_batch <- DESeqDataSetFromHTSeqCount(
     sampleTable = sampletable,
