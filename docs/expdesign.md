@@ -45,6 +45,51 @@ Careful experimental design helps ensure that results are reproducible and stati
 
 <br>
 
+<br>
+
+### Experimental design begins with the biological question, and affects every stage of an RNA-seq experiment
+
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| ![fishy](images/exp_design.jpg) | 
+| *Figure is from [https://galaxyproject.org/tutorials/rb_rnaseq/](https://galaxyproject.org/tutorials/rb_rnaseq/)* |
+
+</div>
+
+Think:
+
+```
+biological question
+       ↓
+experimental design
+       ↓
+sample preparation
+       ↓
+sequencing
+       ↓
+bioinformatics
+```
+
+<br>
+
+**Biological questions**:
+- Which genes change their expression levels between treated and control samples?
+
+- Which transcript isoforms or alternative splicing events differ between treated and control samples?
+
+- Which genes are expressed at very low levels in this tissue, and how does their expression change between conditions?
+
+- Which cell types respond to treatment, and what genes change expression within each cell type?
+
+<br>
+
+### Three basic principles of experimental design
+
+<br>
+
+
 | **Goal** | **Design principle** |
 |------|------------------|
 | Unbiased estimates | Randomization |
