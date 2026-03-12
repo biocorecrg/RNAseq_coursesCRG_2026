@@ -32,7 +32,7 @@ Careful experimental design helps ensure that results are reproducible and stati
 
 <br>
 
-## Well-designed experiment
+## What makes a well-designed experiment?
 
 <div style="display:flex; justify-content:center;">
 
@@ -42,6 +42,41 @@ Careful experimental design helps ensure that results are reproducible and stati
 | *Figure is adapted from Cambridge University's Experimental Design Manual 2016* |
 
 </div>
+
+<br>
+
+| **Goal** | **Design principle** |
+|------|------------------|
+| Unbiased estimates | Randomization |
+| Precise estimates | Blocking |
+| Adequate statistical power | Replication |
+
+<br>
+
+:::{important} **Core principles of experimental design**
+These three principles form the foundation of experimental design:
+
+- **Randomization** reduces systematic bias.
+- **Blocking** controls known sources of variation.
+- **Replication** allows estimation of biological variability and increases statistical power.
+
+<small>Source: [Statistics Knowledge Portal](https://www.jmp.com/en/statistics-knowledge-portal/design-of-experiments/key-design-of-experiments-concepts/key-principles-of-experimental-design)</small>
+:::
+
+<br>
+For RNA-seq experiments:<br>
+
+• Replication  
+  → sequence multiple independent biological samples
+
+• Randomization  
+  → distribute samples across lanes or library batches
+
+• Blocking  
+  → include batch or patient in the model
+	( design = ~ batch + condition )
+
+<br>  
 
 ## Factorial design to address wide range of the result applicability
 
