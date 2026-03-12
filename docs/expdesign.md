@@ -29,11 +29,17 @@ seealso
 
 ## Well-designed experiment
 
-<div style="display:flex; justify-content:center;">
-
-```{figure} images/good_exp_design.jpg
+```{figure} images/design_overview.png
 :width: 500px
-:name: Figure is from [Cambridge University's Experimental Design Manual](https://assets.cambridge.org/97811070/74293/frontmatter/9781107074293_frontmatter.pdf)
+:align: center
+:name: fig-design
+
+Experimental design overview. Adapted from  
+[Cambridge University's Experimental Design Manual](https://assets.cambridge.org/97811070/74293/frontmatter/9781107074293_frontmatter.pdf).
+```
+bla
+
+<div style="display:flex; justify-content:center;">
 
 
 | |
@@ -42,7 +48,6 @@ seealso
 | *Figure is from [Cambridge University's Experimental Design Manual](https://assets.cambridge.org/97811070/74293/frontmatter/9781107074293_frontmatter.pdf)*|
 
 </div>
-
 
 ## Factorial design to address wide range of the result applicability
 
