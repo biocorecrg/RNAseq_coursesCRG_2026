@@ -1,31 +1,36 @@
 # Talk: Experimental design of RNA-seq experiment
 
-:::{admonition} Reminder: Phred quality scores
-:class: note
+## Reproducibility in biological experiments
 
-Phred scores (Q scores) encode the probability of a base-calling error:
+Reproducibility is a central goal of scientific research. 
+A result is considered reproducible when independent experiments performed under similar conditions lead to consistent conclusions. 
+In biological studies, reproducibility can be challenging because biological systems exhibit substantial natural variability and experiments often involve multiple sources of technical variation.
 
-| Phred Score | Error Probability | Accuracy |
-|------------|------------------|----------|
-| Q10 | 1 in 10 | 90% |
-| Q20 | 1 in 100 | 99% |
-| Q30 | 1 in 1,000 | 99.9% |
-| Q40 | 1 in 10,000 | 99.99% |
 
-:::
+Several factors can reduce reproducibility, including 
+- small sample sizes, 
+- uncontrolled experimental conditions, and 
+- systematic biases introduced during sample preparation or data acquisition. 
 
-:::{admonition} Tip
-:class: tip
+High-throughput experiments such as RNA-seq are particularly sensitive to these issues because they measure thousands of features simultaneously and rely on statistical models to detect differences between conditions.
 
-Reads are generally considered good quality if the median Phred score is ≥ Q30 across most positions.
+The large-scale study by [SEQC Consortium 2014](https://pmc.ncbi.nlm.nih.gov/articles/PMC4321899)
+showed that RNA-seq results are consistent across technical replicates, laboratories, and sequencing platforms.
 
-:::
+However, the most recent study on replicability of bulk RNA-seq experiments in [PLOS Comp Biol 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1011630)
+confirmed the previous study in [RNA 2016](https://pubmed.ncbi.nlm.nih.gov/27022035/)
+that biological variability remains substantial, and 
+statistical power of reliable differential expression analysis strongly depends on the number of biological replicates.
 
-note
-tip
-warning
-important
-seealso
+Many studies still use fewer samples than recommended.
+
+
+Careful experimental design helps ensure that results are reproducible and statistically interpretable. Experimental design aims to 
+- reduce bias, 
+- control unwanted sources of variation, and 
+- provide sufficient information to estimate biological variability.
+
+<br>
 
 ## Well-designed experiment
 
