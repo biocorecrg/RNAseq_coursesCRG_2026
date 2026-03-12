@@ -110,7 +110,7 @@ Main differences between the tools rely on the **statistical modeling** of count
 
 In this tutorial, we will give you an overview of the **DESeq2** pipeline to find differentially expressed **genes** between two conditions.
 
-## DESeq2
+### DESeq2
 
 [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) is an R/Bioconductor implemented method to detect differentially expressed features.
 
@@ -122,7 +122,7 @@ This DESeq2 tutorial is inspired by the [RNA-seq workflow](http://master.biocond
 
 DESeq2 takes as an input **raw counts** (i.e. non normalized counts): the DESeq2 model internally **corrects for library size**, so giving as an input normalized count would be incorrect.
 
-### DESeq2 steps
+#### DESeq2 steps
 
 * Modeling raw counts for each gene:
   * Estimate size factors (accounts for differences in library size): estimateSizeFactors()
@@ -135,7 +135,7 @@ DESeq2 uses the **median of ratio** method for **normalization**: briefly, the r
 
 For additional information regarding the tool and the algorithm, please refer to the [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4302049/) and the user-friendly package [vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html).
 
-### Tutorial on basic DESeq2 usage for differential analysis of gene expression
+## Tutorial on basic DESeq2 usage for differential analysis of gene expression
 
 * In this tutorial, we will use the counts calculated from the mapping on **all chromosomes** (we practiced so far QC and mapping for data of only one chromosome but here we consider all chromosomes), for the 10 samples previously selected from [**GEO**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE76647):
 
@@ -162,13 +162,7 @@ Get the count data for the full data set, output of both STAR and Salmon:
 cd ~/rnaseq_course/differential_expression
 
 # Download the full count data folder from the course repository
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/docs/data/differential_expression/full_data_counts.tar.gz
-
-# Gunzip
-tar -zxvf full_data_counts.tar.gz
-
-# Remove full_data.tar.gz once extraction is completed
-rm full_data_counts.tar.gz
+wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/full_data_counts
 ```
 
 ### Raw count matrices
@@ -209,7 +203,7 @@ Remember that the STAR count file contains **4 columns** depending on the librar
 * Create the sub-directory **counts_STAR_selected** inside the deseq2 directory:
 
 ```{bash}
-cd ~/rnaseq_course/differential_expression/full_data_counts
+cd ~/rnaseq_course/differential_expression
 mkdir counts_STAR_selected
 ```
 
@@ -224,7 +218,7 @@ cut -f1,2 $i | grep -v "_" > counts_STAR_selected/$(basename $i .ReadsPerGene.ou
 done
 ```
 
-#### Prepare transcript-to-gene annotation file
+#### Prepare transcript-to-gene annotation file (Salmon)
 
 Prepare the annotation file needed to import the **Salmon** counts: a two-column data frame linking transcript id (column 1) to gene id (column 2).
 
@@ -277,7 +271,7 @@ You can download it the following way, in R:
 wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/sample_sheet_foxc1.txt
 ```
 
-#### Analysis
+## Analysis
 
 The analysis is done in R!
 
@@ -315,7 +309,7 @@ install.packages("reshape2")
 setwd("~/rnaseq_course/differential_expression")
 ```
 
-##### Import STAR counts
+### Import STAR counts
 
 * Read in the sample table that we prepared:
 
@@ -357,7 +351,7 @@ The design formula is used to estimate the dispersions and to estimate the log2 
 For more information on how to build a design formula, see [here](https://www.atakanekiz.com/technical/a-guide-to-designs-and-contrasts-in-DESeq2/).
 :::
 
-##### Import Salmon counts
+### Import Salmon counts
 
 * Load the count data from **SALMON** into a **DESeq** object:
 
@@ -410,7 +404,7 @@ The only thing that differs slightly is the annotation *(remember that for STAR 
 
 * We will focus the rest of the analysis on the **se_star**.
 
-##### Filtering out lowly expressed genes
+### Filtering out lowly expressed genes
 
 From DESeq2 vignette: *While it is not necessary to pre-filter low count genes before running the DESeq2 functions, there are two reasons which make pre-filtering useful: by removing rows in which there are very few reads, we reduce the memory size of the dds data object, and we increase the speed of the transformation and testing functions within DESeq2.*
 
@@ -427,7 +421,7 @@ se_star <- se_star[rowSums(counts(se_star)) > 10, ]
 nrow(se_star)
 ```
 
-##### Prepare annotation
+### Prepare annotation
 
 The **biomaRt** package is used for adding a more **detailed annotation** to our data sets.
 
@@ -480,22 +474,30 @@ dim(annot)
 head(annot)
 ```
 
-##### Fit statistical model
+### Fit statistical model
 
-All steps are wrapped up in the **DESeq** function:
-
-* **estimating size factors:** correct for differences in sequencing depth between samples.
-* **estimating dispersions:** measure how variable gene expression is across replicates.
-* **gene-wise dispersion estimates:** calculate an initial dispersion estimate for each gene individually.
-* **mean-dispersion relationship:** learn the amount of variability expected at each expression level.
-* **final dispersion estimates:** take into account gene-specific estimate and global mean dispersion. Genes with unreliable estimates are pulled toward the global trend.
-* **fitting model and testing:** fits a generalized linear model (GLM) for each gene using your design formula and performs a statistical test (usually Wald test) to check if the effect of the condition is significantly different from zero.
+All steps are wrapped up in a single call to **`DESeq()`**, which runs three phases: normalization, dispersion estimation, and statistical testing.
 
 ```{r}
 se_star2 <- DESeq(se_star)
 ```
 
-##### Normalized counts
+* **Estimating size factors:** corrects for differences in sequencing depth between samples using the median-of-ratios method. Each sample gets a size factor; dividing its raw counts by that factor normalizes it.
+
+* **Gene-wise dispersion estimates:** RNA-seq counts are overdispersed (variance > mean). DESeq2 uses a Negative Binomial model with a gene-specific dispersion parameter (α), estimated independently for each gene via maximum likelihood.
+
+* **Mean-dispersion relationship:** lowly expressed genes tend to be more variable. DESeq2 fits a smooth trend curve of dispersion vs. mean expression across all genes.
+
+* **Final dispersion estimates:** combines gene-wise estimates with the global trend via **empirical Bayes shrinkage** — noisy outlier estimates are pulled toward the trend, improving reliability with few replicates.
+
+* **Fitting model and testing:** fits a Negative Binomial GLM per gene using the design formula, then applies a **Wald test** to assess whether the log2 fold change is significantly different from zero. P-values are corrected for multiple testing with **Benjamini-Hochberg** → **padj**.
+
+:::{admonition} See also
+:class: seealso
+<https://bookdown.org/ggiaever/2025_RNA-Seq-Analysis/differential-expression-analysis-with-deseq2.html>
+:::
+
+### Normalized counts
 
 The main objective of normalization is to adjust raw reads so that samples become comparable. We will extract the DESeq normalized counts, which are calculated by dividing the raw counts by the size factor (that represents the sequencing depth).
 Then we will log2-transform these normalized counts in order to compress large values and expand small values, thus making distributions more symmetric.
@@ -516,10 +518,10 @@ This normalized counts table serves as interpretable expression levels, to compa
 
 **Exercise**
 
-* What are the normalized counts corresponding to genes "ENSG00000169813" and "ENSG00000182898"?
+* What are the normalized counts corresponding to genes "ENSG00000054598" and "ENSG00000111640"?
 * Calculate the average and the standard deviation of these genes' normalized counts. How do they differ? What can you tell about them?
 
-#### Sample QC and Data exploration
+### Sample QC and Data exploration
 
 * Transform raw counts to be able to visualize the data
 
@@ -547,7 +549,7 @@ So let's use the **vst** transformation.
 se_vst <- vst(se_star2)
 ```
 
-* **Samples correlation**
+#### Samples correlation
 
 The aim of this plot is to compare the expression of all genes for each pair of samples, so if gene expression behaves similarly between two samples, their correlation will be high. The most common measure is Pearson correlation, but you can use others such as Euclidean distance or Spearman correlation.
 We expect that replicates show a high correlation, and they will cluster together.
@@ -589,7 +591,7 @@ dev.off()
 Are the samples clustering as expected?
 Are they clustering better by differentiation or by condition?
 
-* **Principal Component Analysis** (PCA)
+#### Principal Component Analysis (PCA)
 
 Reduction of dimensionality to be able to retrieve main differences / underlying variance between samples.
 It is used to bring out strong patterns from complex biological datasets.
@@ -619,7 +621,7 @@ For the PC1 axis, do samples separate by differentiation or by condition?
 At this stage, the PCA plot allows us to evaluate whether samples belonging to the same experimental condition cluster together. Ideally, biological replicates should appear close to each other in the plot, indicating similar global gene expression profiles. If a sample does not cluster with the other replicates of its condition, it may indicate a potential technical problem, such as low library complexity, RNA degradation, contamination, or a sample labeling error. In such cases, the sample should be carefully evaluated by reviewing quality control metrics before deciding whether it should be retained or excluded from further analysis.
 :::
 
-* **Gene expression plots**
+#### Gene expression plots
 
 We can also plot the **normalized counts** of a gene per sample / experimental group:
 
@@ -664,7 +666,67 @@ pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differenti
 |:---:|
 | ![FOXC1 counts detailed](images/counts_foxc1_nice.png) |
 
-##### Differential expression analysis
+We can represent it as a boxplot:
+
+```{r}
+# Boxplot
+pbox <- ggplot(data=mygenelong, 
+               mapping=aes(x=Condition, y=value, fill=Differentiation, label=name)) + 
+  geom_boxplot(alpha = 0.3) +
+  geom_jitter(aes(color=Differentiation), width=0.2, size=2)+
+  xlab("Experimental group") +
+  ylab("Normalized expression (log2)") +
+  theme_bw()
+
+```
+
+Here we can see clearly that in KO this gene was expressed 2^1.5 times higher in 5 days, and same for WT.
+
+| |
+|:---:|
+| ![FOXC1 counts detailed](images/counts_foxc1_nice_boxplot.png) |
+
+* **Comparing FOXC1 and GAPDH expression**
+
+Also, we can compare the expression of our study gene with a control gene (GADPH).
+GAPDH ensembl id ENSG00000111640
+
+```{r}
+# Retrieve the normalized counts per sample for FOXC1 and GAPDH genes. 
+tmp<-norm_counts[c("ENSG00000054598","ENSG00000111640"),]
+
+# convert to "long" format
+mygenelong <- melt(tmp)
+mygenelong
+
+# sample name
+colnames(mygenelong) <- c("gene","name","value")
+# sample Condition and Differentiation: merge with sample table
+mygenelong <- merge(mygenelong, sampletable, by.x="name", by.y="SampleName", all=F)
+mygenelong
+
+# Dot plot
+pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differentiation, shape=Condition, label=name)) + 
+  geom_point() +
+  geom_text(nudge_x=0.2) +  
+  xlab(label="Experimental group") +
+  ylab(label="Normalized expression (log2)") +
+  facet_wrap(~ gene) +
+  theme_bw()
+``
+
+| |
+|:---:|
+| ![FOXC1 and GAPDH counts](images/counts_foxc1_gapdh_nice.png) |
+
+
+### Differential expression analysis
+
+Now is the moment to retrieve the results of the differential expression analysis for the constrast we are interested in. In this case, it is the comparison between WT and KO.
+
+From results we will obtain the following columns each one with a value for each gene:
+
+  baseMean log2FoldChange     lfcSE       stat    pvalue      padj
 
 ```{r}
 # check results names: depends on what was modeled. Here it was the "Condition"
@@ -688,27 +750,6 @@ de_symbols <- merge(data.frame(ID=rownames(de), de, check.names=FALSE), annot, b
 
 # write differential expression analysis result to a text file
 write.table(de_symbols, "deseq2_results.txt", quote=F, col.names=T, row.names=F, sep="\t")
-```
-
-#### Volcano plot
-
-A volcano plot is a representation of the log2 fold change data against the p-value data. The aim of this plot is to see the number of downregulated and upregulated genes for defined cutoffs.
-
-```{r}
-## Let's select the columns with the gene.name, Log2 foldchange and padjusted value information. 
-colnames(de_symbols)
-res_for_volc <- de_symbols[, c("external_gene_name","log2FoldChange","padj")]
-
-myplot <- EnhancedVolcano(res_for_volc,
-                         lab = res_for_volc$external_gene_name, #column with the gene names for the points out of the defined thresholds for Log2fc and pvalue
-                         x = 'log2FoldChange',
-                         pCutoff = 0.05, ## padjusted threshold 
-                         FCcutoff = 2,   ## Log2 fold change threshold to select upregulated and downregulated genes. 
-                         y = 'padj')
-
-pdf("Volcano_plot_of_WT_vs_KO.pdf", width = 10, height = 8)
-print(myplot)
-dev.off()
 ```
 
 #### DESeq2 output
@@ -736,6 +777,53 @@ Some values in the results table can be set to NA for one of the following reaso
 * If a row contains a sample with an extreme count outlier then the p value and adjusted p value will be set to NA. These outlier counts are detected by Cook's distance. If there are very many outliers (e.g. many hundreds or thousands) reported by summary(res), one might consider further exploration to see if a single sample or a few samples should be removed due to low quality.
 * If a row is filtered by automatic independent filtering, for having a low mean normalized count, then only the adjusted p value will be set to NA. This independent filtering can be customized or turned off in the DESeq2 function results(dds, independentFiltering=FALSE).
 :::
+
+#### Volcano plot
+
+A volcano plot combines **effect size** and **statistical significance** into a single view, making it one of the most widely used plots in differential expression analysis.
+
+```{r}
+## Let's select the columns with the gene.name, Log2 foldchange and padjusted value information. 
+colnames(de_symbols)
+res_for_volc <- de_symbols[, c("external_gene_name","log2FoldChange","padj")]
+
+volcano_plot <- EnhancedVolcano(res_for_volc,
+                         lab = res_for_volc$external_gene_name, #column with the gene names for the points out of the defined thresholds for Log2fc and pvalue
+                         x = 'log2FoldChange',
+                         pCutoff = 0.05, ## padjusted threshold 
+                         FCcutoff = 2,   ## Log2 fold change threshold to select upregulated and downregulated genes. 
+                         y = 'padj')
+
+pdf("Volcano_plot_of_WT_vs_KO.pdf", width = 10, height = 8)
+print(volcano_plot)
+dev.off()
+```
+
+* **X-axis:** log2 fold change (log2FC) — how much a gene's expression changes between conditions. Positive values = higher in the first group; negative = lower.
+* **Y-axis:** −log10(padj) — the adjusted p-value on a negative log scale. The **higher** a point is on the Y-axis, the **more statistically significant** the difference.
+
+Each dot is a gene. The plot naturally splits into four regions:
+
+| Region | Meaning |
+|:---:|:---|
+| Top-right | **Significantly upregulated** (high FC, low padj) |
+| Top-left | **Significantly downregulated** (low FC, low padj) |
+| Bottom-center | **Not significant** (low FC or high padj) |
+| Top-center | Large statistical significance, but small fold change |
+
+The name "volcano" comes from the shape: most genes cluster at the bottom (non-significant), with two "plumes" of significant genes rising on the left and right flanks.
+
+:::{admonition} How to read it
+:class: tip
+
+Focus on the **top corners** — genes that are both far from zero on the X-axis (large effect) and high on the Y-axis (highly significant). Those are the most biologically meaningful candidates.
+:::
+
+| |
+|:---:|
+| ![Volcano plot](images/volcano_plot_WT_vs_KO.png) |
+
+Do we see FOXC1 in the top corners?
 
 #### Gene selection
 
@@ -767,7 +855,7 @@ A FDR adjusted p-value of 0.05 implies that 5% of **significant tests according 
 # how many genes are differentially expressed, taking into account "padj < 0.05"?
   # contains NAs... Filter them out
 de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
-  # 84 genes
+  # 85 genes
 
 # save results in file for further usage
 write.table(de_select, "deseq2_selection_padj005.txt", quote=F, col.names=T, row.names=F, sep="\t")
@@ -779,15 +867,15 @@ write.table(de_select, "deseq2_selection_padj005.txt", quote=F, col.names=T, row
 # how many genes are differentially expressed, taking into account "padj < 0.05" and log2FoldChange < -0.5 or > 0.5?
   # contains NAs... Filter them out
 de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(de_symbols$log2FoldChange) > 0.5,]
-  # 82 genes
+  # 83 genes
 ```
 
-**Exercise 1**
+### Exercise 1
 
 * Is **FOXC1** differentially expressed? What are the corresponding adjusted-value and log2FoldChanges?
 * How many genes are found differentially expressed if you change the log2FoldChange threshold to 0.8 / -0.8 and the padj threshold to 0.01?
 
-**Exercise 2**
+### Exercise 2
 
 * Repeat the analysis comparing WT vs KO for the **undifferentiated samples** only!
 * Steps are:
@@ -804,7 +892,7 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 * Read in data **DESeqDataSetFromHTSeqCount()**
 * Filter out low counts (keep high counts)
 * Fit statistical model **DESeq()**
-* rlog-transform counts **rlog()**
+* VST-transform counts **vst()**
   * Plot PCA and sample-to-sample distances heatmap
 * Check differential expression **resultsNames()**
   * How many genes are differentially expressed, when considering padj < 0.05?
@@ -821,11 +909,10 @@ library(DESeq2)
 # Create sample sheet
 
 sampletable <- data.frame(SampleName=c("5p4_25c", "5p4_27c", "5p4_28c", "5p4_29c", "5p4_30c", "5p4_31cfoxc1", "5p4_32cfoxc1", "5p4_33cfoxc1", "5p4_34cfoxc1", "5p4_35cfoxc1"),
-                          FileName=c("SRR3091420_1_counts.txt", "SRR3091421_1_counts.txt", "SRR3091422_1_counts.txt", "SRR3091423_1_counts.txt", "SRR3091424_1_counts.txt", "SRR3091425_1_counts.txt", "SRR3091426_1_counts.txt", "SRR3091427_1_counts.txt", "SRR3091428_1_counts.txt", "SRR3091429_1_counts.txt"),
+                          FileName=c("SRR3091420_counts.txt", "SRR3091421_counts.txt", "SRR3091422_counts.txt", "SRR3091423_counts.txt", "SRR3091424_counts.txt", "SRR3091425_counts.txt", "SRR3091426_counts.txt", "SRR3091427_counts.txt", "SRR3091428_counts.txt", "SRR3091429_counts.txt"),
                           Differentiation=c(rep("undiff", 2), rep("diff5days", 3), rep("undiff", 3), rep("diff5days", 2)),
                           Condition=c(rep("WT", 5), rep("KO", 5)))
 rownames(sampletable) <- gsub("_counts.txt", "", sampletable$FileName)
-
 # Modify sample sheet to keep only "undiff" samples
 
 sampletable2 <- sampletable[sampletable$Differentiation=="undiff",]
@@ -845,7 +932,7 @@ gene_ids <- rownames(se_star)
 
 library(biomaRt)
 
-mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="mar2017.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
+mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="https://sep2025.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
 
 annot <- getBM(attributes=c('ensembl_gene_id', 'chromosome_name', 'start_position', 'end_position', 'description', 'external_gene_name'), filters ='ensembl_gene_id', values = gene_ids, mart = mart)
 
@@ -863,18 +950,18 @@ norm_counts_symbols <- merge(data.frame(ID=rownames(norm_counts), norm_counts, c
 write.table(norm_counts_symbols, "normalized_counts_log2_star_undiff.txt", quote=F, col.names=T, row.names=F, sep="\t")
 
 # Transform counts for visualization
-se_rlog <- rlog(se_star2)
+se_vst <- vst(se_star2)
 
 # Build heatmap
 # load libraries pheatmap to create the heatmap plot
 library(pheatmap)
 
 # calculate between-sample distance matrix
-sampleDistMatrix <- as.matrix(dist(t(assay(se_rlog))))
+sampleDistMatrix <- as.matrix(dist(t(assay(se_vst))))
 
 # prepare a "metadata" object to add a colored bar with the differentiation and condition information
-metadata <- sampletable[,c("Differentiation", "Condition")]
-rownames(metadata) <- sampletable$SampleName
+metadata <- sampletable2[,c("Differentiation", "Condition")]
+rownames(metadata) <- sampletable2$SampleName
 
 # create figure in PNG format
 png("sample_distance_heatmap_star_undiff.png")
@@ -899,12 +986,13 @@ write.table(de_symbols, "deseq2_results_undiff.txt", quote=F, col.names=T, row.n
 
 # Select genes for which padj < 0.05
 de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
+nrow(de_select)
 
 # save results in file for further usage
 write.table(de_select, "deseq2_selection_padj005_undiff.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
 
-**Exercise 3**
+#### Exercise 3
 
 ##### Control for "Differentiation"
 
@@ -920,11 +1008,131 @@ In a way, we "discard" the expected changes due to differentiation to focus on t
 * Repeat the first analysis, changing the design **~ Condition** to **~ Differentiation + Condition**.
 * How many genes are now found differentially expressed, when filtering for padj < 0.05?
 
-**Homework**
+#### Homework
 
 Do the same using the **Salmon counts** (object *se_salmon*): how many genes are found differentially expressed when using the Salmon counts?
 How do results overlap between STAR and Salmon?
 
-**Exercise 4**
+:::{admonition}
+:class: note
+Remember to use the Gencode annotation file gencode.v49.annotation.gtf.gz preapred with the annotation columns you want to include in your normalized counts and differential expression tables.
+:::
 
-##### Batch effect in the data
+## Bonus
+
+### Batch effect in the data
+
+Sometimes, we perform RNA-seq experiments one year, and then another year later with the same study, making us wonder if we can merge data from the previous year in order to have more replicates and a better statistical power.
+
+Other times, some samples are processed at different time points, by different operators, or using slightly different protocols (e.g. different RNA extraction kits, different library preparation lots, or different sequencing runs).
+
+In all these cases, unintended technical variation can be introduced into the data — something known as a **batch effect**.
+
+:::{admonition} What is a batch effect?
+:class: note
+
+A **batch effect** is systematic, non-biological variation in gene expression data introduced by technical factors such as:
+
+* Different **sequencing runs** or **flow cells**
+* Samples processed on different **dates** or by different **operators**
+* Different **reagent lots** or **library prep kits**
+* Samples stored under different conditions before RNA extraction
+
+Batch effects can be just as large as (or larger than) the biological signal you are trying to detect, and will **confound** your differential expression results if not properly accounted for.
+:::
+
+#### Step 1: Detect batch effects using PCA
+
+The first step is always to **visualize** the data and check whether samples cluster by their **batch** rather than by their **biological condition** of interest.
+
+A PCA plot where samples separate along PC1 by batch instead of by condition (e.g., WT vs KO) is a strong indicator of a batch effect.
+
+Let's see and example:
+
+Download batch raw counts and sample table  data:
+
+```{bash}
+wget https://github.com/fabian-andrade/RNAseq_coursesCRG_2026/raw/main/docs/data/differential_expression/rnaseq_batch_example_raw_counts.txt
+wget https://github.com/fabian-andrade/RNAseq_coursesCRG_2026/raw/main/docs/data/differential_expression/rnaseq_batch_example_sample_table.txt
+```
+
+```{r}
+#### Batch Effect Correction 
+
+batch_counts <- read.csv("rnaseq_batch_example_raw_counts.txt",header = TRUE, sep="\t")
+head(batch_counts) ## this are annotated raw counts.
+
+## Let's prepare matrix with only raw counts for DESeq
+
+rownames(batch_counts) <- batch_counts$gene_id
+colnames(batch_counts)
+
+matrix_counts <- batch_counts[,9:length((batch_counts))]
+
+annot <- batch_counts[,1:8]
+colnames(annot)
+
+## Let's read the sample table
+
+sampletable <- read.csv("batch_sample_table.txt", sep="\t", header=TRUE)
+head(sampletable)  
+
+## Creating deseq object from counts matrix
+se_matrix <- DESeqDataSetFromMatrix(countData = matrix_counts, colData = sampletable, design = ~treatment)
+se_matrix
+
+se_2 <- DESeq(se_matrix)
+
+se_vst <- varianceStabilizingTransformation(se_2)
+
+png("PCA_batch.png")
+plotPCA(object = se_vst,
+        intgroup = c("treatment"))
+dev.off()
+
+
+## Batch correction with Combatseq
+
+BiocManager::install("sva")
+library(sva)
+
+rownames(sampletable) <- sampletable$sampleName
+batch <- sampletable$batch
+
+
+mat_corrected <- ComBat_seq(
+  counts = counts(se_matrix),
+  batch = batch)
+
+mat_corrected
+head(mat_corrected)
+
+se_correc <- DESeqDataSetFromMatrix(countData = mat_corrected, colData = sampletable, design = ~treatment)
+vst_correct <- varianceStabilizingTransformation(se_correc)
+
+png("PCA_batch_corrected.png")
+plotPCA(object = vst_correct,
+        intgroup = c("treatment"))
+dev.off()
+
+```
+
+##### Strategy 2: Include batch in the DESeq2 design formula
+
+The simplest and most statistically rigorous approach is to include the **Batch** variable in the DESeq2 design formula. This tells DESeq2 to model and account for the batch effect when estimating fold changes and p-values, without modifying the raw count data.
+
+```{r}
+# Re-create the DESeq2 object with Batch in the design
+se_star_batch <- DESeqDataSetFromHTSeqCount(
+    sampleTable = sampletable,
+    directory   = "counts_STAR_selected",
+    design      = ~ Batch + Condition   # Batch is controlled for; Condition is tested
+)
+
+```
+
+### Outliers
+
+### Sample swaps
+
+## Further reading materials
