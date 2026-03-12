@@ -1063,17 +1063,17 @@ batch_counts <- read.csv("rnaseq_batch_example_raw_counts.txt",header = TRUE, se
 head(batch_counts) ## this are annotated raw counts.
 
 ## Let's prepare matrix with only raw counts for DESeq
-
 rownames(batch_counts) <- batch_counts$gene_id
 colnames(batch_counts)
 
+## Let's prepare matrix with only raw counts for DESeq
 matrix_counts <- batch_counts[,9:length((batch_counts))]
 
+## Here we separate the annotation from the counts
 annot <- batch_counts[,1:8]
 colnames(annot)
 
 ## Let's read the sample table
-
 sampletable <- read.csv("batch_sample_table.txt", sep="\t", header=TRUE)
 head(sampletable)  
 
@@ -1081,10 +1081,13 @@ head(sampletable)
 se_matrix <- DESeqDataSetFromMatrix(countData = matrix_counts, colData = sampletable, design = ~treatment)
 se_matrix
 
+## Run DESeq
 se_2 <- DESeq(se_matrix)
 
+## VST, in this case we use variance stabilizing transformation to normalize the data because we have a small number of rows. 
 se_vst <- varianceStabilizingTransformation(se_2)
 
+## PCA plot
 png("PCA_batch.png")
 plotPCA(object = se_vst,
         intgroup = c("treatment"))
@@ -1099,6 +1102,7 @@ library(sva)
 rownames(sampletable) <- sampletable$sampleName
 batch <- sampletable$batch
 
+## Batch correction in raw counts with Combatseq
 
 mat_corrected <- ComBat_seq(
   counts = counts(se_matrix),
@@ -1107,9 +1111,11 @@ mat_corrected <- ComBat_seq(
 mat_corrected
 head(mat_corrected)
 
+## Creating deseq object from corrected counts
 se_correc <- DESeqDataSetFromMatrix(countData = mat_corrected, colData = sampletable, design = ~treatment)
 vst_correct <- varianceStabilizingTransformation(se_correc)
 
+## PCA plot for the vst corrected counts
 png("PCA_batch_corrected.png")
 plotPCA(object = vst_correct,
         intgroup = c("treatment"))
@@ -1117,7 +1123,7 @@ dev.off()
 
 ```
 
-##### Strategy 2: Include batch in the DESeq2 design formula
+##### Homework: Strategy 2: Include batch in the DESeq2 design formula
 
 The simplest and most statistically rigorous approach is to include the **Batch** variable in the DESeq2 design formula. This tells DESeq2 to model and account for the batch effect when estimating fold changes and p-values, without modifying the raw count data.
 
@@ -1130,6 +1136,8 @@ se_star_batch <- DESeqDataSetFromHTSeqCount(
 )
 
 ```
+
+Does this approach corrects for batch effect?
 
 ### Outliers
 
