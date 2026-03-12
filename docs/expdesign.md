@@ -29,23 +29,12 @@ seealso
 
 ## Well-designed experiment
 
-```{figure} images/design_overview.png
-:width: 500px
-:align: center
-:name: fig-design
-
-Experimental design overview. Adapted from  
-[Cambridge University's Experimental Design Manual](https://assets.cambridge.org/97811070/74293/frontmatter/9781107074293_frontmatter.pdf).
-```
-bla
-
 <div style="display:flex; justify-content:center;">
-
 
 | |
 |:---:|
 | ![fishy](images/good_exp_design.jpg) | 
-| *Figure is from [Cambridge University's Experimental Design Manual](https://assets.cambridge.org/97811070/74293/frontmatter/9781107074293_frontmatter.pdf)*|
+| *Figure is adapted from Cambridge University's Experimental Design Manual 2016* |
 
 </div>
 
@@ -56,27 +45,11 @@ bla
 | |
 |:---:|
 | ![fishy](images/factorial_design_1.jpg) | 
-| *Figure is from [Cambridge University's Experimental Design Manual](https://assets.cambridge.org/97811070/74293/frontmatter/9781107074293_frontmatter.pdf)*|
+| *Figure is adapted from Cambridge University's Experimental Design Manual 2016*|
 
 </div>
 
-
-
-
-## Well-designed experiment
-
-
-|<img src="images/good_exp_design.jpg" width="700" align="middle" />|
-|from [Cambridge University's Experimental Design Manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)|
-
-<br/>
-
-## Factorial design to address wide range of the result applicability
-
-|<img src="images/factorial_design_1.jpg" width="700" align="middle" />|
-|from [Cambridge University's Experimental Design Manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)|
-
-<br/>
+done? 
 
 
 
