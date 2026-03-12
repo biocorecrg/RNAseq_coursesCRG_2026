@@ -1,10 +1,62 @@
----
-layout: page
-title: Experimental design
-navigation: 10
----
+# Talk: Experimental design of RNA-seq experiment
 
-# Experimental design
+:::{admonition} Reminder: Phred quality scores
+:class: note
+
+Phred scores (Q scores) encode the probability of a base-calling error:
+
+| Phred Score | Error Probability | Accuracy |
+|------------|------------------|----------|
+| Q10 | 1 in 10 | 90% |
+| Q20 | 1 in 100 | 99% |
+| Q30 | 1 in 1,000 | 99.9% |
+| Q40 | 1 in 10,000 | 99.99% |
+
+:::
+
+:::{admonition} Tip
+:class: tip
+
+Reads are generally considered good quality if the median Phred score is ≥ Q30 across most positions.
+
+:::
+
+note
+tip
+warning
+important
+seealso
+
+## Well-designed experiment
+
+<div style="display:flex; justify-content:center;">
+
+```{figure} images/good_exp_design.jpg
+:width: 500px
+:name: Figure is from [Cambridge University's Experimental Design Manual](https://assets.cambridge.org/97811070/74293/frontmatter/9781107074293_frontmatter.pdf)
+
+
+| |
+|:---:|
+| ![fishy](images/good_exp_design.jpg) | 
+| *Figure is from [Cambridge University's Experimental Design Manual](https://assets.cambridge.org/97811070/74293/frontmatter/9781107074293_frontmatter.pdf)*|
+
+</div>
+
+
+## Factorial design to address wide range of the result applicability
+
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| ![fishy](images/factorial_design_1.jpg) | 
+| *Figure is from [Cambridge University's Experimental Design Manual](https://assets.cambridge.org/97811070/74293/frontmatter/9781107074293_frontmatter.pdf)*|
+
+</div>
+
+
+
 
 ## Well-designed experiment
 
