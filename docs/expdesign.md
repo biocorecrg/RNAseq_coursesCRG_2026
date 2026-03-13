@@ -45,7 +45,6 @@ Careful experimental design helps ensure that results are reproducible and stati
 
 </div>
 
-<br><br>
 
 ### Experimental design begins with the biological question, and affects every stage of an RNA-seq experiment
 
@@ -377,30 +376,63 @@ power increases with
 ```
 :::
 
-Increasing the number of biological replicates generally improves power **more than increasing sequencing depth**.
+<br>
+
+RNA-seq experiments with small numbers of biological replicates often produce
+results that are difficult to reproduce in independent experiments
+([Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630)).
 
 <br>
+
+Increasing the number of biological replicates generally improves statistical power more than increasing sequencing depth 
+([Tarazona et al., 2011](https://genome.cshlp.org/content/21/12/2213), 
+[Liu et al., 2014](https://academic.oup.com/bioinformatics/article/30/3/301/236651), 
+[Schurch et al., 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)).
+
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| ![fishy](images/Fig1_Liu_2014.png) | 
+| **(a) Increase in biological replication significantly increases the number of DE genes identified.** Numbers of sequencing reads have a diminishing return after 10 M reads. Line thickness indicates depth of replication, with 2 replicates the darkest and 7 replicates the lightest. The lines are smoothed averages for each replication level, with the shaded regions corresponding to the 95% confidence intervals. <br> **(b) Power of detecting DE genes increases with both sequencing depth and biological replication.** Similar to the trends in (a), increases in the power showed diminishing returns after 10 M reads. <br> *Figure is adapted from [Liu et al., 2014](https://academic.oup.com/bioinformatics/article/30/3/301/236651)* |
+
+</div>
+
+<br><br>
+
 ---
 
 ### Number of replicates in RNA-seq experiments
 
-> "RNA-seq is now the technology of choice for genome-wide differential gene expression experiments..."
+> "RNA was sequenced from 48 biological replicate samples of Saccharomyces cerevisiae in each of two well-studied experimental conditions; wild-type (WT) and a Δsnf2 mutant. 
+... bootstrap runs were performed with i = 100 iterations and nr = 2,…,40 replicates in each condition.
+...For a given value of nr, the mean log2 transformed fold change [log2(FC)] and median adjusted P-value or FDR calculated across all the bootstrap iterations was considered representative of the measured behavior for each individual gene. 
+Again, genes were marked as SDE when the adjusted P-value or FDR was ≤0.05. 
+From these results, true positive, true negative, false positive, and false negative rates (hereafter TPR, TNR, FPR, FNR) were then calculated as a function of nr for four arbitrary fold-change thresholds (|lo⁢g2⁡(𝐹⁡𝐶)| =𝑇 ∈{0,0.3,1,2}), by comparing the SDE genes from each bootstrap with the SDE genes from the tool's gold standard."
 >
 > — [Schurch et al., 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)
 
 
-| Effect of the number of biological replicates on the detection of differentially expressed genes (Schurch et al., 2016).|
-| :---:  |
-|<img src="images/fig2_schurch_2016.png" width="700" align="middle" />|
-| adapted from [Schurch, et al., RNA, 2016; Fig 2.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)|
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| ![fishy](images/fig2_schurch_2016.png) | 
+| **Statistical properties of edgeR (exact) as a function of log2FC threshold, T, and the number of replicates, nr. (A)** The fraction of all (7126) genes called as SDE as a function of the number of replicates nr. **(B)** Mean true positive rate (TPR) as a function of nr for four thresholds (solid curves). **(C)** Mean TPR as a function of T for nr (solid curves). **(D)** The number of genes called as TP, FP, TN, and FN as a function of nr. <br> *Figure is adapted from [Schurch, et al., RNA, 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)* |
+
+</div>
+
 
 The study showed that:
 
-- with **3 replicates**, many differentially expressed genes are missed
-- with **6 replicates**, most strong signals are detected
-- detecting small expression changes may require **more than 10 replicates**
+- With **3 replicates**, many differentially expressed genes are missed (Fig. A - <30% SDEs identified), 
+in particular, lower expressed (Fig. B - TPR = 0.8 for log2FC > 1)
+- With **6 replicates**, most strong signals are detected (Fig. A - ~40% SDEs identified;
+Fig. B - TPR = 0.87 for log2FC > 1; TPR = 0.8 for log2FC > 0.5)
+- Detecting small expression changes may require **more than 10 replicates** (Fig. C - TPR = 0.9 for log2FC > 0.3 --> FC = 1.24)
 
 <br/>
+
 
 
 
