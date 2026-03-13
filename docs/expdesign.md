@@ -103,7 +103,7 @@ bioinformatics
 <br>
 
 :::{important} **Core principles of experimental design**
-These three principles form the foundation of experimental design:
+These three principles form the foundation of experimental design: 
 
 - **Randomization** reduces systematic bias.
 - **Blocking** controls known sources of variation.
@@ -113,7 +113,8 @@ These three principles form the foundation of experimental design:
 :::
 
 <br>
-How to address core principles of experimental design for a RNA-seq experiments:<br>
+How to address core principles of experimental design for a RNA-seq experiments:
+<br>
 
 • **Replication**  → sequence multiple independent biological samples
 
@@ -209,6 +210,17 @@ determines the number of **biological replicates** in the experiment.
 ---
 
 ### Biological vs technical replicates
+
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| ![fishy](images/tech_bio_replicates.png) | 
+| *adapted from [Bernd Klaus, EMBO 2015](https://link.springer.com/article/10.15252/embj.201592958)* |
+
+</div>
+
+<br>
 
 **Biological replicates** are samples derived from **independent biological sources**.  
 They capture natural biological variability.
