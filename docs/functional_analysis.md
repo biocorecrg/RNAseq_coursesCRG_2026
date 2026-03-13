@@ -2,7 +2,7 @@
 
 First, get the files from the **undifferentiated only** DESeq2 analysis (in case we did not have time to do it):
 
-```{bash}
+```bash
 # get file
 wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/undiff.tar.gz
 
@@ -75,7 +75,7 @@ They are often based on the **Hypergeometric test** or on the **Fisher's exact t
 
 Let's prepare this list from the file we saved before:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/functional_analysis
 
 # The gene symbol is in the 12th column
@@ -143,7 +143,7 @@ The tool needs a selection of differentially expressed genes (supported IDs are:
 
 Prepare files using this time the **ENSEMBL IDs**:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/functional_analysis
 
 # Extract all gene IDs used in our analysis
@@ -176,7 +176,7 @@ In **Reference List**, we need to upload a file containing the **universe** (*de
 
 * Try the same analysis using the **gene symbols** instead of ENSEMBL IDs
 
-```{bash}
+```bash
 # Get universe with gene symbols (we already have the gene selection in deseq2_selection_padj005_symbol.txt)
 cut -f11 ~/rnaseq_course/differential_expression/undiff/normalized_counts_log2_star_undiff.txt | sed '1d' > deseq2_UNIVERSE_symbols.txt
 ```
@@ -191,7 +191,7 @@ cut -f11 ~/rnaseq_course/differential_expression/undiff/normalized_counts_log2_s
 
 In RStudio, load the `GOstats` package:
 
-```{r}
+```r
 setwd("~/rnaseq_course/functional_analysis")
 
 library("GOstats")
@@ -199,19 +199,19 @@ library("GOstats")
 
 Read in differentially expressed genes:
 
-```{r}
+```r
 de_select <- read.table("deseq2_selection_padj005_ENSEMBL.txt", header=T, as.is=T, sep="\t")
 ```
 
 The gene universe can be the list of genes **after filtering for low counts**: we prepared it already: **deseq2_UNIVERSE_ENSEMBL.txt**
 
-```{r}
+```r
 de_univ <- read.table("deseq2_UNIVERSE_ENSEMBL.txt", header=T, as.is=T, sep="\t")
 ```
 
 GOstats works only with **Entrez IDs**: we can get them with the **biomaRt** package, as we did for the differential expression analysis.
 
-```{r}
+```r
 library(biomaRt)
 
 # load database
@@ -233,7 +233,7 @@ entrez_univ <- getBM(attributes=c('entrezgene', 'ensembl_gene_id'), filters ='en
 
 As biomaRt may cause connection issues, you can download pre-computed Entrez ID files directly:
 
-```{r}
+```r
 download.file("https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/deseq2_UNIVERSE_entrez.txt", "deseq2_UNIVERSE_entrez.txt")
 download.file("https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/deseq2_selection_padj005_entrez.txt", "deseq2_selection_padj005_entrez.txt")
 
@@ -245,7 +245,7 @@ entrez_univ <- scan("deseq2_UNIVERSE_entrez.txt")
 
 We can proceed with the **hypergeometric test** (enrichment) for the **Biological Process** ontologies:
 
-```{r}
+```r
 # install annotation package
 BiocManager::install("org.Hs.eg.db")
 
@@ -280,7 +280,7 @@ df <- summary(hgOver)
 
 **GOstats** also provides an **HTML report**:
 
-```{r}
+```r
 # Produce HTML report
 htmlReport(hgOver, file="GOstats_BP.html")
 ```
@@ -291,13 +291,13 @@ We can open the report in a web browser.
 
 Load the **KEGGprofile** package:
 
-```{r}
+```r
 library(KEGGprofile)
 ```
 
 KEGGprofile also works with **Entrez ID** (we got them for the GOstats analysis).
 
-```{r}
+```r
 # KEGG pathway enrichment
 KEGGresult <- find_enriched_pathway(na.omit(unique(entrez$entrezgene)),
  returned_genenumber=10,
@@ -384,7 +384,7 @@ The remaining columns contain normalized expressions: one column per sample.
 
 Adjust the file **normalized_counts_log2_star.txt** so the first column is the gene symbol, the second is the gene ID (or anything else), and the remaining ones are the expression columns. Save the new file as **gsea_normalized_counts.txt**.
 
-```{bash}
+```bash
 cd ~/rnaseq_course/functional_analysis
 
 awk -F "\t" 'BEGIN{OFS="\t"}{print $16,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11}' ~/rnaseq_course/differential_expression/normalized_counts_log2_star.txt > gsea_normalized_counts.txt
@@ -442,7 +442,7 @@ Click on **download gsea-3.0.jar** link and save file locally to your home direc
 
 GSEA is Java-based. Launch it from a terminal window:
 
-```{bash}
+```bash
 $RUN java -Xmx1024m -jar gsea-3.0.jar
 ```
 
