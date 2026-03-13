@@ -244,8 +244,12 @@ curl -o my_readme.txt ftp://ftp.ensemblgenomes.org/pub/bacteria/release-42/fasta
 
 ## Piping
 
-ADD IMAGE
-https://commons.wikimedia.org/wiki/File:Stdstreams-notitle.svg
+![Standard Streams][stdstreams-image][^1]
+
+[stdstreams-image]: ./images/Stdstreams.png
+
+[^1]: [Source: Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Stdstreams-notitle.svg)
+
 
 **Pipe stdout to another command:**
 ```
@@ -274,6 +278,7 @@ ls non_existing_file 2> error.log
 command > all_output.log 2>&1
 ```
 
+## Common data formats
 
 * more
 * less
@@ -281,7 +286,6 @@ command > all_output.log 2>&1
 * gzip / bzip2
 * zcat
 
-## Common data formats
 
 TODO: Review what we have in the course
 
