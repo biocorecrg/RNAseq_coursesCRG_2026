@@ -153,6 +153,18 @@ And get a final counts of every feature:
 
 ```bash
 zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | grep -v "#" | cut -f3 | sort | uniq -c 
+
+      1 
+ 101233 CDS
+ 172707 exon
+  19185 five_prime_utr
+   4230 gene
+      3 Selenocysteine
+  10180 start_codon
+   9955 stop_codon
+  16561 three_prime_utr
+  25648 transcript
+
 ```
 
 <br>
