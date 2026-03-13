@@ -225,7 +225,7 @@ GOstats works only with **Entrez IDs**: we can get them with the **biomaRt** pac
 library(biomaRt)
 
 # load database
-mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="mar2017.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
+mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="https://sep2025.archive.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
 
 # ENSEMBL IDs for differentially expressed genes
 ids <- de_select
@@ -243,12 +243,17 @@ entrez_univ <- getBM(attributes=c('entrezgene', 'ensembl_gene_id'), filters ='en
 
 As biomaRt may cause connection issues, you can download pre-computed Entrez ID files directly:
 
-```r
-download.file("https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/deseq2_UNIVERSE_entrez.txt", "deseq2_UNIVERSE_entrez.txt")
-download.file("https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/deseq2_selection_padj005_entrez.txt", "deseq2_selection_padj005_entrez.txt")
+```bash
+cd ~/rnaseq_course/functional_analysis
 
-entrez <- scan("deseq2_selection_padj005_entrez.txt")
-entrez_univ <- scan("deseq2_UNIVERSE_entrez.txt")
+wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/functional_analysis/deseq2_selection_padj005_entrez.txt
+
+wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/functional_analysis/deseq2_UNIVERSE_entrez.txt
+```
+
+```r
+entrez <- read.table("deseq2_selection_padj005_entrez.txt", header=T, as.is=T, sep="\t")
+entrez_univ <- read.table("deseq2_UNIVERSE_entrez.txt", header=T, as.is=T, sep="\t")
 ```
 
 :::
