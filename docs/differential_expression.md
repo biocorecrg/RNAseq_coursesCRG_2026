@@ -683,12 +683,16 @@ mygenelong <- merge(mygenelong, sampletable, by.x="name", by.y="SampleName", all
 
 # Dot plot
 
-pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differentiation, shape=Condition, label=name)) +
+pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differentiation, shape=Condition, label=name)) + 
   geom_point() +
-  geom_text(nudge_x=0.2) +  
+  geom_text_repel(nudge_x=0.2) +  
   xlab(label="Experimental group") +
   ylab(label="Normalized expression (log2)") +
+  labs(title = "FOXC1") +
   theme_bw()
+
+ggsave("counts_foxc1_nice.png", pdot)
+
 
 ```
 
@@ -706,9 +710,14 @@ pbox <- ggplot(data=mygenelong,
                mapping=aes(x=Condition, y=value, fill=Differentiation, label=name)) +
   geom_boxplot(alpha = 0.3) +
   geom_jitter(aes(color=Differentiation), width=0.2, size=2)+
+  geom_text_repel() +
   xlab("Experimental group") +
   ylab("Normalized expression (log2)") +
+  labs(title = "FOXC1") +
   theme_bw()
+
+ggsave("counts_foxc1_nice_boxplot.png", pbox)
+
 
 ```
 
