@@ -417,6 +417,15 @@ And then feeding the custom config file using the `-c` parameter
 nextflow run /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-core-rnaseq_dev/dev -profile singularity -params-file /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-params.json -c my_local.config  -resume
 ```
 
+## Nextflow versions
+Nextflow has both stable and edge releases. Some pipelines may require the use of Nextflow edge releases to exploit particular features.
+
+Nextflow installs the latest stable version by default. You can get an edge release either by defining the exact version with NXF_VER or by using the NXF_EDGE environment variable: 
+
+```bash
+NXF_VER=25.11.0-edge nextflow run ...
+
+```
 
 After some minutes, we got:
 
