@@ -40,11 +40,21 @@ For our data analysis, we will use the [nf-core RNAseq pipeline](https://nf-co.r
 As you can see, we have almost 40 tools that are chained and available. This level of complexity was nearly impossible in the past without the use of an orchestrator.
 
 We can identify 5 macro areas:
-- Preprocessing: merge different sequencing runs, infer strandness, QC, UMI extraction, adapter trimming and contaminants, and rRNA removal.  
-- Genome alignment using either Star, Hisat2 or bowtie2. Quantification with Rsem or Salmon. (Hisat2 has no quantification method)
-- Transcriptome pseudo-alignment with either Salmon or Kallisto.
-- Post-processing after genome alignment: sorting, umi and read deduplication, transcriptome assembly, and quantification. Generation of read coverage files (bigWig) for displaying in genome browsers.
-- Quality control and reporting after post-processing: QC on alignment, such as RSeQC, qualimap, etc. Detection of contamination and final reporting with MultiQC 
+
+### Preprocessing
+Merge different sequencing runs, infer strandness, QC, UMI extraction, adapter trimming and contaminants, and rRNA removal.
+
+### Genome alignment
+Genome alignment using either Star, Hisat2 or bowtie2. Quantification with Rsem or Salmon. (Hisat2 has no quantification method)
+
+### Transcriptome pseudo-alignment
+Transcriptome pseudo-alignment with either Salmon or Kallisto.
+
+### Post-processing after genome alignment
+Sorting, umi and read deduplication, transcriptome assembly, and quantification. Generation of read coverage files (bigWig) for displaying in genome browsers.
+
+### Quality control and reporting after post-processing
+QC on alignment, such as RSeQC, qualimap, etc. Detection of contamination and final reporting with MultiQC 
 
 We can use the nf-core tools by installing them using **pip**.  
 
