@@ -1212,7 +1212,7 @@ Using the previous sample table and the matrix counts, create a DESeq2 object ac
 ```r
 # Re-create the DESeq2 object with Batch in the design
 se_correc <- DESeqDataSetFromMatrix(
-  countData = mat_corrected, 
+  countData = matrix_counts, 
   colData = sampletable, 
   design = ~batch + treatment  # Batch is controlled and treatment is tested
   ) 

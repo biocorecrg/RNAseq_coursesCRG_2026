@@ -104,7 +104,7 @@ It does not require the input of a gene universe: only a selection of genes or a
 
 | |
 |:---:|
-| ![EnrichR paper](images/enrichr_paper1.jpg) |
+| ![EnrichR paper](images/enrichr_paper1.jpg) | Title: <https://pmc.ncbi.nlm.nih.gov/articles/PMC3637064/> |
 
 The default EnrichR interface works for *Homo sapiens* and *Mus musculus*.
 However, EnrichR also provides a [set of tools](https://amp.pharm.mssm.edu/modEnrichr/) for ortholog conversion and enrichment analysis of more organisms:
