@@ -56,10 +56,12 @@ Sorting, umi and read deduplication, transcriptome assembly, and quantification.
 ### Quality control and reporting after post-processing
 QC on alignment, such as RSeQC, qualimap, etc. Detection of contamination and final reporting with MultiQC 
 
+--------
+
 We can use the nf-core tools by installing them using **pip**.  
 
 ```{note}
-You might also think of getting it from Biocontainers, but this won't work when executing the pipeline with other containers!
+You might also think of getting nf-core tools from Biocontainers, but this won't work when executing the pipeline!
 ```
 
 ```bash
@@ -258,6 +260,7 @@ process {
 }
 ```
 
+
 We need to define the input files inside a sample sheet.  
 
 ```
@@ -380,6 +383,34 @@ In brief, the command creates a soft link for standardizing the name and contain
 This definition is not fixed; it is generated at run time, depending on your configuration, and is linked to the resources requested to your system when submitting the jobs.
 
 Nextflow takes care of all these aspects, so that an increase of resources is automatically translated into changing the command line.
+
+You can also run nextflow without using the nf-core tools. Just using the command line that was written before in the logs or present in the first row of the file `.nextflow.log`
+
+```bash
+head -n 1 .nextflow.log
+Mar-09 17:07:35.926 [main] DEBUG nextflow.cli.Launcher - $> nextflow run /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-core-rnaseq_dev/dev -profile singularity -params-file /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-params.json
+```
+
+In case of failure, you can resume by just adding the `-resume` parameter to the nextflow command line. You can also change the maximum resources available by using a local config file like
+
+```bash
+vi my_local.config 
+
+process {
+  resourceLimits = [
+    cpus: 4,
+    memory: 6.GB,
+    time: 24.h
+  ]
+}
+```
+
+And then feeding the custom config file using the `-c` parameter
+
+```bash
+nextflow run /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-core-rnaseq_dev/dev -profile singularity -params-file /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-params.json -c my_local.config  -resume
+```
+
 
 After some minutes, we got:
 
