@@ -4,13 +4,8 @@ First, get the files from the **undifferentiated only** DESeq2 analysis (in case
 
 ```bash
 # get file
-wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/undiff.tar.gz
+wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/undiff
 
-# extract archive
-tar -xvzf undiff.tar.gz
-
-# remove archive
-rm undiff.tar.gz
 ```
 
 ## Databases
@@ -21,17 +16,25 @@ rm undiff.tar.gz
 |:---:|
 | ![Gene Ontology logo](images/GO_logo.png) |
 
-The [Gene Ontology (GO)](http://geneontology.org/) describes our knowledge of the biological domain with respect to three aspects:
+The [Gene Ontology (GO)](http://geneontology.org/) describes our knowledge of the biological domain with respect to three aspects (domains):
 
-| GO domains / root terms | Description |
-| :----: | :----: |
-| Molecular Function | Molecular-level activities performed by gene products. e.g. **catalysis**, **binding**. |
-| Biological Process | Larger processes accomplished by multiple molecular activities. e.g. **apoptosis**, **DNA repair**. |
-| Cellular Component | The locations where a gene product performs a function. e.g. **cell membrane**, **ribosome**. |
+| GO domain | Description | Biological Level |
+| :--- | :--- | :--- |
+| **Biological Process (BP)** | Coordinated series of molecular activities that contribute to a biological goal. | Integrative (e.g., *mitosis*, *DNA repair*) |
+| **Molecular Function (MF)** | Elemental activities performed by a gene product at the molecular level. | Elemental (e.g., *catalysis*, *binding*) |
+| **Cellular Component (CC)** | The physical locations or complexes where a gene product is active. | Spatial (e.g., *nucleus*, *ribosome*) |
 
-Example of GO annotation: the gene product "cytochrome c" can be described by the **molecular function** *oxidoreductase activity*, the **biological process** *oxidative phosphorylation*, and the **cellular component** *mitochondrial matrix*.
+:::{admonition} Differences in number and granularity
+:class: note
 
-The structure of GO can be described as a graph: each GO term is a **node**, each **edge** represents the relationships between the nodes. For example:
+* **Biological Process** is typically the largest and most complex domain, often yielding the most specific biological insights in RNA-seq studies.
+* The structure is a **Directed Acyclic Graph (DAG)**, meaning a term can have multiple parents.
+* **True Path Rule**: If a gene is associated with a specific child term, it is automatically associated with all its parent terms up to the root. This is why "higher" terms in the hierarchy (closer to the root) contain many more genes than "lower", more specific terms.
+:::
+
+Example: the gene product "cytochrome c" is associated with the **molecular function** *oxidoreductase activity*, the **biological process** *oxidative phosphorylation*, and the **cellular component** *mitochondrial matrix*.
+
+The structure of GO can be described as a graph: each GO term is a **node**, and each **edge** represents the relationship (e.g., *is_a*, *part_of*) between nodes.
 
 | |
 |:---:|
@@ -56,13 +59,19 @@ Example of the [*Homo sapiens* melanoma pathway](https://www.genome.jp/dbget-bin
 |:---:|
 | ![MSigDB banner](images/gsea_msig_banner.png) |
 
-The [Molecular Signatures Database (MSigDB)](http://software.broadinstitute.org/gsea/msigdb/index.jsp) is a collection of 17810 annotated gene sets (as of May 2019) created to be used with the GSEA software (but not only).
+The [Molecular Signatures Database (MSigDB)](http://software.broadinstitute.org/gsea/msigdb/index.jsp) is a collection of  35361 gene sets in the Human Molecular Signatures Database (MSigDB) (as of March 2026) created to be used with the GSEA software (but not only).
 
-It is divided into [8 major collections](http://software.broadinstitute.org/gsea/msigdb/collections.jsp) (that include the previously described Gene Ontologies and KEGG pathways):
+It is divided into [9 major collections](https://www.gsea-msigdb.org/gsea/msigdb/human/collections.jsp) (that include the previously described Gene Ontologies and KEGG pathways):
 
 | |
 |:---:|
 | ![MSigDB collections](images/gsea_msig_sets.png) |
+
+:::{admonition} Mouse MSigDB Collections
+:class: note
+
+A collection of gene sets is also available for mouse: [Mouse Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/mouse/collections.jsp).
+:::
 
 ## Enrichment analysis based on gene selection
 
@@ -76,9 +85,10 @@ They are often based on the **Hypergeometric test** or on the **Fisher's exact t
 Let's prepare this list from the file we saved before:
 
 ```bash
+mkdir -p ~/rnaseq_course/functional_analysis
 cd ~/rnaseq_course/functional_analysis
 
-# The gene symbol is in the 12th column
+# The gene symbol is in the 12th column, sed '1d' removes the header
 cut -f 12 ~/rnaseq_course/differential_expression/undiff/deseq2_selection_padj005_undiff.txt | sed '1d' > deseq2_selection_padj005_symbols.txt
 ```
 

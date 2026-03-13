@@ -1142,10 +1142,9 @@ PCA_batch <- ggplot(pcaData, aes(PC1, PC2, color=treatment)) +
                 geom_point(size=3) +
                 geom_text_repel(aes(label=name), vjust=-1) +
                 xlab(paste0("PC1: ", percentVar[1], "% variance")) +
-                ylab(paste0("PC2: ", percentVar[2], "% variance")) +
-                coord_fixed()
+                ylab(paste0("PC2: ", percentVar[2], "% variance")) 
 
-ggsave("PCA_batch.png",PCA_batch)
+ggsave("PCA_batch.png",PCA_batch,  width = 8, height = 6)
 
 ## Batch correction with Combatseq
 
@@ -1180,10 +1179,9 @@ pca_batch_correc <- ggplot(pcaData, aes(PC1, PC2, color=treatment)) +
                       geom_point(size=3) +
                       geom_text_repel(aes(label=name), vjust=-1) +
                       xlab(paste0("PC1: ", percentVar[1], "% variance")) +
-                      ylab(paste0("PC2: ", percentVar[2], "% variance")) +
-                      coord_fixed()
+                      ylab(paste0("PC2: ", percentVar[2], "% variance")) 
 
-ggsave("PCA_batch_corrected.png",pca_batch_correc)
+ggsave("PCA_batch_corrected.png",pca_batch_correc,  width = 8, height = 6)
 
 ```
 
