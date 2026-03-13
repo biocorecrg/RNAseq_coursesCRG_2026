@@ -1130,13 +1130,11 @@ A **batch effect** is systematic, non-biological variation in gene expression da
 Batch effects can be just as large as (or larger than) the biological signal you are trying to detect, and will **confound** your differential expression results if not properly accounted for.
 :::
 
-#### Step 1: Detect batch effects using PCA
+#### Detect batch effects using PCA
 
 The first step is always to **visualize** the data and check whether samples cluster by their **batch** rather than by their **biological condition** of interest.
 
-A PCA plot where samples separate along PC1 by batch instead of by condition (e.g., WT vs KO) is a strong indicator of a batch effect.
-
-Let's see and example:
+On the following example, we have samples that were processed at different weeks but RNA extraction was performed on the same day for all samples. A batch column indicating if samples were processed on week 1 (values   = 1) or week 2 (values = 2) is included in the sample table.
 
 Download batch raw counts and sample table  data:
 
@@ -1151,12 +1149,13 @@ wget https://github.com/fabian-andrade/RNAseq_coursesCRG_2026/raw/main/docs/data
 batch_counts <- read.csv("rnaseq_batch_example_raw_counts.txt",header = TRUE, sep="\t")
 head(batch_counts) ## this are annotated raw counts.
 
-## Let's prepare matrix with only raw counts for DESeq
+## Let's set the gene_id as row names
 rownames(batch_counts) <- batch_counts$gene_id
 colnames(batch_counts)
 
 ## Let's prepare matrix with only raw counts for DESeq
 matrix_counts <- batch_counts[,9:length((batch_counts))]
+colnames(matrix_counts)
 
 ## Here we separate the annotation from the counts
 annot <- batch_counts[,1:8]
@@ -1173,7 +1172,7 @@ se_matrix
 ## Run DESeq
 se_2 <- DESeq(se_matrix)
 
-## VST, in this case we use variance stabilizing transformation to normalize the data because we have a small number of rows. 
+## VST, in this case we use variance stabilizing transformation to normalize the data because we have a small dataset. 
 se_vst <- varianceStabilizingTransformation(se_2)
 
 ## PCA plot
@@ -1182,9 +1181,7 @@ plotPCA(object = se_vst,
         intgroup = c("treatment"))
 dev.off()
 
-
-## Batch correction with Combatseq
-
+# Lets correct for batch effect using ComBat-seq
 BiocManager::install("sva")
 library(sva)
 
@@ -1192,7 +1189,6 @@ rownames(sampletable) <- sampletable$sampleName
 batch <- sampletable$batch
 
 ## Batch correction in raw counts with Combatseq
-
 mat_corrected <- ComBat_seq(
   counts = counts(se_matrix),
   batch = batch)
@@ -1224,20 +1220,28 @@ PCA after correction
 |:---:|
 | ![PCA after correction](images/PCA_batch_corrected.png) |
 
-##### Homework: Strategy 2: Include batch in the DESeq2 design formula
+##### Homework
 
-The simplest and most statistically rigorous approach is to include the **Batch** variable in the DESeq2 design formula. This tells DESeq2 to model and account for the batch effect when estimating fold changes and p-values, without modifying the raw count data.
+Another approach to take into account batch effect is to include the **Batch** variable in the DESeq2 design formula. This tells DESeq2 to model and account for the batch effect when estimating fold changes and p-values, without modifying the raw count data.
+
+:::{admonition}
+:class: note
+
+More information <https://www.biostars.org/p/403053/>
+:::
+
+Using the previous sample table and the matrix counts, create a DESeq2 object accounting for batch effect in the design formula.
 
 ```r
 # Re-create the DESeq2 object with Batch in the design
-se_star_batch <- DESeqDataSetFromHTSeqCount(
-    sampleTable = sampletable,
-    directory   = "counts_STAR_selected",
-    design      = ~ Batch + Condition   # Batch is controlled for; Condition is tested
-)
-
+se_correc <- DESeqDataSetFromMatrix(
+  countData = mat_corrected, 
+  colData = sampletable, 
+  design = ~batch + treatment  # Batch is controlled and treatment is tested
+  ) 
 ```
 
+Create a vst object and visualize your data using PCA.
 Does this approach corrects for batch effect?
 
 ### Outliers detection
