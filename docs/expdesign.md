@@ -1,9 +1,11 @@
 # Talk: Experimental design of RNA-seq experiment
 
+---
+
 ## Reproducibility in biological experiments
 
-Reproducibility is a central goal of scientific research. 
-A result is considered reproducible when independent experiments performed under similar conditions lead to consistent conclusions. 
+Reproducibility is a central goal of scientific research. <br>
+A result is considered reproducible when independent experiments performed under similar conditions lead to consistent conclusions. <br>
 In biological studies, reproducibility can be challenging because biological systems exhibit substantial natural variability and experiments often involve multiple sources of technical variation.
 
 
@@ -14,11 +16,11 @@ Several factors can reduce reproducibility, including
 
 High-throughput experiments such as RNA-seq are particularly sensitive to these issues because they measure thousands of features simultaneously and rely on statistical models to detect differences between conditions.
 
-The large-scale study by [SEQC Consortium 2014](https://pmc.ncbi.nlm.nih.gov/articles/PMC4321899)
+The large-scale study lead by [SEQC Consortium 2014](https://pmc.ncbi.nlm.nih.gov/articles/PMC4321899)
 showed that RNA-seq results are consistent across technical replicates, laboratories, and sequencing platforms.
 
-However, the most recent study on replicability of bulk RNA-seq experiments in [PLOS Comp Biol 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1011630)
-confirmed the previous study in [RNA 2016](https://pubmed.ncbi.nlm.nih.gov/27022035/)
+However, the most recent study on replicability of bulk RNA-seq experiments published in [PLOS Comp Biol 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1011630)
+confirmed the previous study ([RNA 2016](https://pubmed.ncbi.nlm.nih.gov/27022035/))
 that biological variability remains substantial, and 
 statistical power of reliable differential expression analysis strongly depends on the number of biological replicates.
 
@@ -30,7 +32,7 @@ Careful experimental design helps ensure that results are reproducible and stati
 - control unwanted sources of variation, and 
 - provide sufficient information to estimate biological variability.
 
-<br>
+---
 
 ## What makes a well-designed experiment?
 
@@ -43,9 +45,7 @@ Careful experimental design helps ensure that results are reproducible and stati
 
 </div>
 
-<br>
-
-<br>
+<br><br>
 
 ### Experimental design begins with the biological question, and affects every stage of an RNA-seq experiment
 
@@ -58,6 +58,7 @@ Careful experimental design helps ensure that results are reproducible and stati
 
 </div>
 
+:::{note}
 Think:
 
 ```
@@ -71,17 +72,20 @@ sequencing
        ↓
 bioinformatics
 ```
+:::
+
+
 
 <br>
 
-**Biological questions**:
-- Which genes change their expression levels between treated and control samples?
+**Examples of biological questions**:
+1. Which genes change their expression levels between treated and control samples?
 
-- Which transcript isoforms or alternative splicing events differ between treated and control samples?
+2. Which transcript isoforms or alternative splicing events differ between treated and control samples?
 
-- Which genes are expressed at very low levels in this tissue, and how does their expression change between conditions?
+3. Which genes are expressed at very low levels in this tissue, and how does their expression change between conditions?
 
-- Which cell types respond to treatment, and what genes change expression within each cell type?
+4. Which cell types respond to treatment, and what genes change expression within each cell type?
 
 <br>
 
@@ -90,11 +94,11 @@ bioinformatics
 <br>
 
 
-| **Goal** | **Design principle** |
-|------|------------------|
-| Unbiased estimates | Randomization |
-| Precise estimates | Blocking |
-| Adequate statistical power | Replication |
+| **Goal** | **What it means in RNA-seq experiments** | **Design principle** |
+|------|------------------|------------------|
+| **Unbiased estimates** | Observed expression differences should reflect biological differences rather than artifacts from sequencing lanes, library preparation order, or operator effects. | **Randomization** |
+| **Precise estimates** | Known sources of variation such as batch, patient, or sequencing run are accounted for to improve accuracy of expression estimates. | **Blocking** |
+| **Adequate statistical power** | Sufficient biological replicates are included so that true differential expression can be detected despite biological variability. | **Replication** |
 
 <br>
 
@@ -109,19 +113,291 @@ These three principles form the foundation of experimental design:
 :::
 
 <br>
-For RNA-seq experiments:<br>
+How to address core principles of experimental design for a RNA-seq experiments:<br>
 
-• Replication  
-  → sequence multiple independent biological samples
+• **Replication**  → sequence multiple independent biological samples
 
-• Randomization  
-  → distribute samples across lanes or library batches
+• **Randomization**  → distribute samples across lanes or library batches
 
-• Blocking  
-  → include batch or patient in the model
-	( design = ~ batch + condition )
+• **Blocking**  → include batch in the model ( design = ~ batch + condition )
+
 
 <br>  
+
+---
+
+## Replication or Why independent samples are required
+
+Replication is essential for reliable statistical inference in RNA-seq experiments.  
+Replication allows estimation of **biological variability**, which determines whether observed differences in gene expression are larger than expected by chance.
+
+:::{important} **Golden rule of replication**
+Replicates must represent **independent biological samples (or units)**, not repeated measurements of the same sample.
+:::
+
+---
+
+### Experimental units
+
+The **experimental unit** is the smallest entity that independently receives the treatment.  
+
+It defines the level at which **biological replication** occurs.
+
+| Term                  | Meaning                                          |
+| --------------------- | ------------------------------------------------ |
+| **Experimental unit** | entity that independently receives the treatment |
+| **Sample**            | material measured by sequencing                  |
+
+<br>
+
+In many RNA-seq experiments, <br>
+
+**Experimental unit = Sample = Biological replicate** 
+<br>
+
+Examples:
+
+| Experiment | Experimental unit | RNA-seq sample |
+|---|---|---|
+| Drug treatment in mice | individual mouse | RNA extracted from each mouse |
+| Patient RNA-seq study | patient | tissue sample from each patient |
+| Cell culture experiment | independent culture | RNA extracted from each culture |
+<br>
+
+| mouse   | RNA-seq sample |
+| ------- | -------------- |
+| mouse 1 | sample 1       |
+| mouse 2 | sample 2       |
+| mouse 3 | sample 3       |
+
+<br>
+
+However, multiple samples can sometimes originate from the same experimental unit. 
+For example:
+
+| mouse   | tissue sample |
+| ------- | ------------- |
+| mouse 1 | liver         |
+| mouse 1 | kidney        |
+| mouse 1 | brain         |
+
+
+**experimental unit = mouse != sample** <br>
+**samples = tissues != biological replicate**
+
+<br>
+
+| RNA extraction | library   |
+| -------------- | --------- |
+| sample A       | library 1 |
+| sample A       | library 2 |
+
+
+**experimental unit = RNA sample** <br>
+**libraries = technical replicates != biological replicate**
+<br><br>
+
+:::{important}
+Treating samples originated from the same experimental unit
+as **independent replicates** would result in **pseudoreplication**. <br>
+Once the experimental unit is defined, the number of independent units 
+determines the number of **biological replicates** in the experiment.
+:::
+
+<br>
+
+---
+
+### Biological vs technical replicates
+
+**Biological replicates** are samples derived from **independent biological sources**.  
+They capture natural biological variability.
+
+Examples:
+
+- different individuals  
+- independent cell cultures  
+- independent tissue samples  
+
+<br>
+
+**Technical replicates** are repeated measurements of the **same biological sample**.
+
+Examples:
+
+- different library preparations from the same RNA sample  
+- sequencing the same library in multiple lanes  
+- repeated sequencing runs of the same library
+
+  <br>
+
+| Type of replicate | Example | What it measures |
+|---|---|---|
+| **Biological replicate** | RNA-seq from three different mice | Biological variability |
+| **Technical replicate** | Two libraries prepared from the same RNA sample | Technical variability |
+| **Lane replicate** | Same library sequenced in two lanes | Sequencing variability |
+
+<br>
+
+Technical replicates measure **technical variability**, which can arise from:
+
+- library preparation (reverse transcription, PCR)
+- sequencing reactions
+- sample loading or lane effects
+
+However, modern RNA-seq protocols have **very low technical variability**.
+
+<br>
+
+---
+
+### Pseudoreplication
+
+A common mistake is **pseudoreplication**, where technical replicates are incorrectly treated as biological replicates.
+
+Example:
+
+```
+Mouse 1
+  ├── library 1
+  ├── library 2
+  └── library 3
+```
+
+Treating them as independent samples artificially inflates statistical significance.
+<br>
+
+Typical examples of pseudoreplication include:
+
+- multiple libraries prepared from the same RNA extraction  
+- multiple wells from the same cell culture  
+- several tissue slices from the same animal  
+
+<br>
+
+**Questions:** 
+**Are these samples technical replicates, biological replicates, or pseudoreplicates?**
+1. Three samples of blood were obtained from a healthy patient not under any treatment during three consecutive days at the same hour.
+2. 1000 cells were isolated from a tumor sample obtained from a single patient.
+The cells were divided into three batches, pooled again, and three RNA-seq libraries were prepared and sequenced independently.
+3. RNA was extracted from a single mouse liver sample.
+Three independent RNA-seq libraries were prepared from this RNA extraction by 3 different people and sequenced separately.
+4. Bone marrow was obtained from 12 mice. Cells from 6 mice were pooled to form sample 1; and cells from another 6 mice, to make sample 2. 
+5. Three vials of blood were obtained from a patient at the same time; from each, a library was prepared independently and sequenced. 
+
+<br>
+
+---
+
+### Technical vs biological variability in RNA-seq
+
+Studies have shown that **biological variability is typically much larger than technical variability** in RNA-seq experiments.
+
+Key studies:
+
+- [SEQC Consortium 2014](https://pmc.ncbi.nlm.nih.gov/articles/PMC4321899)
+- [Schurch et al, RNA 2016](https://pubmed.ncbi.nlm.nih.gov/27022035/)
+- [Degen & Medo, PLOS Comp Biol 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1011630)
+]<br>
+
+These studies demonstrated that RNA-seq measurements are highly reproducible across technical replicates.
+
+:::{admonition} 
+:class: important
+**Biological replication is more important than performing technical replicates** in most RNA-seq experiments.
+:::
+
+<br>
+
+---
+
+### Replication and statistical power
+
+Statistical power is the probability that an RNA-seq experiment correctly detects a true difference in gene expression between conditions;
+that is, the probability of rejecting the null hypothesis when it is false. <br>
+The null hypothesis is that the gene expression is the same in both conditions.
+
+**Power** is the probability of **not accepting a false null hypothesis**, or the probability of detecting a specified difference, or **effect size**, given it exists, within the population *(e.g., a fold change in a microarray experiment or a change in the size of a tumour)*. 
+
+:::{admonition} 
+:class: note
+The desired power of the research experiment is usually above 80%; <br>
+while for clinical studies, it might be required to be above 90%. 
+:::
+
+**Power (aka, sensitivity of the statistical test) = 1 - (type II error)**,  *(type II error is an error of accepting a false null hypothesis)*
+
+power = 0.8 --> 80% chance of detecting a true differential expression signal
+
+If all other parameters remain the same, 
+a larger experiment will have more power than a smaller experiment. 
+<br><br>
+However, if an experiment is too large and 
+a smaller experiment would have achieved the same 
+statistical result, it is **overpowered experiment** 
+and then it has wasted subjects, money, time and effort, and is potentially unethical. 
+<br><br>
+On the other hand, if an experiment is too small, it may **lack power and miss important differences that do actually exist**. <br>
+Therefore, an **underpowered study** also wastes resources and can be unethical. 
+<br><br>
+It is important to know what effect size is important to ensure that an experiment is sufficiently powered.
+<br>
+
+In RNA-seq experiments, replication increases the ability to detect true differences in gene expression.
+<br>
+The statistical power of an RNA-seq experiment depends on:
+
+- **number of biological replicates**: 2 replicates → low power, 
+6 replicates → good power
+- **effect size** (magnitude of expression change): log2fc=3 easy to detect, log2fc=0.5 need more power
+- **biological variability** within each condition: higher variability → lower power
+- **sequencing depth**: more reads → lower-expressed genes are detected
+
+<br>
+
+:::{note}
+```
+power increases with
+  ↑ number of replicates
+  ↑ effect size
+  ↓ biological variability
+  ↑ sequencing depth
+```
+:::
+
+Increasing the number of biological replicates generally improves power **more than increasing sequencing depth**.
+
+<br>
+---
+
+### Number of replicates in RNA-seq experiments
+
+> "RNA-seq is now the technology of choice for genome-wide differential gene expression experiments..."
+>
+> — [Schurch et al., 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)
+
+
+| Effect of the number of biological replicates on the detection of differentially expressed genes (Schurch et al., 2016).|
+| :---:  |
+|<img src="images/fig2_schurch_2016.png" width="700" align="middle" />|
+| adapted from [Schurch, et al., RNA, 2016; Fig 2.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)|
+
+The study showed that:
+
+- with **3 replicates**, many differentially expressed genes are missed
+- with **6 replicates**, most strong signals are detected
+- detecting small expression changes may require **more than 10 replicates**
+
+<br/>
+
+
+
+
+
+
+
+
+
 
 ## Factorial design to address wide range of the result applicability
 
