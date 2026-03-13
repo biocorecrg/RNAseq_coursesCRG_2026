@@ -158,7 +158,6 @@ The FOXC1 protein is also involved in the normal development of other parts of t
 Get the count data for the full data set, output of both STAR and Salmon:
 
 ```bash
-
 # Navigate to your course directory
 cd ~/rnaseq_course/differential_expression
 
@@ -293,7 +292,6 @@ Note that in the R code boxes below **\#** is followed by comments, i.e. words n
 * Go to the **differential_expression** working directory and install and load the required packages (loading a package in R allows to use specific sets of functions developed as part of this package).
 
 ```r
-
 library(BiocManager)
 
 BiocManager::install("DESeq2") ## Installation of the package for differential expression analysis, only needed the first time in Rstudio local installation.
@@ -306,11 +304,8 @@ BiocManager::install("pheatmap")
 install.packages("reshape2")
 
 # setwd = set working directory; equivalent to the Linux "cd". All the files you will write will be in this directory
-
 # the R equivalent to the Linux pwd is getwd() = get working directory
-
 setwd("~/rnaseq_course/differential_expression")
-
 ```
 
 ### Import STAR counts
@@ -318,25 +313,18 @@ setwd("~/rnaseq_course/differential_expression")
 * Read in the sample table that we prepared:
 
 ```r
-
 # read in the sample sheet
-
 # header = TRUE: the first row is the "header", i.e. it contains the column names
-
 # sep = "\t": the columns/fields are separated with tabs
-
 sampletable <- read.table("sample_sheet_foxc1.txt", header=T, sep="\t")
 
 # add the SRA codes as row names (it is needed for some of the DESeq functions)
-
 rownames(sampletable) <- gsub("_counts.txt", "", sampletable$FileName)
 
 # display the first 6 rows
-
 head(sampletable)
 
 # check the number of rows and the number of columns
-
 nrow(sampletable) # if this is not 10, please raise your hand !
 ncol(sampletable) # if this is not 4, also raise your hand !
 ```
@@ -350,7 +338,6 @@ DESeq will process only the counts for the files listed in the sample table (kee
 
 ```r
 # Import STAR counts
-
 se_star <- DESeqDataSetFromHTSeqCount(sampleTable = sampletable,
                         directory = "counts_STAR_selected",
                         design = ~ Condition)
@@ -369,30 +356,23 @@ For more information on how to build a design formula, see [here](https://www.at
 * Load the count data from **SALMON** into a **DESeq** object:
 
 ```r
-
 # Go to the deseq2 directory
-
 setwd("~/rnaseq_course/differential_expression")
 
 # Load the tximport package that we use to import Salmon counts
-
 library(tximport)
 
 # List the quantification files from Salmon: one quant.sf file per sample
 
 # dir is list all files in "~/rnaseq_course/differential_expression/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
-
 files <- dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon", recursive=TRUE, pattern="quant.sf", full.names=TRUE)
 files
 
 # files is a vector of file paths. we will name each element of this vector with a simplified corresponding sample name
-
 names(files) <- gsub("_quant.sf", "", dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon"))
-
 names(files)
 
 # Read in the two-column data.frame linking transcript id (column 1) to gene id (column 2)
-
 transcripts2genes <- read.table("tx2gene.gencode.v49.csv",
   sep="\t",
   header=F)
@@ -400,21 +380,17 @@ transcripts2genes <- read.table("tx2gene.gencode.v49.csv",
 # tximport can import data from Salmon, Kallisto, Sailfish, RSEM, Stringtie
 
 # here we summarize the transcript-level counts to gene-level counts
-
 txi <- tximport(files,
   type = "salmon",
   tx2gene = transcripts2genes)
 
 # check the names of the "slots" of the txi object
-
 names(txi)
 
 # display the first rows of the counts per gene information
-
 head(txi$counts)
 
 # Create a DESeq2 object based on Salmon per-gene counts
-
 se_salmon <- DESeqDataSetFromTximport(txi,
    colData = sampletable,
    design = ~ Condition)
@@ -438,19 +414,14 @@ From DESeq2 vignette: *While it is not necessary to pre-filter low count genes b
 Let's filter:
 
 ```r
-
 # Number of genes before filtering
-
 nrow(se_star)
 
 # Filter
-
 se_star <- se_star[rowSums(counts(se_star)) > 10, ]
 
 # Number of genes left after low-count filtering
-
 nrow(se_star)
-
 ```
 
 ### Prepare annotation
@@ -472,33 +443,24 @@ Additionally to the ENSEMBL gene IDs we want (for example):
 ```r
 
 # load library
-
 library(biomaRt)
 
 # list ENSEMBL archives
-
 listEnsemblArchives()
 
 # We used version 115 of ENSEMBL, which corresponds to URL <https://sep2025.archive.ensembl.org>
-
 # we can load the corresponding database
-
 mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="<https://sep2025.archive.ensembl.org>", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
 
 # "filters" correspond to the input WE want to retrieve more annotation for
-
 # a list of available filters can be obtained with listFilters(mart)
-
 head(listFilters(mart))
 
 # let's see what is available in terms of ensembl ID
-
 grep("ensembl", listFilters(mart)[,1], value=TRUE)
 
 # ensembl_gene_id is what we want
-
 # "attributes" correspond to the kind of annotation you want to retrieve
-
 # a list of available attributes can be obtained with listAttributes(mart)
 
 head(listAttributes(mart))
@@ -506,21 +468,15 @@ head(listAttributes(mart))
 # you can browse and decide what is interesting for you. For this exercise, we will use 'ensembl_gene_id', 'chromosome_name', 'start_position', 'end_position', 'description', 'external_gene_name'
 
 # list of ENSEMBL IDs we want to annotate
-
 gene_ids <- rownames(se_star)
-
 # 18084 IDs
 
 # annotate
-
 annot <- getBM(attributes=c('ensembl_gene_id', 'chromosome_name', 'start_position', 'end_position', 'description', 'external_gene_name'), filters ='ensembl_gene_id', values = gene_ids, mart = mart)
-  
 dim(annot)
-
 # 18084 rows
 
 head(annot)
-
 ```
 
 ### Fit statistical model
@@ -528,9 +484,7 @@ head(annot)
 All steps are wrapped up in a single call to **`DESeq()`**, which runs three phases: normalization, dispersion estimation, and statistical testing.
 
 ```r
-
 se_star2 <- DESeq(se_star)
-
 ```
 
 * **Estimating size factors:** corrects for differences in sequencing depth between samples using the median-of-ratios method. Each sample gets a size factor; dividing its raw counts by that factor normalizes it.
@@ -554,21 +508,16 @@ The main objective of normalization is to adjust raw reads so that samples becom
 Then we will log2-transform these normalized counts in order to compress large values and expand small values, thus making distributions more symmetric.
 
 ```r
-
 # compute normalized counts (log2 transformed); + 1 is a count added to avoid errors during the log2 transformation: log2(0) gives an infinite number, but log2(1) is 0
 
 # normalized = TRUE: divide the counts by the size factors calculated by the DESeq function
-
 norm_counts <- log2(counts(se_star2, normalized = TRUE)+1)
 
 # add annotation
-
 norm_counts_symbols <- merge(data.frame(ID=rownames(norm_counts), norm_counts, check.names=FALSE), annot, by.x="ID", by.y="ensembl_gene_id", all=F)
 
 # write normalized counts to text file
-
 write.table(norm_counts_symbols, "normalized_counts_log2_star.txt", quote=F, col.names=T, row.names=F, sep="\t")
-
 ```
 
 This normalized counts table serves as interpretable expression levels, to compare how the expression changes between samples and genes.
@@ -1175,20 +1124,29 @@ se_2 <- DESeq(se_matrix)
 ## VST, in this case we use variance stabilizing transformation to normalize the data because we have a small dataset. 
 se_vst <- varianceStabilizingTransformation(se_2)
 
-## PCA plot
-png("PCA_batch.png")
-plotPCA(object = se_vst,
-        intgroup = c("treatment"))
-dev.off()
+### Let's extract PCA data into a table to create a plot with sample labels and detect samples in one batch and another.
 
-# Lets correct for batch effect using ComBat-seq
+pcaData <- plotPCA(se_vst, intgroup="treatment", returnData=TRUE) ## ReturnData=TRUE  return the data in a dataframe 
+percentVar <- round(100 * attr(pcaData, "percentVar")) ## Extracting explained variance (%) for PC1 and PC2
+
+PCA_batch <- ggplot(pcaData, aes(PC1, PC2, color=treatment)) +
+                geom_point(size=3) +
+                geom_text_repel(aes(label=name), vjust=-1) +
+                xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+                ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+                coord_fixed()
+
+ggsave("PCA_batch.png",PCA_batch)
+
+## Batch correction with Combatseq
+
 BiocManager::install("sva")
 library(sva)
 
 rownames(sampletable) <- sampletable$sampleName
 batch <- sampletable$batch
 
-## Batch correction in raw counts with Combatseq
+
 mat_corrected <- ComBat_seq(
   counts = counts(se_matrix),
   batch = batch)
@@ -1196,15 +1154,27 @@ mat_corrected <- ComBat_seq(
 mat_corrected
 head(mat_corrected)
 
-## Creating deseq object from corrected counts
 se_correc <- DESeqDataSetFromMatrix(countData = mat_corrected, colData = sampletable, design = ~treatment)
 vst_correct <- varianceStabilizingTransformation(se_correc)
 
-## PCA plot for the vst corrected counts
 png("PCA_batch_corrected.png")
 plotPCA(object = vst_correct,
         intgroup = c("treatment"))
 dev.off()
+
+library(ggrepel)
+
+pcaData <- plotPCA(vst_correct, intgroup="treatment", returnData=TRUE)
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+
+pca_batch_correc <- ggplot(pcaData, aes(PC1, PC2, color=treatment)) +
+                      geom_point(size=3) +
+                      geom_text_repel(aes(label=name), vjust=-1) +
+                      xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+                      ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+                      coord_fixed()
+
+ggsave("PCA_batch_corrected.png",pca_batch_correc)
 
 ```
 
