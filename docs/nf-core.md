@@ -23,10 +23,10 @@ All nf-core pipelines follow strict guidelines for structure, documentation, and
 </br>
 
 These pipelines leverage containerization to ensure reproducibility and portability. Each bioinformatics tool runs inside a Linux container (such as Singularity/Apptainer or Docker), eliminating dependency conflicts and the "works (only :) ) on my machine" problem.
-Most nf-core pipelines rely on container images from [Biocontainers](https://biocontainers.pro/), a community-driven project that automatically builds and hosts containers for thousands of bioinformatics tools. These pre-built images are publicly available at [quay.io](https://quay.io/), allowing pipelines to pull the exact software versions they need on-demand.
+Most nf-core pipelines rely on container images from [Biocontainers](https://biocontainers.pro/), a community-driven project that automatically builds and hosts containers for thousands of bioinformatics tools. These pre-built images are publicly available at [quay.io](https://quay.io/), allowing pipelines to pull the exact software versions they need on demand.
 
 <div align="center">
-<img src="images/biocontainers_screen.png" width="300"  />
+<img src="images/biocontainers_screen.png" width="500"  />
 </div>
 
 ## RNAseq nf-core pipeline 
@@ -315,7 +315,63 @@ Nextflow 26.02.0-edge is available - Please consider updating your version to it
 Launching `/users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-core-rnaseq_dev/dev/main.nf` [special_lamarck] DSL2 - revision: ff377cb1d2
 ```
 
-After some minute we got:
+While the pipeline is running, we can inspect where the pipeline is writing the temporary files: the work folder.
+
+This folder will contain a number of subfolders, that are connected to each process execution. For instance the process indicated with:
+
+```bash
+
+[a8/9852eb] Submitted process > NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC (SRR3091428)
+
+```
+is indicating the existence of a subfolder structure   work/**a8/9852eb**73bcf5c0cebe39fead0be5b5/
+
+Let's go inside and check what's there:
+
+```bash
+ls work/a8/9852eb73bcf5c0cebe39fead0be5b5/
+.command.begin
+.command.env
+.command.err
+.command.log
+.command.out
+.command.run
+.command.sh
+.command.trace
+.exitcode
+SRR3091428_raw_fastqc.html
+SRR3091428_raw_fastqc.zip
+SRR3091428_raw.gz ⇒ SRR3091428_1_chr6.fastq.gz
+ SRR3091428_1_chr6.fastq.gz ⇒ /users/bi/lcozzuto/rnaseq_course/RNAseq_coursesCRG_2026/docs/data/reads/SRR3091428_1_chr6.fastq.gz
+```
+
+You can see that the input file is a soft link to the original fastq file to avoid unnecessary duplication of data. Moreover, everything that is needed for the computation is "isolated" in this folder without the possibility of file collision with other executions. There is a further link to "standardize" the input name, this is quite useful considering the final reporting with MultiQC.
+
+
+Inspecting the .command.sh reveal:
+
+```
+#!/usr/bin/env bash -C -e -u -o pipefail
+printf "%s %s\n" SRR3091428_1_chr6.fastq.gz SRR3091428_raw.gz | while read old_name new_name; do
+    [ -f "${new_name}" ] || ln -s $old_name $new_name
+done
+
+fastqc \
+    --quiet \
+    --threads 2 \
+    --memory 6144 \
+    SRR3091428_raw.gz
+
+# capture process environment
+...
+```
+
+In brief, the command creates a soft link for standardizing the name and contains the fastqc command line with the definition of memory and the number of threads.
+This definition is not fixed; it is generated at run time, depending on your configuration, and is linked to the resources requested to your system when submitting the jobs.
+
+Nextflow takes care of all these aspects, so that an increase of resources is automatically translated into changing the command line.
+
+After some minutes, we got:
 
 ```bash
 [fd/068789] NFCORE_RNASEQ:RNASEQ:BAM_RSEQC:RSEQC_INFEREXPERIMENT (SRR3091426)                                                  [100%] 10 of 10 ✔
@@ -348,3 +404,5 @@ Let's inspect the output.
 - trimgalore (report of trimgalore execution)
 
 The final report can be seen [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/nf-core/multiqc_report.html)
+
+
