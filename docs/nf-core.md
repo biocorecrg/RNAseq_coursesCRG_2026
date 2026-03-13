@@ -309,6 +309,10 @@ INFO     Would you like to enter pipeline parameters using a web-based interface
 ```
 We choose the command line, we choose **-profile  [singularity]**, as input **sample_sheet.csv**, **outfolder** as output. We provide the fasta file as **--fasta** and the gtf as **--gtf**.
 
+```{note}
+Hyphens matter! Core Nextflow command-line options use one (-), whereas pipeline-specific parameters use two (--).
+```
+
 
 ```bash
 
