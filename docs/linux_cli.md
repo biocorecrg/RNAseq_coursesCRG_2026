@@ -1,4 +1,4 @@
-# Linux CLI refresher
+# Hands-on: Linux CLI refresher
 
 ## Linux history
 
@@ -12,7 +12,12 @@ UNIX-like derivatives spread:
 - Linux
 * etc.
 
-TODO: Image of UNIX history here https://en.wikipedia.org/wiki/History_of_Unix#/media/File:Unix_history-simple.svg
+![Unix History][unix-history][^1]
+
+[unix-history]: ./images/Unix_history.png
+
+[^1]: [Source: Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Unix_history-simple.svg)
+
 
 ### UNIX Philosophy
 
