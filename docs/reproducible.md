@@ -171,13 +171,11 @@ An alternative of GitHub is GitLab, used mostly in-premise for private projects.
 Software solutions:
 
 - Docker (most popular)
-- Podman
-- Singularity/Apptainer
+- Podman (no sysadmin permissions needed)
+- Singularity/Apptainer (popular in HTC environments)
 
 
-TODO: Logo Docker, Podman, Singularity/Apptainer
-
-Docker recipe example, Dockerfile:
+Docker recipe example, `Dockerfile`:
 
 
 ```
@@ -209,7 +207,7 @@ RUN set -x; \
 Convenient package management system to set up environments
 
 
-- env.yaml. Recipe for conda environments
+- `environment.yaml`. Recipe for conda environments
 
 ```
 conda env create -f myenv.yaml
@@ -241,7 +239,7 @@ Tools for installing Conda:
 
 TODO: Logo Python here
 
-- requirements.txt
+- `requirements.txt`
 
 ```
 pip install -r requirements.txt
@@ -287,6 +285,11 @@ TODO: Logo R here
         - [nf-prov](https://github.com/nextflow-io/nf-prov)
 
 ![Nextflow logo](./images/nextflow_logo.png)
+
+- [RO-Crate](https://www.researchobject.org/ro-crate/) - Effort to package research data with metadata. `nf-prov` project supports it.
+
+- Register your workflow or refer to it: [WorkflowHub](https://workflowhub.eu/) 
+    - Example: related to [RNAseq](https://workflowhub.eu/search?q=rnaseq#workflows)
 
 ## FAIR
 
@@ -334,8 +337,15 @@ These repositories  are linked to the repositories of NGS raw data (FASTQ files)
 * [**ENA**](https://www.ebi.ac.uk/ena) (European Nucleotide Archive) 
 * [**DDBJ-DRA**](https://www.ddbj.nig.ac.jp/dra/index-e.html) 
 
-Convenient CLI tool: [FASTQ-dl](https://github.com/rpetit3/fastq-dl) ([Container](https://biocontainers.pro/tools/fastq-dl))
+### Some CLI suggestions
 
+- CLI tool for downloading data: [FASTQ-dl](https://github.com/rpetit3/fastq-dl) ([Container](https://biocontainers.pro/tools/fastq-dl)) - Support both SRA and ENA. Can download multiples files from a project
+
+- CLI tool for uploading to ENA: [ena-upload-cli](https://github.com/usegalaxy-eu/ena-upload-cli)  
+    - First, you upload files to a repository (FTP/Aspera)
+    - Then, upload metadata associated: STUDY, SAMPLE, EXPERIMENT, RUN
+    - Map these 4 concepts to simple TSV files
+    - There are checklists, specific metadata requirements, depending on the sample/experiments that are going to be uploaded: [Checklist templates](https://github.com/ELIXIR-Belgium/ENA-metadata-templates)
 
 ## FAIR in practice for RNAseq
 

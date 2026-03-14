@@ -192,7 +192,7 @@ cat my_dna.txt
 ATGTACTGACTGCATGCATGCCATGCA
 ```
 
-To convert this sequence to a RNA one we can just replace the **T** base with **U** by using the program `sed`. The sintax of this program is the following ```s/<TO BE REPLACED>/<TO REPLACE>/```.
+To convert this sequence to a RNA one we can just replace the **T** base with **U** by using the program `sed`. The syntax of this program is the following ```s/<TO BE REPLACED>/<TO REPLACE>/```.
 
 You can add a **g** at the end if you want to replace every character found ```s/<TO BE REPLACED>/<TO REPLACE>/g```.
 
