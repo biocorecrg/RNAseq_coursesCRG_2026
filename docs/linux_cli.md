@@ -4,7 +4,7 @@
 
 UNIX is a computer operating system originally developed in 1969 by a group of AT&T employees at Bell Labs.
 
-UNIX-like derivatives spread:
+UNIX-like derivatives spread from that moment:
 
 - BSD
 - AIX
@@ -83,6 +83,9 @@ Other UNIX systems (e.g., Mac OS X) are similar, but not exactly the same.
 
 
 ## Move around
+
+We use what we name the Command Line Interface (CLI) Shell, in our case **Bash**, as an interface with the Operating System. 
+
 
 ### Relative paths
 
@@ -205,6 +208,31 @@ cat my_rna.txt
 AUGUACUGACUGCAUGCAUGCCAUGCA
 ```
 
+Let's remove something:
+
+```bash
+rm my_rna.txt
+```
+
+Let's try to remove the previous directory:
+
+```bash
+rm my_beautiful_folder
+# We cannot :O
+rmdir my_beautiful_folder
+# We cannot either
+rm my_beautiful_folder/* && rmdir my_beautiful_folder
+# Alternative
+rm -r my_beautiful_folder # Recursive - use with care
+```
+
+We can provide access to files and directories installed in other locations to more convenient places (e.g., for performing analyses) and so we save some space.
+Be careful sometimes if using shared storage.
+
+```bash
+ln -s my_dna.txt your_dna.txt
+```
+
 
 ### Recap
 
@@ -218,6 +246,9 @@ AUGUACUGACUGCAUGCAUGCCAUGCA
 * `echo` print values to standard output
 * `cat` print the content of a file to standard output
 * `sed` replace a string with another
+- `rm` remove a file
+- `rmdir` remove an empty directory
+- `ln` provides links to files/directories in other locations
 
 ## Download files
 
@@ -257,68 +288,104 @@ curl -o my_readme.txt ftp://ftp.ensemblgenomes.org/pub/bacteria/release-42/fasta
 
 
 **Pipe stdout to another command:**
-```
+```bash
 ls | grep ".txt"
 ```
 Lists files, then filters for `.txt` files.
 
 
 **Redirect stdout to a file (overwrite):**
-```
+```bash
 echo "Hello" > output.txt
 ```
 
 **Append stdout to a file:**
-```
+```bash
 echo "World" >> output.txt
 ```
 
 **Redirect stderr to a file:**
-```
+```bash
 ls non_existing_file 2> error.log
 ```
 
 **Redirect both stdout and stderr to a file:**
-```
+```bash
 command > all_output.log 2>&1
+# Use the wget or curl example above
 ```
 
-## Common data formats
+## Commands for manipulating Bioinformatics files
 
-* more
-* less
-* tar
-* gzip / bzip2
-* zcat
+We will use some of them during the course in practical examples. We will briefly mention some of them here with some examples.
 
 
-TODO: Review what we have in the course
-
-
-## Manipulate files, piping, parsing, reformatting
-
-TODO: To be adapted to course
-
-* grep
-* cut
-* head
-* tail (tail -f)
+* `more` / `less` paginate contents of a file if it is large and `cat` is not convenient
+* `tar` can be used for pack and unpack several files in a single archive 
+* `gzip` / `gunzip` are used for compressing and uncompressing files - normally resulting in files with `.gz` extension 
+* `zcat` is like `cat` but allowing to view gzipped files
+* `grep` finds patterns
+* `cut` splits the contents, normally in a line-by-line basis
+* `head` prints the starting contents
+* `tail` prints the ending contents
 
 
 ## Running programs
 
-Mention to PATH
 
-```
+### Making and Running a Bash Script
+
+1. Create a file called `myscript.sh` with this content:
+   ```bash
+   echo "Hello, world!" > myscript.sh
+   ```
+2. Make it executable:
+   ```bash
+   chmod +x myscript.sh
+   ```
+3. Run it:
+   ```bash
+   ./myscript.sh
+   ```
+
+### Finding running programs
+
+When you run a program in Linux, the shell searches for its executable in directories listed in the `PATH` environment variable. You can check your current `PATH` with:
+
+```bash
 echo $PATH
+```
+
+`$PATH` is one of the many available environment variables. You can check all them with `env`.
+
+
+If you want to add a directory to your `PATH` permanently, for example **bin** subdirectory in your $HOME directory, edit your `.bashrc` file (in your home directory) and add:
+
+```bash
+export PATH="$PATH:~/bin"
+```
+
+After saving `.bashrc`, reload it with:
+
+```bash
+source ~/.bashrc
+```
+
+Environment variables like `PATH` control how programs are found and executed. Modifying `.bashrc` lets you customize your shell environment.
+
+
+We can test it placing `myscript.sh` in the new PATH folder we defined:
+
+```bash
+mv myscript.sh ~/bin
 ```
 
 
 ### Running containers
 
-We will use already pre-made containers, so we will not need installing so many programs.
+We will use already pre-made containers, so we will not need installing so many programs (and struggle with their dependencies).
 
-For executing the tools from the container images, we will use Apptainer/Singularity?
+For executing the tools from the container images, we will use Apptainer/Singularity.
 
 Why Apptainer/Singularity?
 
@@ -333,11 +400,12 @@ singularity exec -e RNAseq_course.sif fastqc --version
 
 ```
 
+Along the course we will use this shortcut for no needing to type so much:
+
 ```
 export RUN="singularity exec -e RNAseq_course.sif"
 $RUN fastqc --version
 
 ```
 
-Mention to `.bashrc`
 

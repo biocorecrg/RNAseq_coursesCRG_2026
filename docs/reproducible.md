@@ -237,9 +237,10 @@ Tools for installing Conda:
 
 ## Python
 
-TODO: Logo Python here
+![Python logo](./images/python_logo.png)
 
 - `requirements.txt`
+
 
 ```
 pip install -r requirements.txt
@@ -262,9 +263,10 @@ Other tools:
 
 ## R
 
-TODO: Logo R here
+![R logo](./images/r_logo.png)
 
 - RStudio (.Rproj files)
+
 
 - [Working with R projects](https://communicate-data-with-r.netlify.app/docs/baser/workingprojects/)
 
