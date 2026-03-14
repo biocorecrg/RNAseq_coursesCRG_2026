@@ -308,42 +308,39 @@ htmlReport(hgOver, file="GOstats_BP.html")
 
 We can open the report in a web browser.
 
-### With R: KEGGprofile
+### With R: clusterProfiler
 
-Load the **KEGGprofile** package:
+Load the **clusterProfiler** package:
 
 ```r
-library(KEGGprofile)
+library(clusterProfiler)
 ```
 
-KEGGprofile also works with **Entrez ID** (we got them for the GOstats analysis).
+**clusterProfiler** also works with **Entrez ID** (we got them for the GOstats analysis).
 
 ```r
 # KEGG pathway enrichment
-KEGGresult <- find_enriched_pathway(na.omit(unique(entrez$entrezgene)),
- returned_genenumber=10,
- species='hsa',
- download_latest = TRUE)
+KEGGresult <- enrichKEGG(gene = na.omit(unique(entrez$entrezgene)),
+                 organism = 'hsa',
+                 pvalueCutoff = 0.05)
 
-# Format results
-kegg_final <- data.frame(KEGGresult$stastic,
- genes_entrezid=unlist(lapply(KEGGresult$detail, function(x)paste(x, collapse=",")), use.names=F),
- stringsAsFactors=F)
+# Get results table
+kegg_final <- as.data.frame(KEGGresult)
 
 # Write table to file
-write.table(kegg_final, "KEGGprofile_results.txt", sep="\t", row.names=F, col.names=T, quote=F)
+write.table(kegg_final, "clusterProfiler_KEGG_results.txt", sep="\t", row.names=F, col.names=T, quote=F)
 ```
 
 Results table:
 
-| Pathway_Name | Gene_Found | Gene_Pathway | Percentage | pvalue | pvalueAdj |
+| ID | Description | GeneRatio | BgRatio | pvalue | p.adjust |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| Metabolic pathways | 88 | 1489 | 0.06 | 4.644397e-08 | 1.565162e-05 |
-| Cytokine-cytokine receptor interaction | 26 | 294 | 0.09 | 3.187192e-05 | 3.580279e-03 |
-| Viral protein interaction with cytokine and cytokine receptor | 12 | 100 | 0.12 | 1.671507e-04 | 8.047114e-03 |
-| NF-kappa B signaling pathway | 10 | 102 | 0.10 | 2.490180e-03 | 3.356763e-02 |
-| Mitophagy - animal | 11 | 65 | 0.17 | 8.801457e-06 | 1.483046e-03 |
-| C-type lectin receptor signaling pathway | 10 | 104 | 0.10 | 2.898658e-03 | 3.757106e-02 |
+| hsa01100 | Metabolic pathways | 88/850 | 1489/19000 | 4.64e-08 | 1.56e-05 |
+| hsa04060 | Cytokine-cytokine receptor interaction | 26/850 | 294/19000 | 3.18e-05 | 3.58e-03 |
+| hsa04061 | Viral protein interaction with cytokine and cytokine receptor | 12/850 | 100/19000 | 1.67e-04 | 8.04e-03 |
+| hsa04064 | NF-kappa B signaling pathway | 10/850 | 102/19000 | 2.49e-03 | 3.35e-02 |
+| hsa04137 | Mitophagy - animal | 11/850 | 65/19000 | 8.80e-06 | 1.48e-03 |
+| hsa04625 | C-type lectin receptor signaling pathway | 10/850 | 104/19000 | 2.90e-03 | 3.76e-02 |
 
 ## Enrichment based on ranked lists of genes using GSEA
 
