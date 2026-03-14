@@ -537,6 +537,70 @@ unless it is known that the population is **very homogeneous** (e.g. cell cultur
 
 <br>
 
+Typical recommendations for bulk RNA-seq experiments:
+
+| Replicates per condition | Interpretation |
+|---|---|
+| 2 | insufficient |
+| 3 | minimum |
+| 5–6 | recommended |
+| >10 | very robust |
+
+<br>
+---
+
+
+### Recommended number of sequencing reads
+
+For bulk RNA-seq differential expression experiments in human/mouse, 
+the [ENCODE consortium](https://www.encodeproject.org/data-standards/rna-seq/long-rnas/)
+ recommends for each replicate to have **at least 30 million mapped paired reads per sample**.
+
+Because not all reads map to the reference genome or transcriptome, the number of **sequenced reads must be higher** than the number of mapped reads. 
+<br>In typical RNA-seq experiments, mapping rates are often around **80–85%**, depending on the organism, library preparation, and read quality.
+<br>
+This implies that achieving 30 million mapped reads usually requires sequencing approximately:
+
+| Target mapped reads | Typical mapping rate | Approximate reads to sequence |
+|---|---|---|
+| 30 million | 80–85% | 35–40 million reads |
+
+Mapping rates can vary depending on several factors:
+
+- quality of the RNA and library preparation
+- contamination (e.g., rRNA)
+- completeness of the reference genome or transcriptome
+- read length and sequencing quality
+
+Therefore, sequencing projects typically aim for **slightly higher sequencing depth than the desired number of mapped reads** to ensure sufficient usable data for downstream analysis.
+
+Typical sequencing depths for bulk RNA-seq experiments include:
+
+| Application | Recommended sequencing reads per sample |
+|---|---|
+| Gene-level differential expression | 35-40 million |
+| Alternative transcript or isoform analysis | 50–100 million |
+| Detection of rare or lowly expressed transcripts | >100 million |
+
+Sequencing depth influences several aspects of RNA-seq data analysis:
+- **Detection of low-expression genes.**  
+  Low abundance transcripts require sufficient sequencing depth to be reliably detected.
+
+- **Precision of expression estimates.**  
+  Genes with higher read counts have lower sampling noise and therefore more stable expression estimates.
+
+- **Isoform detection and alternative splicing analysis.**  
+  Resolving transcript isoforms typically requires deeper sequencing than gene-level expression analysis.
+
+:::{admonition} 
+:class: important
+Increasing sequencing depth cannot compensate for insufficient biological replication.  
+While deeper sequencing improves sensitivity for detecting transcripts, it does not improve estimation of biological variability between samples.
+:::
+
+
+
+---
 
 
 
