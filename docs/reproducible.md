@@ -32,14 +32,14 @@ Management of changes to documents, computer programs and other collections of i
 
 [phdcomics-notfinal]: ./images/phd101212s.gif
 
-[^1]: [Source: PhD Comics](https://phdcomics.com/comics.php?f=1531)
+[^1]: [Source: PhD Comics: Not final](https://phdcomics.com/comics.php?f=1531)
 
 
 ![PhD Comics][phd-comics-story][^2]
 
 [phdcomics-story]: ./images/phd052810s.png
 
-[^2]: [Source: PhD Comics](https://phdcomics.com/comics/archive.php?comicid=1323)
+[^2]: [Source: PhD Comics: A story in files](https://phdcomics.com/comics/archive.php?comicid=1323)
 
 
 ### Benefits
@@ -165,6 +165,9 @@ An alternative of GitHub is GitLab, used mostly in-premise for private projects.
 
 [container-rods]: ./images/Container_lashing_with_rods.jpg
 
+[^3]: [Source: Wikimedia Commons - Container lashing with rods](https://commons.wikimedia.org/wiki/File:Container_lashing_with_rods.jpg)
+
+
 Software solutions:
 
 - Docker (most popular)
@@ -287,11 +290,11 @@ TODO: Logo R here
 
 ## FAIR
 
-![FAIR data principles][fair-image][^1]
+![FAIR data principles][fair-image][^4]
 
 [fair-image]: ./images/FAIR_data_principles.svg.png
 
-[^1]: [Source: Wikimedia Commons](https://commons.wikimedia.org/wiki/File:FAIR_data_principles.svg)
+[^4]: [Source: Wikimedia Commons - FAIR Data Principles](https://commons.wikimedia.org/wiki/File:FAIR_data_principles.svg)
 
 
 ### Findable
