@@ -330,27 +330,7 @@ Let's explore [this GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?a
 * What type of RNA was sequenced? From which organism?
 * How many samples were sequenced?
 
-<br/>
-
-## Downloading data from a public repository
-
-**fastq-dump** program from the [**SRA toolkit**](https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc) allows you to retrieve raw data from the **SRA** platform, using the command line:
-<br>
-```bash
-fastq-dump --gzip --origfmt --split-files --skip-technical SRR-IDENTIFIER
-
-# For us, it would be:
-$RUN fastq-dump --gzip --origfmt --split-files --skip-technical SRR-IDENTIFIER
-```
-
-The options used here are:
-* **--split-files** for paired-end data (if omitted, fastq-dump outputs a single interleaved file)
-* **--origfmt**: to avoid the generic "SRA" naming. Keep the original name of the reads.
-* **--gzip**: get a gzip-compressed fastq file (fastq files can ve very storage consuming!)
-* **--skip-technical**: download only biological reads (do not output barcodes, linkers, etc.)
-<br>
-
-### EXERCISE
+Convenient tool: [FASTQ-dl](https://github.com/rpetit3/fastq-dl) ([Container](https://biocontainers.pro/tools/fastq-dl))
 
 Going back to the previous [GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126535):
 * Where can you find the SRA identifiers (code SRR...), for each sample?
