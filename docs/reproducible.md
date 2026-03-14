@@ -26,9 +26,21 @@ Management of changes to documents, computer programs and other collections of i
 
 ### Why you should you use it?
 
-![](./images/phd101212s.gif)
 
-![](./images/phd052810s.png)
+
+![PhD Comics][phd-comics-notfinal][^1]
+
+[phdcomics-notfinal]: ./images/phd101212s.gif
+
+[^1]: [Source: PhD Comics](https://phdcomics.com/comics.php?f=1531)
+
+
+![PhD Comics][phd-comics-story][^2]
+
+[phdcomics-story]: ./images/phd052810s.png
+
+[^2]: [Source: PhD Comics](https://phdcomics.com/comics/archive.php?comicid=1323)
+
 
 ### Benefits
 
@@ -130,8 +142,6 @@ GitHub is a web-based Git repository hosting service, which offers all the funct
 
 An alternative of GitHub is GitLab, used mostly in-premise for private projects.
 
-![GitLab](./images/gitlab.png)
-
 
 ## Computational reproducibility
 
@@ -151,10 +161,9 @@ An alternative of GitHub is GitLab, used mostly in-premise for private projects.
 
 ## Containers
 
+![Container Lashing with Rods][container-rods][^3]
 
-![Container lashing with rods](./images/Container_lashing_with_rods.jpg)
-
-https://commons.wikimedia.org/wiki/File:Container_lashing_with_rods.jpg
+[container-rods]: ./images/Container_lashing_with_rods.jpg
 
 Software solutions:
 
@@ -215,7 +224,6 @@ channels:
 dependencies:
   - jannessp::pod5==0.2.4
 ```
-
 
 
 
@@ -323,21 +331,69 @@ These repositories  are linked to the repositories of NGS raw data (FASTQ files)
 * [**ENA**](https://www.ebi.ac.uk/ena) (European Nucleotide Archive) 
 * [**DDBJ-DRA**](https://www.ddbj.nig.ac.jp/dra/index-e.html) 
 
-
-### EXERCISE
-Let's explore [this GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE76647) (GSE76647)
-* Which platform and protocol were used for sequencing?
-* What type of RNA was sequenced? From which organism?
-* How many samples were sequenced?
-
-Convenient tool: [FASTQ-dl](https://github.com/rpetit3/fastq-dl) ([Container](https://biocontainers.pro/tools/fastq-dl))
-
-Going back to the previous [GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126535):
-* Where can you find the SRA identifiers (code SRR...), for each sample?
-* How large are the raw data files?
-
-Another source of high quality data on gene expression in human and mouse is [The Encyclopedia of DNA Elements (ENCODE)](https://www.encodeproject.org/). Using the ENCODE portal one can access data produced by the ENCODE Consortium.
+Convenient CLI tool: [FASTQ-dl](https://github.com/rpetit3/fastq-dl) ([Container](https://biocontainers.pro/tools/fastq-dl))
 
 
+## FAIR in practice for RNAseq
 
-Reference: [FAIRification of an RNAseq dataset](https://training.galaxyproject.org/training-material/topics/fair/tutorials/fair-rna/tutorial.html)
+- Reference: [FAIRification of an RNAseq dataset](https://training.galaxyproject.org/training-material/topics/fair/tutorials/fair-rna/tutorial.html)
+
+We will use **[E-MTAB-8316](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8316)** from ArrayExpress as example.
+
+### Findable (RNAseq Examples)
+
+**Example:**
+- Dataset **E-MTAB-8316** (from Alivernini et al. 2020, Nature Medicine) has a globally unique and persistent identifier: `E-MTAB-8316` or full URL `https://www.ebi.ac.uk/biostudies/ArrayExpress/studies/E-MTAB-8316`
+- Indexed in searchable repositories (ArrayExpress, ENA)
+- Rich metadata allows discovery via keywords like "macrophage rheumatoid arthritis" combined with "rna-seq of coding rna"
+- Uses resolution services like identifiers.org for regularized URLs
+
+**Counter-example:**
+- RNAseq data kept only on a lab's local server without public deposition
+- FASTQ files named `sample1.fq`, `sample2.fq` with no associated metadata file
+
+
+### Accessible (RNAseq Examples)
+
+**Example:**
+- Data retrievable via standard HTTP/HTTPS protocol using the persistent identifier
+- Raw FASTQ files accessible via ENA (European Nucleotide Archive)
+- Processed data (gene expression matrices) downloadable directly from ArrayExpress
+- Protocol is open, free, and universally implementable
+
+**Counter-example:**
+- Data available only upon request with approval process
+- FASTQ files in proprietary or obscure sequencing format
+- Data behind paywall or institutional login requirement
+
+### Interoperable (RNAseq Examples)
+
+**Example:**
+- Uses published ontologies: NCBI taxonomy for species ("Homo sapiens")
+- Complies with **MINSEQE** (Minimum Information about a Sequencing Experiment) community standard — 5-star rating
+- Machine-readable metadata formats:
+  - **MAGE-TAB** (Sample and Data Relationship Format - SDRF)
+  - **ENA SRA XML** format
+- Controlled vocabularies via Annotare submission tool
+
+**Counter-example:**
+- Custom gene identifiers not mapped to standard databases (Ensembl, RefSeq)
+- Proprietary sample annotation system without ontology links
+- Protocol descriptions using only lab-specific terminology
+
+### Reusable (RNAseq Examples)
+
+**Example:**
+- Clear licensing: **CC BY 4.0** (Creative Commons Attribution)
+- Detailed provenance: links to publication, protocol documentation, sample metadata
+- Complete data availability: raw FASTQ files + processed gene expression matrices
+- Clear documentation of experimental design, protocols, and variables
+- Associated with publication DOI: [10.1038/s41591-020-0939-8](https://dx.doi.org/10.1038/s41591-020-0939-8)
+
+**Counter-example:**
+- No license specified or restrictive license
+- Missing protocol details (e.g., "library prep performed as usual")
+- Only processed data provided without raw FASTQ files
+- No link to methods publication
+
+

@@ -16,7 +16,7 @@ UNIX-like derivatives spread:
 
 [unix-history]: ./images/Unix_history.png
 
-[^1]: [Source: Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Unix_history-simple.svg)
+[^1]: [Source: Wikimedia Commons - UNIX history](https://commons.wikimedia.org/wiki/File:Unix_history-simple.svg)
 
 
 ### UNIX Philosophy
@@ -249,11 +249,11 @@ curl -o my_readme.txt ftp://ftp.ensemblgenomes.org/pub/bacteria/release-42/fasta
 
 ## Piping
 
-![Standard Streams][stdstreams-image][^1]
+![Standard Streams][stdstreams-image][^2]
 
 [stdstreams-image]: ./images/Stdstreams.png
 
-[^1]: [Source: Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Stdstreams-notitle.svg)
+[^2]: [Source: Wikimedia Commons - Stdstreams](https://commons.wikimedia.org/wiki/File:Stdstreams-notitle.svg)
 
 
 **Pipe stdout to another command:**
