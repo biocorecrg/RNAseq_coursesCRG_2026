@@ -1,6 +1,6 @@
 ---
+title: "R basics"
 layout: page
-title: R basics
 navigation: 17
 ---
 
@@ -440,7 +440,7 @@ library('BiocManager')
 BiocManager::install('GOstats')
 ```
 
-## Exercise: warming up !
+## Exercises to warm up!
 
 * Ex1.
 	* Create a numeric vector **y** containing numbers from 2 to 11 (both included). 
@@ -488,60 +488,86 @@ Then:
 
 ```{r}
 
-# Ex1.
-#Create a numeric vector y which contains the numbers from 2 to 11, both included.
-y <- 2:11
-# same as y <- c(2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-#How many elements are in y? I.e what is the length of vector y ?
+
+* Ex1.
+	* Create a numeric vector **y** containing numbers from 2 to 11 (both included). 
+
+y <- 2:11 
+# same as or y <- c(2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+
+	* How many elements are in y?
+
 length(y)
-#Show the 3rd and the 6th elements of y.
-y[c(3, 6)]
-#Show all elements of y that have a value inferior to 7.
+
+	* Show the 3rd and the 6th elements of y.
+
+y[c(3,6)]
+
+	* Show all elements of y that have a value inferior to 7.
+
 y[y < 7]
 
-# Ex2.
-#Create the vector x of 1000 random numbers from the normal distribution (with rnorm).
+
+* Ex2.
+	* Create the vector **x** of 1000 random numbers from the normal distribution (see **rnorm** function).
+
 x <- rnorm(1000)
-#What are the mean, median, minimum and maximum values of x?
+
+	* What are the mean, median, minimum and maximum values of x?
+
 mean(x); median(x); min(x); max(x)
-  # more straightforward:
+# or more straightforward:
 summary(x)
 
-# Ex3.
-#Create vector y2 as: y2 <- c(1, 11, 5, 62, NA, 18, 2, 8, NA)
-y2 <- c(1, 11, 5, 62, NA, 18, 2, 8, NA)
-#What is the sum of all elements in y2 ?
+
+* Ex3.
+	* Create vector **y2** as: y2 <- c(1, 11, 5, 62,  NA, 18, 2, 8, NA)
+	* What is the sum of all elements in y2 ?
+	
 sum(y2, na.rm = TRUE)
-# same as sum(na.omit(y2))
-#Which elements of y2 are also present in y?
+
+	* Which elements of y2 are also present in y?
+
 y2[y2 %in% y]
-#Remove NA values from y2.
+
+	* Remove NA values from y2.
+
 y2 <- na.omit(y2)
 
-# Ex4.
-#Create the following data frame (I will call it df):
-  #with row names: John, Jessica, Steve, Rachel 
-  #and column names: Age, Height, Sex.
+
+* Ex4. 
+	* Create the following data frame wih 
+  * row names: **John, Jessica, Steve, Rachel**
+  * column names: **Age, Height, Sex**.
+  
 df <- data.frame(Age=c(43, 34, 22, 27),
                  Height=c(181, 172, 189, 167),
                  Sex=c("M", "F", "M", "F"),
                  row.names = c("John", "Jessica", "Steve", "Rachel"))
-#Check the structure of df with str().
+
+* Check the structure of df with str().
+
 str(df)
-#Calculate the average age and height in df.
+
+* Calculate the average age and height in df.
+
 mean(df$Age) # same as mean(df[,"Age"])
+
 mean(df$Height) # same as mean(df[,"Height"])
-  # or
-colMeans(df[,c("Age", "Height")])
-#Change the row names of df so the data becomes anonymous 
-  # (use for example Patient1, Patient2, etc.)
+
+* Change the row names of df so the data becomes anonymous
+  + Use for example Patient1, Patient2, etc.
+
 rownames(df) <- c("Patient1", "Patient2", "Patient3", "Patient4")
-#Write df to the file mydf.txt with write.table(). 
-  # Explore parameters sep, row.names, col.names, quote.
+
+* Write **df** to the file **mydf.txt** with **write.table()**. 
+  + Explore parameters **sep**, **row.names**, **col.names**, **quote**.
+
 write.table(df,
             "mydf.txt",
             sep="\t",
             row.names = TRUE,
             col.names = NA,
             quote = FALSE)
+            
 ```
