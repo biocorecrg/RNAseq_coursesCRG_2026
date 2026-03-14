@@ -40,6 +40,8 @@ The structure of GO can be described as a graph: each GO term is a **node**, and
 |:---:|
 | ![GO example graph](images/GO_example_graph.png) |
 
+Source: Isoform Function Prediction Using Deep Neural Network - Scientific Figure on ResearchGate. Available from: <https://www.researchgate.net/figure/GO-Terms-Graph-The-GO-terms-have-a-graph-structure-nodes-represent-the-functions-and_fig2_362567903> [accessed 14 Mar 2026]
+
 GO:0019319 (hexose biosynthetic process) is part of GO:0019318 (hexose metabolic process) and also part of GO:0046364 (monosaccharide biosynthetic process). They all share common **parent nodes**, for example GO:0008152 (metabolic process), and eventually a **root node** that is here **biological process**.
 
 ### KEGG pathways
@@ -52,6 +54,8 @@ Example of the [*Homo sapiens* melanoma pathway](https://www.genome.jp/dbget-bin
 | |
 |:---:|
 | ![KEGG melanoma pathway](images/kegg_hsa05218.png) |
+
+Source: <https://link.springer.com/article/10.1186/s12859-019-2881-7/figures/14>
 
 ### Molecular Signatures Database (MSigDB)
 
@@ -104,7 +108,9 @@ It does not require the input of a gene universe: only a selection of genes or a
 
 | |
 |:---:|
-| ![EnrichR paper](images/enrichr_paper1.jpg) | Title: <https://pmc.ncbi.nlm.nih.gov/articles/PMC3637064/> |
+| ![EnrichR paper](images/enrichr_paper1.jpg) |
+
+Source: <https://pmc.ncbi.nlm.nih.gov/articles/PMC3637064/>
 
 The default EnrichR interface works for *Homo sapiens* and *Mus musculus*.
 However, EnrichR also provides a [set of tools](https://amp.pharm.mssm.edu/modEnrichr/) for ortholog conversion and enrichment analysis of more organisms:
@@ -390,6 +396,7 @@ The first column contains the gene ID (HUGO symbols for *Homo sapiens*).
 The second column contains any description or symbol, and will be ignored by the algorithm.
 The remaining columns contain normalized expressions: one column per sample.
 
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | NAME | DESCRIPTION | 5p4_25c | 5p4_27c | 5p4_28c | 5p4_29c | 5p4_30c | 5p4_31cfoxc1 | ... |
 | DKK1 | NA | 0 | 0 | 0 | 0 | 0 | 0 | ... |
 | HGT | NA | 0 | 0 | 0 | 0 | 0 | 0 | ... |
@@ -399,10 +406,28 @@ The remaining columns contain normalized expressions: one column per sample.
 
 Adjust the file **normalized_counts_log2_star.txt** so the first column is the gene symbol, the second is the gene ID (or anything else), and the remaining ones are the expression columns. Save the new file as **gsea_normalized_counts.txt**.
 
-```bash
-cd ~/rnaseq_course/functional_analysis
+```r
+setwd("~/rnaseq_course/differential_expression/undiff/")
 
-awk -F "\t" 'BEGIN{OFS="\t"}{print $16,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11}' ~/rnaseq_course/differential_expression/normalized_counts_log2_star.txt > gsea_normalized_counts.txt
+## Read undiff normalized counts
+norm_counts <- read.table("normalized_counts_log2_star_undiff.txt",as.is = TRUE, sep="\t", header = TRUE)
+
+## Check our sample columns and gene id and gene name columns
+colnames(norm_counts)
+# write normalized counts for GSEA
+x <- norm_counts
+sample_val<-norm_counts[,2:6] ## Selecting the sample columns with the normalized values. 
+
+#Select column names and ensembl gene ids
+y <- x[,c(1,11)] ## Select the gene_id and gene_name columns
+colnames(y)
+x <- data.frame(NAME=y[,2], DESCRIPTION=y[,1])
+x <- cbind(x,sample_val)
+colnames(x)
+
+setwd("~/rnaseq_course/functional_analysis")
+
+write.table(x, "R_norm_counts_for_GSEA.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
 
 :::
@@ -417,9 +442,11 @@ A phenotype label file defines phenotype labels (experimental groups) and assign
 
 Let's create it for our experiment:
 
-| 10 | 2 | 1 |  |  |  | | | | |
-| # | WT | KO |  |  |  | | | | |
-| WT | WT | WT | WT | WT | KO | KO | KO | KO | KO |
+```
+10 2 1
+# WT KO
+WT WT WT WT WT KO KO KO KO KO
+```
 
 :::{admonition} Note
 :class: note
@@ -428,9 +455,11 @@ The first label used is assigned to the first class named on the second line; th
 
 So the phenotype file could also be:
 
-| 10 | 2 | 1 |  |  |  | | | | |
-| # | WT | KO |  |  |  | | | | |
-| 0 | 0 | 0 | 0 | 0 | 1 | 1 | 1 | 1 | 1 |
+```
+10 2 1
+# WT KO
+0 0 0 0 0 1 1 1 1 1
+```
 
 The first label **WT** in the second line is associated to the first label **0** on the third line.
 :::
@@ -445,20 +474,14 @@ Create the phenotype labels file and save it as **gsea_phenotypes.cls**.
 
 ##### Download Java application
 
-Enter the [registration page](https://www.gsea-msigdb.org/gsea/register.jsp), enter your **email** and **organization**, then go to the [download page](http://software.broadinstitute.org/gsea/login.jsp), enter your email and **login**:
-
-| |
-|:---:|
-| ![GSEA downloads page](images/gsea_downloads.png) |
-
-Click on **download gsea-3.0.jar** link and save file locally to your home directory.
-
-##### Launch the GSEA application
-
 GSEA is Java-based. Launch it from a terminal window:
 
 ```bash
-$RUN java -Xmx1024m -jar gsea-3.0.jar
+#Download GSEA
+wget https://data.broadinstitute.org/gsea-msigdb/.test/gsea/software/desktop/4.0/GSEA_Linux_4.0.3.zip
+unzip GSEA_Linux_4.0.3.zip
+cd GSEA_Linux_4.0.3
+bash gsea.sh 
 ```
 
 | |
@@ -526,3 +549,9 @@ Heatmap of all genes from that gene set (ranked by GSEA) for each sample:
   * It is also good to go back to the **differential expression** analysis table and make sure that their **adjusted-value** is low.
 * You can also upload **your own gene sets** (for example a gene signature taken from a specific paper) to test against your list of genes, using one of the [GSEA gene set database formats](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#Gene_Set_Database_Formats).
 :::
+
+## Further reading
+
+* [GSEA User Guide](https://docs.gsea-msigdb.org/#GSEA/GSEA_User_Guide/)
+* [clusterProfiler](https://bioconductor.org/packages/clusterProfiler/)
+* [GOstats](https://bioconductor.org/packages/GOstats/)
