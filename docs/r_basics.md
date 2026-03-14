@@ -148,9 +148,9 @@ str(factor_object)
 The main data structures in R are:
 
 * Vector
-* Factor
 * Matrix
 * Data frame
+* List
 
 ##### Vectors
 
@@ -178,7 +178,51 @@ Check the length of (i.e. number of elements in) a vector:
 length(b)
 ```
 
-##### Data frame
+##### Matrices
+
+Matrices are two-dimensional and contain a single data type.
+
+Create a matrix:
+
+```{r}
+# specify number of rows
+mat <- matrix(1:20, nrow=4)
+
+# specify number of columns
+mat <- matrix(1:20, ncol=4)
+```
+
+Check dimensions (i.e. number of rows and number of columns) of a matrix:
+
+```{r}
+# Number of rows
+nrow(mat)
+
+# Number of columns
+ncol(mat)
+
+# Dimensions (first element is the number of rows, second element is the number of columns)
+dim(mat)
+```
+
+You can extract rows and columns of a matrix using the slicing operator **[]** and their position/index:
+
+```{r}
+# first row
+mat[1,]
+
+# row 1 and 3
+mat[c(1,3),]
+
+# first column
+mat[,1]
+
+# column 2 and 3
+mat[,c(2, 3)] # or mat[,2:3]
+```
+
+
+##### Data frames
 
 Data frames are two-dimensional and can contain several data types (column-wise).
 
@@ -210,7 +254,7 @@ You can extract columns of a data frame with:
   * Access using the column index (i.e. position): `df[,2]`
 * Dollar sign **$**: `df$Age`
 
-You can extract rows using the slicing operator: df[1,]
+You can extract rows - as with matrices - using the slicing operator: df[1,]
 
 Select rows of the data frame **if the Age column is superior to 24**:
 
