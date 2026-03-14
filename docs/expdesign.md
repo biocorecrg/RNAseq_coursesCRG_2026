@@ -426,12 +426,61 @@ From these results, true positive, true negative, false positive, and false nega
 The study showed that:
 
 - With **3 replicates**, many differentially expressed genes are missed (Fig. A - <30% SDEs identified), 
-in particular, lower expressed (Fig. B - TPR = 0.8 for log2FC > 1)
-- With **6 replicates**, most strong signals are detected (Fig. A - ~40% SDEs identified;
-Fig. B - TPR = 0.87 for log2FC > 1; TPR = 0.8 for log2FC > 0.5)
-- Detecting small expression changes may require **more than 10 replicates** (Fig. C - TPR = 0.9 for log2FC > 0.3 --> FC = 1.24)
+in particular, lower expressed --> Fig. B - TPR = 0.8 for log2FC > 1
+- With **6 replicates**, most strong signals are detected --> Fig. A - ~40% SDEs identified;
+Fig. B - TPR = 0.87 for log2FC > 1; TPR = 0.8 for log2FC > 0.5
+- Detecting small expression changes may require **more than 10 replicates** --> Fig. C - TPR = 0.9 for log2FC > 0.3 (i.e., FC = 1.24)
 
-<br/>
+<br>
+
+
+---
+
+### When the number of replicates is limited
+
+In practice, RNA-seq experiments are often performed with a small number of biological replicates due to cost or sample availability. 
+However, studies have shown that differential expression results obtained from small cohort sizes are often difficult to reproduce in independent experiments.
+
+A recent analysis by [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630) 
+simulated more than 18,000 RNA-seq experiments by repeatedly 
+subsampling real datasets with cohort sizes ranging from 3 to 15 replicates. 
+The study showed that experiments with small cohort sizes frequently produce differential expression results that are unlikely to replicate well.
+
+However, low replicability does not necessarily imply that the results are incorrect. 
+In many cases, the main problem is low recall (missing true signals) rather than a high rate of false positives.
+
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| ![fishy](images/expdesign_journal.pcbi.1011630.g002.PNG) | 
+| **DEG performance metrics as a function of the cohort size.** Each symbol summarizes the median of 100 cohorts. All panels show results using the DESeq2 Wald test with abs(log2FC)>1. <br> *Figure is adapted from [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630) * |
+
+</div>
+
+Fig A shows the median replicability of 100 subsampled cohorts as a function of the cohort size. 
+Except for the SNF2 data set, 
+all data sets show low (<0.5) replicability for the smallest cohort size of N = 3. 
+For the largest cohort size of N = 15, a wide range of replicability values is observed, depending on the data set. 
+The median number of DEGs is shown in Fig B. 
+<br>
+Fig C & D show that the precision rises more steeply than recall for small cohort sizes. <br>
+<br>10 out of 18 data sets exceed the precision of 0.9 for N>5. <br>
+<br>
+In contrast, for all data sets except SNF2, recall is below 0.5 for N<7. <br>
+<br>
+**That means that false negatives (low recall) are a more significant driver of low replicability than false positives (low precision).**
+<br>
+
+> The best-performing SNF2 data set is so homogeneous and well-separated by condition that the subsampling has little influence on the logFC estimation, 
+which has little variance even for the smallest cohort sizes. 
+By contrast, the worst-performing LMAB data has few true DEGs and 
+the logFC estimates exhibit substantial sampling variance, 
+which leads to logFC estimates that are either inflated or deflated. 
+>
+> — [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630) 
+
+
 
 
 
