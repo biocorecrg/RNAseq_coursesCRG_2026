@@ -13,7 +13,7 @@
 - Statistical deficiencies (small sample sizes, bias, improper choices)
 - Societal and cultural issues
   - Lack of proper training in data management
-  - Publish and perish push
+  - Publish and perish pressure
   - Little reward to data sharing
 
 
@@ -24,8 +24,7 @@ Management of changes to documents, computer programs and other collections of i
 - **when**, **who**, **what**
 
 
-### Why you should you use it?
-
+### Why should you use it?
 
 
 ![PhD Comics][phdcomics-notfinal][^1]
@@ -54,7 +53,7 @@ Management of changes to documents, computer programs and other collections of i
 
 ### Uses
 
-(either alone or collaboratively)
+You can use version control either alone or collaboratively for:
 
 - papers
 - lectures
@@ -123,7 +122,7 @@ It is the most used thanks to its simplicity and GitHub
 
 ![git-github](./images/Github2.png)
 
-GitHub is a web-based Git repository hosting service, which offers all the functionalities of Git as well as adding its own features
+[GitHub](https://www.github.com) is a web-based Git repository hosting service, which offers all the functionalities of Git as well as adding its own features
 
 ### Git Features
 
@@ -140,7 +139,7 @@ GitHub is a web-based Git repository hosting service, which offers all the funct
 - in-browser editing
 - additional collaborative features
 
-An alternative of GitHub is GitLab, used mostly in-premise for private projects.
+An alternative to GitHub is [GitLab](https://www.gitlab.com), used mostly in-premise for private projects.
 
 
 ## Computational reproducibility
@@ -172,13 +171,13 @@ Software solutions:
 
 - Docker (most popular)
 - Podman (no sysadmin permissions needed)
-- Singularity/Apptainer (popular in HTC environments)
+- Singularity/Apptainer (popular in HPC environments)
 
 
 Docker recipe example, `Dockerfile`:
 
 
-```
+```dockerfile
 FROM debian:bookworm
 
 ARG PERLBREW_ROOT=/usr/local/perl
@@ -209,7 +208,7 @@ Convenient package management system to set up environments
 
 - `environment.yaml`. Recipe for conda environments
 
-```
+```bash
 conda env create -f myenv.yaml
 
 conda env create myenv
@@ -217,7 +216,7 @@ conda env export > myenv.yaml
 ```
 
 
-```
+```yaml
 name: pod5
 channels:
   - conda-forge
@@ -242,7 +241,7 @@ Tools for installing Conda:
 - `requirements.txt`
 
 
-```
+```bash
 pip install -r requirements.txt
 
 pip freeze > requirements.txt
@@ -283,7 +282,7 @@ Other tools:
 
 - Different steps using different software
   - Rather simple cases: keep Bash scripts or Python pipelines (Scikit/Pandas/etc.)
-  - If the project grows, it is always better use a **workflow orchestrator**
+  - If the project grows, it is always better to use a **workflow orchestrator**
     - [Nextflow](https://www.nextflow.io)
       - Keep details in config files (params.yaml, nextflow_schema.json)
       - Provenance (tracking data transformation along used software)
