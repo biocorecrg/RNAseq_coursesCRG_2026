@@ -1,9 +1,3 @@
----
-layout: page
-title: R basics
-navigation: 17
----
-
 # Reviewing some R basics
 
 Open the **RStudio** software.
@@ -20,16 +14,16 @@ Everything that stores any kind of data in R is an **object**.
   		+ Use **<-** for assignments
   	+ Keep **=** for functions arguments
 * Assigning a value to the object **B**: 
-```{r}
+```r
 B <- 10
 ```
 * Reassigning: modifying the content of an object:
-```{r}
+```r
 B + 10
 ```
 
 <span style="color:red">**B unchanged !!**</span><br>
-```{r}
+```r
 B <- B + 10
 ```
 
@@ -46,7 +40,7 @@ Each object has a data type:
 * Logical (TRUE / FALSE)
 
 Number:
-```{r}
+```r
 a <- 10
 mode(a)
 typeof(a)
@@ -54,7 +48,7 @@ str(a)
 ```
 
 Text:
-```{r}
+```r
 b <- "word"
 mode(b)
 typeof(b)
@@ -70,13 +64,13 @@ The main data structures in R are:
 
 Create a vector:
 
-```{r}
+```r
 a <- 1:5
 ```
 
 Create a second vector, and check with elements of that second vector are also present in **a** with **%in%**:
 
-```{r}
+```r
 b <- 3:8
 
 b[b %in% a]
@@ -84,13 +78,13 @@ b[b %in% a]
  
 Check the length of (=number of elements in) a vector:
 
-```{r}
+```r
 length(b)
 ```
 
 Create a data frame:
 
-```{r}
+```r
 # stringsAsFactors: ensures that characters are treated as characters and not as factors
 d <- data.frame(Name=c("Maria", "Juan", "Alba"), 
         Age=c(23, 25, 31),
@@ -100,7 +94,7 @@ d <- data.frame(Name=c("Maria", "Juan", "Alba"),
 
 Check dimensions of a dataframe:
 
-```{r}
+```r
 # Number of rows
 nrow(d)
 
@@ -113,13 +107,13 @@ dim(d)
 
 Select rows of the data frame **if the Age column is superior to 24**:
 
-```{r}
+```r
 d[d$Age > 24,]
 ```
 
 Select rows of the data frame **if the Age column is superior to 24 AND if Vegetarian is TRUE** :
 
-```{r}
+```r
 d[d$Age > 24 & d$Vegetarian == TRUE,]
 ```
 
@@ -127,23 +121,23 @@ d[d$Age > 24 & d$Vegetarian == TRUE,]
 ## Paths and directories
 
 * Get the path of the current directory (know where you are working at the moment) with <b>getwd</b> (get working directory):
-```{r}      
+```r      
 getwd()
 ```
 
 * Change working directory with **setwd** (set working directory)<br>
 Go to a directory giving the absolute path: 
-```{r}
+```r
 setwd("~/rnaseq_course")
 ```
 Go to a directory giving the relative path:
-```{r}
+```r
 setwd("differential_expression")
 ```
 You are now in: "~/rnaseq_course/differential_expression"
 <br>
 Move one directory "up" the tree:
-```{r} 
+```r 
 setwd("..")
 ```
 You are now in: "~/rnaseq_course"
@@ -155,7 +149,7 @@ You are now in: "~/rnaseq_course"
 
 * Finding missing values in a vector
 
-```{r}
+```r
 # Create vector
 x <- c(4, 2, 7, NA)
 
@@ -169,7 +163,7 @@ x[ !is.na(x) ]
 
 * Some functions can deal with NAs, either by default, or with specific arguments:
 
-```{r}
+```r
 x <- c(4, 2, 7, NA)
 
 # default arguments
@@ -181,7 +175,7 @@ mean(x, na.rm=TRUE)
 
 * In a matrix or a data frame, keep only rows where there are no NA values:
 
-```{r}
+```r
 # Create matrix with some NA values
 mydata <- matrix(c(1:10, NA, 12:2, NA, 15:20, NA), ncol=3)
 
@@ -201,7 +195,7 @@ Check this [R blogger post on missing/null values](https://www.r-bloggers.com/r-
 
 * Read a file as a vector with the **scan** function
 
-```{r}
+```r
 # Read in file
 scan(file="file.txt")
 # Save in  object
@@ -211,7 +205,7 @@ k <- scan(file="file.txt")
 By default, scans "double" (numeric) elements: it fails if the input contains characters.<br>
 If non-numeric, you need to specify the type of data contained in the file: 
 
-```{r}
+```r
 # specify the type of data to scan
 scan(file="file.txt", 
         what="character")
@@ -222,14 +216,14 @@ scan(file="~/file.txt",
 Regarding paths of files:<br>
 If the file is not in the current directory, you can provide a full or relative path. For example, if located in the home directory, read it as:
 
-```{r}
+```r
 scan(file="~/file.txt", 
         what="character")
 ```
 
 * Write the content of a vector in a file:
 
-```{r}
+```r
 # create a vector
 mygenes <- c("SMAD4", "DKK1", "ASXL3", "ERG", "CKLF", "TIAM1", "VHL", "BTD", "EMP1", "MALL", "PAX3")
 # write in a file
@@ -240,7 +234,7 @@ write(x=mygenes,
 Regarding paths of files:<br>
 When you write a file, you can also specify a full or relative path:
 
-```{r}
+```r
 # Write to home directory
 write(x=mygenes,
         file="~/gene_list.txt")
@@ -253,19 +247,19 @@ write(x=mygenes,
 
 * Read in a file into a data frame with the **read.table** function:
 
-```{r}
+```r
 a <- read.table(file="file.txt")
 ```
 
 You can convert it as a matrix, if needed, with:
 
-```{r}
+```r
 a <- as.matrix(read.table(file="file.txt"))
 ```
 
 * Write a data frame or matrix to a file:
 
-```{r}
+```r
 write.table(x=a,
         file="file.txt")
 ```
@@ -301,13 +295,13 @@ All other packages:
 
 Install a CRAN package using **install.packages**:
 
-```{r}
+```r
 install.packages('BiocManager', repos = 'http://cran.us.r-project.org', dependencies = TRUE)
 ```
 
 Install a Bioconductor package using **BiocManager::install**:
 
-```{r}
+```r
 library('BiocManager')
 BiocManager::install('GOstats')
 ```
@@ -347,7 +341,7 @@ with row names: **John, Jessica, Steve, Rachel** and column names: **Age, Height
 <br>
 **CORRECTION**
 
-```{r}
+```r
 
 # Ex1.
 #Create a numeric vector y which contains the numbers from 2 to 11, both included.
