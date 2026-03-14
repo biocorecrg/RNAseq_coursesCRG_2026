@@ -265,7 +265,7 @@ Other tools:
 
 ```{image} ./images/r_logo.png
 :alt: R logo
-:width: 600px
+:width: 300px
 ```
 
 - RStudio (.Rproj files)
