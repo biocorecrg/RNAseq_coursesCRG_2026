@@ -40,6 +40,8 @@ The structure of GO can be described as a graph: each GO term is a **node**, and
 |:---:|
 | ![GO example graph](images/GO_example_graph.png) |
 
+Source: Isoform Function Prediction Using Deep Neural Network - Scientific Figure on ResearchGate. Available from: <https://www.researchgate.net/figure/GO-Terms-Graph-The-GO-terms-have-a-graph-structure-nodes-represent-the-functions-and_fig2_362567903> [accessed 14 Mar 2026]
+
 GO:0019319 (hexose biosynthetic process) is part of GO:0019318 (hexose metabolic process) and also part of GO:0046364 (monosaccharide biosynthetic process). They all share common **parent nodes**, for example GO:0008152 (metabolic process), and eventually a **root node** that is here **biological process**.
 
 ### KEGG pathways
@@ -52,6 +54,8 @@ Example of the [*Homo sapiens* melanoma pathway](https://www.genome.jp/dbget-bin
 | |
 |:---:|
 | ![KEGG melanoma pathway](images/kegg_hsa05218.png) |
+
+Source: <https://link.springer.com/article/10.1186/s12859-019-2881-7/figures/14>
 
 ### Molecular Signatures Database (MSigDB)
 
@@ -104,7 +108,9 @@ It does not require the input of a gene universe: only a selection of genes or a
 
 | |
 |:---:|
-| ![EnrichR paper](images/enrichr_paper1.jpg) | Title: <https://pmc.ncbi.nlm.nih.gov/articles/PMC3637064/> |
+| ![EnrichR paper](images/enrichr_paper1.jpg) |
+
+Source: <https://pmc.ncbi.nlm.nih.gov/articles/PMC3637064/>
 
 The default EnrichR interface works for *Homo sapiens* and *Mus musculus*.
 However, EnrichR also provides a [set of tools](https://amp.pharm.mssm.edu/modEnrichr/) for ortholog conversion and enrichment analysis of more organisms:
