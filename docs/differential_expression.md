@@ -1227,6 +1227,8 @@ Does this approach corrects for batch effect?
 
 ### Outliers detection
 
+In some cases we can find samples that are not clustered with the others. This could be due to several reasons, such as sample preparation errors, technical issues, or biological differences between samples. In this case, we need a review of the different sequencing Quality Control parameters we studied previously to identify possible sample degradation, contamination, or other technical issues. If we find such issues, we can remove the outlier samples from the dataset and re-run the analysis.
+
 | | |
 |:---:|:---:|
 | ![PCA with outlier](images/PCA_outlier.png) |
@@ -1306,6 +1308,10 @@ PCA_misl <- ggplot(pcaData, aes(PC1, PC2, color=Condition)) +
 
 ggsave("PCA_mislabeled.png",PCA_misl,  width = 12, height = 6)
 ```
+
+| | |
+|:---:|:---:|
+| ![PCA mislabeled sample](images/PCA_mislabeled.png) |
 
 ## Further reading materials
 
