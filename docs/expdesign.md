@@ -378,16 +378,14 @@ power increases with
 
 <br>
 
-RNA-seq experiments with small numbers of biological replicates often produce
-results that are difficult to reproduce in independent experiments
-([Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630)).
-
-<br>
-
-Increasing the number of biological replicates generally improves statistical power more than increasing sequencing depth 
+:::{important}
+**Increasing the number of biological replicates generally improves statistical power more than increasing sequencing depth**
 ([Tarazona et al., 2011](https://genome.cshlp.org/content/21/12/2213), 
 [Liu et al., 2014](https://academic.oup.com/bioinformatics/article/30/3/301/236651), 
 [Schurch et al., 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)).
+:::
+
+<br>
 
 <div style="display:flex; justify-content:center;">
 
@@ -404,11 +402,11 @@ Increasing the number of biological replicates generally improves statistical po
 
 ### Number of replicates in RNA-seq experiments
 
-> "RNA was sequenced from 48 biological replicate samples of Saccharomyces cerevisiae in each of two well-studied experimental conditions; wild-type (WT) and a Δsnf2 mutant. 
-... bootstrap runs were performed with i = 100 iterations and nr = 2,…,40 replicates in each condition.
-...For a given value of nr, the mean log2 transformed fold change [log2(FC)] and median adjusted P-value or FDR calculated across all the bootstrap iterations was considered representative of the measured behavior for each individual gene. 
-Again, genes were marked as SDE when the adjusted P-value or FDR was ≤0.05. 
-From these results, true positive, true negative, false positive, and false negative rates (hereafter TPR, TNR, FPR, FNR) were then calculated as a function of nr for four arbitrary fold-change thresholds (|lo⁢g2⁡(𝐹⁡𝐶)| =𝑇 ∈{0,0.3,1,2}), by comparing the SDE genes from each bootstrap with the SDE genes from the tool's gold standard."
+> "RNA was sequenced from 48 biological replicate samples of Saccharomyces cerevisiae in each of two well-studied experimental conditions; wild-type (WT) and a Δsnf2 mutant. ... <br>
+       Bootstrap runs were performed with i = 100 iterations and nr = 2,…,40 replicates in each condition.<br>
+       For a given value of nr, the mean log2 transformed fold change [log2(FC)] and median adjusted P-value or FDR calculated across all the bootstrap iterations was considered representative of the measured behavior for each individual gene. <br>
+       Genes were marked as SDE when the adjusted P-value or FDR was ≤0.05. <br>
+       From these results, true positive, true negative, false positive, and false negative rates were calculated as a function of nr for four arbitrary fold-change thresholds (|lo⁢g2⁡(𝐹⁡𝐶)| =𝑇 ∈{0,0.3,1,2}), by comparing the SDE genes from each bootstrap with the SDE genes from the tool's gold standard."
 >
 > — [Schurch et al., 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)
 
@@ -425,10 +423,10 @@ From these results, true positive, true negative, false positive, and false nega
 
 The study showed that:
 
-- With **3 replicates**, many differentially expressed genes are missed (Fig. A - <30% SDEs identified), 
-in particular, lower expressed --> Fig. B - TPR = 0.8 for log2FC > 1
-- With **6 replicates**, most strong signals are detected --> Fig. A - ~40% SDEs identified;
-Fig. B - TPR = 0.87 for log2FC > 1; TPR = 0.8 for log2FC > 0.5
+- With **3 replicates**, many differentially expressed genes are missed --> Fig A - <30% SDEs identified; 
+in particular, many lower expressed genes are missed --> Fig B - TPR = 0.8 for log2FC > 1
+- With **6 replicates**, most strong signals are detected --> Fig A - ~40% SDEs identified;
+Fig B - TPR = 0.87 for log2FC > 1; TPR = 0.8 for log2FC > 0.5
 - Detecting small expression changes may require **more than 10 replicates** --> Fig. C - TPR = 0.9 for log2FC > 0.3 (i.e., FC = 1.24)
 
 <br>
@@ -438,14 +436,14 @@ Fig. B - TPR = 0.87 for log2FC > 1; TPR = 0.8 for log2FC > 0.5
 
 ### When the number of replicates is limited
 
-In practice, RNA-seq experiments are often performed with a small number of biological replicates due to cost or sample availability. 
+In practice, RNA-seq experiments are often performed with a small number of biological replicates due to cost or sample availability. <br>
 However, studies have shown that differential expression results obtained from small cohort sizes are often difficult to reproduce in independent experiments.
 
 A recent analysis by [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630) 
 simulated more than 18,000 RNA-seq experiments by repeatedly 
-subsampling real datasets with cohort sizes ranging from 3 to 15 replicates. 
-The study showed that experiments with small cohort sizes frequently produce differential expression results that are unlikely to replicate well.
-
+subsampling real datasets with cohort sizes ranging from 3 to 15 replicates. <br><br>
+The study showed that **experiments with small cohort sizes frequently produce differential expression results that are unlikely to replicate well.**
+<br><br>
 However, low replicability does not necessarily imply that the results are incorrect. 
 In many cases, the main problem is low recall (missing true signals) rather than a high rate of false positives.
 
@@ -454,32 +452,90 @@ In many cases, the main problem is low recall (missing true signals) rather than
 | |
 |:---:|
 | ![fishy](images/expdesign_journal.pcbi.1011630.g002.PNG) | 
-| **DEG performance metrics as a function of the cohort size.** Each symbol summarizes the median of 100 cohorts. All panels show results using the DESeq2 Wald test with abs(log2FC)>1. <br> *Figure is adapted from [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630) * |
+| **DEG performance metrics as a function of the cohort size.** Each symbol summarizes the median of 100 cohorts. All panels show results using the DESeq2 Wald test with abs(log2FC) above 1. <br> *Figure is adapted from [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630)* |
 
 </div>
 
-Fig A shows the median replicability of 100 subsampled cohorts as a function of the cohort size. 
-Except for the SNF2 data set, 
-all data sets show low (<0.5) replicability for the smallest cohort size of N = 3. 
+<br>
+
+**Fig A shows the median replicability of 100 subsampled cohorts as a function of the cohort size.**
+<br>Except for the SNF2 data set, all data sets show low (<0.5) replicability for the smallest cohort size of N = 3. <br>
 For the largest cohort size of N = 15, a wide range of replicability values is observed, depending on the data set. 
-The median number of DEGs is shown in Fig B. 
 <br>
-Fig C & D show that the precision rises more steeply than recall for small cohort sizes. <br>
-<br>10 out of 18 data sets exceed the precision of 0.9 for N>5. <br>
-<br>
+**Fig C & D show that the precision rises more steeply than recall for small cohort sizes.** <br>
+10 out of 18 data sets exceed the precision of 0.9 for N>5. <br>
+
 In contrast, for all data sets except SNF2, recall is below 0.5 for N<7. <br>
 <br>
 **That means that false negatives (low recall) are a more significant driver of low replicability than false positives (low precision).**
+<br><br>
+
+
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| ![fishy](images/expdesign_journal.pcbi.1011630.g003.PNG) | 
+| **Heat maps and fold change estimates for SNF2 and LMAB data sets.** <br> Left column: Heat maps showing the logCPM correlation of samples for the SNF2 and LMAB data sets. Heat map rows and columns were ordered using hierarchical Ward clustering. <br> Right column: Fold change estimates of expressed genes in the SNF2 and LMAB data sets. **Blue dots represent the ground truth estimate from the full data set.** Gray (red) bars represent the interquartile range of estimates obtained from 100 subsampled cohorts of size N = 3 (N = 15). The horizontal dashed line shows the logFC threshold used to define DEGs. <br> *Figure is adapted from [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630)* |
+
+</div>
+
 <br>
 
-> The best-performing SNF2 data set is so homogeneous and well-separated by condition that the subsampling has little influence on the logFC estimation, 
-which has little variance even for the smallest cohort sizes. 
-By contrast, the worst-performing LMAB data has few true DEGs and 
+> The best-performing SNF2 data set is so homogeneous and well-separated by condition that the subsampling has little influence on the logFC estimation, which has little variance even for the smallest cohort sizes. 
+<br><br>By contrast, the worst-performing LMAB data has few true DEGs and 
 the logFC estimates exhibit substantial sampling variance, 
-which leads to logFC estimates that are either inflated or deflated. 
+which leads to **logFC estimates that are either inflated or deflated.** ...
+<br>In the case of inflation of a non-DEG, the respective gene is more likely to spuriously pass significance 
+and fold change thresholds, thus yielding a false positive. ...<br>
+[this is] **the study that inflates effect sizes and undermines the reliability of results.** <br><br>
+These findings are consistent with expectations, given that the SNF2 samples originate from cell colonies, whereas the LMAB samples are derived from heterogeneous tumor tissues. 
 >
 > — [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630) 
 
+<br>
+
+---
+
+### Recommendations when replication is limited (from Degen & Medo, 2025)
+
+When experiments must be performed with a small number of replicates:
+
+- Interpret differential expression results with caution.
+- Focus on **large effect sizes** rather than small fold changes.
+- Validate key findings using independent experiments.
+- Use **resampling or bootstrapping approaches** to estimate the reliability of results.
+
+These approaches can help estimate whether the results of an underpowered RNA-seq experiment are likely to contain many false discoveries.
+
+<br> **What does it mean "focus on large effect size"?**
+<br> That means that instead of testing the null hypothesis log2FC=0 <br>
+test for **abs(log2FC) > lfcThreshold** (e.g., =1). <br><br>
+**This improves interpretability and maintains proper type I error control.**
+<br><br>DESeq2 implementation:
+```
+results(dds, lfcThreshold = 1)
+```
+Thus, instead of asking
+```
+Is the gene differentially expressed?
+```
+you ask
+```
+Is the fold change larger than a biologically meaningful threshold?
+```
+
+<br>
+
+:::{admonition} 
+:class: important
+When replication cannot be increased, researchers should treat RNA-seq results as **hypothesis-generating rather than definitive evidence.**
+Significant DEGs from one small cohort are unlikely to be significant in another small cohort (low replicability), 
+unless it is known that the population is **very homogeneous** (e.g. cell cultures).
+
+:::
+
+<br>
 
 
 
