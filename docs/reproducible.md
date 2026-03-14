@@ -323,7 +323,6 @@ These repositories  are linked to the repositories of NGS raw data (FASTQ files)
 * [**ENA**](https://www.ebi.ac.uk/ena) (European Nucleotide Archive) 
 * [**DDBJ-DRA**](https://www.ddbj.nig.ac.jp/dra/index-e.html) 
 
-<br/>
 
 ### EXERCISE
 Let's explore [this GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE76647) (GSE76647)
@@ -337,7 +336,7 @@ Let's explore [this GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?a
 
 **fastq-dump** program from the [**SRA toolkit**](https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc) allows you to retrieve raw data from the **SRA** platform, using the command line:
 <br>
-```{bash}
+```bash
 fastq-dump --gzip --origfmt --split-files --skip-technical SRR-IDENTIFIER
 
 # For us, it would be:
