@@ -28,14 +28,14 @@ Management of changes to documents, computer programs and other collections of i
 
 
 
-![PhD Comics][phd-comics-notfinal][^1]
+![PhD Comics][phdcomics-notfinal][^1]
 
 [phdcomics-notfinal]: ./images/phd101212s.gif
 
 [^1]: [Source: PhD Comics: Not final](https://phdcomics.com/comics.php?f=1531)
 
 
-![PhD Comics][phd-comics-story][^2]
+![PhD Comics][phdcomics-story][^2]
 
 [phdcomics-story]: ./images/phd052810s.png
 
@@ -263,7 +263,10 @@ Other tools:
 
 ## R
 
-![R logo](./images/r_logo.png)
+```{image} ./images/r_logo.png
+:alt: R logo
+:width: 600px
+```
 
 - RStudio (.Rproj files)
 
@@ -286,7 +289,10 @@ Other tools:
       - Provenance (tracking data transformation along used software)
         - [nf-prov](https://github.com/nextflow-io/nf-prov)
 
-![Nextflow logo](./images/nextflow_logo.png)
+```{image} ./images/nextflow_logo.png
+:alt: Nextflow logo
+:width: 600px
+```
 
 - [RO-Crate](https://www.researchobject.org/ro-crate/) - Effort to package research data with metadata. `nf-prov` project supports it.
 
