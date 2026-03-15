@@ -1,4 +1,4 @@
-# Running the full analysis using the nf-core pipelines
+# Hands-on: Running the full analysis using the nf-core pipelines
 
 All the previous steps can be chained together in what bioinformaticians call a pipeline.
 Historically, each lab developed its own pipelines using custom code tailored to its specific IT infrastructure. 
@@ -23,11 +23,13 @@ All nf-core pipelines follow strict guidelines for structure, documentation, and
 </br>
 
 These pipelines leverage containerization to ensure reproducibility and portability. Each bioinformatics tool runs inside a Linux container (such as Singularity/Apptainer or Docker), eliminating dependency conflicts and the "works (only :) ) on my machine" problem.
-Most nf-core pipelines rely on container images from [Biocontainers](https://biocontainers.pro/), a community-driven project that automatically builds and hosts containers for thousands of bioinformatics tools. These pre-built images are publicly available at [quay.io](https://quay.io/), allowing pipelines to pull the exact software versions they need on-demand.
+Most nf-core pipelines rely on container images from [Biocontainers](https://biocontainers.pro/), a community-driven project that automatically builds and hosts containers for thousands of bioinformatics tools. These pre-built images are publicly available at [quay.io](https://quay.io/), allowing pipelines to pull the exact software versions they need on demand.
 
 <div align="center">
-<img src="images/biocontainers_screen.png" width="300"  />
+<img src="images/biocontainers_screen.png" width="500"  />
 </div>
+
+The nf-core community has a great [documentation](https://nf-co.re/docs/usage/getting_started/introduction), which is being updated continuously. 
 
 ## RNAseq nf-core pipeline 
 
@@ -40,16 +42,28 @@ For our data analysis, we will use the [nf-core RNAseq pipeline](https://nf-co.r
 As you can see, we have almost 40 tools that are chained and available. This level of complexity was nearly impossible in the past without the use of an orchestrator.
 
 We can identify 5 macro areas:
-- Preprocessing: merge different sequencing runs, infer strandness, QC, UMI extraction, adapter trimming and contaminants, and rRNA removal.  
-- Genome alignment using either Star, Hisat2 or bowtie2. Quantification with Rsem or Salmon. (Hisat2 has no quantification method)
-- Transcriptome pseudo-alignment with either Salmon or Kallisto.
-- Post-processing after genome alignment: sorting, umi and read deduplication, transcriptome assembly, and quantification. Generation of read coverage files (bigWig) for displaying in genome browsers.
-- Quality control and reporting after post-processing: QC on alignment, such as RSeQC, qualimap, etc. Detection of contamination and final reporting with MultiQC 
+
+### Preprocessing
+Merge different sequencing runs, infer strandness, QC, UMI extraction, adapter trimming and contaminants, and rRNA removal.
+
+### Genome alignment
+Genome alignment using either Star, Hisat2 or bowtie2. Quantification with Rsem or Salmon. (Hisat2 has no quantification method)
+
+### Transcriptome pseudo-alignment
+Transcriptome pseudo-alignment with either Salmon or Kallisto.
+
+### Post-processing after genome alignment
+Sorting, umi and read deduplication, transcriptome assembly, and quantification. Generation of read coverage files (bigWig) for displaying in genome browsers.
+
+### Quality control and reporting after post-processing
+QC on alignment, such as RSeQC, qualimap, etc. Detection of contamination and final reporting with MultiQC 
+
+--------
 
 We can use the nf-core tools by installing them using **pip**.  
 
 ```{note}
-You might also think of getting it from Biocontainers, but this won't work when executing the pipeline with other containers!
+You might also think of getting nf-core tools from Biocontainers, but this won't work when executing the pipeline!
 ```
 
 ```bash
@@ -248,6 +262,7 @@ process {
 }
 ```
 
+
 We need to define the input files inside a sample sheet.  
 
 ```
@@ -294,6 +309,10 @@ INFO     Would you like to enter pipeline parameters using a web-based interface
 ```
 We choose the command line, we choose **-profile  [singularity]**, as input **sample_sheet.csv**, **outfolder** as output. We provide the fasta file as **--fasta** and the gtf as **--gtf**.
 
+```{note}
+Hyphens matter! Core Nextflow command-line options use one (-), whereas pipeline-specific parameters use two (--).
+```
+
 
 ```bash
 
@@ -315,7 +334,100 @@ Nextflow 26.02.0-edge is available - Please consider updating your version to it
 Launching `/users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-core-rnaseq_dev/dev/main.nf` [special_lamarck] DSL2 - revision: ff377cb1d2
 ```
 
-After some minute we got:
+While the pipeline is running, we can inspect where the pipeline is writing the temporary files: the work folder.
+
+This folder will contain a number of subfolders, that are connected to each process execution. For instance the process indicated with:
+
+```bash
+
+[a8/9852eb] Submitted process > NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC (SRR3091428)
+
+```
+is indicating the existence of a subfolder structure   work/**a8/9852eb**73bcf5c0cebe39fead0be5b5/
+
+Let's go inside and check what's there:
+
+```bash
+ls work/a8/9852eb73bcf5c0cebe39fead0be5b5/
+.command.begin
+.command.env
+.command.err
+.command.log
+.command.out
+.command.run
+.command.sh
+.command.trace
+.exitcode
+SRR3091428_raw_fastqc.html
+SRR3091428_raw_fastqc.zip
+SRR3091428_raw.gz ⇒ SRR3091428_1_chr6.fastq.gz
+ SRR3091428_1_chr6.fastq.gz ⇒ /users/bi/lcozzuto/rnaseq_course/RNAseq_coursesCRG_2026/docs/data/reads/SRR3091428_1_chr6.fastq.gz
+```
+
+You can see that the input file is a soft link to the original fastq file to avoid unnecessary duplication of data. Moreover, everything that is needed for the computation is "isolated" in this folder without the possibility of file collision with other executions. There is a further link to "standardize" the input name, this is quite useful considering the final reporting with MultiQC.
+
+
+Inspecting the .command.sh reveal:
+
+```
+#!/usr/bin/env bash -C -e -u -o pipefail
+printf "%s %s\n" SRR3091428_1_chr6.fastq.gz SRR3091428_raw.gz | while read old_name new_name; do
+    [ -f "${new_name}" ] || ln -s $old_name $new_name
+done
+
+fastqc \
+    --quiet \
+    --threads 2 \
+    --memory 6144 \
+    SRR3091428_raw.gz
+
+# capture process environment
+...
+```
+
+In brief, the command creates a soft link for standardizing the name and contains the fastqc command line with the definition of memory and the number of threads.
+This definition is not fixed; it is generated at run time, depending on your configuration, and is linked to the resources requested to your system when submitting the jobs.
+
+Nextflow takes care of all these aspects, so that an increase of resources is automatically translated into changing the command line.
+
+You can also run nextflow without using the nf-core tools. Just using the command line that was written before in the logs or present in the first row of the file `.nextflow.log`
+
+```bash
+head -n 1 .nextflow.log
+Mar-09 17:07:35.926 [main] DEBUG nextflow.cli.Launcher - $> nextflow run /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-core-rnaseq_dev/dev -profile singularity -params-file /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-params.json
+```
+
+In case of failure, you can resume by just adding the `-resume` parameter to the nextflow command line. You can also change the maximum resources available by using a local config file like
+
+```bash
+vi my_local.config 
+
+process {
+  resourceLimits = [
+    cpus: 4,
+    memory: 6.GB,
+    time: 24.h
+  ]
+}
+```
+
+And then feeding the custom config file using the `-c` parameter
+
+```bash
+nextflow run /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-core-rnaseq_dev/dev -profile singularity -params-file /users/bi/lcozzuto/rnaseq_course/test_nf-core/nf-params.json -c my_local.config  -resume
+```
+
+## Nextflow versions
+Nextflow has both stable and edge releases. Some pipelines may require the use of Nextflow edge releases to exploit particular features.
+
+Nextflow installs the latest stable version by default. You can get an edge release either by defining the exact version with NXF_VER or by using the NXF_EDGE environment variable: 
+
+```bash
+NXF_VER=25.11.0-edge nextflow run ...
+
+```
+
+After some minutes, we got:
 
 ```bash
 [fd/068789] NFCORE_RNASEQ:RNASEQ:BAM_RSEQC:RSEQC_INFEREXPERIMENT (SRR3091426)                                                  [100%] 10 of 10 ✔
@@ -331,3 +443,22 @@ Duration    : 16m 21s
 CPU hours   : 1.7
 Succeeded   : 363
 ```
+
+Let's inspect the output.
+
+- fastqc (QC)
+  - raw
+  - trim
+- fq_lint (validator)
+- multiqc (reporting)
+- pipeline_info 
+- star_salmon: output of several tools:
+  - bam files
+  - salmon quantification on star aligned results
+  - qualimap QC
+  - ...   
+- trimgalore (report of trimgalore execution)
+
+The final report can be seen [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/nf-core/multiqc_report.html)
+
+

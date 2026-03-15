@@ -13,7 +13,7 @@
 - Statistical deficiencies (small sample sizes, bias, improper choices)
 - Societal and cultural issues
   - Lack of proper training in data management
-  - Publish and perish push
+  - Publish and perish pressure
   - Little reward to data sharing
 
 
@@ -24,11 +24,22 @@ Management of changes to documents, computer programs and other collections of i
 - **when**, **who**, **what**
 
 
-### Why you should you use it?
+### Why should you use it?
 
-![](./images/phd101212s.gif)
 
-![](./images/phd052810s.png)
+![PhD Comics][phdcomics-notfinal][^1]
+
+[phdcomics-notfinal]: ./images/phd101212s.gif
+
+[^1]: [Source: PhD Comics: Not final](https://phdcomics.com/comics.php?f=1531)
+
+
+![PhD Comics][phdcomics-story][^2]
+
+[phdcomics-story]: ./images/phd052810s.png
+
+[^2]: [Source: PhD Comics: A story in files](https://phdcomics.com/comics/archive.php?comicid=1323)
+
 
 ### Benefits
 
@@ -42,7 +53,7 @@ Management of changes to documents, computer programs and other collections of i
 
 ### Uses
 
-(either alone or collaboratively)
+You can use version control either alone or collaboratively for:
 
 - papers
 - lectures
@@ -111,7 +122,7 @@ It is the most used thanks to its simplicity and GitHub
 
 ![git-github](./images/Github2.png)
 
-GitHub is a web-based Git repository hosting service, which offers all the functionalities of Git as well as adding its own features
+[GitHub](https://www.github.com) is a web-based Git repository hosting service, which offers all the functionalities of Git as well as adding its own features
 
 ### Git Features
 
@@ -128,9 +139,7 @@ GitHub is a web-based Git repository hosting service, which offers all the funct
 - in-browser editing
 - additional collaborative features
 
-An alternative of GitHub is GitLab, used mostly in-premise for private projects.
-
-![GitLab](./images/gitlab.png)
+An alternative to GitHub is [GitLab](https://www.gitlab.com), used mostly in-premise for private projects.
 
 
 ## Computational reproducibility
@@ -151,24 +160,24 @@ An alternative of GitHub is GitLab, used mostly in-premise for private projects.
 
 ## Containers
 
+![Container Lashing with Rods][container-rods][^3]
 
-![Container lashing with rods](./images/Container_lashing_with_rods.jpg)
+[container-rods]: ./images/Container_lashing_with_rods.jpg
 
-https://commons.wikimedia.org/wiki/File:Container_lashing_with_rods.jpg
+[^3]: [Source: Wikimedia Commons - Container lashing with rods](https://commons.wikimedia.org/wiki/File:Container_lashing_with_rods.jpg)
+
 
 Software solutions:
 
 - Docker (most popular)
-- Podman
-- Singularity/Apptainer
+- Podman (no sysadmin permissions needed)
+- Singularity/Apptainer (popular in HPC environments)
 
 
-TODO: Logo Docker, Podman, Singularity/Apptainer
-
-Docker recipe example, Dockerfile:
+Docker recipe example, `Dockerfile`:
 
 
-```
+```dockerfile
 FROM debian:bookworm
 
 ARG PERLBREW_ROOT=/usr/local/perl
@@ -188,18 +197,18 @@ RUN set -x; \
 
 ### Where to find Docker images
 
-* [Docker Hub](https://hub.docker.com/)
-* [Biocontainers](https://biocontainers.pro)
-
+* [Docker Hub](https://hub.docker.com/) - Most popular and first registry
+* [Biocontainers](https://biocontainers.pro) - Based on bioconda (more on it later)
+* [Seqera Containers](https://seqera.io/containers/) - Creation of containers on demand
 
 ## Conda
 
 Convenient package management system to set up environments
 
 
-- env.yaml. Recipe for conda environments
+- `environment.yaml`. Recipe for conda environments
 
-```
+```bash
 conda env create -f myenv.yaml
 
 conda env create myenv
@@ -207,7 +216,7 @@ conda env export > myenv.yaml
 ```
 
 
-```
+```yaml
 name: pod5
 channels:
   - conda-forge
@@ -215,7 +224,6 @@ channels:
 dependencies:
   - jannessp::pod5==0.2.4
 ```
-
 
 
 
@@ -228,11 +236,12 @@ Tools for installing Conda:
 
 ## Python
 
-TODO: Logo Python here
+![Python logo](./images/python_logo.png)
 
-- requirements.txt
+- `requirements.txt`
 
-```
+
+```bash
 pip install -r requirements.txt
 
 pip freeze > requirements.txt
@@ -253,9 +262,13 @@ Other tools:
 
 ## R
 
-TODO: Logo R here
+```{image} ./images/r_logo.png
+:alt: R logo
+:width: 300px
+```
 
 - RStudio (.Rproj files)
+
 
 - [Working with R projects](https://communicate-data-with-r.netlify.app/docs/baser/workingprojects/)
 
@@ -269,20 +282,32 @@ TODO: Logo R here
 
 - Different steps using different software
   - Rather simple cases: keep Bash scripts or Python pipelines (Scikit/Pandas/etc.)
-  - If the project grows, it is always better use a **workflow orchestrator**
+  - If the project grows, it is always better to use a **workflow orchestrator**
     - [Nextflow](https://www.nextflow.io)
       - Keep details in config files (params.yaml, nextflow_schema.json)
       - Provenance (tracking data transformation along used software)
         - [nf-prov](https://github.com/nextflow-io/nf-prov)
 
-TODO: Logo Nextflow here
+```{image} ./images/nextflow_logo.png
+:alt: Nextflow logo
+:width: 600px
+```
 
+- [RO-Crate](https://www.researchobject.org/ro-crate/) - Effort to package research data with metadata. `nf-prov` project supports it.
+
+- Register your workflow or refer to it: [WorkflowHub](https://workflowhub.eu/) 
+    - Example: related to [RNAseq](https://workflowhub.eu/search?q=rnaseq#workflows)
 
 ## FAIR
 
-![FAIR data principles](./images/FAIR_data_principles.svg.png)
+![FAIR data principles][fair-image][^4]
 
-https://commons.wikimedia.org/wiki/File:FAIR_data_principles.svg
+[fair-image]: ./images/FAIR_data_principles.svg.png
+
+[^4]: [Source: Wikimedia Commons - FAIR Data Principles](https://commons.wikimedia.org/wiki/File:FAIR_data_principles.svg)
+
+- More information about the [FAIR principles](https://www.go-fair.org/fair-principles/)
+
 
 ### Findable
 
@@ -299,9 +324,98 @@ https://commons.wikimedia.org/wiki/File:FAIR_data_principles.svg
 - **Example:** Dataset using terminology, ontology or measurement units that are widely accepted by the community, so it can be compared and integrated with other projects from third parties.
 - **Counter-example:** Dataset with project-specific choices that can be hardly mapped to other experiments of the field.
 
-### Reusable**
+### Reusable
 
 - **Example:** Dataset provided in a way that contained data can be used easily by third parties and regenerated if needed using available instructions.
 - **Counter-example:** Dataset without any documentation, instructions or even context.
 
-Reference: [FAIRification of an RNAseq dataset](https://training.galaxyproject.org/training-material/topics/fair/tutorials/fair-rna/tutorial.html)
+
+## RNA-Seq data repositories
+
+**Public data repositories** exist that store data ("raw" and processed) produced by the community from a variety of experiments: microarrays, high-throughput sequencing, high throughput PCR, etc.
+
+It is nowadays required by most journals to make data **publicly available** upon publication of study in a peer-reviewed journal.
+
+The major repositories for gene expression data:
+* [**GEO**](https://www.ncbi.nlm.nih.gov/geo/) 
+* [**Array-express**](https://www.ebi.ac.uk/arrayexpress/)
+* [**ENCODE**](https://www.encodeproject.org/)
+
+These repositories  are linked to the repositories of NGS raw data (FASTQ files):
+* [**SRA**](https://www.ncbi.nlm.nih.gov/sra) (Sequence Read Archive) 
+* [**ENA**](https://www.ebi.ac.uk/ena) (European Nucleotide Archive) 
+* [**DDBJ-DRA**](https://www.ddbj.nig.ac.jp/dra/index-e.html) 
+
+### Some CLI suggestions
+
+- CLI tool for downloading data: [FASTQ-dl](https://github.com/rpetit3/fastq-dl) ([Container](https://biocontainers.pro/tools/fastq-dl)) - Support both SRA and ENA. Can download multiples files from a project
+
+- CLI tool for uploading to ENA: [ena-upload-cli](https://github.com/usegalaxy-eu/ena-upload-cli)  
+    - First, you upload files to a repository (FTP/Aspera)
+    - Then, upload metadata associated: STUDY, SAMPLE, EXPERIMENT, RUN
+    - Map these 4 concepts to simple TSV files
+    - There are checklists, specific metadata requirements, depending on the sample/experiments that are going to be uploaded: [Checklist templates](https://github.com/ELIXIR-Belgium/ENA-metadata-templates)
+
+## FAIR in practice for RNAseq
+
+- Reference: [FAIRification of an RNAseq dataset](https://training.galaxyproject.org/training-material/topics/fair/tutorials/fair-rna/tutorial.html)
+
+We will use **[E-MTAB-8316](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8316)** from ArrayExpress as example.
+
+### Findable (RNAseq Examples)
+
+**Example:**
+- Dataset **E-MTAB-8316** (from Alivernini et al. 2020, Nature Medicine) has a globally unique and persistent identifier: `E-MTAB-8316` or full URL `https://www.ebi.ac.uk/biostudies/ArrayExpress/studies/E-MTAB-8316`
+- Indexed in searchable repositories (ArrayExpress, ENA)
+- Rich metadata allows discovery via keywords like "macrophage rheumatoid arthritis" combined with "rna-seq of coding rna"
+- Uses resolution services like identifiers.org for regularized URLs
+
+**Counter-example:**
+- RNAseq data kept only on a lab's local server without public deposition
+- FASTQ files named `sample1.fq`, `sample2.fq` with no associated metadata file
+
+
+### Accessible (RNAseq Examples)
+
+**Example:**
+- Data retrievable via standard HTTP/HTTPS protocol using the persistent identifier
+- Raw FASTQ files accessible via ENA (European Nucleotide Archive)
+- Processed data (gene expression matrices) downloadable directly from ArrayExpress
+- Protocol is open, free, and universally implementable
+
+**Counter-example:**
+- Data available only upon request with approval process
+- FASTQ files in proprietary or obscure sequencing format
+- Data behind paywall or institutional login requirement
+
+### Interoperable (RNAseq Examples)
+
+**Example:**
+- Uses published ontologies: [NCBI taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy) for species ("Homo sapiens")
+- Complies with [MINSEQE](https://zenodo.org/records/5706412) (Minimum Information about a Sequencing Experiment) community standard — 5-star rating
+- Machine-readable metadata formats:
+  - **MAGE-TAB** (Sample and Data Relationship Format - SDRF)
+  - **ENA SRA XML** format
+- Controlled vocabularies via [Annotare](https://www.ebi.ac.uk/fg/annotare) submission tool
+
+**Counter-example:**
+- Custom gene identifiers not mapped to standard databases (Ensembl, RefSeq)
+- Proprietary sample annotation system without ontology links
+- Protocol descriptions using only lab-specific terminology
+
+### Reusable (RNAseq Examples)
+
+**Example:**
+- Clear licensing: **CC BY 4.0** ([Creative Commons](https://creativecommons.org/) Attribution)
+- Detailed provenance: links to publication, protocol documentation, sample metadata
+- Complete data availability: raw FASTQ files + processed gene expression matrices
+- Clear documentation of experimental design, protocols, and variables
+- Associated with publication DOI: [10.1038/s41591-020-0939-8](https://dx.doi.org/10.1038/s41591-020-0939-8)
+
+**Counter-example:**
+- No license specified or restrictive license
+- Missing protocol details (e.g., "library prep performed as usual")
+- Only processed data provided without raw FASTQ files
+- No link to methods publication
+
+

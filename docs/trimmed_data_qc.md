@@ -1,4 +1,4 @@
-# Adapter trimming, rRNA removal and post-processing data QC
+# Hands-on: Adapter trimming, rRNA removal and post-processing data QC
 
 In the previous lecture, we ran FastQC, FastQ Screen, and Kraken2 on raw untrimmed reads. Looking back at our MultiQC report, two issues stood out:
 

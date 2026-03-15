@@ -1,4 +1,4 @@
-# Read mapping (Hands on)
+# Hands-on: Read mapping 
 
 
 <img src="images/RNAseq_workflow.png" width="1000"/>
@@ -88,7 +88,7 @@ rm reference_chr6_Hsapiens.tar.gz
 
 # Mapping using STAR
 
-For the **STAR** running options, see [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf).
+For the **STAR** running options, see [STAR Manual](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf).
 
 
 ## Building the STAR index
@@ -158,7 +158,7 @@ To use **STAR** for the read alignment (default **--runMode** option), we have t
 The following parameters are optional but very convenient:
 * **--outSAMtype**: type of output. Default is **BAM Unsorted**; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be indexed or directly used with downstream software such as HTseq, without the need for sorting."* We therefore prefer the option **BAM SortedByCoordinate**
 * **--outFileNamePrefix**: the path for the output directory and prefix of all output files. By default, this parameter is ./, i.e. all output files are written in the current directory.
-* **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In the case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by **htseq-count** with default parameters. **This option requires annotations (in GTF format or GFF with –-sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual](http://labshare.cshl.edu/shares/gingeraslab/www-data/dobin/STAR/Releases/FromGitHub/Old/STAR-2.5.3a/doc/STARmanual.pdf)) 
+* **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In the case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by **htseq-count** with default parameters. **This option requires annotations (in GTF format or GFF with –-sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual] (https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf)) 
 
 <br>
 We can try to launch the mapping for one file:
@@ -373,7 +373,7 @@ The rest is a read alignment.
 <br>
 **CIGAR string 48M** means that 48 bases were mapped to the reference (M).
 <br>
-You can use [this website for the translation of SAM FLAG values](https://www.samformat.info/sam-format-flag) and [this one for interpreting CIGAR strings](https://www.drive5.com/usearch/manual/cigar.html).
+You can use [this website for the translation of SAM FLAG values](https://broadinstitute.github.io/picard/explain-flags.html) and [this one for interpreting CIGAR strings](https://jef.works/blog/2017/03/28/CIGAR-strings-for-dummies/).
 
 <br>
 Extra fields are often present and differ between aligners [https://samtools.github.io/hts-specs/SAMtags.pdf](https://samtools.github.io/hts-specs/SAMtags.pdf). In our case we have:
@@ -385,7 +385,7 @@ Extra fields are often present and differ between aligners [https://samtools.git
 |AS:i:47|Alignment score calculated by the aligner|
 |nM:i:0|number of difference with the reference*|
 
-```{note} Careful that sometimes tools can disagree on some definition, from time to time the standard is "changed" depending on the community, new data to show
+```{note} Careful that sometimes tools can disagree on some definition, from time to time, the standard is "changed" depending on the community, new data to show
 ```
 
 <br/>
@@ -492,7 +492,7 @@ To make an index for **Salmon**, we need transcript sequences in the FASTA forma
 <br>
 This can be found easily in **GENCODE**.
 <br>
-The transcript sequences corresponding to chromosome 6 was prepared and already downloaded in **~/rnaseq_course/reference_genome/**
+The transcript sequences corresponding to chromosome 6 were prepared and already downloaded in **~/rnaseq_course/reference_genome/**
 <br>
 
 **Salmon** does not need any decompression of the input, so we can index by using this command:
@@ -500,7 +500,7 @@ The transcript sequences corresponding to chromosome 6 was prepared and already 
 ```bash
 cd ~/rnaseq_course/mapping
 
-# index and store the index files in index_salmon folder
+# index and store the index files in the index_salmon folder
 $RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v49.transcripts.chr6.fa.gz \
 	-i index_salmon \
 	--gencode
@@ -517,7 +517,7 @@ cd ~/rnaseq_course/reference_genome/reference_chr6/
 cp gencode.v49.transcripts.fa.gz gencode.v49.transcripts.genome.fa.gz
 cat Homo_sapiens.GRCh38.dna.chrom6.fa.gz >> gencode.v49.transcripts.genome.fa.gz 
 
-echo "6" > decoys.txt
+echo "6" > decoy.txt
 ```
 
 Then, we index again
@@ -525,11 +525,13 @@ Then, we index again
 ```bash
 cd ~/rnaseq_course/mapping
 
-# index and store the index files in index_salmon folder
+# index and store the index files in the index_salmon folder. More threads are needed; it is quite slow!
 $RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v49.transcripts.genome.fa.gz \
 	-i index_salmon \
-	--gencode
+	--gencode -p 4 -d decoy.txt
 ```
+
+This step takes around 10 minutes with 4 cpus.
 
 ## Quantifying transcript expression
 
@@ -575,12 +577,12 @@ cd ~/rnaseq_course/mapping
 # create folder for salmon's output files
 mkdir alignments_salmon
 
+# again here using more cpus is better
 $RUN salmon quant -i index_salmon -l U \
     -r ~/rnaseq_course/raw_data/fastq_chr6/SRR3091420_1_chr6.fastq.gz \
     -o alignments_salmon/SRR3091420_1_chr6_salmon \
-    -g ~/rnaseq_course/reference_genome/reference_chr6/gencode.v33.annotation_chr6.gtf.gz \
     --seqBias \
-    --validateMappings
+    --validateMappings -p 4 
 ```
 
 We can check the results inside the folder "alignments".
@@ -592,58 +594,38 @@ ls alignments_salmon/SRR3091420_1_chr6_salmon/
 
 For an explanation of all output files, see the [Salmon documentation](https://salmon.readthedocs.io/en/latest/file_formats.html).
 <br>
-The most interesting to us in this course is the file **quant.genes.sf**, which is a tab-separated file containing the read counts for genes:
+The most interesting to us in this course is the file **quant.sf**, which is a tab-separated file containing the read counts for transcripts:
 
-
-|Column |Meaning |   
-| :----: | :---- |
-|Name| Gene name|
-|Length| Gene length|
-|EffectiveLength| Effective length after considering biases|
-|TPM|Transcripts Per Million|
-|NumReads|Estimated number of reads considering both univocally and multimapping reads|
 
 ```bash
-head -n 5 alignments_salmon/SRR3091420_1_chr6_salmon/quant.genes.sf 
-
+awk '{if ($4>0) print}' quant.sf| head
 Name	Length	EffectiveLength	TPM	NumReads
-ENSG00000285803.1	1152	1116.21	7.96961	15.764
-ENSG00000285712.1	1590	1545.58	2.19064	6
-ENSG00000285824.1	1120	860.855	6.91601	10.551
-ENSG00000285884.1	790	515.683	3.28285	3
+ENST00000466430.5	2748	2815.573	0.384361	1.091
+ENST00000424587.7	5603	6195.161	0.635870	3.972
+ENST00000743878.1	737	509.108	11.858146	6.087
+ENST00000416931.1	372	226.773	5.674886	1.298
+ENST00000457540.1	1044	1378.147	1.891150	2.628
+ENST00000427426.1	682	558.366	1.979782	1.115
+ENST00000514057.1	681	678.963	4.016001	2.749
+ENST00000487214.1	865	562.716	1.762567	1.000
+ENST00000959612.1	3051	4260.652	0.232787	1.000
 ```
 
-There is a similarly formatted file **quant.sf** that provides read counts for transcript:
-
-```bash
-head -n 5 alignments_salmon/SRR3091420_1_chr6_salmon/quant.sf 
-
-Name	Length	EffectiveLength	TPM	NumReads
-ENST00000016171.5	2356	1970.742	659.861626	2304.468
-ENST00000020673.5	4183	5925.497	0.000000	0.000
-ENST00000173785.4	925	868.802	0.000000	0.000
-ENST00000181796.6	3785	3216.057	0.000000	0.000
-```
-
-We will use information on read counts for genes from **quant.sf** files for the differential expression (DE) analysis.
+We will use information on read counts for transcripts from **quant.sf** files for the differential expression (DE) analysis.
 
 <br>
 
 Now, if time and resources allow, proceed with the mapping of the **9 remaining samples**:
 
 ```bash
-cd ~/rnaseq_course/mapping
-
-for fastq in ~/rnaseq_course/raw_data/fastq_chr6/SRR309142{1,2,3,4,5,6,7,8,9}_1_chr6.fastq.gz
+for fastq in ~/rnaseq_course/ ~/rnaseq_course/trimming/SRR309142*.gz;
 do echo $fastq
 
 $RUN salmon quant -i index_salmon -l U \
     -r ${fastq} \
-    -o alignments_salmon/$(basename $fastq .fastq.gz)_salmon \
-    -g ~/rnaseq_course/reference_genome/reference_chr6/gencode.v33.annotation_chr6.gtf.gz \
+    -o alignments_salmon/$(basename $fastq _trimmed.fq.gz)_salmon \
     --seqBias \
-    --validateMappings
-
+    --validateMappings;
 done
 ```
 

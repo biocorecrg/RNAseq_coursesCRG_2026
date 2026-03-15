@@ -4,7 +4,7 @@ layout: page
 navigation: 17
 ---
 
-# Review of RStudio & R basics
+# Hands-on: Reviewing some R basics
 
 In this section, we will review:
 
@@ -79,6 +79,8 @@ B + 10
 ```
 
 <span style="color:red">**B unchanged !!**</span><br>
+
+
 ```r
 B <- B + 10
 ```
@@ -175,12 +177,12 @@ a <- 1:6
 ```{note}
 shorta <- 1
 
-is equivalent to
+#is equivalent to
 
 shorta <- c(1)
-
-**shorta is a vector with 1-element**
 ```
+
+shorta is a vector with 1-element
 
 Check the length of (i.e. number of elements) a vector:
 
@@ -210,7 +212,6 @@ b <- 3:8
 
 b[b %in% a]
 ```
-
 
 ```{tip}
 
@@ -242,6 +243,7 @@ mat <- matrix(1:100, nrow=4)
 
 # define number of columns
 mat <- matrix(1:100, ncol=4)
+
 ```
 
 Check dimensions (i.e. number of rows and number of columns) of a matrix:
@@ -260,7 +262,6 @@ dim(mat)
 Display the first or last rows with `head` or `tail`:
 
 ```r
-
 # first 6 rows (default)
 head(mat)
 
@@ -270,7 +271,6 @@ head(mat, n=10)
 # last 6 rows
 tail(mat)
 ```
-
 
 You can extract rows and columns of a matrix using the slicing operator **[]** and their position/index:
 
@@ -342,11 +342,9 @@ df[df$Age > 24 & df$Vegetarian == TRUE,]
 ```
 
 
-
-
 ## Paths and directories
 
-Show the path of the current directory (i.e. working directory) with `getwd` (get working directory):
+Get/show the path of the current directory (i.e. working directory) with `getwd` (get working directory):
 
 ```r      
 getwd()
@@ -466,7 +464,6 @@ scan(file="~/file.txt",
         what="character")
 ```
 
-
 If the file is not in the current directory, you can provide a full or relative path. 
 
 For example, if the file is located in the home directory, read it as:
@@ -490,7 +487,7 @@ write(x=mygenes,
 Like when reading a file, you can also specify a full or relative path where to write down a file:
 
 ```r
-# Write to r_basics directory
+# Write to home directory
 write(x=mygenes,
         file="~/rnaseq_course/r_basics/gene_list.txt")
         
@@ -550,7 +547,7 @@ All other packages:
 \* As of March 2026
 
 
-Install a CRAN package using **install.packages**:
+Install a CRAN package using `install.packages`:
 
 ```r
 install.packages('BiocManager', repos = 'http://cran.us.r-project.org', dependencies = TRUE)
@@ -635,6 +632,8 @@ or the more straightforward:
 ````
 
 
+````{tab-set}
+
 ```{tab-item} Exercise 3
 :sync: key1
 
@@ -669,6 +668,8 @@ or the more straightforward:
 ````
 
 
+````{tab-set}
+
 ```{tab-item} Exercise 4
 :sync: key1
 
@@ -699,6 +700,8 @@ Then:
 
 ```{tab-item} Correction
 :sync: key2
+
+```r
 
 * Create the following data frame wih 
   + row names: **John, Jessica, Steve, Rachel**
@@ -740,3 +743,4 @@ write.table(df,
             quote = FALSE)
 
 ```
+````

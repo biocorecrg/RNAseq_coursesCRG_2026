@@ -1,4 +1,4 @@
-RNA-seq data analysis: Workflow & Approaches 
+Talk: RNA-seq data analysis: Workflow & Approaches 
 =================
 
 This section will explain the history for the analysis of the transcriptome and the different strategies for aligning the sequencing reads.
