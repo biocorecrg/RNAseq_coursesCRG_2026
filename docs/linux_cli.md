@@ -10,7 +10,7 @@ UNIX-like derivatives spread from that moment:
 - AIX
 - HP-UX
 - Linux
-* etc.
+- etc.
 
 ![Unix History][unix-history][^1]
 
@@ -117,7 +117,7 @@ tldr ls
 
 ## Create files and directories
 
-To create file and folders in linux is quite simple. You can use a number of programs for creating an empty file (`touch`) or an empty directory (`mkdir`)
+To create files and folders in Linux is quite simple. You can use a number of programs for creating an empty file (`touch`) or an empty directory (`mkdir`)
 
 ```bash
 touch my_beautiful_file.txt
@@ -139,7 +139,7 @@ mv my_beautiful_file.txt my_ugly_file.txt
 mv my_beautiful_folder my_ugly_folder
 
 cp my_ugly_file.txt my_beautiful_file.txt
-cp my_ugly_folder -r my_beautiful_folder
+cp -r my_ugly_folder my_beautiful_folder
 ```
 If you omit the **-r** option the system will complain
 
@@ -201,7 +201,7 @@ You can add a **g** at the end if you want to replace every character found ```s
 
 ```bash
 
-sed s/T/U/g my_dna.txt > my_rna.txt
+sed 's/T/U/g' my_dna.txt > my_rna.txt
 
 cat my_rna.txt
 
@@ -223,7 +223,7 @@ rmdir my_beautiful_folder
 # We cannot either
 rm my_beautiful_folder/* && rmdir my_beautiful_folder
 # Alternative
-rm -r my_beautiful_folder # Recursive - use with care
+rm -r my_beautiful_folder # Recursive! Use with care
 ```
 
 We can provide access to files and directories installed in other locations to more convenient places (e.g., for performing analyses) and so we save some space.
@@ -315,20 +315,69 @@ command > all_output.log 2>&1
 # Use the wget or curl example above
 ```
 
-## Commands for manipulating Bioinformatics files
+## Basic commands for manipulating text files
 
-We will use some of them during the course in practical examples. We will briefly mention some of them here with some examples.
+We will use some of them during the course in practical examples.
 
+- `more` / `less` paginate contents of a file if it is large and `cat` is not convenient
+- `tar` can be used for pack and unpack several files in a single archive 
+- `gzip` / `gunzip` are used for compressing and uncompressing files - normally resulting in files with `.gz` extension 
+- `zcat` is like `cat` but allowing to view gzipped files
+- `grep` finds patterns
+- `cut` splits the contents, normally in a line-by-line basis
+- `head` prints the starting contents
+- `tail` prints the ending contents
+- `sort` sorts the content of a file or stdin
+- `wc` counts words, characters, or lines
 
-* `more` / `less` paginate contents of a file if it is large and `cat` is not convenient
-* `tar` can be used for pack and unpack several files in a single archive 
-* `gzip` / `gunzip` are used for compressing and uncompressing files - normally resulting in files with `.gz` extension 
-* `zcat` is like `cat` but allowing to view gzipped files
-* `grep` finds patterns
-* `cut` splits the contents, normally in a line-by-line basis
-* `head` prints the starting contents
-* `tail` prints the ending contents
+Below a couple of examples:
 
+```bash
+# Let's download a gzipped FASTQ file
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/reads/SRR3091420_1_chr6.fastq.gz
+# We see its contents without uncompressing it
+zcat SRR3091420_1_chr6.fastq.gz
+# We pipe it to the paginator
+zcat SRR3091420_1_chr6.fastq.gz | less
+# We look for 55 within the file
+zcat SRR3091420_1_chr6.fastq.gz | grep 55
+# We look for 55 within the file and we read interactively
+zcat SRR3091420_1_chr6.fastq.gz | grep 55 | less
+# We get the first 10 lines of the file
+zcat SRR3091420_1_chr6.fastq.gz | head -n 10
+# We get the last 10 lines of the file
+zcat SRR3091420_1_chr6.fastq.gz | tail -n 10
+# We uncompress the file
+gunzip SRR3091420_1_chr6.fastq.gz
+# We paginate the uncompressed file
+less SRR3091420_1_chr6.fastq
+# We compress it back
+gzip SRR3091420_1_chr6.fastq
+
+```
+
+```bash
+# Let's download a tar archive
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/annotation/reference_chr6_Hsapiens.tar.gz
+# Let's inspect its contents
+tar tf reference_chr6_Hsapiens.tar.gz
+# reference_chr6/
+# reference_chr6/Homo_sapiens.GRCh38.dna.chrom6.fa.gz
+# reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz
+# reference_chr6/gencode.v49.transcripts.chr6.fa.gz
+# Let's extract a specific file
+tar xf reference_chr6_Hsapiens.tar.gz reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz
+# Let's inspect its last 10 lines
+zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | tail -n 10
+# Let's extract the fourth column of the 100 last lines and we place the contents into a file
+zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | tail -n 100 | cut -f 4 > start-points.txt
+# Let's inspect that file and we sort is contents
+less start-points.txt
+sort start-points.txt | less
+sort start-points.txt | wc -l
+sort -u start-points.txt | less
+sort -u start-points.txt | wc -l
+```
 
 ## Running programs
 
@@ -337,7 +386,7 @@ We will use some of them during the course in practical examples. We will briefl
 
 1. Create a file called `myscript.sh` with this content:
    ```bash
-   echo "Hello, world!" > myscript.sh
+   echo 'echo "Hello, world!"' > myscript.sh
    ```
 2. Make it executable:
    ```bash
@@ -405,7 +454,5 @@ Along the course we will use this shortcut for no needing to type so much:
 ```
 export RUN="singularity exec -e RNAseq_course.sif"
 $RUN fastqc --version
-
 ```
-
 

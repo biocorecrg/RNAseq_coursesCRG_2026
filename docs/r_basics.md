@@ -1,4 +1,4 @@
-# Reviewing some R basics
+# Hands-on: Reviewing some R basics
 
 Open the **RStudio** software.
 
