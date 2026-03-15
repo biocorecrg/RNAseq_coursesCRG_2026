@@ -391,12 +391,12 @@ We will use **[E-MTAB-8316](https://www.ebi.ac.uk/biostudies/arrayexpress/studie
 ### Interoperable (RNAseq Examples)
 
 **Example:**
-- Uses published ontologies: NCBI taxonomy for species ("Homo sapiens")
-- Complies with **MINSEQE** (Minimum Information about a Sequencing Experiment) community standard — 5-star rating
+- Uses published ontologies: [NCBI taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy) for species ("Homo sapiens")
+- Complies with [MINSEQE](https://zenodo.org/records/5706412) (Minimum Information about a Sequencing Experiment) community standard — 5-star rating
 - Machine-readable metadata formats:
   - **MAGE-TAB** (Sample and Data Relationship Format - SDRF)
   - **ENA SRA XML** format
-- Controlled vocabularies via Annotare submission tool
+- Controlled vocabularies via [Annotare](https://www.ebi.ac.uk/fg/annotare) submission tool
 
 **Counter-example:**
 - Custom gene identifiers not mapped to standard databases (Ensembl, RefSeq)
@@ -406,7 +406,7 @@ We will use **[E-MTAB-8316](https://www.ebi.ac.uk/biostudies/arrayexpress/studie
 ### Reusable (RNAseq Examples)
 
 **Example:**
-- Clear licensing: **CC BY 4.0** (Creative Commons Attribution)
+- Clear licensing: **CC BY 4.0** ([Creative Commons](https://creativecommons.org/) Attribution)
 - Detailed provenance: links to publication, protocol documentation, sample metadata
 - Complete data availability: raw FASTQ files + processed gene expression matrices
 - Clear documentation of experimental design, protocols, and variables
