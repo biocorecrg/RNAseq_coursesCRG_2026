@@ -6,8 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import json
 import os
 
+import yaml
 from myst_parser import __version__
 from sphinx.application import Sphinx
 from sphinx.util.fileutil import copy_asset
@@ -28,6 +30,15 @@ html_context = {
     "matomo_url": matomo_url,
     "matomo_site_id": matomo_site_id,
 }
+
+bioschemas_jsonld = None
+yaml_path = os.path.join(os.path.dirname(__file__), "bioschemas.yaml")
+if os.path.exists(yaml_path):
+    with open(yaml_path, "r") as f:
+        bioschemas_data = yaml.safe_load(f)
+    bioschemas_jsonld = json.dumps(bioschemas_data, indent=2)
+    html_context["bioschemas_jsonld"] = bioschemas_jsonld
+
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
