@@ -306,6 +306,8 @@ Other tools:
 
 [^4]: [Source: Wikimedia Commons - FAIR Data Principles](https://commons.wikimedia.org/wiki/File:FAIR_data_principles.svg)
 
+- More information about the [FAIR principles](https://www.go-fair.org/fair-principles/)
+
 
 ### Findable
 
