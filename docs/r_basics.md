@@ -36,12 +36,11 @@ When you open RStudio, you will see 3-4 panels:
 
 
 
-
 ### Shortcuts
 
 RStudio provides a variety of [shortcuts](https://docs.posit.co/ide/user/ide/reference/shortcuts.html) to make user interaction smoother.
 
-From the software, click {kbd}`Alt` + {kbd}`Shift` + {kbd}`K` to display all available shortcuts.
+Click {kbd}`Alt` + {kbd}`Shift` + {kbd}`K` to display all available shortcuts.
 
 <img title="posit logo" alt="posit logo" src="images/rstudio_shortcuts.png" width="700">
 
@@ -56,12 +55,11 @@ Examples:
 
 ### Objects
 
-What stores data - if any kind - in R is an **object**.
+What stores data - of any kind - in R is an **object**.
 
+<img title="panels" alt="panels" src="images/R_basics_objects.png" width="250">
 
-<img title="panels" alt="panels" src="images/R_basics_objects.png" width="280">
-
-Assignment operators (how to assign data to the object)
+Assignment operators (how to assign data to the object):
 
 *  **<-** or **=**
 * Mostly the same but, to avoid confusions:
@@ -90,7 +88,8 @@ B <- B + 10
 You can see the objects you created in the **environment** panel (upper right).
 
 
-Note: Naming an object in R is flexible. You should nevertheless follow a few base rules:
+```{note}
+Naming an object in R is flexible. You should nevertheless follow a few base rules:
 
 * You can use:
   + Letters (note that object names case sensitive: A and a are NOT the same)
@@ -99,7 +98,7 @@ Note: Naming an object in R is flexible. You should nevertheless follow a few ba
 * You cannot use:
   + Spaces
   + Most special characters
-
+```
 
 ### Data types and data structures
 
@@ -111,7 +110,7 @@ Each object has a data type:
 * Logical (TRUE / FALSE)
 * Factors (categorical variables)
 
-Numeric: numbers, floats
+**Numeric**: numbers, floats
 
 ```r
 number_object <- 10
@@ -120,7 +119,7 @@ typeof(number_object)
 str(number_object)
 ```
 
-Character: text, strings of characters
+**Character**: text, strings of characters
 
 ```r
 text_object <- "word"
@@ -129,7 +128,7 @@ typeof(text_object)
 str(text_object)
 ```
 
-Logical: boolean values (TRUE or FALSE)
+**Logical**: boolean values (TRUE or FALSE)
 
 
 ```r
@@ -139,7 +138,7 @@ typeof(logical_object)
 str(logical_object)
 ```
 
-Factor: used to work with categorical variables, for example, in statistical modeling or graphing.
+**Factor**: used to work with categorical variables. For example, in statistical modeling or graphing.
 
 Creating a factor starts by creating an object, that is then converted to a factor.
 
@@ -149,6 +148,7 @@ mode(factor_object)
 typeof(factor_object)
 str(factor_object)
 ```
+
 
 
 #### Data structures
@@ -167,37 +167,81 @@ Vectors are one-dimensional and contain a single data type.
 Create a numeric vector:
 
 ```r
-a <- c(1, 2, 3, 4, 5)
+a <- c(1, 2, 3, 4, 5, 6)
 # equivalent to:
-a <- 1:5
+a <- 1:6
 ```
 
-Create a second numeric vector, and check with elements of that second vector are also present in **a** with operator **%in%**:
+```{note}
+shorta <- 1
+
+is equivalent to
+
+shorta <- c(1)
+
+**shorta is a vector with 1-element**
+```
+
+Check the length of (i.e. number of elements) a vector:
+
+```r
+length(a)
+```
+
+You can extract elements of a vector using the slicing operator **[]**:
+
+Extract 1st and 3rd elements of **a**:
+
+```r
+a[c(1,3)]
+```
+
+Extract all but the first element:
+
+```r
+a[-1]
+```
+
+
+Create a second numeric vector, and check which elements of that second vector are also present in **a** using operator **%in%**:
 
 ```r
 b <- 3:8
 
 b[b %in% a]
 ```
- 
-Check the length of (i.e. number of elements in) a vector:
 
-```r
-length(b)
+
+```{tip}
+
+Table of logical operators that can be used for data selection and filtering:
+
+| Operator    | Description |
+| -------- | ------- |
+| <  | less than |
+| <= | less than or equal to |
+| > | greater than |
+| >= | greater than or equal to |
+| == | exactly equal to |
+| != | not equal to  |
+| !x | not x |
+| x\|y | x OR y |
+| x&y | x AND y |
+
 ```
 
 ##### Matrices
 
-Matrices are two-dimensional and contain a single data type.
+Matrices are two-dimensional and can only contain **one** data type.
 
-Create a matrix:
+Create a numeric matrix:
 
 ```r
-# specify number of rows
-mat <- matrix(1:20, nrow=4)
+# define number of rows
+mat <- matrix(1:100, nrow=4)
 
-# specify number of columns
-mat <- matrix(1:20, ncol=4)
+# define number of columns
+mat <- matrix(1:100, ncol=4)
 ```
 
 Check dimensions (i.e. number of rows and number of columns) of a matrix:
@@ -213,6 +257,21 @@ ncol(mat)
 dim(mat)
 ```
 
+Display the first or last rows with `head` or `tail`:
+
+```r
+
+# first 6 rows (default)
+head(mat)
+
+# first 10 rows
+head(mat, n=10)
+
+# last 6 rows
+tail(mat)
+```
+
+
 You can extract rows and columns of a matrix using the slicing operator **[]** and their position/index:
 
 ```r
@@ -226,20 +285,26 @@ mat[c(1,3),]
 mat[,1]
 
 # column 2 and 3
-mat[,c(2, 3)] # or mat[,2:3]
+mat[,c(2, 3)]
+
+# or mat[,2:3]
 ```
 
 
 ##### Data frames
 
-Data frames are two-dimensional and can contain several data types (column-wise).
+Data frames are two-dimensional and can contain several data types (column-wise: one column will have a single data type).
 
-Create a data frame:
+Create a three-column data frame :
+
+* `Name`: character column
+* `Age`: numeric column
+* `Vegetarian`: logical column
 
 ```r
-df <- data.frame(Name=c("Maria", "Juan", "Alba", "Enrique"), 
-        Age=c(23, 25, 31, 28),
-        Vegetarian=c(TRUE, TRUE, FALSE, FALSE))
+df <- data.frame(Name=c("Maria", "Juan", "Alba", "Xavier", "Lara", "Max"), 
+        Age=c(23, 25, 31, 28, 36, 34),
+        Vegetarian=c(TRUE, TRUE, FALSE, FALSE, TRUE, FALSE))
 ```
 
 Check dimensions (i.e. number of rows and number of columns) of a dataframe:
@@ -264,64 +329,69 @@ You can extract columns of a data frame with:
 
 You can extract rows - as with matrices - using the slicing operator: df[1,]
 
-Select rows of the data frame **if the Age column is superior to 24**:
+Select rows of the data frame **if the Age column is greater than 24**:
 
 ```r
-d[d$Age > 24,]
+df[df$Age > 24,]
 ```
 
-Select rows of the data frame based on multiple conditions, for example, **if the Age column is superior to 24 AND if Vegetarian is TRUE** :
+Select rows of the data frame based on multiple conditions, for example, **if the Age column is greater than 24 AND if Vegetarian is TRUE** :
 
 ```r
-d[d$Age > 24 & d$Vegetarian == TRUE,]
+df[df$Age > 24 & df$Vegetarian == TRUE,]
 ```
 
-Table of logical operators that can be used for data selection and filtering:
 
-| Operator    | Description |
-| -------- | ------- |
-| <  | less than |
-| <= | less than or equal to |
-| > | greater than |
-| >= | greater than or equal to |
-| == | exactly equal to |
-| != | not equal to  |
-| !x | not x |
-| x\|y | x OR y |
-| x&y | x AND y |
 
 
 ## Paths and directories
 
-Show the path of the current directory (i.e. working directory) with <b>getwd</b> (get working directory):
+Show the path of the current directory (i.e. working directory) with `getwd` (get working directory):
 
 ```r      
 getwd()
 ```
 
-Change working directory with **setwd** (set working directory)<br>
+Change working directory with `setwd` (set working directory).
 
-Go to a directory giving the absolute path (note: **~** is a shortcut to your home directory): 
-
-```r
-setwd("~/rnaseq_course")
-```
-
-Go to a directory using the relative path:
+Go to a directory giving the *absolute* path:
 
 ```r
-setwd("differential_expression")
+setwd("~")
+# the home directory is likely different for each of you, but it could be like /users/username
 ```
 
-You are now in: "~/rnaseq_course/differential_expression"
-<br>
+```{note}
+**~** is a shortcut to your home directory
+```
+
+Now that you are in your home directory, you can create an `rnaseq_course` directory (if you have not created a folder for the course yet) and an `r_basics` directory:
+
+```r
+dir.create("rnaseq_course/r_basics",  recursive=TRUE)
+```
+
+Go to the newly created directory using the *relative* path:
+
+```r
+setwd("./rnaseq_course/r_basics")
+
+# which is equivalent to
+setwd("~/rnaseq_course/r_basics")
+```
+
+You are now in: "~/rnaseq_course/r_basics"
+
 Move one directory "up" the tree:
 
 ```r 
 setwd("..")
+
+# and move back to r_basics
+setwd("r_basics")
 ```
 
-You are now in: "~/rnaseq_course"
+You are now back in: "~/rnaseq_course" (your home directory)
 
 
 ## Missing values
@@ -366,8 +436,7 @@ mydata[complete.cases(mydata), ]
 na.omit(mydata)
 ```
 
-<br>
-Check this [R blogger post on missing/null values](https://www.r-bloggers.com/r-null-values-null-na-nan-inf/)
+For additional information, you can check this [R blogger post on missing/null values](https://www.r-bloggers.com/r-null-values-null-na-nan-inf/)
 
 
 ## Read in, write out
@@ -379,11 +448,12 @@ Read a file as a vector using **scan**:
 ```r
 # Read in file
 scan(file="file.txt")
-# Save in  object
+
+# Save scanned data into an object k
 k <- scan(file="file.txt")
 ```
 
-By default, the function scans for "double" (numeric) elements: it fails if the input contains characters.<br>
+By default, the function scans for "double" (numeric) elements: it fails if the input contains characters.
 
 If reading non-numeric data, you need to specify the type of data contained in the file: 
 
@@ -391,6 +461,7 @@ If reading non-numeric data, you need to specify the type of data contained in t
 # specify the type of data to scan
 scan(file="file.txt", 
         what="character")
+
 scan(file="~/file.txt", 
         what="character")
 ```
@@ -419,9 +490,9 @@ write(x=mygenes,
 Like when reading a file, you can also specify a full or relative path where to write down a file:
 
 ```r
-# Write to home directory
+# Write to r_basics directory
 write(x=mygenes,
-        file="~/gene_list.txt")
+        file="~/rnaseq_course/r_basics/gene_list.txt")
         
 # Write to one directory up
 write(x=mygenes,
@@ -451,7 +522,7 @@ write.table(x=a,
 
 Useful arguments:
 
-<img title="writetable" alt="writetable" src="images/writetable.png" width="550">
+<img title="writetable" alt="writetable" src="images/writetable.png" width="500">
 
 Note that "\t" stands for tab-delimitation; if reading a **.csv** file, you can change to **sep=","** (or use the dedicated write.scv function!).
 
@@ -492,21 +563,7 @@ library('BiocManager')
 BiocManager::install('GOstats')
 ```
 
-## Exercises to warm up!
-
-
-* Ex4. 
-
-<br>
-
-**CORRECTION**
-
-
-
-```r
-            
-```
-
+## Exercises
 
 ````{tab-set}
 
@@ -545,6 +602,7 @@ or
 ```
 
 ````
+
 
 ````{tab-set}
 
