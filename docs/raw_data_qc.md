@@ -1,5 +1,24 @@
 # Pre-processing and Quality Control of Raw Sequencing Data
 
+## Data for this course and SRA download:
+
+The **Sequence Read Archive (SRA)** at NCBI is the world's largest public repository of raw sequencing data. It is the primary source for publicly available datasets to use for practice, benchmarking, or reproduction of published results.
+
+### SRA Accession Types
+
+| Prefix | Level | Example |
+|--------|-------|---------|
+| `PRJNA` | BioProject — the overall study | PRJNA257197 |
+| `SAMN` / `SRS` | BioSample — a biological specimen | SAMN03254300 |
+| `SRX` | Experiment — library preparation metadata | SRX123456 |
+| `SRR` / `ERR` | Run — the actual sequencing reads | SRR1553607 |
+
+The **SRR Run accession** is what you need to download reads. A single experiment (SRX) may have multiple runs (SRR). The data that will be using for the hands-on exercises is from GEO data set **GSE76647**. Specifically, it contains *Homo sapiens* samples from differentiated (5-day differentiation) and undifferentiated primary keratinocytes. Additionally, some samples underwent a knock-down of the **FOXC1** gene. 
+
+We could try to download these datasets from SRA directly but due to time constrains, we have already prepared fastq files that correspond to **chromosome 6 only**. You will find them in the data directory within the repository of the course. 
+
+## Raw Data QC
+
 Before any downstream analysis (alignment, read count, differential expression, functional enrichment), it is critical to assess the **quality of raw sequencing reads** and pre-process them accordingly. Poor-quality data can introduce errors that propagate through the entire pipeline.
 
 Pre-processing includes:
@@ -10,8 +29,6 @@ Pre-processing includes:
 - rRNA removal (where applicable)
 
 ---
-
-## Part 1 — Raw Data QC
 
 ### Tools Overview
 
@@ -162,35 +179,11 @@ Problem case (insert < read length):
 ![FastQC report for a small RNA-seq sample](images/fastqc_small_rnas.png)
 *Figure: FastQC report for a small RNA-seq sample showing elevated adapter content*
 
----
+## Exercises: FastQC Pattern Recognition Exercises
 
-## Downloading Data from SRA
-
-The **Sequence Read Archive (SRA)** at NCBI is the world's largest public repository of raw sequencing data. It is the primary source for publicly available datasets to use for practice, benchmarking, or reproduction of published results.
-
-### SRA Accession Types
-
-| Prefix | Level | Example |
-|--------|-------|---------|
-| `PRJNA` | BioProject — the overall study | PRJNA257197 |
-| `SAMN` / `SRS` | BioSample — a biological specimen | SAMN03254300 |
-| `SRX` | Experiment — library preparation metadata | SRX123456 |
-| `SRR` / `ERR` | Run — the actual sequencing reads | SRR1553607 |
-
-The **SRR Run accession** is what you need to download reads. A single experiment (SRX) may have multiple runs (SRR).
-
-### The SRA Toolkit
-
-NCBI provides the **SRA Toolkit** for downloading and converting SRA data. The two main commands are:
-
-- `prefetch` — downloads the compressed `.sra` file locally
-- `fasterq-dump` — converts `.sra` to FASTQ (faster than the older `fastq-dump`)
+The following exercises use publicly available datasets from NCBI SRA, each chosen to illustrate a specific and **recognisable FastQC signature**. For each one, download the data, run FastQC, and answer the interpretation questions below. To download these datasets, NCBI provides the **SRA Toolkit**:
 
 ```bash
-# Install/load the SRA toolkit (if not already available)
-# On conda: conda install -c bioconda sra-tools
-# On the course environment it is pre-installed
-
 # Download a single run (compressed .sra format)
 prefetch SRR1234567
 
@@ -210,10 +203,6 @@ fasterq-dump SRR1234567 --outdir ./fastq/ --temp /tmp/
 fasterq-dump SRR1234567 --outdir ./fastq/ -X 100000
 # -X 100000 downloads only the first 100,000 reads
 ```
-
-## Exercises: FastQC Pattern Recognition Exercises
-
-The following exercises use publicly available datasets from NCBI SRA, each chosen to illustrate a specific and **recognisable FastQC signature**. For each one, download the data, run FastQC, and answer the interpretation questions below.
 
 > **Note on download size:** Full SRA runs can be large (several GB). For the exercises below, downloading 1–2 million reads is sufficient to see the QC patterns clearly. Use `fasterq-dump -X 1000000` to limit the download.
 
@@ -541,8 +530,6 @@ multiqc . --ignore-samples "bad_sample*"
 # Use a config file
 multiqc . --config multiqc_config.yaml
 
-# Generate a PDF report (requires pandoc)
-multiqc . --pdf
 ```
 
 ### Example `multiqc_config.yaml`
@@ -765,7 +752,7 @@ ribopicker_output/
 
 ```
 Total sequences: 4,987,320
-rRNA sequences:    312,458  (6.3%)      ← removed
+rRNA sequences:    312,458  (6.3%)     ← removed
 Non-rRNA sequences: 4,674,862  (93.7%) ← kept
 ```
 
