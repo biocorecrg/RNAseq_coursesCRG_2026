@@ -65,7 +65,7 @@ html_theme_options = {
         },
     ],
     "source_repository": "https://github.com/biocorecrg/RNAseq_coursesCRG_2026/",
-    "source_branch": "main",
+    "source_branch": "master",
     "source_directory": "docs/",
 }
 myst_enable_extensions = [

@@ -1,0 +1,46 @@
+"@context": https://schema.org/
+"@type": LearningResource
+"@id": https://biocorecrg.github.io/RNAseq_coursesCRG_2026
+"http://purl.org/dc/terms/conformsTo":
+- "@type": CreativeWork
+  "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE"
+about:
+  - "@id": https://edamontology.org/topic_0091
+  - "@id": https://edamontology.org/topic_0622
+  - "@id": https://edamontology.org/topic_3170
+audience:
+- "@type": Audience
+  name: Biologists interested in learning about RNA-seq data analysis
+name: Decoding Transcriptomes - A Practical Course on RNA-seq
+author:
+- "@type": Person
+  name: "Fabian Andrade Lozano"
+  "@id": https://orcid.org/0009-0000-0298-8049
+  url: https://orcid.org/0009-0000-0298-8049
+- "@type": Person
+  name: "Sarah Bonnin"
+  "@id": https://orcid.org/0000-0001-5159-2518
+  url: https://orcid.org/0000-0001-5159-2518
+- "@type": Person
+  name: "Luca Cozzuto"
+  "@id": https://orcid.org/0000-0003-3194-8892
+  url: https://orcid.org/0000-0003-3194-8892
+- "@type": Person
+  name: "Anna Delgado Tejedor"
+  "@id": https://orcid.org/0000-0002-3836-0293
+  url: https://orcid.org/0000-0002-3836-0293
+- "@type": Person
+  name: "Toni Hermoso Pulido"
+  "@id": https://orcid.org/0000-0003-2016-6465
+  url: https://orcid.org/0000-0003-2016-6465
+- "@type": Person
+  name: "Julia Ponomarenko"
+  "@id": https://orcid.org/0000-0002-1477-9444
+  url: https://orcid.org/0000-0002-1477-9444
+- "@type": Organization
+  name: "Centre for Genomic Regulation"
+  "@id": https://ror.org/03wyzt892
+  url: https://www.crg.eu
+dateModified: 2026-03-18
+description: Course providing a comprehensive introduction to RNA sequencing, guiding participants through the complete data analysis workflow  
+keywords: "genomics, linux, bioinformatics, RNA-seq, NGS"
