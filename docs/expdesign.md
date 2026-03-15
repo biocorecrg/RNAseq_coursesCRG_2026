@@ -912,7 +912,7 @@ the effects of multiple variables in a single experiment and to test whether the
 
 | |
 |:---:|
-| ![fishy](images/images/factorial_design_1.jpg) | 
+| ![fishy](images/factorial_design_1.jpg) | 
 | Example of a factorial experimental design with two factors: treatment and sex. The design allows testing main effects and their interaction. <br> *Figure is adapted from Cambridge University's Experimental Design Manual 2016* |
 
 </div>
