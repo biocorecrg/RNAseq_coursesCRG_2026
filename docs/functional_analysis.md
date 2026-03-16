@@ -359,8 +359,8 @@ The first column contains the gene ID (HUGO symbols for *Homo sapiens*).
 The second column contains any description or symbol, and will be ignored by the algorithm.
 The remaining columns contain normalized expressions: one column per sample.
 
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | NAME | DESCRIPTION | 5p4_25c | 5p4_27c | 5p4_28c | 5p4_29c | 5p4_30c | 5p4_31cfoxc1 | ... |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | DKK1 | NA | 0 | 0 | 0 | 0 | 0 | 0 | ... |
 | HGT | NA | 0 | 0 | 0 | 0 | 0 | 0 | ... |
 
