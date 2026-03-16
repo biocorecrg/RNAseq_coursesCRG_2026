@@ -689,7 +689,7 @@ MultiQC supports many tools: see the different [modules](https://multiqc.info/do
 
 Let's create a multiqc_report folder and link all the analyses done so far.
 
-```{bash}
+```bash
 cd ~/rnaseq_course/
 
 # create a folder for the multiqc result
@@ -704,7 +704,7 @@ ln -s ~/rnaseq_course/trimming
 
 Then run **multiqc** on the directory **multiqc_report** to combine all reports:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/multiqc_report
 
 $RUN multiqc .
@@ -724,7 +724,7 @@ $RUN multiqc .
 
 We can visualize the final report in the internet browser:
 
-```{bash}
+```bash
 firefox multiqc_report.html
 ```
 

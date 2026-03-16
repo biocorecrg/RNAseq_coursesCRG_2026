@@ -139,8 +139,7 @@ Although this technology is widely used, it also has important caveats that can 
 :::{important} Limitation with 2-Channel SBS!
 :class: important
 
-If several early R1 cycles contain G (no fluorescence), the camera only sees background noise and as a result, there is poor cluster detection which leads to a decreased % of PF clusters (ie: those with sufficient signal quality across early cycles) and data quality. 
-
+    If several early R1 cycles contain G (no fluorescence), the camera only sees background noise and as a result, there is poor cluster detection which leads to a decreased % of PF clusters (ie: those with sufficient signal quality across early cycles) and data quality. 
 :::
 
 All limitations described above result in a **quality score decline** towards the end of the read.
@@ -196,7 +195,7 @@ If no collision occurs, **bcl2fastq** generates the demultiplexed **fastq** file
 Short (and long) sequencing reads coming from the sequencers are stored in **FASTQ** format files (with the extension **.fastq** / **.fq**).
 This format contains the information about the sequence and the quality of each sequenced base. The quality encodes the **probability that the corresponding base call is incorrect**.
 
-<img src="" width="500"/>
+<!-- <img src="" width="500"/> -->
 
 <div style="display:flex; justify-content:center;">
 
