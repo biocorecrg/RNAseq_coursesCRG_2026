@@ -587,11 +587,10 @@ When experiments must be performed with a small number of replicates:
 
 
 <br> **What does it mean "focus on large effect size"?**
-<br> That means that instead of testing the null hypothesis log2FC=0 <br>
-test for **abs(log2FC) > lfcThreshold** (e.g., =1). <br><br>
-**This improves interpretability and maintains proper type I error control.**
-
+<br> That means that instead of testing the null hypothesis log2FC=0 
+test for **abs(log2FC) > lfcThreshold** (e.g., =1). 
 <br>
+
 DESeq2 implementation:
 ```
 results(dds, lfcThreshold = 1)
@@ -965,19 +964,18 @@ the experiment follows a **factorial design**.
 Factorial designs allow researchers to investigate 
 the effects of multiple variables in a single experiment and to test whether these variables interact with each other.
 
-<div style="display:flex; justify-content:center;">
-
-| |
-|:---:|
-| ![fishy](images/factorial_design_1.jpg) | 
-| Example of a factorial experimental design with two factors: treatment and sex. The design allows testing main effects and their interaction. <br> *Figure is adapted from Cambridge University's Experimental Design Manual 2016* |
-
-</div>
 
 In this example, the experiment contains two factors (biological variables):
 
 - **Treatment** (control vs treated)
 - **Sex** (male vs female)
+
+| Treatment | Sex |
+|---|---|
+| control | male |
+| control | female |
+| drug | male |
+| drug | female |
 
 Each factor has two levels, producing four experimental groups.
 <br>This is a **2 × 2 factorial design**.
@@ -992,9 +990,7 @@ An **interaction** occurs when the effect of one factor depends on the level of 
 
 The real statistical test of interaction is:
 ```
-
 (treated_males − control_males) − (treated_females − control_females)
-
 ```
 
 Example for a specific gene in RNA-seq experiment:
@@ -1057,24 +1053,12 @@ to reliably estimate effects and interactions.
 
 When multiple factors are studied, the number of experimental groups increases because each combination of factor levels must be measured.
 
-Example:
-
-| Treatment | Sex |
-|---|---|
-| control | male |
-| control | female |
-| drug | male |
-| drug | female |
-
-This is a **2 × 2 factorial design**, producing four experimental groups.
-
 If each group contains *n* biological replicates, the total number of samples becomes:
 ```
 total samples = number of groups × replicates per group
 ```
 
-
-For example:
+For example for a 2 × 2 factorial design (4 experimental groups):
 
 | Replicates per group | Total samples |
 |---|---|
