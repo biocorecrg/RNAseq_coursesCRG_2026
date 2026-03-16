@@ -269,7 +269,6 @@ Technical replicates measure **technical variability**, which can arise from:
 - sample loading or lane effects
 
 However, modern NGS RNA-seq protocols have **very low technical variability**.
-<br>
 
 :::{admonition} Side note: scRNA-seq
 :class: note
@@ -279,7 +278,6 @@ In single-cell experiments, **technical variability can be large** due to captur
 :::
 
 
-<br>
 :::{admonition} Side note: total RNA-seq
 :class: note
 
