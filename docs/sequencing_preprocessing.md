@@ -136,7 +136,7 @@ Although this technology is widely used, it also has important caveats that can 
 
 - **Imperfect dye/terminator cleavage:** cleavage's efficiency might decrease during our sequencing run and it can lead to a) molecules retaining the 3' terminator and cannot add the next base (ie: phasing) and b) residual fluorescence which results into background noise and therefore, lower quality scores. 
 
-:::{admonition} Limitation with 2-Channel SBS!
+:::{important} Limitation with 2-Channel SBS!
 :class: important
 
 If several early R1 cycles contain G (no fluorescence), the camera only sees background noise and as a result, there is poor cluster detection which leads to a decreased % of PF clusters (ie: those with sufficient signal quality across early cycles) and data quality. 
