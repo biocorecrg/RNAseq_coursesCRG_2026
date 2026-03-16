@@ -729,8 +729,7 @@ We can visualize the final report in the internet browser:
 firefox multiqc_report.html
 ```
 
-Here is an example done on just one sample:
-
+Here is an example done on just one [sample](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/multiqc/multiqc_report.html)
 
 <img src="images/multiQC.png" width="800" />
 
