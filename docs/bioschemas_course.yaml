@@ -14,7 +14,7 @@ audience:
 name: Decoding Transcriptomes - A Practical Course on RNA-seq
 provider:
   name: "Centre for Genomic Regulation"
-  "@id": https://ror.org/03wyzt89
+  "@id": https://ror.org/03wyzt892
   url: https://www.crg.eu
 description: Course providing a comprehensive introduction to RNA sequencing, guiding participants through the complete data analysis workflow  
 keywords: "genomics, linux, bioinformatics, RNA-seq, NGS"
@@ -30,7 +30,7 @@ hasCourseInstance:
   endDate: "2026-03-20 13:00:00 UTC"
   organizer:
     name: "Centre for Genomic Regulation"
-    "@id": https://ror.org/03wyzt89
+    "@id": https://ror.org/03wyzt892
     url: https://www.crg.eu
     "@type": "Organization"
   "location":
