@@ -42,6 +42,8 @@ The course integrates laboratory practice with computational training, equipping
 * 12:00 - 13:00 Q&A and General discussion
 * 13:00 - 14:00 _Lunch_
 
+```{bioschemas} ./bioschemas_course.yaml
+
 
 ```{toctree}
 :hidden:

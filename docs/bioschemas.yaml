@@ -8,6 +8,7 @@ about:
   - "@id": https://edamontology.org/topic_0091
   - "@id": https://edamontology.org/topic_0622
   - "@id": https://edamontology.org/topic_3170
+inLanguage: "en"
 audience:
 - "@type": Audience
   name: Biologists interested in learning about RNA-seq data analysis
