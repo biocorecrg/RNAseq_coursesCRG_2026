@@ -56,9 +56,9 @@ annotations.md
 r_basics.md
 alignment.md
 gbrowser.md
-nf-core.md
 differential_expression.md
 functional_analysis.md
+nf-core.md
 expdesign.md
 ```
 
