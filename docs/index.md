@@ -11,7 +11,7 @@ The course integrates laboratory practice with computational training, equipping
 
 **This repository covers only the computational part of the course.**
 
-### The webpage is at https://biocorecrg.github.io/RNAseq_coursesCRG_2026/ 
+- The webpage is at https://biocorecrg.github.io/RNAseq_coursesCRG_2026/ 
 
 ## Agenda
 ### Day 3 - Wed 18 March 2026
@@ -53,12 +53,12 @@ rnaseq_data_analysis.md
 linux_cli.md
 raw_data_qc.md
 annotations.md
-r_basics.md
-alignment.md
 gbrowser.md
-nf-core.md
+alignment.md
+r_basics.md
 differential_expression.md
 functional_analysis.md
+nf-core.md
 expdesign.md
 ```
 

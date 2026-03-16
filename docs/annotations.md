@@ -114,6 +114,67 @@ zcat ~/rnaseq_course/reference_genome/reference_chr6/Homo_sapiens.GRCh38.dna.chr
 # 170805979
 ```
 
+We can also check the transcriptome sequences. 
+
+```bash
+zcat gencode.v49.transcripts.chr6.fa.gz| head -n 4
+>ENST00000604449.1|ENSG00000271530.1|OTTHUMG00000184610.1|OTTHUMT00000468943.1|WBP1LP12-201|WBP1LP12|331|processed_pseudogene|
+AGGATAAGGAAGCCTGTGTGTGTACCAACAATCAAAGCTACATCTGTGACACAACAGGACACTGCTATGGGCAGTCTCAGTGTTGTAACTACTACTATGAACATTGGTGGTTCTGGCTGGCATGGACCATCACCATCATCCTGAGCTGCTGCTGTGTCTGCCACCACAGCCAAGCCAGCCCTCAAGTCCAGCAGTAGCAACATGAAATCAACCTGACTGCCTATCCAGAAGCCCGCAATTACTCAGTGCTACCATTTTATTTCACCAAACTATTTATTACCTTCTTATGAGGAAGTGGTGAACTAACCTCCACCTGTTTCCCTCCCTGTCT
+>ENST00000405102.1|ENSG00000220212.1|OTTHUMG00000014107.1|OTTHUMT00000039615.1|OR4F1P-201|OR4F1P|938|unprocessed_pseudogene|
+ATGGATGGAGAGAATCACTCAGTGGTATCTGAGTTTTTGTTTCTGGGACTCACTCATTCATGGGAGATCCAGCTCCTCCTCCTAGTGTTTTCCTCTGTGCTCTATGTGGCAAGCATTACTGGAAACATCCTCATTGTATTTTCTGTGACCACTGACCCTCACTTACACTCCCCCATGTACTTTCTACTGGCCAGTCTCTCCTTCATTGACTTAGGAGCCTGCTCTGTCACTTCTCCCAAGATGATTTATGACCTGTTCAGAAAGCGCAAAGTCATCTCCTTTGGAGGCTGCATCGCTCAAATCTTCTTCATCCACGTCATTGGTGGTGTGGAGATGGTGCTGCTCATAGCCATGGCCTTTGACAGTTATGTGGCCCTATTAAGCCCCTCCACTATCTGACCATTATGAGCCCAAGAATGTGCCTTTCATTTCTGGCTGTTGCCTGGACCCTTGGTGTCAGTCACTCCCTGTTCCAACTGGCATTTCTTGTTAATTTACCCTTCTGTGGCCCTAATGTGTTGGACAGCTTCTACTGTGACCTTCCTCGGCTTCTCAGACTAGCCTGTACCGACACCTACAGATTGCAGTTCATGGTCACTGTTAACAGTGGGTTTATCTGTGTGGGTACTTTCTTCATACTTGTAATCTCCTACATCTTCATCCTGTTTACTGTTTGGAAACATTCCTCAGGTGGTTCATCCAAGGCCCTTTCCACTCTTTCAGCTCACAGCACAGCGGTCCTTTTGTTCTTTGGTCCACCCATGTTTGTGTATACATGGCCACACCCTAATTCACAGATGGACAAGTTTCTGGCTATTTTTGATGCAGTTCTCACTCCTTTTCTGAATCCAGTTGTCTATACATTCAGGAATAAGGAGATGAAGGCAGCAATAAAGAGAGTATGCAAACAGCTAGTGATTTACAAGAAGATCTCATAA
+```
+
+As you can see, this is a multi fasta file with several sequences, each one with its own header that contains: 
+
+
+| Field | Value | Meaning |
+|---|---|---|
+| Ensembl Transcript ID | ENST00000405102.1 | Transcript identifier from Ensembl. The `.1` indicates the annotation version of the transcript. |
+| Ensembl Gene ID | ENSG00000220212.1 | Gene identifier in Ensembl associated with this transcript. `.1` indicates the gene version. |
+| HAVANA Gene ID | OTTHUMG00000014107.1 | Gene identifier from the HAVANA manual annotation project |
+| HAVANA Transcript ID | OTTHUMT00000039615.1 | Transcript identifier from HAVANA |
+| Transcript Name | OR4F1P-201 | Name of the transcript isoform. `201` indicates the isoform number. |
+| Gene Symbol | OR4F1P | Gene symbol (olfactory receptor family 4 member F1 pseudogene). |
+| Transcript Length | 938 | Length of the transcript in base pairs (bp). |
+| Gene Biotype | unprocessed_pseudogene | Gene type indicating a duplicated gene that lost protein-coding ability but retains intron–exon structure. |
+
+We can count how many transcripts we have in our fasta file by counting the character ">" that is in the header: 
+
+
+```bash
+zcat gencode.v49.transcripts.chr6.fa.gz| grep ">" -c 
+25648
+```
+
+We can count the number of **Gene Biotype** by using a combination of linux commands such as **grep**, **cut**, **sort**, and **uniq**: 
+
+```bash
+zcat gencode.v49.transcripts.chr6.fa.gz| grep ">" | cut -d "|" -f8|sort|uniq -c 
+  11435 lncRNA
+     67 miRNA
+    105 misc_RNA
+    971 nonsense_mediated_decay
+      3 non_stop_decay
+    581 processed_pseudogene
+      7 processed_transcript
+   9665 protein_coding
+   1042 protein_coding_CDS_not_defined
+      2 protein_coding_LoF
+   1335 retained_intron
+      1 rRNA
+     26 rRNA_pseudogene
+      1 scaRNA
+     39 snoRNA
+    107 snRNA
+     34 TEC
+     76 transcribed_processed_pseudogene
+     11 transcribed_unitary_pseudogene
+     63 transcribed_unprocessed_pseudogene
+      3 unitary_pseudogene
+     74 unprocessed_pseudogene
+```
+
+
 ### GTF file
 
 The annotation is stored in **G**eneral **T**ransfer **F**ormat (**GTF**) format (which is an extension of the older **[GFF format](https://genome.ucsc.edu/FAQ/FAQformat.html#format3)**): a tabular format with one line per genome feature, each one containing 9 columns of data. In general it has a header indicated by the first character **"#"** and one row per feature composed in 9 columns:
@@ -149,7 +210,15 @@ zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | grep -v "#" | awk '$3=
 # 4230
 ```
 
-And get a final counts of every feature:
+You can also extract those genes and put them into a separate file:
+
+```bash
+zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | grep -v "#" | awk '$3=="gene"' > genes.gtf
+
+```
+
+
+And get the final count of every feature:
 
 ```bash
 zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | grep -v "#" | cut -f3 | sort | uniq -c 
@@ -169,5 +238,9 @@ zcat reference_chr6/Homo_sapiens.GRCh38.115.chr6.gtf.gz | grep -v "#" | cut -f3 
 
 <br>
 
+
+## Exercise
+
+Try to download the whole genome and annotation, and try to get the feature counts and count the number of **Gene Biotype** in the transcriptome.   
 
 

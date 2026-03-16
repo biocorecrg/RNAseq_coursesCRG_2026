@@ -5,9 +5,14 @@
 
 What does it mean to map reads to a transcriptome? During sequencing, we read both ends of each RNA fragment—these are called "paired-end reads." Mapping to the transcriptome means finding where these paired reads match in our database of known transcript sequences. Since transcripts already have introns removed and exons joined together, the reads align directly without needing to "jump" across gaps as they would when mapping to the genome.
 
-<div align="center">
-<img src="images/800px-Mapping_Reads.png" width="500"  />
-</div>
+
+||
+| :---:  |
+|<img src="images/800px-Mapping_Reads.png" width="500" />|
+|From wikimedia commons|
+
+
+
 
 ## Tools for read mapping
 
@@ -25,8 +30,8 @@ Like the index at the end of a book, an index of a large DNA sequence allows one
 
 |k-mer index|
 | :---:  |
-|<img src="images/index_kmer.png" width="300" />|
-|from [https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index](https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index)|
+|<img src="images/index_kmer.png" width="200" />|
+|from [coursera.org](https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index)|
 
 
 ### Fast (splice-unaware) aligners to a reference transcriptome
@@ -86,12 +91,12 @@ rm reference_chr6_Hsapiens.tar.gz
 
 ```
 
-# Mapping using STAR
+## Mapping using STAR
 
 For the **STAR** running options, see [STAR Manual](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf).
 
 
-## Building the STAR index
+### Building the STAR index
 
 To make an index for STAR, we need both the genome sequence in FASTA format and the annotation in GTF format. 
 <br>
@@ -122,6 +127,7 @@ To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** opt
 **NOTE** that for small genomes, parameter **--genomeSAindexNbases** (default 14) should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
 <br>
+
 Building the STAR index (option **--runMode genomeGenerate**):
 
 ```bash
@@ -148,7 +154,7 @@ $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
 
 This should take around 3 to 4 minutes to complete.
 
-## Aligning reads to the genome
+### Aligning reads to the genome
 
 To use **STAR** for the read alignment (default **--runMode** option), we have to specify the following options:
 * the index directory (**--genomeDir**)
@@ -261,7 +267,7 @@ cat SRR3091420_1_chr6Log.final.out
 
 ```
 
-## Read counts 
+### Read counts 
 
 STAR outputs read counts per gene into **PREFIX**ReadsPerGene.out.tab file with 4 columns which correspond to different **strandedness options**:
 
@@ -317,7 +323,7 @@ If the protocol used was stranded, there would be a **strong imbalance** between
 
 <br/>
 
-## BAM/SAM/CRAM format
+### BAM/SAM/CRAM format
 
 The **BAM format** is a compressed version of the [**SAM format**](https://samtools.github.io/hts-specs/SAMv1.pdf) (which is a plain text) and cannot thus being seen as a text. To explore the BAM file, we have to convert it to the SAM format by using [**samtools**](http://samtools.sourceforge.net/). Note that we use the parameter **-h** to show also the header that is hidden by default. 
 
@@ -422,7 +428,7 @@ ls  SRR3091420_1_chr6Aligned.sortedByCoord.out.* -alht
 
 <br/>
 
-## Alignment QC
+### Alignment QC
 
 The quality of the resulting alignment can be checked using the tool [**QualiMap**](http://qualimap.bioinfo.cipf.es/). To run QualiMap, we specify the kind of analysis (**rnaseq**), the **gtf** file, and the strandness of the library (**-p unstranded**). 
 <br>
@@ -474,7 +480,7 @@ Finally, we can see that the majority of reads map to the exons.
 
 <br/>
 
-# Mapping using Salmon
+## Mapping using Salmon
 
 <img src="images/RNAseq_workflow.png" width="1000"/>
 
@@ -486,7 +492,7 @@ Salmon can also make use of pre-computed alignments (in the form of a SAM/BAM fi
 
 <br/>
 
-## Building the Salmon index
+### Building the Salmon index
 
 To make an index for **Salmon**, we need transcript sequences in the FASTA format.
 <br>
@@ -533,7 +539,7 @@ $RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v49
 
 This step takes around 10 minutes with 4 cpus.
 
-## Quantifying transcript expression
+### Quantifying transcript expression
 
 To quantify reads with **Salmon**, we need to specify the type of sequencing library, aka [**Fragment Library Types** in Salmon](https://salmon.readthedocs.io/en/latest/library_type.html), using three letters:
 
@@ -560,15 +566,16 @@ To quantify reads with **Salmon**, we need to specify the type of sequencing lib
 |R|read 1 (or single-end read) comes from the reverse strand|
 
 <br/>
+
 From the STAR output for read counts we already know that for the analyzed experiment, the **U** (**Unstranded**) library was used. 
-<br>
+
 If the library were **paired-end** and sequenced with a **stranded reverse** library, we would set the parameter to **ISR**.
-<br>
+
 If we want to assign the reads to the genes (option **-g**) in addition to transcripts, we have to provide a **GTF file** corresponding to the transcript version that was used to build the Salmon index. 
-<br>
+
 We have it already for chromosome 6, in **~/rnaseq_course/reference_genome/**
 
-<br>
+
 We can proceed with the mapping.
 
 ```bash
