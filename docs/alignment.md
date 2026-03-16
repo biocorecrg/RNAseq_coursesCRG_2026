@@ -127,6 +127,7 @@ To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** opt
 **NOTE** that for small genomes, parameter **--genomeSAindexNbases** (default 14) should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
 <br>
+
 Building the STAR index (option **--runMode genomeGenerate**):
 
 ```bash
