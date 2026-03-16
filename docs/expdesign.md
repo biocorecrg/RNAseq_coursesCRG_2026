@@ -198,8 +198,7 @@ therefore: samples are NOT technical replicates, NOT biological replicates
 
 <br>
 
-:::{admonition} 
-:class: important
+:::{important} 
 - Once the experimental unit is defined, the number of independent units 
 determines the number of **biological replicates** in the experiment.
 - Biological replication depends on the independence of experimental units,
@@ -315,8 +314,7 @@ Typical examples of pseudoreplication include:
 - multiple wells from the same cell culture  
 - several tissue slices from the same animal  
 
-:::{admonition} 
-:class: warning
+:::{warning} 
 
 Treating samples originating from the same experimental unit
 as **independent replicates** would result in **pseudoreplication**. 
@@ -370,8 +368,7 @@ Statistical power is the probability of detecting a real effect;
 that is, in an RNA-seq experiment, to correctly detect a true difference in gene expression between conditions.
  <br>
 
-:::{admonition} 
-:class: note
+:::{note} 
 
 - The desired power of the research experiment is usually above 80%. <br>
 - In clinical studies, power might be required to be above 90%. 
@@ -389,8 +386,7 @@ statistical result, the experiment is **overpowered**.
 <br><br>
 On the other hand, if an experiment is too small, it may be **underpowered**.
 
-:::{admonition} 
-:class: warning
+:::{warning} 
 
 Both underpowered and overpowered experiments waste subjects, money, time and effort, and are potentially unethical.
 :::
@@ -666,16 +662,14 @@ Sequencing depth influences several aspects of RNA-seq data analysis:
 - **Isoform detection and alternative splicing analysis.**  
   Resolving transcript isoforms typically requires deeper sequencing than gene-level expression analysis.
 
-:::{admonition} 
-:class: important
+:::{important} 
 Increasing sequencing depth cannot compensate for insufficient biological replication.  
 While deeper sequencing improves sensitivity for detecting transcripts, it does not improve estimation of biological variability between samples.
 :::
 
 <br>
 
-:::{admonition} 
-:class: tip
+:::{tip} 
 Consider using existing tools to estimate the sample size for the target power
 - The R library **[SsizeRNA](https://pubmed.ncbi.nlm.nih.gov/27029470/)** (Sample Size Calculation for RNA-Seq) 
 allows for predicting the sample size used in an experiment with the target power, 

@@ -100,11 +100,11 @@ The best performing tools for differential expression analysis tend to be:
 | **Flexibility for complex designs** | Good                                                    | Very good                                          | Excellent                                          |
 | **Low-count genes**                 | Conservative handling                                   | Handles low counts well                            | Less ideal for extremely low counts                |
 
-:::{admonition} Further reading
-    :class: note
+```{admonition} Further reading
+:class: note
 
-    For more information see [Schurch et al, 2015; arXiv:1505.02017](https://arxiv.org/abs/1505.02017) and [the Biostars thread about the main differences between the methods](https://www.biostars.org/p/284775/).
-:::
+For more information see [Schurch et al, 2015; arXiv:1505.02017](https://arxiv.org/abs/1505.02017) and [the Biostars thread about the main differences between the methods](https://www.biostars.org/p/284775/).
+```
 
 Main differences between the tools rely on the **statistical modeling** of counts and different normalization approaches. They capture different biological meaning and their results are not mutually exclusive.
 
@@ -344,12 +344,12 @@ se_star <- DESeqDataSetFromHTSeqCount(sampleTable = sampletable,
 
 ```
 
-:::{admonition} Design formula
-    :class: note
+```{admonition} Design formula
+:class: note
 
-    The design formula is used to estimate the dispersions and to estimate the log2 fold changes of the model!
+The design formula is used to estimate the dispersions and to estimate the log2 fold changes of the model!
 For more information on how to build a design formula, see [here](https://www.atakanekiz.com/technical/a-guide-to-designs-and-contrasts-in-DESeq2/).
-:::
+```
 
 ### Import Salmon counts
 
@@ -399,11 +399,11 @@ se_salmon <- DESeqDataSetFromTximport(txi,
 
 * From that step on, you can proceed **the same way** with se_star and se_salmon!
 
-:::{admonition} Warning
-    :class: warning
+```{admonition} Warning
+:class: warning
 
     The only thing that differs slightly is the annotation *(remember that for STAR we used ENSEMBL annotation while we used GENCODE annotation for Salmon)*.
-:::
+```
 
 * We will focus the rest of the analysis on the **se_star**.
 
@@ -428,11 +428,11 @@ nrow(se_star)
 
 The **biomaRt** package is used for adding a more **detailed annotation** to our data sets.
 
-:::{admonition} Tip
-    :class: tip
+```{admonition} Tip
+:class: tip
 
-    When we don't perform the mapping, this tool is very useful when we receive directly the counts matrix and we lack the annotation file.
-:::
+When we don't perform the mapping, this tool is very useful when we receive directly the counts matrix and we lack the annotation file.
+```
 
 Additionally to the ENSEMBL gene IDs we want (for example):
 
@@ -497,10 +497,10 @@ se_star2 <- DESeq(se_star)
 
 * **Fitting model and testing:** fits a Negative Binomial GLM per gene using the design formula, then applies a **Wald test** to assess whether the log2 fold change is significantly different from zero. P-values are corrected for multiple testing with **Benjamini-Hochberg** → **padj**.
 
-:::{admonition} See also
+```{admonition} See also
     :class: seealso
     <https://bookdown.org/ggiaever/2025_RNA-Seq-Analysis/differential-expression-analysis-with-deseq2.html>
-:::
+```
 
 ### Normalized counts
 
@@ -563,11 +563,11 @@ se_vst <- vst(se_star2)
 The aim of this plot is to compare the expression of all genes for each pair of samples, so if gene expression behaves similarly between two samples, their correlation will be high. The most common measure is Pearson correlation, but you can use others such as Euclidean distance or Spearman correlation.
 We expect that replicates show a high correlation, and they will cluster together.
 
-:::{admonition} Tip
-    :class: tip
+```{admonition} Tip
+:class: tip
 
-    Good replicate concordance has a Pearson correlation value > 0.9.
-:::
+Good replicate concordance has a Pearson correlation value > 0.9.
+```
 
 Calculate the sample-to-sample distances:
 
@@ -635,11 +635,11 @@ The horizontal axis (PC1 = Principal Component 1) represents the highest variati
 
 For the PC1 axis, do samples separate by differentiation or by condition?
 
-:::{admonition} Interpreting the PCA plot
-    :class: note
+```{admonition} Interpreting the PCA plot
+:class: note
 
-    At this stage, the PCA plot allows us to evaluate whether samples belonging to the same experimental condition cluster together. Ideally, biological replicates should appear close to each other in the plot, indicating similar global gene expression profiles. If a sample does not cluster with the other replicates of its condition, it may indicate a potential technical problem, such as low library complexity, RNA degradation, contamination, or a sample labeling error. In such cases, the sample should be carefully evaluated by reviewing quality control metrics before deciding whether it should be retained or excluded from further analysis.
-:::
+At this stage, the PCA plot allows us to evaluate whether samples belonging to the same experimental condition cluster together. Ideally, biological replicates should appear close to each other in the plot, indicating similar global gene expression profiles. If a sample does not cluster with the other replicates of its condition, it may indicate a potential technical problem, such as low library complexity, RNA degradation, contamination, or a sample labeling error. In such cases, the sample should be carefully evaluated by reviewing quality control metrics before deciding whether it should be retained or excluded from further analysis.
+```
 
 #### Gene expression plots
 
@@ -815,15 +815,15 @@ Standard error of the log2FoldChange.
 * **stat:**
 Wald statistic: the log2FoldChange divided by its standard error.
 
-:::{admonition} Note on p-values set to NA
-    :class: note
+```{admonition} Note on p-values set to NA
+:class: note
 
-    Some values in the results table can be set to NA for one of the following reasons (from [Analyzing RNA-seq data with DESeq2 by M. Love et al., 2017](https://bioconductor.statistik.tu-dortmund.de/packages/3.5/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)):
+Some values in the results table can be set to NA for one of the following reasons (from [Analyzing RNA-seq data with DESeq2 by M. Love et al., 2017](https://bioconductor.statistik.tu-dortmund.de/packages/3.5/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)):
 
-    * If within a row, all samples have zero counts, the baseMean column will be zero, and the log2 fold change estimates, p value and adjusted p value will all be set to NA.
-    * If a row contains a sample with an extreme count outlier then the p value and adjusted p value will be set to NA. These outlier counts are detected by Cook's distance. If there are very many outliers (e.g. many hundreds or thousands) reported by summary(res), one might consider further exploration to see if a single sample or a few samples should be removed due to low quality.
-    * If a row is filtered by automatic independent filtering, for having a low mean normalized count, then only the adjusted p value will be set to NA. This independent filtering can be customized or turned off in the DESeq2 function results(dds, independentFiltering=FALSE).
-:::
+* If within a row, all samples have zero counts, the baseMean column will be zero, and the log2 fold change estimates, p value and adjusted p value will all be set to NA.
+* If a row contains a sample with an extreme count outlier then the p value and adjusted p value will be set to NA. These outlier counts are detected by Cook's distance. If there are very many outliers (e.g. many hundreds or thousands) reported by summary(res), one might consider further exploration to see if a single sample or a few samples should be removed due to low quality.
+* If a row is filtered by automatic independent filtering, for having a low mean normalized count, then only the adjusted p value will be set to NA. This independent filtering can be customized or turned off in the DESeq2 function results(dds, independentFiltering=FALSE).
+```
 
 #### Volcano plot
 
@@ -860,11 +860,11 @@ Each dot is a gene. The plot naturally splits into four regions:
 
 The name "volcano" comes from the shape: most genes cluster at the bottom (non-significant), with two "plumes" of significant genes rising on the left and right flanks.
 
-:::{admonition} How to read it
-    :class: tip
+```{admonition} How to read it
+:class: tip
 
-    Focus on the **top corners** — genes that are both far from zero on the X-axis (large effect) and high on the Y-axis (highly significant). Those are the most biologically meaningful candidates.
-:::
+Focus on the **top corners** — genes that are both far from zero on the X-axis (large effect) and high on the Y-axis (highly significant). Those are the most biologically meaningful candidates.
+```
 
 | |
 |:---:|
@@ -1060,10 +1060,10 @@ In a way, we "discard" the expected changes due to differentiation to focus on t
 Do the same using the **Salmon counts** (object *se_salmon*): how many genes are found differentially expressed when using the Salmon counts?
 How do results overlap between STAR and Salmon?
 
-:::{admonition}
-    :class: note
-    Remember to use the Gencode annotation file gencode.v49.annotation.gtf.gz preapred with the annotation columns you want to include in your normalized counts and differential expression tables.
-:::
+```{note}
+
+Remember to use the Gencode annotation file gencode.v49.annotation.gtf.gz preapred with the annotation columns you want to include in your normalized counts and differential expression tables.
+```
 
 ## Other cases
 
@@ -1205,10 +1205,9 @@ PCA after correction
 
 Another approach to take into account batch effect is to include the **Batch** variable in the DESeq2 design formula. This tells DESeq2 to model and account for the batch effect when estimating fold changes and p-values, without modifying the raw count data.
 
-:::{admonition}
-    :class: note
+:::{note}
 
-    More information <https://www.biostars.org/p/403053/>
+More information <https://www.biostars.org/p/403053/>
 :::
 
 Using the previous sample table and the matrix counts, create a DESeq2 object accounting for batch effect in the design formula.

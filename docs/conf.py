@@ -116,9 +116,9 @@ def copy_assets(app, exception):
 
 def setup(app: Sphinx):
     """Add functions to the Sphinx setup."""
-    from myst_parser._docs import (
-        MystAdmonitionDirective,
-    )
-
-    app.add_directive("myst-admonitions", MystAdmonitionDirective)
+    # from myst_parser._docs import (
+    #     MystAdmonitionDirective,
+    # )
+    #
+    # app.add_directive("myst-admonitions", MystAdmonitionDirective)
     app.connect("build-finished", copy_assets)
