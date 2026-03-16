@@ -1,9 +1,3 @@
----
-title: "Reviewing R basics"
-layout: page
-navigation: 17
----
-
 # Hands-on: Reviewing some R basics
 
 In this section, we will review:
