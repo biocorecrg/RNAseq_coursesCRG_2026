@@ -27,7 +27,7 @@ statistical power of reliable differential expression analysis strongly depends 
 Many studies still use fewer samples than recommended.
 
 
-Careful experimental design helps ensure that results are reproducible and statistically interpretable. Experimental design aims to 
+Careful experimental design helps ensure that results are reproducible and statistically interpretable and aims to 
 - reduce bias, 
 - control unwanted sources of variation, and 
 - provide sufficient information to estimate biological variability.
@@ -36,14 +36,6 @@ Careful experimental design helps ensure that results are reproducible and stati
 
 ## What makes a well-designed experiment?
 
-<div style="display:flex; justify-content:center;">
-
-| |
-|:---:|
-| ![fishy](images/good_exp_design.jpg) | 
-| *Figure is adapted from Cambridge University's Experimental Design Manual 2016* |
-
-</div>
 
 
 ### Experimental design begins with the biological question, and affects every stage of an RNA-seq experiment
@@ -52,13 +44,13 @@ Careful experimental design helps ensure that results are reproducible and stati
 
 | |
 |:---:|
-| ![fishy](images/exp_design.jpg) | 
+| <img src="images/exp_design.jpg" width="70%"> |
 | *Figure is from [https://galaxyproject.org/tutorials/rb_rnaseq/](https://galaxyproject.org/tutorials/rb_rnaseq/)* |
 
 </div>
 
-:::{note}
-Think:
+:::{admonition} Think:
+:class: note
 
 ```
 biological question
@@ -90,6 +82,15 @@ bioinformatics
 
 ### Three basic principles of experimental design
 
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| <img src="images/good_exp_design.jpg" width="70%"> |
+| *Figure is adapted from Cambridge University's Experimental Design Manual 2016* |
+
+</div>
+
 <br>
 
 
@@ -101,14 +102,15 @@ bioinformatics
 
 <br>
 
-:::{important} **Core principles of experimental design**
-These three principles form the foundation of experimental design: 
+:::{admonition} Core principles of experimental design
+:class: important
 
 - **Randomization** reduces systematic bias.
 - **Blocking** controls known sources of variation.
 - **Replication** allows estimation of biological variability and increases statistical power.
 
 <small>Source: [Statistics Knowledge Portal](https://www.jmp.com/en/statistics-knowledge-portal/design-of-experiments/key-design-of-experiments-concepts/key-principles-of-experimental-design)</small>
+
 :::
 
 <br>
@@ -131,8 +133,11 @@ How to address core principles of experimental design for a RNA-seq experiments:
 Replication is essential for reliable statistical inference in RNA-seq experiments.  
 Replication allows estimation of **biological variability**, which determines whether observed differences in gene expression are larger than expected by chance.
 
-:::{important} **Golden rule of replication**
+:::{admonition} Golden rule of replication
+:class: important
+
 Replicates must represent **independent biological samples (or units)**, not repeated measurements of the same sample.
+
 :::
 
 ---
@@ -197,11 +202,14 @@ For example:
 **libraries = technical replicates != biological replicate**
 <br><br>
 
-:::{important}
+:::{admonition} Watch for pseudoreplications!
+:class: warning
+
 Treating samples originated from the same experimental unit
 as **independent replicates** would result in **pseudoreplication**. <br>
 Once the experimental unit is defined, the number of independent units 
 determines the number of **biological replicates** in the experiment.
+
 :::
 
 <br>
@@ -214,7 +222,7 @@ determines the number of **biological replicates** in the experiment.
 
 | |
 |:---:|
-| ![fishy](images/tech_bio_replicates.png) | 
+| <img src="images/tech_bio_replicates.png" width="50%"> 
 | *adapted from [Bernd Klaus, EMBO 2015](https://link.springer.com/article/10.15252/embj.201592958)* |
 
 </div>
@@ -313,9 +321,11 @@ Key studies:
 
 These studies demonstrated that RNA-seq measurements are highly reproducible across technical replicates.
 
-:::{admonition} 
+:::{admonition} In most RNA-seq experiments
 :class: important
-**Biological replication is more important than performing technical replicates** in most RNA-seq experiments.
+
+**Biological replication is more important than performing technical replicates**.
+
 :::
 
 <br>
@@ -324,21 +334,22 @@ These studies demonstrated that RNA-seq measurements are highly reproducible acr
 
 ### Replication and statistical power
 
-Statistical power is the probability that an RNA-seq experiment correctly detects a true difference in gene expression between conditions;
+Statistical power is the probability that an RNA-seq experiment correctly detects a true difference in gene expression between conditions; <br>
 that is, the probability of rejecting the null hypothesis when it is false. <br>
-The null hypothesis is that the gene expression is the same in both conditions.
+**The null hypothesis is that the gene expression is the same in both conditions.**
 
-**Power** is the probability of **not accepting a false null hypothesis**, or the probability of detecting a specified difference, or **effect size**, given it exists, within the population *(e.g., a fold change in a microarray experiment or a change in the size of a tumour)*. 
+**Power** (aka, sensitivity of the statistical test) is the probability of **not accepting a false null hypothesis**, or, in other words, the probability of detecting a specified difference, or **effect size**, given it exists, within the population *(e.g., a fold change in a gene expression)*. 
 
 :::{admonition} 
 :class: note
-The desired power of the research experiment is usually above 80%; <br>
-while for clinical studies, it might be required to be above 90%. 
+
+The desired power of the research experiment is usually above 80%. <br>
+power = 0.8 --> 80% chance of detecting a true differential expression signal. <br>
+In clinical studies, power might be required to be above 90%. 
+
 :::
 
-**Power (aka, sensitivity of the statistical test) = 1 - (type II error)**,  *(type II error is an error of accepting a false null hypothesis)*
-
-power = 0.8 --> 80% chance of detecting a true differential expression signal
+#### Overpowered vs underpowered experiment
 
 If all other parameters remain the same, 
 a larger experiment will have more power than a smaller experiment. 
@@ -354,21 +365,20 @@ Therefore, an **underpowered study** also wastes resources and can be unethical.
 It is important to know what effect size is important to ensure that an experiment is sufficiently powered.
 <br>
 
-In RNA-seq experiments, replication increases the ability to detect true differences in gene expression.
-<br>
 The statistical power of an RNA-seq experiment depends on:
 
 - **number of biological replicates**: 2 replicates → low power, 
 6 replicates → good power
-- **effect size** (magnitude of expression change): log2fc=3 easy to detect, log2fc=0.5 need more power
+- **effect size** (magnitude of expression change): log2fc=3 easy to detect, log2fc=0.5 needs more power
 - **biological variability** within each condition: higher variability → lower power
 - **sequencing depth**: more reads → lower-expressed genes are detected
 
 <br>
 
-:::{note}
+:::{admonition} Power of RNA-seq experiment increases with
+:class: important
+
 ```
-power increases with
   ↑ number of replicates
   ↑ effect size
   ↓ biological variability
@@ -402,7 +412,7 @@ power increases with
 
 ### Number of replicates in RNA-seq experiments
 
-> "RNA was sequenced from 48 biological replicate samples of Saccharomyces cerevisiae in each of two well-studied experimental conditions; wild-type (WT) and a Δsnf2 mutant. ... <br>
+> "RNA was sequenced from 48 biological replicate samples of *Saccharomyces cerevisiae* in each of two well-studied experimental conditions; wild-type (WT) and a Δsnf2 mutant. ... <br>
        Bootstrap runs were performed with i = 100 iterations and nr = 2,…,40 replicates in each condition.<br>
        For a given value of nr, the mean log2 transformed fold change [log2(FC)] and median adjusted P-value or FDR calculated across all the bootstrap iterations was considered representative of the measured behavior for each individual gene. <br>
        Genes were marked as SDE when the adjusted P-value or FDR was ≤0.05. <br>
@@ -423,11 +433,10 @@ power increases with
 
 The study showed that:
 
-- With **3 replicates**, many differentially expressed genes are missed --> Fig A - <30% SDEs identified; 
-in particular, many lower expressed genes are missed --> Fig B - TPR = 0.8 for log2FC > 1
-- With **6 replicates**, most strong signals are detected --> Fig A - ~40% SDEs identified;
-Fig B - TPR = 0.87 for log2FC > 1; TPR = 0.8 for log2FC > 0.5
-- Detecting small expression changes may require **more than 10 replicates** --> Fig. C - TPR = 0.9 for log2FC > 0.3 (i.e., FC = 1.24)
+- With **3 replicates**: many differentially expressed genes were missed (Fig A - <30% SDEs identified); 
+especially many lower expressed genes were missed (Fig B - TPR = 0.8 for log2FC > 1).
+- With **6 replicates**: most strong signals were detected (Fig B - TPR = 0.87 for log2FC > 1; TPR = 0.8 for log2FC > 0.5)
+- Detecting small expression changes may require **more than 10 replicates** (Fig. C - TPR = 0.9 for log2FC > 0.3, or FC = 1.24)
 
 <br>
 
@@ -437,7 +446,6 @@ Fig B - TPR = 0.87 for log2FC > 1; TPR = 0.8 for log2FC > 0.5
 ### When the number of replicates is limited
 
 In practice, RNA-seq experiments are often performed with a small number of biological replicates due to cost or sample availability. <br>
-However, studies have shown that differential expression results obtained from small cohort sizes are often difficult to reproduce in independent experiments.
 
 A recent analysis by [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630) 
 simulated more than 18,000 RNA-seq experiments by repeatedly 
@@ -451,7 +459,7 @@ In many cases, the main problem is low recall (missing true signals) rather than
 
 | |
 |:---:|
-| ![fishy](images/expdesign_journal.pcbi.1011630.g002.PNG) | 
+| <img src="images/expdesign_journal.pcbi.1011630.g002.PNG" width="70%"> |
 | **DEG performance metrics as a function of the cohort size.** Each symbol summarizes the median of 100 cohorts. All panels show results using the DESeq2 Wald test with abs(log2FC) above 1. <br> *Figure is adapted from [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630)* |
 
 </div>
