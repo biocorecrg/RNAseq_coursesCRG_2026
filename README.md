@@ -20,7 +20,7 @@ The course integrates laboratory practice with computational training, equipping
 * 14:00 - 14:30 Hands-on: Basics of Linux CLI **(Toni Hermoso)**
 * 14:30 - 16:00 Hands-on: Read QC: fastq format, FastQC, FastqScreen, kraken, MultiQC **(Anna)**
 * 16:00 - 16:15 _Coffee break_
-* 16:15 - 17:00 Hands-on: Read pre-processing: adapter trimming, riboPicker, MultiQC **(Luca)**
+* 16:15 - 17:00 Hands-on: Read pre-processing: adapter trimming, riboDetector, MultiQC **(Anna)**
 * 17:00 - 18:00 Hands-on: Getting reference genome/transcriptome and annotation (ENSEMBL, Gencode, UCSC Genome Browser), GTF/GFF format **(Luca)**
 
 ### Day 4 - Thu 19 March 2026
