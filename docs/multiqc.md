@@ -36,7 +36,7 @@ We can visualize the final report in the internet browser:
 firefox multiqc_report.html
 ```
 
-<img src="images/multiqc.png"  align="middle" />
+<img src="images/multiqc.png"  align="center" />
 
 MultiQC is very customizable. You can ignore files or folder:
 
