@@ -9,7 +9,7 @@ The course integrates laboratory practice with computational training, equipping
 
 **This repo covers only the computational part of the course.**
 
-### The webpage is at https://biocorecrg.github.io/RNAseq_coursesCRG_2026/ 
+- The webpage is at https://biocorecrg.github.io/RNAseq_coursesCRG_2026/ 
 
 ## Agenda
 ### Day 3 - Wed 18 March 2026
