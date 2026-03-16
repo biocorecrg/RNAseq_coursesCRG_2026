@@ -178,7 +178,7 @@ Examples:
 <br>
 
 However, multiple samples can sometimes originate from the same experimental unit. 
-For example:
+
 
 | mouse   | tissue sample |
 | ------- | ------------- |
@@ -186,9 +186,10 @@ For example:
 | mouse 1 | kidney        |
 | mouse 1 | brain         |
 
-
-**experimental unit = mouse != sample** <br>
-**samples = tissues != biological replicate**
+```
+experimental unit = mouse  ≠  sample
+samples = tissues  ≠  biological replicate
+```
 
 <br>
 
@@ -198,15 +199,15 @@ For example:
 | sample A       | library 2 |
 
 
-**experimental unit = RNA sample** <br>
-**libraries = technical replicates != biological replicate**
+```
+experimental unit = RNA sample
+libraries = technical replicates  ≠  biological replicate
+```
 <br><br>
 
-:::{admonition} Watch for pseudoreplications!
-:class: warning
+:::{admonition} 
+:class: important
 
-Treating samples originated from the same experimental unit
-as **independent replicates** would result in **pseudoreplication**. <br>
 Once the experimental unit is defined, the number of independent units 
 determines the number of **biological replicates** in the experiment.
 
@@ -291,6 +292,14 @@ Typical examples of pseudoreplication include:
 - multiple libraries prepared from the same RNA extraction  
 - multiple wells from the same cell culture  
 - several tissue slices from the same animal  
+
+:::{admonition} 
+:class: warning
+
+Treating samples originated from the same experimental unit
+as **independent replicates** would result in **pseudoreplication**. <br>
+
+:::
 
 <br>
 
@@ -441,6 +450,7 @@ especially many lower expressed genes were missed (Fig B - TPR = 0.8 for log2FC 
 <br>
 
 
+
 ---
 
 ### When the number of replicates is limited
@@ -452,8 +462,8 @@ simulated more than 18,000 RNA-seq experiments by repeatedly
 subsampling real datasets with cohort sizes ranging from 3 to 15 replicates. <br><br>
 The study showed that **experiments with small cohort sizes frequently produce differential expression results that are unlikely to replicate well.**
 <br><br>
-However, low replicability does not necessarily imply that the results are incorrect. 
-In many cases, the main problem is low recall (missing true signals) rather than a high rate of false positives.
+Importantly, low replicability does not necessarily imply that the results are incorrect.  
+In most cases, the main limitation is **low recall (missing true signals)** rather than a large number of false positives.
 
 <div style="display:flex; justify-content:center;">
 
@@ -474,8 +484,13 @@ For the largest cohort size of N = 15, a wide range of replicability values 
 10 out of 18 data sets exceed the precision of 0.9 for N>5. <br>
 
 In contrast, for all data sets except SNF2, recall is below 0.5 for N<7. <br>
-<br>
-**That means that false negatives (low recall) are a more significant driver of low replicability than false positives (low precision).**
+<br><br>
+These results show that small-cohort experiments tend to detect only the **strongest expression changes**, 
+while weaker but real effects remain undetected.
+
+A second analysis in the study demonstrates that **effect size estimates become unstable when replication is low**. 
+In heterogeneous datasets, fold-change estimates may be inflated or underestimated depending on which samples are included in the cohort.
+
 <br><br>
 
 
@@ -486,20 +501,16 @@ In contrast, for all data sets except SNF2, recall is below 0.5 for N<7. <br>
 | ![fishy](images/expdesign_journal.pcbi.1011630.g003.PNG) | 
 | **Heat maps and fold change estimates for SNF2 and LMAB data sets.** <br> Left column: Heat maps showing the logCPM correlation of samples for the SNF2 and LMAB data sets. Heat map rows and columns were ordered using hierarchical Ward clustering. <br> Right column: Fold change estimates of expressed genes in the SNF2 and LMAB data sets. **Blue dots represent the ground truth estimate from the full data set.** Gray (red) bars represent the interquartile range of estimates obtained from 100 subsampled cohorts of size N = 3 (N = 15). The horizontal dashed line shows the logFC threshold used to define DEGs. <br> *Figure is adapted from [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630)* |
 
+
 </div>
 
 <br>
 
-> The best-performing SNF2 data set is so homogeneous and well-separated by condition that the subsampling has little influence on the logFC estimation, which has little variance even for the smallest cohort sizes. 
-<br><br>By contrast, the worst-performing LMAB data has few true DEGs and 
-the logFC estimates exhibit substantial sampling variance, 
+The best-performing SNF2 data set is very homogeneous (cell colonies).
+<br>By contrast, the worst-performing LMAB 
+samples are derived from heterogeneous tumor tissues. 
+Its logFC estimates exhibit substantial sampling variance, 
 which leads to **logFC estimates that are either inflated or deflated.** ...
-<br>In the case of inflation of a non-DEG, the respective gene is more likely to spuriously pass significance 
-and fold change thresholds, thus yielding a false positive. ...<br>
-[this is] **the study that inflates effect sizes and undermines the reliability of results.** <br><br>
-These findings are consistent with expectations, given that the SNF2 samples originate from cell colonies, whereas the LMAB samples are derived from heterogeneous tumor tissues. 
->
-> — [Degen & Medo, 2025](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630) 
 
 <br>
 
@@ -507,12 +518,13 @@ These findings are consistent with expectations, given that the SNF2 samples ori
 
 ### Recommendations when replication is limited (from Degen & Medo, 2025)
 
+
 When experiments must be performed with a small number of replicates:
 
-- Interpret differential expression results with caution.
-- Focus on **large effect sizes** rather than small fold changes.
-- Validate key findings using independent experiments.
-- Use **resampling or bootstrapping approaches** to estimate the reliability of results.
+- interpret differential expression results cautiously
+- focus on **genes with larger effect sizes**
+- validate key findings using independent experiments
+- treat results primarily as **hypothesis-generating**
 
 These approaches can help estimate whether the results of an underpowered RNA-seq experiment are likely to contain many false discoveries.
 
@@ -535,10 +547,12 @@ Is the fold change larger than a biologically meaningful threshold?
 
 <br>
 
-:::{admonition} 
+:::{admonition} When replication cannot be increased
 :class: important
-When replication cannot be increased, researchers should treat RNA-seq results as **hypothesis-generating rather than definitive evidence.**
-Significant DEGs from one small cohort are unlikely to be significant in another small cohort (low replicability), 
+
+- RNA-seq results should generally be interpreted as **hypothesis-generating rather than definitive evidence**. 
+- Focus only on the strongest signals in gene expression changes.
+- Significant DEGs from one small cohort are unlikely to be significant in another small cohort (low replicability), 
 unless it is known that the population is **very homogeneous** (e.g. cell cultures).
 
 :::
@@ -555,6 +569,7 @@ Typical recommendations for bulk RNA-seq experiments:
 | >10 | very robust |
 
 <br>
+
 ---
 
 
@@ -960,9 +975,7 @@ indicating a **treatment × sex interaction**.
 
 That is,
 ```
-(treated_male − control_male)
-≠
-(treated_female − control_female)
+(treated_male − control_male) ≠ (treated_female − control_female)
 ```
 
 This difference of differences is exactly what the interaction term tests.

@@ -679,4 +679,58 @@ done
 
 <br/>
 
+### MultiQC report
+
+At this point, we can summarize all the work done with the tool [**MultiQC**](https://multiqc.info/). 
+MultiQC aggregates outputs from many bioinformatics tools across many samples into a single report by searching a given directory for analysis logs and compiling an HTML report. 
+
+
+MultiQC supports many tools: see the different [modules](https://multiqc.info/docs/#multiqc-modules)
+
+
+Let's create a multiqc_report folder and link all the analyses done so far.
+
+```{bash}
+cd ~/rnaseq_course/
+
+# create a folder for the multiqc result
+mkdir multiqc_report
+cd ~/rnaseq_course/multiqc_report
+
+# link QC, trimming and mapping data
+ln -s ~/rnaseq_course/quality_control* .
+ln -s ~/rnaseq_course/mapping* .
+ln -s ~/rnaseq_course/trimming
+```
+
+Then run **multiqc** on the directory **multiqc_report** to combine all reports:
+
+```{bash}
+cd ~/rnaseq_course/multiqc_report
+
+$RUN multiqc .
+
+/// MultiQC 🔍 v1.33
+
+       file_search | Search path: /users/bi/lcozzuto/rnaseq_course/RNAseq_coursesCRG_2026/docs/data/multiqc
+         searching | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 40/40  
+          qualimap | Found 1 RNASeq reports
+              star | Found 1 reports and 1 gene count files
+          cutadapt | Found 1 reports
+     write_results | Data        : multiqc_data
+     write_results | Report      : multiqc_report.html
+           multiqc | MultiQC complete
+
+```
+
+We can visualize the final report in the internet browser:
+
+```{bash}
+firefox multiqc_report.html
+```
+
+Here is an example done on just one sample:
+
+
+<img src="images/multiQC.png" width="800" />
 
