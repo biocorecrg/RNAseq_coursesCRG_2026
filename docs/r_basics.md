@@ -36,7 +36,7 @@ RStudio provides a variety of [shortcuts](https://docs.posit.co/ide/user/ide/ref
 
 Click {kbd}`Alt` + {kbd}`Shift` + {kbd}`K` to display all available shortcuts.
 
-<img title="posit logo" alt="posit logo" src="images/rstudio_shortcuts.png" width="700">
+<img title="posit logo" alt="posit logo" src="images/rstudio_shortcuts.png" width="800">
 
 
 Examples:
@@ -51,7 +51,7 @@ Examples:
 
 What stores data - of any kind - in R is an **object**.
 
-<img title="panels" alt="panels" src="images/R_basics_objects.png" width="250">
+<img title="panels" alt="panels" src="images/R_basics_objects.png" width="300">
 
 Assignment operators (how to assign data to the object):
 
@@ -146,7 +146,6 @@ str(factor_object)
 ```
 
 
-
 #### Data structures
 
 The main data structures in R are:
@@ -164,19 +163,19 @@ Create a numeric vector:
 
 ```r
 a <- c(1, 2, 3, 4, 5, 6)
-# equivalent to:
+
+# same as:
 a <- 1:6
 ```
 
 ```{note}
 shorta <- 1
 
-#is equivalent to
-
+# same as:
 shorta <- c(1)
 ```
 
-shorta is a vector with 1-element
+`shorta` is a **vector of 1-element**.
 
 Check the length of (i.e. number of elements) a vector:
 
@@ -209,7 +208,7 @@ b[b %in% a]
 
 ```{tip}
 
-Table of logical operators that can be used for data selection and filtering:
+Table of comparison and logical operators that can be used for data selection and filtering:
 
 | Operator    | Description |
 | -------- | ------- |
@@ -222,8 +221,16 @@ Table of logical operators that can be used for data selection and filtering:
 | !x | not x |
 | x\|y | x OR y |
 | x&y | x AND y |
+| %in% | checks if an element belongs to a vector |
 
 ```
+
+You can replace one element of a vector by pointing to its position, e.g.:
+
+```r
+b[2] <- 10
+```
+
 
 ##### Matrices
 
@@ -296,6 +303,15 @@ Create a three-column data frame :
 * `Vegetarian`: logical column
 
 ```r
+# create data frame
+df <- data.frame(c("Maria", "Juan", "Alba", "Xavier", "Lara", "Max"), 
+        c(23, 25, 31, 28, 36, 34),
+        c(TRUE, TRUE, FALSE, FALSE, TRUE, FALSE))
+        
+# add column names
+colnames(df) <- c("Name", "Age", "Vegetarian")
+
+# do both steps at once
 df <- data.frame(Name=c("Maria", "Juan", "Alba", "Xavier", "Lara", "Max"), 
         Age=c(23, 25, 31, 28, 36, 34),
         Vegetarian=c(TRUE, TRUE, FALSE, FALSE, TRUE, FALSE))
@@ -314,14 +330,22 @@ ncol(df)
 dim(df)
 ```
 
+Check column names or row names:
+
+```r
+colnames(df)
+
+rownames(df)
+```
+
+You can extract rows - as with matrices - using the slicing operator: df[1,]
+
 You can extract columns of a data frame with:
 
 * Slicing operator **[]**
   * Access using the column name: `df[,"Age"]`
   * Access using the column index (i.e. position): `df[,2]`
 * Dollar sign **$**: `df$Age`
-
-You can extract rows - as with matrices - using the slicing operator: df[1,]
 
 Select rows of the data frame **if the Age column is greater than 24**:
 
@@ -333,6 +357,41 @@ Select rows of the data frame based on multiple conditions, for example, **if th
 
 ```r
 df[df$Age > 24 & df$Vegetarian == TRUE,]
+```
+
+Finally, select only columns of interest for your selection:
+
+```r
+df[df$Age > 24 & df$Vegetarian == TRUE, "Name"]
+```
+
+##### Lists
+
+Lists are one-dimensional: each element of a list can contain a different data structure!
+
+```r
+mylist <- list(my_df=df,
+              my_vector=b,
+              my_matrix=mat)
+```
+
+The `length` of a list gives you the number of elements.
+
+```r
+length(mylist)
+```
+
+You can extract elements of a list (and apply functions on them) using the double square brackets **[[]]**.
+
+```r
+# extract third element of the list with the index...
+mylist[[3]]
+# or the name
+mylist[["my_matrix"]]
+mylist$my_matrix
+
+# check dimensions of the third element
+dim(mylist[[3]])
 ```
 
 
@@ -383,7 +442,7 @@ setwd("..")
 setwd("r_basics")
 ```
 
-You are now back in: "~/rnaseq_course" (your home directory)
+You are now back to: "~/rnaseq_course/r_basics"
 
 
 ## Missing values
@@ -393,7 +452,7 @@ You are now back in: "~/rnaseq_course" (your home directory)
 Finding missing values in a vector:
 
 ```r
-# Create vector
+# Create vector with a missing value
 x <- c(4, 2, 7, NA)
 
 # Find missing values in vector:
@@ -409,14 +468,14 @@ Some functions can deal with NAs, either by default, or with specific parameters
 ```r
 x <- c(4, 2, 7, NA)
 
-# default arguments
+# default arguments: what happens?
 mean(x)
 
-# set na.rm=TRUE for the mean function to work properly
+# set na.rm=TRUE for the mean function to handle (in this case, ignore) missing values
 mean(x, na.rm=TRUE)
 ```
 
-In a matrix or a data frame, you can keep only rows where there are no NA values:
+In a matrix or a data frame, you can keep only rows where there are no NA values with:
 
 ```r
 # Create matrix with some NA values
@@ -435,50 +494,18 @@ For additional information, you can check this [R blogger post on missing/null v
 
 ### On vectors
 
-Read a file as a vector using **scan**:
-
-```r
-# Read in file
-scan(file="file.txt")
-
-# Save scanned data into an object k
-k <- scan(file="file.txt")
-```
-
-By default, the function scans for "double" (numeric) elements: it fails if the input contains characters.
-
-If reading non-numeric data, you need to specify the type of data contained in the file: 
-
-```r
-# specify the type of data to scan
-scan(file="file.txt", 
-        what="character")
-
-scan(file="~/file.txt", 
-        what="character")
-```
-
-If the file is not in the current directory, you can provide a full or relative path. 
-
-For example, if the file is located in the home directory, read it as:
-
-```r
-scan(file="~/file.txt", 
-        what="character")
-```
-
-Write the content of a vector in a file with **write**:
+Write the content of a vector in a file with `write`:
 
 ```r
 # create a vector
 mygenes <- c("SMAD4", "DKK1", "ASXL3", "ERG", "CKLF", "TIAM1", "VHL", "BTD", "EMP1", "MALL", "PAX3")
 
-# write in a file
+# write to a file
 write(x=mygenes, 
         file="gene_list.txt")
 ```
 
-Like when reading a file, you can also specify a full or relative path where to write down a file:
+You can specify a full or relative path where to write down a file:
 
 ```r
 # Write to home directory
@@ -489,6 +516,37 @@ write(x=mygenes,
 write(x=mygenes,
         file="../gene_list.txt")
 ```
+
+
+Read in a file into a vector object using `scan`:
+
+```r
+# Read in file
+scan(file="gene_list.txt")
+
+# Save scanned data into an object k
+k <- scan(file="gene_list.txt")
+```
+
+By default, the function scans for "double" (numeric) elements: it fails if the input contains characters.
+
+If reading non-numeric data, you need to specify the type of data contained in the file: 
+
+```r
+# specify the type of data to scan
+scan(file="gene_list.txt", 
+        what="character")
+```
+
+If the file is not in the current directory, you can provide a full or relative path. 
+
+For example, if the file is located in the home directory, read it as:
+
+```r
+scan(file="~/gene_list.txt", 
+        what="character")
+```
+
 
 ### Data frames or matrices
 
@@ -513,9 +571,9 @@ write.table(x=a,
 
 Useful arguments:
 
-<img title="writetable" alt="writetable" src="images/writetable.png" width="500">
+<img title="writetable" alt="writetable" src="images/writetable.png" width="600">
 
-Note that "\t" stands for tab-delimitation; if reading a **.csv** file, you can change to **sep=","** (or use the dedicated write.scv function!).
+Note that **sep="\t"** stands for tab-delimitation; if reading a **.csv** file, you can change to **sep=","** (or use the dedicated write.scv function!).
 
 
 ## Install packages
@@ -532,11 +590,11 @@ All other packages:
 * [CRAN](https://cran.r-project.org): Comprehensive R Archive Network
   + 23422\* packages available
   + find packages in https://cran.r-project.org/web/packages/
-  + <img src="images/cran_packages.png" width="550"/>
+  + <img src="images/cran_packages.png" width="800"/>
 * [Bioconductor](https://www.bioconductor.org/):
   + 2361\* packages available
   + find packages in https://bioconductor.org/packages
-  + <img src="images/bioc_packages.png" width="550"/>
+  + <img src="images/bioc_packages.png" width="800"/>
 
 \* As of March 2026
 
@@ -556,19 +614,14 @@ BiocManager::install('GOstats')
 
 ## Exercises
 
-````{tab-set}
-
-```{tab-item} Exercise 1
-:sync: key1
+### Exercise 1
 
 * Create a numeric vector **y** containing numbers from 2 to 11 (both included). 
 * How many elements are in y?
 * Show the 3rd and the 6th elements of y.
 * Show all elements of y that have a value inferior to 7.
-```
 
-```{tab-item} Correction
-:sync: key2
+:::{dropdown} Click to show correction
 
 * Create a numeric vector **y** containing numbers from 2 to 11 (both included). 
 
@@ -590,24 +643,14 @@ or
 
 `y[y < 7]`
 
-```
+:::
 
-````
-
-
-````{tab-set}
-
-```{tab-item} Exercise 2
-:sync: key1
+### Exercise 2
 
 * Create the vector **x** of 1000 random numbers from the normal distribution (see **rnorm** function).
 * What are the mean, median, minimum and maximum values of x?
 
-
-```
-
-```{tab-item} Correction
-:sync: key2
+:::{dropdown} Click to show correction
 
 * Create the vector **x** of 1000 random numbers from the normal distribution (see **rnorm** function).
 
@@ -621,25 +664,17 @@ or the more straightforward:
 
 `summary(x)`
 
-```
-
-````
+:::
 
 
-````{tab-set}
-
-```{tab-item} Exercise 3
-:sync: key1
+### Exercise 3
 
 * Create vector **y2** as: y2 <- c(1, 11, 5, 62,  NA, 18, 2, 8, NA)
 * What is the sum of all elements in y2 ?
 * Which elements of y2 are also present in y?
 * Remove NA values from y2.
-	
-```
 
-```{tab-item} Correction
-:sync: key2
+:::{dropdown} Click to show correction
 
 * Create vector **y2** as: 
 
@@ -657,15 +692,9 @@ or the more straightforward:
 
 `y2 <- na.omit(y2)`
 
-```
+:::
 
-````
-
-
-````{tab-set}
-
-```{tab-item} Exercise 4
-:sync: key1
+### Exercise 4
 
 * Create the following data frame:
 
@@ -690,12 +719,7 @@ Then:
 * Write **df** to the file **mydf.txt** with **write.table()**. 
   + Explore parameters **sep**, **row.names**, **col.names**, **quote**.
 
-```
-
-```{tab-item} Correction
-:sync: key2
-
-```r
+:::{dropdown} Click to show correction
 
 * Create the following data frame wih 
   + row names: **John, Jessica, Steve, Rachel**
@@ -736,5 +760,43 @@ write.table(df,
             col.names = NA,
             quote = FALSE)
 
+:::
+
+### Exercise 5
+
+* Create a matrix called `grades` representing 4 students (rows) and 3 subjects (columns: Math, Science, English) with the following values:
+  * Student 1: 85, 92, 78
+  * Student 2: 70, 88, 95
+  * Student 3: 99, 91, 89
+  * Student 4: 60, 72, 68
+    
+* Extract the Science grade for Student 3
+
+* Calculate the average score for Math across all 4 students
+
+:::{dropdown} Click to show correction
+
+* Create a matrix called `grades` representing 4 students (rows) and 3 subjects (columns: Math, Science, English) with the following values:
+  * Student1: 85, 92, 78
+  * Student2: 70, 88, 95
+  * Student3: 99, 91, 89
+  * Student4: 60, 72, 68
+
+```r
+grades <- matrix(c(85, 92, 78, 79, 88, 95, 99, 91, 89, 60, 72, 68),
+                nrow=4,
+                byrow=TRUE,
+                dimnames=list(c("Student1", "Student2", "Student3", "Student4"), c("Math", "Science", "English"))
+                )
 ```
-````
+
+* Extract the Science grade for Student 3
+
+`grades["Student3", "Science"]`
+
+* Calculate the average score for Math across all 4 students
+
+`mean(grades[,"Math"])`
+
+:::
+    
