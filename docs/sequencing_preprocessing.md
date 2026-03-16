@@ -7,7 +7,7 @@ Illumina sequencing happens on a **flowcell** —a glass slide with billions of 
 | | |
 |:---:|:---:|
 | ![fishy](images/preprocessing/Flowcell_structure.png) | ![](images/preprocessing/Surface_flowcell.png) |
-| *Figure 1: flowcell design* | *Figure 2: Flowcell surface coated with oligos* |
+| *Figure 1: flowcell design. Image taken from [Illumina's knowledge base.](https://support-docs.illumina.com/IN/NovaSeqX/Content/IN/NovaSeqX/ConsumablesDetails.html)* | *Figure 2: Flowcell surface coated with oligos. Image taken from [Illumina publicly available presentation.](https://cbiit.github.io/brownbag-science/02-sequencing/Illumina_Sequencing_Overview_15045845_D.pdf)* |
 
 Every Illumina library consists of your target **insert** (genomic DNA, amplicons, cDNA, etc.) flanked by adapters on both ends:
 
@@ -16,7 +16,7 @@ Every Illumina library consists of your target **insert** (genomic DNA, amplicon
 | |
 |:---:|
 | ![fishy](images/preprocessing/Library_structure_scheme.png) |
-| *Figure 3: library structure* | 
+| *Figure 3: library structure.  Image taken from [Illumina's knowledge base.](https://knowledge.illumina.com/library-preparation/general/library-preparation-general-reference_material-list/000003874)* | 
 
 </div>
 
@@ -32,6 +32,19 @@ Now that the library structure is clear, let's see what occurs once our molecule
 
 ## Cluster generation and sequencing by syntehsis (SBS)
 
+Once the libraries are ready, they are loaded into the sequencer and the experiment starts. Below you can find an overview of the whole process. Of note, we won't go through each step in details, only those that are relevant to better understand the data quality assessment.
+
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| ![fishy](images/preprocessing/illumina_pf_2channel_timeline.svg) |
+| *Figure 4: sequencing experiment overview. Image generated together with Claude Code.* | 
+
+</div>
+
+### Cluster generation/amplification:
+
 Libraries bind to the flow cell via either P5-to-P5 OR P7-to-P7 hybridization. Then, the bridge amplification process starts and it is identical for both orientations:
 
 <div style="display:flex; justify-content:center;">
@@ -39,7 +52,7 @@ Libraries bind to the flow cell via either P5-to-P5 OR P7-to-P7 hybridization. T
 | |
 |:---:|
 | ![fishy](images/preprocessing/Bridge_amplification.png) |
-| *Figure 4: cluster generation via bridge amplification* | 
+| *Figure 5: cluster generation via bridge amplification. Image from [webpage.](https://uclouvain-cbio.github.io/WSBIM2122/sec-hts.html)* | 
 
 </div>
 
@@ -53,6 +66,10 @@ Libraries bind to the flow cell via either P5-to-P5 OR P7-to-P7 hybridization. T
 
 **5. Cluster linearization:** Selective cleavage of reverse strands only so only molecules in forward orientation are kept to start the **sequencing by syntehsis (SBS)** procedure. 
 
+**6. Cluster detection:** Instrument performs an initial imaging scan of every tile to register the precise XY pixel coordinates of each cluster. 
+
+### Sequencing by synthesis (SBS):
+
 Once clusters are ready, sequencing primers that hybridize to the Read 1 primer site are added. Then, a SBS cycle is carried out for every base in read 1. Each cycle consists of:
 
 <div style="display:flex; justify-content:center;">
@@ -60,7 +77,7 @@ Once clusters are ready, sequencing primers that hybridize to the Read 1 primer 
 | |
 |:---:|
 | ![fishy](images/preprocessing/Sequencing_imaging.png) |
-| *Figure 5: sequencing imaging* | 
+| *Figure 6: sequencing imaging procedure. Image taken from [webpage.](https://www.lexogen.com/rna-lexicon-next-generation-sequencing/)* | 
 
 </div>
 
@@ -69,7 +86,16 @@ Once clusters are ready, sequencing primers that hybridize to the Read 1 primer 
 
 **2. Incorporation:** Polymerase adds exactly one nucleotide per cluster (the next correct base).
 
-**3. Imaging:** The instrument scans all lanes/tiles, recording fluorescence intensity/color at every cluster position. In the initial chemistry, there were 4 dyes - one per nucleotide type - and therefore, four images were generated per SBS cycle. This approach lead to a slower basecalling and preprocessing of the data. 
+**3. Imaging:** The instrument scans all lanes/tiles, recording fluorescence intensity/color at every cluster position. In the initial chemistry, there were 4 dyes - one per nucleotide type - and therefore, four images were generated per SBS cycle. This approach lead to a slower basecalling and preprocessing of the data. See below an example of what the sequencing experiment generates:
+
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| ![fishy](images/preprocessing/RTA_image.png) | 
+| *Figure 7: Pseudocolor image from the Illumina flow cell. Image from [Voelkerding et al, Clinical Chemistry, 2009](https://academic.oup.com/clinchem/article-abstract/55/4/641/5629392?redirectedFrom=fulltext&login=false)* 
+
+</div>
 
 Currently, this approach has evolved into a **2-Channel SBS**. In this case, only two dyes are used (red and green) and each nucleotide is identified as a combination of both:
 
@@ -87,7 +113,7 @@ In this case, only two images are generated and analysed per cycle and therefore
 | |
 |:---:|
 | ![fishy](images/preprocessing/SBS_channels.png) | 
-| *Figure 6: 2 channel vs 4 channel chemistry* 
+| *Figure 7: 2 channel vs 4 channel chemistry. Image taken from [Illumina's technical note.](https://emea.illumina.com/content/dam/illumina-marketing/documents/products/techspotlights/cmos-tech-note-770-2013-054.pdf)* 
 
 </div>
 
@@ -100,7 +126,7 @@ Once the sequencing of read 1 has finished, the sequencing order for the remaini
 | |
 |:---:|
 | ![fishy](images/preprocessing/Library_structure.png) | 
-| *Figure 7: Sequencing order for paired-end reads (PE)* 
+| *Figure 8: Sequencing order for paired-end reads (PE). Image taken from [Illumina's knowledge base.](https://knowledge.illumina.com/library-preparation/general/library-preparation-general-faq-list/000005679)* 
 
 </div>
 
@@ -110,7 +136,7 @@ Although this technology is widely used, it also has important caveats that can 
 
 - **Imperfect dye/terminator cleavage:** cleavage's efficiency might decrease during our sequencing run and it can lead to a) molecules retaining the 3' terminator and cannot add the next base (ie: phasing) and b) residual fluorescence which results into background noise and therefore, lower quality scores. 
 
-:::{admonition} Limitation with 2-Channel SBS!
+:::{important} Limitation with 2-Channel SBS!
 :class: important
 
 If several early R1 cycles contain G (no fluorescence), the camera only sees background noise and as a result, there is poor cluster detection which leads to a decreased % of PF clusters (ie: those with sufficient signal quality across early cycles) and data quality. 
@@ -177,7 +203,7 @@ This format contains the information about the sequence and the quality of each 
 | |
 |:---:|
 | ![fishy](images/fastq_format.png) | 
-| *Figure 8: FastQ format example* 
+| *Figure 9: FastQ format example* 
 
 </div>
 

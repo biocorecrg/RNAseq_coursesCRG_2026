@@ -5,9 +5,14 @@
 
 What does it mean to map reads to a transcriptome? During sequencing, we read both ends of each RNA fragment—these are called "paired-end reads." Mapping to the transcriptome means finding where these paired reads match in our database of known transcript sequences. Since transcripts already have introns removed and exons joined together, the reads align directly without needing to "jump" across gaps as they would when mapping to the genome.
 
-<div align="center">
-<img src="images/800px-Mapping_Reads.png" width="500"  />
-</div>
+
+||
+| :---:  |
+|<img src="images/800px-Mapping_Reads.png" width="500" />|
+|From wikimedia commons|
+
+
+
 
 ## Tools for read mapping
 
@@ -25,15 +30,15 @@ Like the index at the end of a book, an index of a large DNA sequence allows one
 
 |k-mer index|
 | :---:  |
-|<img src="images/index_kmer.png" width="300" />|
-|from [https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index](https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index)|
+|<img src="images/index_kmer.png" width="200" />|
+|from [coursera.org](https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index)|
 
 
 ### Fast (splice-unaware) aligners to a reference transcriptome
 These tools can be used for aligning **short reads** to a transcriptome reference.
-<br>
+
 If a genome were used as a reference, these tools would not map reads to **splicing junctions**.
-<br>
+
 They can be much faster than traditional aligners like [**Blast**](https://blast.ncbi.nlm.nih.gov/Blast.cgi) but less sensitive and may have limitations about the read size. 
 
 * [**Bowtie**](http://bowtie-bio.sourceforge.net/index.shtml) is an ultrafast, memory-efficient short read aligner geared toward quickly aligning large sets of short DNA sequences (reads) to large genomes/transcriptomes. Bowtie uses a **Burrows-Wheeler index**. 
@@ -86,12 +91,12 @@ rm reference_chr6_Hsapiens.tar.gz
 
 ```
 
-# Mapping using STAR
+## Mapping using STAR
 
 For the **STAR** running options, see [STAR Manual](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf).
 
 
-## Building the STAR index
+### Building the STAR index
 
 To make an index for STAR, we need both the genome sequence in FASTA format and the annotation in GTF format. 
 <br>
@@ -116,12 +121,12 @@ To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** opt
 * It usually equals the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a splicing site. 
 * In our case, since the read size is 49 bases, we can accept a maximum of 48 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **48**. 
 * This also means that **for every different read-length to be aligned, a new STAR index needs to be generated**. Otherwise, a drop in aligned reads can be experienced.
-<br>
+
 * **--runThreadN** allows you to parallelize the job.
-<br>
+
 **NOTE** that for small genomes, parameter **--genomeSAindexNbases** (default 14) should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
-<br>
+
 Building the STAR index (option **--runMode genomeGenerate**):
 
 ```bash
@@ -148,7 +153,7 @@ $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
 
 This should take around 3 to 4 minutes to complete.
 
-## Aligning reads to the genome
+### Aligning reads to the genome
 
 To use **STAR** for the read alignment (default **--runMode** option), we have to specify the following options:
 * the index directory (**--genomeDir**)
@@ -261,7 +266,7 @@ cat SRR3091420_1_chr6Log.final.out
 
 ```
 
-## Read counts 
+### Read counts 
 
 STAR outputs read counts per gene into **PREFIX**ReadsPerGene.out.tab file with 4 columns which correspond to different **strandedness options**:
 
@@ -317,7 +322,7 @@ If the protocol used was stranded, there would be a **strong imbalance** between
 
 <br/>
 
-## BAM/SAM/CRAM format
+### BAM/SAM/CRAM format
 
 The **BAM format** is a compressed version of the [**SAM format**](https://samtools.github.io/hts-specs/SAMv1.pdf) (which is a plain text) and cannot thus being seen as a text. To explore the BAM file, we have to convert it to the SAM format by using [**samtools**](http://samtools.sourceforge.net/). Note that we use the parameter **-h** to show also the header that is hidden by default. 
 
@@ -422,7 +427,7 @@ ls  SRR3091420_1_chr6Aligned.sortedByCoord.out.* -alht
 
 <br/>
 
-## Alignment QC
+### Alignment QC
 
 The quality of the resulting alignment can be checked using the tool [**QualiMap**](http://qualimap.bioinfo.cipf.es/). To run QualiMap, we specify the kind of analysis (**rnaseq**), the **gtf** file, and the strandness of the library (**-p unstranded**). 
 <br>
@@ -474,7 +479,48 @@ Finally, we can see that the majority of reads map to the exons.
 
 <br/>
 
-# Mapping using Salmon
+## Genome Browser
+
+To explore BAM and CRAM files produced by the STAR mapper, we first need to sort and index the files. In our case, sorting has already been done by STAR's **BAM SortedByCoordinate** option.
+
+The indexing can be done with samtools:
+
+```bash
+cd ~/rnaseq_course/mapping
+$RUN samtools index SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
+```
+
+**IMPORTANT!** 
+
+Be careful with the **chromosome name conventions**!
+
+Different genome browsers name chromosomes differently. UCSC names chromosomes as **chr1**, **chr2**,...**chrM**; while Ensembl, **1**, **2**, ... **MT**. 
+
+When you map reads to a genome with a given convention, you cannot directly display BAM/CRAM files in a genome browser that uses a different convention.
+
+**GENCODE** uses the **UCSC convention**, while **ENSEMBL doesn't**: we need to change the chromosome names before being able to load them in the UCSC Genome Browser. 
+
+```bash
+cd ~/rnaseq_course/mapping
+
+# create new sub-directory
+mkdir bam_ucsc
+
+# convert chromosome naming (produce a SAM file)
+$RUN samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam  | awk -F "\t" 'BEGIN{OFS="\t"}{if($1 ~ /^@/){print $0} else {print $1,$2,"chr"$3,$4,$5,$6,$7,$8,$9,$10,$11,$12}}' | sed 's/chrMT/chrM/g' | sed 's/SN:/SN:chr/g' > SRR3091420_1_chr6Aligned.sam
+
+# convert SAM to BAM
+$RUN samtools view -b -o SRR3091420_1_chr6Aligned.bam SRR3091420_1_chr6Aligned.sam
+
+# create index for BAM file
+$RUN samtools index SRR3091420_1_chr6Aligned.bam
+
+# remove SAM files
+rm *.sam
+```
+
+
+## Mapping using Salmon
 
 <img src="images/RNAseq_workflow.png" width="1000"/>
 
@@ -486,7 +532,7 @@ Salmon can also make use of pre-computed alignments (in the form of a SAM/BAM fi
 
 <br/>
 
-## Building the Salmon index
+### Building the Salmon index
 
 To make an index for **Salmon**, we need transcript sequences in the FASTA format.
 <br>
@@ -533,7 +579,7 @@ $RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v49
 
 This step takes around 10 minutes with 4 cpus.
 
-## Quantifying transcript expression
+### Quantifying transcript expression
 
 To quantify reads with **Salmon**, we need to specify the type of sequencing library, aka [**Fragment Library Types** in Salmon](https://salmon.readthedocs.io/en/latest/library_type.html), using three letters:
 
@@ -560,15 +606,16 @@ To quantify reads with **Salmon**, we need to specify the type of sequencing lib
 |R|read 1 (or single-end read) comes from the reverse strand|
 
 <br/>
+
 From the STAR output for read counts we already know that for the analyzed experiment, the **U** (**Unstranded**) library was used. 
-<br>
+
 If the library were **paired-end** and sequenced with a **stranded reverse** library, we would set the parameter to **ISR**.
-<br>
+
 If we want to assign the reads to the genes (option **-g**) in addition to transcripts, we have to provide a **GTF file** corresponding to the transcript version that was used to build the Salmon index. 
-<br>
+
 We have it already for chromosome 6, in **~/rnaseq_course/reference_genome/**
 
-<br>
+
 We can proceed with the mapping.
 
 ```bash
@@ -630,4 +677,58 @@ done
 ```
 
 <br/>
+
+### MultiQC report
+
+At this point, we can summarize all the work done with the tool [**MultiQC**](https://multiqc.info/). 
+MultiQC aggregates outputs from many bioinformatics tools across many samples into a single report by searching a given directory for analysis logs and compiling an HTML report. 
+
+
+MultiQC supports many tools: see the different [modules](https://multiqc.info/docs/#multiqc-modules)
+
+
+Let's create a multiqc_report folder and link all the analyses done so far.
+
+```{bash}
+cd ~/rnaseq_course/
+
+# create a folder for the multiqc result
+mkdir multiqc_report
+cd ~/rnaseq_course/multiqc_report
+
+# link QC, trimming and mapping data
+ln -s ~/rnaseq_course/quality_control* .
+ln -s ~/rnaseq_course/mapping* .
+ln -s ~/rnaseq_course/trimming
+```
+
+Then run **multiqc** on the directory **multiqc_report** to combine all reports:
+
+```{bash}
+cd ~/rnaseq_course/multiqc_report
+
+$RUN multiqc .
+
+/// MultiQC 🔍 v1.33
+
+       file_search | Search path: /users/bi/lcozzuto/rnaseq_course/RNAseq_coursesCRG_2026/docs/data/multiqc
+         searching | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 40/40  
+          qualimap | Found 1 RNASeq reports
+              star | Found 1 reports and 1 gene count files
+          cutadapt | Found 1 reports
+     write_results | Data        : multiqc_data
+     write_results | Report      : multiqc_report.html
+           multiqc | MultiQC complete
+
+```
+
+We can visualize the final report in the internet browser:
+
+```{bash}
+firefox multiqc_report.html
+```
+
+Here is an example done on just one [sample](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/multiqc/multiqc_report.html)
+
+<img src="images/multiQC.png" width="800" />
 

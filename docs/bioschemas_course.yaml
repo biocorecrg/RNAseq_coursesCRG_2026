@@ -1,0 +1,47 @@
+"@context": https://schema.org/
+"@type": Course
+"@id": https://biocorecrg.github.io/RNAseq_coursesCRG_2026
+"http://purl.org/dc/terms/conformsTo":
+- "@type": CreativeWork
+  "@id": "https://bioschemas.org/profiles/Course/1.0-RELEASE"
+about:
+  - "@id": https://edamontology.org/topic_0091
+  - "@id": https://edamontology.org/topic_0622
+  - "@id": https://edamontology.org/topic_3170
+audience:
+- "@type": Audience
+  name: Biologists interested in learning about RNA-seq data analysis
+name: Decoding Transcriptomes - A Practical Course on RNA-seq
+provider:
+  name: "Centre for Genomic Regulation"
+  "@id": https://ror.org/03wyzt892
+  url: https://www.crg.eu
+description: Course providing a comprehensive introduction to RNA sequencing, guiding participants through the complete data analysis workflow  
+keywords: "genomics, linux, bioinformatics, RNA-seq, NGS"
+inLanguage: "en"
+url: https://courses.crg.eu/events/decoding-transcriptomes-practical-course-rna-seq
+hasCourseInstance:
+  "@context": https://schema.org/
+  "@type": CourseInstance
+  "http://purl.org/dc/terms/conformsTo":
+    - "@type": CreativeWork
+      "@id": "https://bioschemas.org/profiles/Course/1.0-RELEASE"
+  startDate: "2026-03-18 10:30:00 UTC"
+  endDate: "2026-03-20 13:00:00 UTC"
+  organizer:
+    name: "Centre for Genomic Regulation"
+    "@id": https://ror.org/03wyzt892
+    url: https://www.crg.eu
+    "@type": "Organization"
+  "location":
+    "@type": "Place"
+    "address": 
+      "@type": "PostalAddress"
+      streetAddress: "PRBB Buliding, Dr. Aiguader, 88"
+      addressLocality: "Barcelona"
+      addressRegion: "Catalonia"
+      addressCountry: "Spain"
+      postalCode: 08003
+    latitude: "41.384214" 
+    longitude: "2.193572"
+  courseMode: onsite

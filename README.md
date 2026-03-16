@@ -9,7 +9,7 @@ The course integrates laboratory practice with computational training, equipping
 
 **This repo covers only the computational part of the course.**
 
-### The webpage is at https://biocorecrg.github.io/RNAseq_coursesCRG_2026/ 
+- The webpage is at https://biocorecrg.github.io/RNAseq_coursesCRG_2026/ 
 
 ## Agenda
 ### Day 3 - Wed 18 March 2026
@@ -20,7 +20,7 @@ The course integrates laboratory practice with computational training, equipping
 * 14:00 - 14:30 Hands-on: Basics of Linux CLI **(Toni Hermoso)**
 * 14:30 - 16:00 Hands-on: Read QC: fastq format, FastQC, FastqScreen, kraken, MultiQC **(Anna)**
 * 16:00 - 16:15 _Coffee break_
-* 16:15 - 17:00 Hands-on: Read pre-processing: adapter trimming, riboPicker, MultiQC **(Luca)**
+* 16:15 - 17:00 Hands-on: Read pre-processing: adapter trimming, riboDetector, MultiQC **(Anna)**
 * 17:00 - 18:00 Hands-on: Getting reference genome/transcriptome and annotation (ENSEMBL, Gencode, UCSC Genome Browser), GTF/GFF format **(Luca)**
 
 ### Day 4 - Thu 19 March 2026
@@ -40,22 +40,3 @@ The course integrates laboratory practice with computational training, equipping
 * 12:00 - 13:00 Q&A and General discussion
 * 13:00 - 14:00 _Lunch_
 
-
-Previous public courses/repos with materials to re-use:
-* https://github.com/biocorecrg/PhD_course_genomics_format
-* https://github.com/biocorecrg/R_GSEA_Docker
-* https://github.com/biocorecrg/CRG_RIntroduction
-* https://github.com/biocorecrg/CRG_RIntroduction_2021
-* https://github.com/biocorecrg/CRG_R_tidyverse_2021
-* https://github.com/biocorecrg/nextflow-course-2025-spring
-* https://github.com/biocorecrg/nextflow-course-2024-alba
-* https://github.com/biocorecrg/contamination-nf
-* https://github.com/biocorecrg/PhD_course_containers_2024
-* https://github.com/biocorecrg/CoursesCRG_Containers_Nextflow_May_2022
-
-
-* https://github.com/biocorecrg/PHINDaccess_RNAseq_2020
-* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/expdesign.html
-* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/r_basics.html
-* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/functional_analysis.html
-* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/resources.html

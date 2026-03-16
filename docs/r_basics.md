@@ -1,156 +1,458 @@
 # Hands-on: Reviewing some R basics
 
-Open the **RStudio** software.
+In this section, we will review:
 
-## Basics
+* RStudio/POSIT software usage
+* R basics.
+
+
+## RStudio
+
+What is RStudio?
+
+* Free and open source IDE (Integrated Development Environment) for R, Python
+* Available for Windows, Mac OS and LINUX
+
+<img title="rstudio logo" alt="RStudio logo" src="images/rstudio_logo.jpeg" width="100">
+<img title="posit logo" alt="posit logo" src="images/posit_logo.png" width="190">
+
+
+### Panels
+
+When you open RStudio, you will see 3-4 panels:
+
+* top-left: scripts and files
+* bottom-left: R console Linux-line terminal / command-line
+* top-right: environment, history, connections, tutorial
+* bottom-right: tree of folders and files, plots/graphs window, packages, help window, viewer, presentation
+
+<img title="panels" alt="panels" src="images/rstudio_panels.png" width="800">
+
+
+
+### Shortcuts
+
+RStudio provides a variety of [shortcuts](https://docs.posit.co/ide/user/ide/reference/shortcuts.html) to make user interaction smoother.
+
+Click {kbd}`Alt` + {kbd}`Shift` + {kbd}`K` to display all available shortcuts.
+
+<img title="posit logo" alt="posit logo" src="images/rstudio_shortcuts.png" width="800">
+
+
+Examples:
+
+* {kbd}`CTRL` + {kbd}`ENTER` to send the current row or a selected block of code to the console
+* {kbd}`CTRL` + {kbd}`2` to move the cursor to the console
+
+
+## R Basics
 
 ### Objects
 
-Everything that stores any kind of data in R is an **object**.
+What stores data - of any kind - in R is an **object**.
 
-* Assignment operators
-	+ **<-** or **=**
-	+ Essentially the same but, to avoid confusions:
-  		+ Use **<-** for assignments
-  	+ Keep **=** for functions arguments
-* Assigning a value to the object **B**: 
+<img title="panels" alt="panels" src="images/R_basics_objects.png" width="300">
+
+Assignment operators (how to assign data to the object):
+
+*  **<-** or **=**
+* Mostly the same but, to avoid confusions:
+    + Use **<-** for assignments
+    +  Keep **=** for functions arguments
+
+Assigning a value to the object **B**: 
+
 ```r
 B <- 10
 ```
-* Reassigning: modifying the content of an object:
+
+Reassigning: modifying the content of an object:
+
 ```r
 B + 10
 ```
 
 <span style="color:red">**B unchanged !!**</span><br>
+
+
 ```r
 B <- B + 10
 ```
 
 <span style="color:red">**B changed !!**</span><br>
 
-* You can see the objects you created in the upper right panel in RStudio: the environment.
+You can see the objects you created in the **environment** panel (upper right).
 
+
+```{note}
+Naming an object in R is flexible. You should nevertheless follow a few base rules:
+
+* You can use:
+  + Letters (note that object names case sensitive: A and a are NOT the same)
+  + Numbers (exception: the object name cannot start with a number)
+  + Underscores _
+* You cannot use:
+  + Spaces
+  + Most special characters
+```
 
 ### Data types and data structures
+
+#### Data types
 
 Each object has a data type:
 * Numeric (number - integer or double)
 * Character (text)
 * Logical (TRUE / FALSE)
+* Factors (categorical variables)
 
-Number:
+**Numeric**: numbers, floats
+
 ```r
-a <- 10
-mode(a)
-typeof(a)
-str(a)
+number_object <- 10
+mode(number_object)
+typeof(number_object)
+str(number_object)
 ```
 
-Text:
+**Character**: text, strings of characters
+
 ```r
-b <- "word"
-mode(b)
-typeof(b)
-str(b)
+text_object <- "word"
+mode(text_object)
+typeof(text_object)
+str(text_object)
 ```
+
+**Logical**: boolean values (TRUE or FALSE)
+
+
+```r
+logical_object <- TRUE
+mode(logical_object)
+typeof(logical_object)
+str(logical_object)
+```
+
+**Factor**: used to work with categorical variables. For example, in statistical modeling or graphing.
+
+Creating a factor starts by creating an object, that is then converted to a factor.
+
+```r
+factor_object <- factor(text_object)
+mode(factor_object)
+typeof(factor_object)
+str(factor_object)
+```
+
+
+#### Data structures
 
 The main data structures in R are:
 
 * Vector
-* Factor
 * Matrix
 * Data frame
+* List
 
-Create a vector:
+##### Vectors
+
+Vectors are one-dimensional and contain a single data type.
+
+Create a numeric vector:
 
 ```r
-a <- 1:5
+a <- c(1, 2, 3, 4, 5, 6)
+
+# same as:
+a <- 1:6
 ```
 
-Create a second vector, and check with elements of that second vector are also present in **a** with **%in%**:
+```{note}
+shorta <- 1
+
+# same as:
+shorta <- c(1)
+```
+
+`shorta` is a **vector of 1-element**.
+
+Check the length of (i.e. number of elements) a vector:
+
+```r
+length(a)
+```
+
+You can extract elements of a vector using the slicing operator **[]**:
+
+Extract 1st and 3rd elements of **a**:
+
+```r
+a[c(1,3)]
+```
+
+Extract all but the first element:
+
+```r
+a[-1]
+```
+
+
+Create a second numeric vector, and check which elements of that second vector are also present in **a** using operator **%in%**:
 
 ```r
 b <- 3:8
 
 b[b %in% a]
 ```
- 
-Check the length of (=number of elements in) a vector:
 
-```r
-length(b)
+```{tip}
+
+Table of comparison and logical operators that can be used for data selection and filtering:
+
+| Operator    | Description |
+| -------- | ------- |
+| <  | less than |
+| <= | less than or equal to |
+| > | greater than |
+| >= | greater than or equal to |
+| == | exactly equal to |
+| != | not equal to  |
+| !x | not x |
+| x\|y | x OR y |
+| x&y | x AND y |
+| %in% | checks if an element belongs to a vector |
+
 ```
 
-Create a data frame:
+You can replace one element of a vector by pointing to its position, e.g.:
 
 ```r
-# stringsAsFactors: ensures that characters are treated as characters and not as factors
-d <- data.frame(Name=c("Maria", "Juan", "Alba"), 
-        Age=c(23, 25, 31),
-        Vegetarian=c(TRUE, TRUE, FALSE),
-        stringsAsFactors = FALSE)
+b[2] <- 10
 ```
 
-Check dimensions of a dataframe:
+
+##### Matrices
+
+Matrices are two-dimensional and can only contain **one** data type.
+
+Create a numeric matrix:
+
+```r
+# define number of rows
+mat <- matrix(1:100, nrow=4)
+
+# define number of columns
+mat <- matrix(1:100, ncol=4)
+
+```
+
+Check dimensions (i.e. number of rows and number of columns) of a matrix:
 
 ```r
 # Number of rows
-nrow(d)
+nrow(mat)
 
 # Number of columns
-ncol(d)
+ncol(mat)
 
 # Dimensions (first element is the number of rows, second element is the number of columns)
-dim(d)
+dim(mat)
 ```
 
-Select rows of the data frame **if the Age column is superior to 24**:
+Display the first or last rows with `head` or `tail`:
 
 ```r
-d[d$Age > 24,]
+# first 6 rows (default)
+head(mat)
+
+# first 10 rows
+head(mat, n=10)
+
+# last 6 rows
+tail(mat)
 ```
 
-Select rows of the data frame **if the Age column is superior to 24 AND if Vegetarian is TRUE** :
+You can extract rows and columns of a matrix using the slicing operator **[]** and their position/index:
 
 ```r
-d[d$Age > 24 & d$Vegetarian == TRUE,]
+# first row
+mat[1,]
+
+# row 1 and 3
+mat[c(1,3),]
+
+# first column
+mat[,1]
+
+# column 2 and 3
+mat[,c(2, 3)]
+
+# or mat[,2:3]
+```
+
+
+##### Data frames
+
+Data frames are two-dimensional and can contain several data types (column-wise: one column will have a single data type).
+
+Create a three-column data frame :
+
+* `Name`: character column
+* `Age`: numeric column
+* `Vegetarian`: logical column
+
+```r
+# create data frame
+df <- data.frame(c("Maria", "Juan", "Alba", "Xavier", "Lara", "Max"), 
+        c(23, 25, 31, 28, 36, 34),
+        c(TRUE, TRUE, FALSE, FALSE, TRUE, FALSE))
+        
+# add column names
+colnames(df) <- c("Name", "Age", "Vegetarian")
+
+# do both steps at once
+df <- data.frame(Name=c("Maria", "Juan", "Alba", "Xavier", "Lara", "Max"), 
+        Age=c(23, 25, 31, 28, 36, 34),
+        Vegetarian=c(TRUE, TRUE, FALSE, FALSE, TRUE, FALSE))
+```
+
+Check dimensions (i.e. number of rows and number of columns) of a dataframe:
+
+```r
+# Number of rows
+nrow(df)
+
+# Number of columns
+ncol(df)
+
+# Dimensions (first element is the number of rows, second element is the number of columns)
+dim(df)
+```
+
+Check column names or row names:
+
+```r
+colnames(df)
+
+rownames(df)
+```
+
+You can extract rows - as with matrices - using the slicing operator: df[1,]
+
+You can extract columns of a data frame with:
+
+* Slicing operator **[]**
+  * Access using the column name: `df[,"Age"]`
+  * Access using the column index (i.e. position): `df[,2]`
+* Dollar sign **$**: `df$Age`
+
+Select rows of the data frame **if the Age column is greater than 24**:
+
+```r
+df[df$Age > 24,]
+```
+
+Select rows of the data frame based on multiple conditions, for example, **if the Age column is greater than 24 AND if Vegetarian is TRUE** :
+
+```r
+df[df$Age > 24 & df$Vegetarian == TRUE,]
+```
+
+Finally, select only columns of interest for your selection:
+
+```r
+df[df$Age > 24 & df$Vegetarian == TRUE, "Name"]
+```
+
+##### Lists
+
+Lists are one-dimensional: each element of a list can contain a different data structure!
+
+```r
+mylist <- list(my_df=df,
+              my_vector=b,
+              my_matrix=mat)
+```
+
+The `length` of a list gives you the number of elements.
+
+```r
+length(mylist)
+```
+
+You can extract elements of a list (and apply functions on them) using the double square brackets **[[]]**.
+
+```r
+# extract third element of the list with the index...
+mylist[[3]]
+# or the name
+mylist[["my_matrix"]]
+mylist$my_matrix
+
+# check dimensions of the third element
+dim(mylist[[3]])
 ```
 
 
 ## Paths and directories
 
-* Get the path of the current directory (know where you are working at the moment) with <b>getwd</b> (get working directory):
+Get/show the path of the current directory (i.e. working directory) with `getwd` (get working directory):
+
 ```r      
 getwd()
 ```
 
-* Change working directory with **setwd** (set working directory)<br>
-Go to a directory giving the absolute path: 
+Change working directory with `setwd` (set working directory).
+
+Go to a directory giving the *absolute* path:
+
 ```r
-setwd("~/rnaseq_course")
+setwd("~")
+# the home directory is likely different for each of you, but it could be like /users/username
 ```
-Go to a directory giving the relative path:
+
+```{note}
+**~** is a shortcut to your home directory
+```
+
+Now that you are in your home directory, you can create an `rnaseq_course` directory (if you have not created a folder for the course yet) and an `r_basics` directory:
+
 ```r
-setwd("differential_expression")
+dir.create("rnaseq_course/r_basics",  recursive=TRUE)
 ```
-You are now in: "~/rnaseq_course/differential_expression"
-<br>
+
+Go to the newly created directory using the *relative* path:
+
+```r
+setwd("./rnaseq_course/r_basics")
+
+# which is equivalent to
+setwd("~/rnaseq_course/r_basics")
+```
+
+You are now in: "~/rnaseq_course/r_basics"
+
 Move one directory "up" the tree:
+
 ```r 
 setwd("..")
+
+# and move back to r_basics
+setwd("r_basics")
 ```
-You are now in: "~/rnaseq_course"
+
+You are now back to: "~/rnaseq_course/r_basics"
 
 
 ## Missing values
 
 **NA** (Not Available) is a recognized element in R.
 
-* Finding missing values in a vector
+Finding missing values in a vector:
 
 ```r
-# Create vector
+# Create vector with a missing value
 x <- c(4, 2, 7, NA)
 
 # Find missing values in vector:
@@ -161,19 +463,19 @@ na.omit(x)
 x[ !is.na(x) ]
 ```
 
-* Some functions can deal with NAs, either by default, or with specific arguments:
+Some functions can deal with NAs, either by default, or with specific parameters:
 
 ```r
 x <- c(4, 2, 7, NA)
 
-# default arguments
+# default arguments: what happens?
 mean(x)
 
-# set na.rm=TRUE
+# set na.rm=TRUE for the mean function to handle (in this case, ignore) missing values
 mean(x, na.rm=TRUE)
 ```
 
-* In a matrix or a data frame, keep only rows where there are no NA values:
+In a matrix or a data frame, you can keep only rows where there are no NA values with:
 
 ```r
 # Create matrix with some NA values
@@ -185,67 +487,70 @@ mydata[complete.cases(mydata), ]
 na.omit(mydata)
 ```
 
-<br>
-Check this [R blogger post on missing/null values](https://www.r-bloggers.com/r-null-values-null-na-nan-inf/)
+For additional information, you can check this [R blogger post on missing/null values](https://www.r-bloggers.com/r-null-values-null-na-nan-inf/)
 
 
 ## Read in, write out
 
 ### On vectors
 
-* Read a file as a vector with the **scan** function
-
-```r
-# Read in file
-scan(file="file.txt")
-# Save in  object
-k <- scan(file="file.txt")
-```
-
-By default, scans "double" (numeric) elements: it fails if the input contains characters.<br>
-If non-numeric, you need to specify the type of data contained in the file: 
-
-```r
-# specify the type of data to scan
-scan(file="file.txt", 
-        what="character")
-scan(file="~/file.txt", 
-        what="character")
-```
-
-Regarding paths of files:<br>
-If the file is not in the current directory, you can provide a full or relative path. For example, if located in the home directory, read it as:
-
-```r
-scan(file="~/file.txt", 
-        what="character")
-```
-
-* Write the content of a vector in a file:
+Write the content of a vector in a file with `write`:
 
 ```r
 # create a vector
 mygenes <- c("SMAD4", "DKK1", "ASXL3", "ERG", "CKLF", "TIAM1", "VHL", "BTD", "EMP1", "MALL", "PAX3")
-# write in a file
+
+# write to a file
 write(x=mygenes, 
         file="gene_list.txt")
 ```
 
-Regarding paths of files:<br>
-When you write a file, you can also specify a full or relative path:
+You can specify a full or relative path where to write down a file:
 
 ```r
 # Write to home directory
 write(x=mygenes,
-        file="~/gene_list.txt")
+        file="~/rnaseq_course/r_basics/gene_list.txt")
+        
 # Write to one directory up
 write(x=mygenes,
         file="../gene_list.txt")
 ```
 
-### On data frames or matrices
 
-* Read in a file into a data frame with the **read.table** function:
+Read in a file into a vector object using `scan`:
+
+```r
+# Read in file
+scan(file="gene_list.txt")
+
+# Save scanned data into an object k
+k <- scan(file="gene_list.txt")
+```
+
+By default, the function scans for "double" (numeric) elements: it fails if the input contains characters.
+
+If reading non-numeric data, you need to specify the type of data contained in the file: 
+
+```r
+# specify the type of data to scan
+scan(file="gene_list.txt", 
+        what="character")
+```
+
+If the file is not in the current directory, you can provide a full or relative path. 
+
+For example, if the file is located in the home directory, read it as:
+
+```r
+scan(file="~/gene_list.txt", 
+        what="character")
+```
+
+
+### Data frames or matrices
+
+Read in a file as a data frame with **read.table**:
 
 ```r
 a <- read.table(file="file.txt")
@@ -257,7 +562,7 @@ You can convert it as a matrix, if needed, with:
 a <- as.matrix(read.table(file="file.txt"))
 ```
 
-* Write a data frame or matrix to a file:
+Write a data frame or matrix to a file with **write.table**:
 
 ```r
 write.table(x=a,
@@ -266,9 +571,9 @@ write.table(x=a,
 
 Useful arguments:
 
-<a href="https://biocorecrg.github.io/CRG_RIntroduction/images/readtable.png"><img src="images/writetable.png" width="550/"></a>
+<img title="writetable" alt="writetable" src="images/writetable.png" width="600">
 
-* Note that "\t" stands for tab-delimitation
+Note that **sep="\t"** stands for tab-delimitation; if reading a **.csv** file, you can change to **sep=","** (or use the dedicated write.scv function!).
 
 
 ## Install packages
@@ -283,17 +588,18 @@ Example: package base (write, table, rownames functions), package utils (read.ta
 All other packages:
 
 * [CRAN](https://cran.r-project.org): Comprehensive R Archive Network
-        + 15356<sup>*</sup> packages available
-        + find packages in https://cran.r-project.org/web/packages/
-        <img src="images/cran_packages.png" width="550"/>
+  + 23422\* packages available
+  + find packages in https://cran.r-project.org/web/packages/
+  + <img src="images/cran_packages.png" width="800"/>
 * [Bioconductor](https://www.bioconductor.org/):
-        + 1823<sup>*</sup> packages available
-        + find packages in https://bioconductor.org/packages
-        <img src="images/bioc_packages.png" width="550"/>
+  + 2361\* packages available
+  + find packages in https://bioconductor.org/packages
+  + <img src="images/bioc_packages.png" width="800"/>
 
-*<sup>*</sup>As of February 2020*
+\* As of March 2026
 
-Install a CRAN package using **install.packages**:
+
+Install a CRAN package using `install.packages`:
 
 ```r
 install.packages('BiocManager', repos = 'http://cran.us.r-project.org', dependencies = TRUE)
@@ -306,97 +612,191 @@ library('BiocManager')
 BiocManager::install('GOstats')
 ```
 
-## Exercise: warming up !
+## Exercises
 
-* Ex1.
-	* Create a numeric vector y which contains the numbers from 2 to 11, both included. 
-	* How many elements are in y? I.e what is the length of vector y ?
-	* Show the 3rd and the 6th elements of y.
-	* Show all elements of y that have a value inferior to 7.
+### Exercise 1
 
-* Ex2.
-	* Create the vector x of 1000 random numbers from the normal distribution (with rnorm).
-	* What are the mean, median, minimum and maximum values of x?
+* Create a numeric vector **y** containing numbers from 2 to 11 (both included). 
+* How many elements are in y?
+* Show the 3rd and the 6th elements of y.
+* Show all elements of y that have a value inferior to 7.
 
-* Ex3.
-	* Create vector y2 as: y2 <- c(1, 11, 5, 62,  NA, 18, 2, 8, NA)
-	* What is the sum of all elements in y2 ?
-	* Which elements of y2 are also present in y?
-	* Remove NA values from y2.
+:::{dropdown} Click to show correction
 
-* Ex4. 
-	* Create the following data frame:
+* Create a numeric vector **y** containing numbers from 2 to 11 (both included). 
 
-|43|181|M|
-|34|172|F|
-|22|189|M|
-|27|167|F|
+`y <- 2:11`
 
-with row names: **John, Jessica, Steve, Rachel** and column names: **Age, Height, Sex**.
+or 
+
+`y <- c(2, 3, 4, 5, 6, 7, 8, 9, 10, 11)`
+
+* How many elements are in y?
+
+`length(y)`
+
+* Show the 3rd and the 6th elements of y.
+
+`y[c(3,6)]`
+
+* Show all elements of y that have a value inferior to 7.
+
+`y[y < 7]`
+
+:::
+
+### Exercise 2
+
+* Create the vector **x** of 1000 random numbers from the normal distribution (see **rnorm** function).
+* What are the mean, median, minimum and maximum values of x?
+
+:::{dropdown} Click to show correction
+
+* Create the vector **x** of 1000 random numbers from the normal distribution (see **rnorm** function).
+
+`x <- rnorm(1000)`
+
+* What are the mean, median, minimum and maximum values of x?
+
+`mean(x); median(x); min(x); max(x)`
+
+or the more straightforward:
+
+`summary(x)`
+
+:::
+
+
+### Exercise 3
+
+* Create vector **y2** as: y2 <- c(1, 11, 5, 62,  NA, 18, 2, 8, NA)
+* What is the sum of all elements in y2 ?
+* Which elements of y2 are also present in y?
+* Remove NA values from y2.
+
+:::{dropdown} Click to show correction
+
+* Create vector **y2** as: 
+
+`y2 <- c(1, 11, 5, 62,  NA, 18, 2, 8, NA)`
+
+* What is the sum of all elements in y2 ?
+	
+`sum(y2, na.rm = TRUE)`
+
+* Which elements of y2 are also present in y?
+
+`y2[y2 %in% y]`
+
+* Remove NA values from y2.
+
+`y2 <- na.omit(y2)`
+
+:::
+
+### Exercise 4
+
+* Create the following data frame:
+
+|    | | |
+| -------- | ------- | -------- |
+| 43 | 181 | M |
+| 34 | 172 | F |
+| 22 | 189 | M |
+| 27 | 167 | F |
+
+with :
+
+* row names: **John, Jessica, Steve, Rachel**
+* column names: **Age, Height, Sex**.
+
+Then:
+
 * Check the structure of df with str().
 * Calculate the average age and height in df.
-* Change the row names of df so the data becomes anonymous (use for example Patient1, Patient2, etc.)
-* Write **df** to the file **mydf.txt** with **write.table()**. Explore parameters **sep**, **row.names**, **col.names**, **quote**.
+* Change the row names of df so the data becomes anonymous
+  + Use for example Patient1, Patient2, etc.
+* Write **df** to the file **mydf.txt** with **write.table()**. 
+  + Explore parameters **sep**, **row.names**, **col.names**, **quote**.
 
-<br>
-**CORRECTION**
+:::{dropdown} Click to show correction
 
-```r
-
-# Ex1.
-#Create a numeric vector y which contains the numbers from 2 to 11, both included.
-y <- 2:11
-# same as y <- c(2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-#How many elements are in y? I.e what is the length of vector y ?
-length(y)
-#Show the 3rd and the 6th elements of y.
-y[c(3, 6)]
-#Show all elements of y that have a value inferior to 7.
-y[y < 7]
-
-# Ex2.
-#Create the vector x of 1000 random numbers from the normal distribution (with rnorm).
-x <- rnorm(1000)
-#What are the mean, median, minimum and maximum values of x?
-mean(x); median(x); min(x); max(x)
-  # more straightforward:
-summary(x)
-
-# Ex3.
-#Create vector y2 as: y2 <- c(1, 11, 5, 62, NA, 18, 2, 8, NA)
-y2 <- c(1, 11, 5, 62, NA, 18, 2, 8, NA)
-#What is the sum of all elements in y2 ?
-sum(y2, na.rm = TRUE)
-# same as sum(na.omit(y2))
-#Which elements of y2 are also present in y?
-y2[y2 %in% y]
-#Remove NA values from y2.
-y2 <- na.omit(y2)
-
-# Ex4.
-#Create the following data frame (I will call it df):
-  #with row names: John, Jessica, Steve, Rachel 
-  #and column names: Age, Height, Sex.
+* Create the following data frame wih 
+  + row names: **John, Jessica, Steve, Rachel**
+  + column names: **Age, Height, Sex**.
+  
 df <- data.frame(Age=c(43, 34, 22, 27),
                  Height=c(181, 172, 189, 167),
                  Sex=c("M", "F", "M", "F"),
                  row.names = c("John", "Jessica", "Steve", "Rachel"))
-#Check the structure of df with str().
-str(df)
-#Calculate the average age and height in df.
-mean(df$Age) # same as mean(df[,"Age"])
-mean(df$Height) # same as mean(df[,"Height"])
-  # or
-colMeans(df[,c("Age", "Height")])
-#Change the row names of df so the data becomes anonymous 
-  # (use for example Patient1, Patient2, etc.)
-rownames(df) <- c("Patient1", "Patient2", "Patient3", "Patient4")
-#Write df to the file mydf.txt with write.table(). 
-  # Explore parameters sep, row.names, col.names, quote.
+
+* Check the structure of df with str().
+
+`str(df)`
+
+* Calculate the average age and height in df.
+
+`mean(df$Age)`
+
+same as `mean(df[,"Age"])`
+
+`mean(df$Height)`
+
+same as `mean(df[,"Height"])`
+
+
+* Change the row names of df so the data becomes anonymous
+  + Use for example Patient1, Patient2, etc.
+
+`rownames(df) <- c("Patient1", "Patient2", "Patient3", "Patient4")`
+
+* Write **df** to the file **mydf.txt** with **write.table()**. 
+  + Explore parameters **sep**, **row.names**, **col.names**, **quote**.
+
 write.table(df,
             "mydf.txt",
             sep="\t",
             row.names = TRUE,
             col.names = NA,
             quote = FALSE)
+
+:::
+
+### Exercise 5
+
+* Create a matrix called `grades` representing 4 students (rows) and 3 subjects (columns: Math, Science, English) with the following values:
+  * Student 1: 85, 92, 78
+  * Student 2: 70, 88, 95
+  * Student 3: 99, 91, 89
+  * Student 4: 60, 72, 68
+    
+* Extract the Science grade for Student 3
+
+* Calculate the average score for Math across all 4 students
+
+:::{dropdown} Click to show correction
+
+* Create a matrix called `grades` representing 4 students (rows) and 3 subjects (columns: Math, Science, English) with the following values:
+  * Student1: 85, 92, 78
+  * Student2: 70, 88, 95
+  * Student3: 99, 91, 89
+  * Student4: 60, 72, 68
+
+```r
+grades <- matrix(c(85, 92, 78, 79, 88, 95, 99, 91, 89, 60, 72, 68),
+                nrow=4,
+                byrow=TRUE,
+                dimnames=list(c("Student1", "Student2", "Student3", "Student4"), c("Math", "Science", "English"))
+                )
 ```
+
+* Extract the Science grade for Student 3
+
+`grades["Student3", "Science"]`
+
+* Calculate the average score for Math across all 4 students
+
+`mean(grades[,"Math"])`
+
+:::
+    

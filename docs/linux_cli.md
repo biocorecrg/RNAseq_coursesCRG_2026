@@ -1,4 +1,4 @@
-# Hands-on: Linux CLI refresher
+# Hands-on: Linux refresher
 
 ## Linux history
 
@@ -84,7 +84,7 @@ Other UNIX systems (e.g., Mac OS X) are similar, but not exactly the same.
 
 ## Move around
 
-We use what we name the Command Line Interface (CLI) Shell, in our case **Bash**, as an interface with the Operating System. 
+We use what we name the *Command Line Interface* (CLI) Shell, in our case **Bash**, as an interface with the Operating System. 
 
 
 ### Relative paths

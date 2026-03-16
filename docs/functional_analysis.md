@@ -308,40 +308,6 @@ htmlReport(hgOver, file="GOstats_BP.html")
 
 We can open the report in a web browser.
 
-### With R: clusterProfiler
-
-Load the **clusterProfiler** package:
-
-```r
-library(clusterProfiler)
-```
-
-**clusterProfiler** also works with **Entrez ID** (we got them for the GOstats analysis).
-
-```r
-# KEGG pathway enrichment
-KEGGresult <- enrichKEGG(gene = na.omit(unique(entrez$entrezgene)),
-                 organism = 'hsa',
-                 pvalueCutoff = 0.05)
-
-# Get results table
-kegg_final <- as.data.frame(KEGGresult)
-
-# Write table to file
-write.table(kegg_final, "clusterProfiler_KEGG_results.txt", sep="\t", row.names=F, col.names=T, quote=F)
-```
-
-Results table:
-
-| ID | Description | GeneRatio | BgRatio | pvalue | p.adjust |
-|:---:|:---:|:---:|:---:|:---:|:---:|
-| hsa01100 | Metabolic pathways | 88/850 | 1489/19000 | 4.64e-08 | 1.56e-05 |
-| hsa04060 | Cytokine-cytokine receptor interaction | 26/850 | 294/19000 | 3.18e-05 | 3.58e-03 |
-| hsa04061 | Viral protein interaction with cytokine and cytokine receptor | 12/850 | 100/19000 | 1.67e-04 | 8.04e-03 |
-| hsa04064 | NF-kappa B signaling pathway | 10/850 | 102/19000 | 2.49e-03 | 3.35e-02 |
-| hsa04137 | Mitophagy - animal | 11/850 | 65/19000 | 8.80e-06 | 1.48e-03 |
-| hsa04625 | C-type lectin receptor signaling pathway | 10/850 | 104/19000 | 2.90e-03 | 3.76e-02 |
-
 ## Enrichment based on ranked lists of genes using GSEA
 
 ### GSEA (Gene Set Enrichment Analysis)
@@ -393,8 +359,8 @@ The first column contains the gene ID (HUGO symbols for *Homo sapiens*).
 The second column contains any description or symbol, and will be ignored by the algorithm.
 The remaining columns contain normalized expressions: one column per sample.
 
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | NAME | DESCRIPTION | 5p4_25c | 5p4_27c | 5p4_28c | 5p4_29c | 5p4_30c | 5p4_31cfoxc1 | ... |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | DKK1 | NA | 0 | 0 | 0 | 0 | 0 | 0 | ... |
 | HGT | NA | 0 | 0 | 0 | 0 | 0 | 0 | ... |
 
@@ -529,6 +495,10 @@ From GSEA documentation: *"Genes with a Yes value in this column contribute to t
 
 | |
 |:---:|
+| ![GSEA gene set enrichment plot](images/gsea_results_enrich_plot.png) |
+
+| |
+|:---:|
 | ![GSEA gene table](images/gsea_results_details2.png) |
 
 Heatmap of all genes from that gene set (ranked by GSEA) for each sample:
@@ -546,6 +516,40 @@ Heatmap of all genes from that gene set (ranked by GSEA) for each sample:
   * It is also good to go back to the **differential expression** analysis table and make sure that their **adjusted-value** is low.
 * You can also upload **your own gene sets** (for example a gene signature taken from a specific paper) to test against your list of genes, using one of the [GSEA gene set database formats](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#Gene_Set_Database_Formats).
 :::
+
+## With R: clusterProfiler
+
+Load the **clusterProfiler** package:
+
+```r
+library(clusterProfiler)
+```
+
+**clusterProfiler** also works with **Entrez ID** (we got them for the GOstats analysis).
+
+```r
+# KEGG pathway enrichment
+KEGGresult <- enrichKEGG(gene = na.omit(unique(entrez$entrezgene)),
+                 organism = 'hsa',
+                 pvalueCutoff = 0.05)
+
+# Get results table
+kegg_final <- as.data.frame(KEGGresult)
+
+# Write table to file
+write.table(kegg_final, "clusterProfiler_KEGG_results.txt", sep="\t", row.names=F, col.names=T, quote=F)
+```
+
+Results table:
+
+| ID | Description | GeneRatio | BgRatio | pvalue | p.adjust |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| hsa01100 | Metabolic pathways | 88/850 | 1489/19000 | 4.64e-08 | 1.56e-05 |
+| hsa04060 | Cytokine-cytokine receptor interaction | 26/850 | 294/19000 | 3.18e-05 | 3.58e-03 |
+| hsa04061 | Viral protein interaction with cytokine and cytokine receptor | 12/850 | 100/19000 | 1.67e-04 | 8.04e-03 |
+| hsa04064 | NF-kappa B signaling pathway | 10/850 | 102/19000 | 2.49e-03 | 3.35e-02 |
+| hsa04137 | Mitophagy - animal | 11/850 | 65/19000 | 8.80e-06 | 1.48e-03 |
+| hsa04625 | C-type lectin receptor signaling pathway | 10/850 | 104/19000 | 2.90e-03 | 3.76e-02 |
 
 ## Further reading
 
