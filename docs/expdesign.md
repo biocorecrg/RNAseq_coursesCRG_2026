@@ -598,36 +598,463 @@ Increasing sequencing depth cannot compensate for insufficient biological replic
 While deeper sequencing improves sensitivity for detecting transcripts, it does not improve estimation of biological variability between samples.
 :::
 
+<br>
+
+:::{admonition} 
+:class: note
+Consider using existing tools to estimate the sample size for the target power
+- The R library **[SsizeRNA](https://pubmed.ncbi.nlm.nih.gov/27029470/)** (Sample Size Calculation for RNA-Seq) 
+allows for predicting the sample size used in an experiment with the target power, 
+considering variable fold changes for specific genes, 
+while also enabling the validation of predictions through a built-in function. 
+- **[PROPER](https://pmc.ncbi.nlm.nih.gov/articles/PMC4287952/)** (PROspective Power Evaluation for RNAseq) provides methods to assess the relationship between power and sample size in the context of differential expression (DE) detection from RNA-seq data, taking into account the read depth. It performs a comprehensive evaluation of statistical power and the actual type I error depending on the sample size, based on simulation studies.
+:::
+
+<br><br>
+
+---
+
+## Randomization or How to avoid systematic bias
+
+:::{admonition} 
+:class: important
+Replication → estimate biological variability and increase statistical power
+Randomization → avoid systematic bias by preventing correlation between biological conditions and technical factors
+:::
+
+
+### Variables, factors, and levels
+
+In experimental design, experiments are described in terms of **variables**, **factors**, and **levels**.
+
+| Term | Meaning | Example in RNA-seq |
+|---|---|---|
+| Variable | Any measured or controlled property | gene expression level |
+| Factor | A variable that defines experimental conditions | treatment, genotype, sex |
+| Level | The specific value of a factor | treated / control |
+
+Examples of **biological factors** in an RNA-seq experiment:
+
+| Factor | Levels |
+|---|---|
+| Treatment | control, drug |
+| Sex | male, female |
+| Genotype | wild type, mutant |
+
+Biological factors define the structure of the experiment 
+and determine how samples will be compared in statistical models.
+
+<br>
+
+:::{admonition} **Technical vs biological factors**
+:class: important
+- biological factor → treatment, genotype
+- **technical factor → batch, lane**
+:::
+
+Common sources of technical variation in an RNA-seq experiment:
+
+- **sample processing order**
+- **RNA extraction batches**
+- **library preparation batches**
+- **sequencing lanes or flowcells**
+
+Therefore, if samples from one experimental condition are processed 
+together, **technical effects may become confounded 
+with biological conditions**, and it becomes impossible 
+to distinguish true biological effects from technical artifacts.
+
+<br>
+
+:::{admonition} **Confound** (verb) - definition
+:class: note
+To cause surprise or confusion, especially by not according with their expectations.
+:::
+
+
+<br>
 
 
 ---
 
 
+### Randomization in practice
+
+**The goal of the randomization technique** 
+is to distribute potential technical variation 
+**evenly across experimental groups**, 
+ensuring that observed differences between conditions are more likely to reflect biological differences rather than systematic bias.
+
+<br>
+Randomization should be applied at every stage 
+of the experimental workflow where technical variation 
+may occur.
+
+
+:::{admonition} **Samples must be randomly distributed across experimental steps:**
+:class: important
+- sample processing order
+- RNA extraction batches
+- library preparation
+- sequencing lanes
+:::
 
 
 
+For example, a problematic design would be:
+
+| Lane | Samples |
+|---|---|
+| Lane 1 | all control samples |
+| Lane 2 | all treated samples |
+
+In this case, any **lane effect** would be indistinguishable from the treatment effect.
+
+A better design distributes samples randomly:
+
+| Lane | Samples |
+|---|---|
+| Lane 1 | control, treated, control |
+| Lane 2 | treated, control, treated |
+
+Randomization ensures that technical variation is spread across biological experimental groups.
+<br>
+Randomization protects against **unknown or uncontrolled sources of technical variation** 
+such as subtle differences in sample handling, reagent performance, or sequencing runs. By distributing samples from different biological conditions across experimental steps, randomization prevents these unknown factors from becoming systematically associated with the biological condition.
+
+<br>
+
+---
+
+### Batch effects in RNA-seq
+
+A **batch** is a group of samples processed together under the same technical conditions during an experimental step.  
+Batches can introduce systematic technical variation unrelated to the biological factors of interest.
+
+<br>
+
+Examples of batches in RNA-seq experiments:
+
+| Experimental step     | Example of batch                            |
+|-----------------------|---------------------------------------------|
+| RNA extraction        | samples extracted on the same day           |
+| library preparation   | samples prepared using the same reagent kit |
+| sequencing            | samples run on the same flowcell or lane    |
+| laboratory processing | samples processed in the same lab           |
+
+<br>
+
+#### How to detect potential batches?
+
+Ask whether technical conditions differed across samples:
+
+- Were all RNA isolations performed on the same day?
+- Were all library preparations performed on the same day?
+- Did the same person perform the RNA isolation/library preparation for all samples?
+- Did you use the same reagents for all samples?
+- Did you perform the RNA isolation/library preparation in the same location?
+
+If any answer is **“No”**, then **technical batches may exist**.
+
+<br>
+
+Having batches does **not automatically mean there is a batch effect problem**.  
+Batches are common and often unavoidable in real experiments.
+
+**The batch effect becomes problematic when the batch variable is correlated with the biological condition of interest**, making it difficult or impossible to distinguish biological effects from technical variation.
+
+---
+
+#### Batches exist but are randomized (good design)
+
+| Batch   | Samples                 |
+|--------|--------------------------|
+| Batch 1 | control, **treated** |
+| Batch 2 | control, **treated** |
+| Batch 3 | control, **treated** |
+| Batch 4 | control, **treated** |
+
+Here, batch and condition are independent.
+
+Batch effects may exist but **can be separated from the biological effect**.
+
+Solution: batch can be ignored if its effect is small or modeled (in DESeq, design = ~ batch + condition)
 
 
+---
+
+#### Batches exist and are partially correlated (risky design)
+
+| Batch   | Samples                 |
+|--------|--------------------------|
+| Batch 1 | **treated**, **treated** |
+| Batch 2 | control, **treated** |
+| Batch 3 | control, **treated** |
+| Batch 4 | control, control |
+
+Here, batch and condition are **partially correlated**.
+
+Batch effects can still be modeled statistically, 
+but the design is **suboptimal** and 
+may reduce statistical power.
+
+Solution: batch can be modeled (in DESeq, design = ~ batch + condition)
 
 
+---
+
+#### Batch is fully confounded with condition (fatal design error):
+
+| Batch   | Samples          |
+| ------- | ---------------- |
+| Batch 1 | **treated**, **treated** |
+| Batch 2 | control, control |
+| Batch 3 | **treated**, **treated** |
+| Batch 4 | control, control |
+
+treatment effect = batch effect
+
+The biological condition is perfectly confounded with the batch variable.
+
+**No statistical method can separate these effects.**
 
 
-## Factorial design to address wide range of the result applicability
+:::{admonition} **Batch effect rule**
+:class: important
+Batch effects are only problematic when the batch variable is correlated with the biological condition being tested.
+:::
+
+<br>
+
+---
+
+## Blocking or How to control known variation
+
+:::{admonition} 
+:class: important
+Replication → estimate biological variability and increase statistical power
+Randomization → avoid systematic bias by preventing correlation between biological conditions and technical factors
+Blocking → control known variation
+:::
+
+Blocking is used when a known source of variation exists 
+(for example, library preparation batches or patients).
+<br>Blocking handles known, recorded factors explicitly modeling batch as variable.
+<br> While randomization protects against factors that are not modeled or cannot be modeled.
+
+
+Even if batches contain the same number of samples per condition,
+processing order can introduce bias 
+(e.g., reagent degradation, operator fatigue - technical factors that cannot be modeled).
+
+**Example: systematic bias caused by processing order**
+<br>Batch 1
+
+| Sample | treated | treated | treated | control | control | control |
+|--------|---------|---------|---------|---------|---------|---------|
+| Processing order | 1 | 2 | 3 | 4 | 5 | 6 |
+
+<br>Batch 2
+
+| Sample | control | control | control | treated | treated | treated |
+|--------|---------|---------|---------|---------|---------|---------|
+| Processing order | 1 | 2 | 3 | 4 | 5 | 6 |
+
+
+Since the processing order can introduce unknown bias that cannot be modeled,
+randomization has to be applied.
+
+**Randomized processing order**
+<br>Batch 1
+
+| Sample | control | treated | control | treated | treated | control |
+|--------|---------|---------|---------|---------|---------|---------|
+| Processing order | 1 | 2 | 3 | 4 | 5 | 6 |
+
+<br>Batch 2
+
+| Sample | treated | control | treated | control | control | treated |
+|--------|---------|---------|---------|---------|---------|---------|
+| Processing order | 1 | 2 | 3 | 4 | 5 | 6 |
+
+<br>Randomizing the processing order distributes potential technical variation (e.g. reagent degradation or operator effects) across biological conditions.
+
+
+:::{admonition} **Key message**
+:class: important
+Randomize what you cannot control, 
+<br>block what you can control (using batch in statistical model: design = ~ batch + condition).
+:::
+Randomize what you cannot control, block what you can control.
+
+<br>
+
+---
+
+## Factorial designs and interactions
+
+:::{admonition} 
+:class: important
+Replication → estimate biological variability and increase statistical power
+Randomization → avoid systematic bias by preventing correlation between biological conditions and technical factors
+Blocking → control known variation
+Factorial design → structure biological questions
+:::
+
+Many RNA-seq experiments involve more than one biological factor.  
+When multiple factors are studied simultaneously, 
+the experiment follows a **factorial design**.
+
+Factorial designs allow researchers to investigate 
+the effects of multiple variables in a single experiment and to test whether these variables interact with each other.
 
 <div style="display:flex; justify-content:center;">
 
 | |
 |:---:|
 | ![fishy](images/factorial_design_1.jpg) | 
-| *Figure is adapted from Cambridge University's Experimental Design Manual 2016*|
+| Example of a factorial experimental design with two factors: treatment and sex. The design allows testing main effects and their interaction. <br> *Figure is adapted from Cambridge University's Experimental Design Manual 2016* |
 
 </div>
 
-done? 
+In this example, the experiment contains two factors (biological variables):
+
+- **Treatment** (control vs treated)
+- **Sex** (male vs female)
+
+Each factor has two levels, producing four experimental groups.
+<br>This is a **2 × 2 factorial design**.
+
+Such a design allows testing:
+
+- **Main effect of treatment** - Does the treatment change gene expression?
+- **Main effect of sex** - Do males and females differ in gene expression?
+- **Interaction between treatment and sex** - Does the treatment affect males and females differently?
+
+An **interaction** occurs when the effect of one factor depends on the level of another factor.
+
+The real statistical test of interaction is:
+```
+(treated_males − control_males)
+−
+(treated_females − control_females)
+```
+
+Example for a specific gene:
+
+| Sex | Control | Drug |
+|---|---|---|
+| Male | low expression | high expression |
+| Female | low expression | unchanged |
+
+In this example, the treatment changes gene expression in **males but not females**, 
+indicating a **treatment × sex interaction**.
+
+That is,
+```
+(treated_male − control_male)
+≠
+(treated_female − control_female)
+```
+
+This difference of differences is exactly what the interaction term tests.
+
+In RNA-seq analysis, for each gene, a model such as
+```
+design = ~ sex + treatment + sex:treatment
+```
+tests three things:
+
+| term          | interpretation                                 |
+| ------------- | ---------------------------------------------- |
+| sex           | baseline difference between males and females  |
+| treatment     | treatment effect averaged across sexes         |
+| sex:treatment | whether treatment effect differs between sexes |
+
+For our example gene:
+
+| Effect           | Interpretation                                                |
+| ---------------- | ------------------------------------------------------------- |
+| sex effect       | none apparent in controls                                     |
+| treatment effect | differs between sexes                                         |
+| interaction      | **suggested by the pattern but must be tested statistically** |
+
+The pattern suggests a potential **treatment × sex interaction**, 
+because the treatment increases expression in males 
+but not in females. 
+However, whether this interaction is statistically significant depends on the variability between replicates and the number of samples.
+
+<br>
+
+---
+
+### Why factorial designs are useful
+
+Factorial designs allow researchers to:
+
+- test multiple biological hypotheses in a single experiment
+- increase experimental efficiency
+- avoid performing multiple separate experiments
+
+However, factorial designs require 
+**sufficient replication in each experimental group** 
+to reliably estimate effects and interactions.
+
+When multiple factors are studied, the number of experimental groups increases because each combination of factor levels must be measured.
+
+Example:
+
+| Treatment | Sex |
+|---|---|
+| control | male |
+| control | female |
+| drug | male |
+| drug | female |
+
+This is a **2 × 2 factorial design**, producing four experimental groups.
+
+If each group contains *n* biological replicates, the total number of samples becomes:
+```
+total samples = number of groups × replicates per group
+```
+
+
+For example:
+
+| Replicates per group | Total samples |
+|---|---|
+| 3 | 12 |
+| 5 | 20 |
+| 8 | 32 |
+
+In factorial experiments, replication is needed not only to estimate the **main effects** of each factor, but also to estimate **interactions between factors**.
+
+An interaction occurs when the effect of one factor depends on the level of another factor.  
+Statistically, interaction effects compare **differences between differences**.
+
+Example interaction test:
+```
+(treated_male − control_male) − (treated_female − control_female)
+```
+
+
+Because interaction terms involve additional comparisons and are often smaller than main effects, they typically require **more biological replication** to detect reliably.
+
+
+In RNA-seq experiments, factorial designs are common when studying treatment effects across **sex, genotype, time points, or environmental conditions**.
+
+:::{admonition} 
+:class: important
+A practical rule of thumb is that each experimental group 
+should contain **at least 3–5 biological replicates**, 
+although larger numbers are often required when studying subtle effects or interactions.
+:::
 
 
 
-## Power analysis & sample size
+---
+
+## Appendix. Power analysis & sample size
 
 Sample size calculations, power calculations and power analysis (the terms are used interchangeably) are a way of determining the appropriate number of replicates (the sample size) for a study.
 
@@ -646,7 +1073,9 @@ If all other parameters remain the same, a larger experiment will have more powe
 * The type of statistical test performed
 
 ### Example 
-We study the difference of some measurement in two populations (in which we assume this variable is normally distributed and variance of two populations are the same). 
+We study the difference of some measurement in two populations, 
+in which we assume this variable is normally distributed,
+so we could use the t-test on the difference of means. 
 <br/>
 
 We draw two samples (n=2) from each population independently and randomly and get
@@ -656,11 +1085,14 @@ y = c(17,19)
 ```
 
 
-We run the *t-test on difference of means* and get **p-value=0.03** *( in R, use function t.test(x, y) )*.
+We run the *t-test on difference of means* (it is equal 8)
+and get **p-value=0.03** *( in R, use function t.test(x, y) )*.
 
 <br/>
 
-Since we know the variance for x and y, *var(x) = 2; var(y) = 2*, we can calculate the power of the t-test to detect the observed **effect size delta**  *( in R, use function power.t.test(n, delta, sd, sig.level = 0.05) )*
+Since we know the variance for x and y, *var(x) = 2; var(y) = 2*, 
+we can calculate the power of the t-test to detect the observed **effect size delta**  
+*( in R, use function power.t.test(n, delta, sd, sig.level = 0.05) )*
 ```
 delta = (mean(y) - mean(x)) / sqrt(var) = 8 / sqrt(2)
 
@@ -679,22 +1111,32 @@ NOTE: n is number in *each* group
 ```
 
 
-The obtained **power = 0.56**. This means that **Type II error** (or the probability of accepting a false null hypothesis, that is, concluding that there is NO difference when in fact there is the difference) **= 1 - power = 44% !!!!** – in roughly 44% of tests conducted with **these parameters for n and sd**, the given effect size delta will be NOT seen as significant even when it is significant. 
+The obtained **power = 0.56**. 
+This means that **Type II error**,
+or the probability of accepting a false null hypothesis;
+ that is, concluding that there is NO difference in means
+ when in fact there is the difference) is
+ **= 1 - power = 44% !!!!** 
+ That means that in 44% of tests conducted with 
+ **these parameters for n and sd**, 
+ the given effect size delta will be NOT seen as significant even when it is significant. 
 
-It is a waist of resources to conduct such an **under-powered study**. 
+It is a waste of resources to conduct such an **under-powered study**. 
 
-If we want to detect this effect size (difference in means of 8) with higher power, we have to increase the number of samples (n).
+If we want to detect this effect size (difference in means of 8) with higher power, 
+we have to increase the number of samples (n).
 
 <br/>
 
-**But what difference in means can we detect with just 2 samples at a sufficient enough power?**
+**But what difference in means can we detect with just 2 samples at a sufficient power?**
 
 
 ```
 x = c(9, 11)
 y = c(24, 26)
 ```
-We run the t-test on difference of means and get **p-value=0.009**.
+We run the t-test on the difference of means (it is equal 15) 
+and get **p-value=0.009**.
 
 
 Since we know the variance for x and y, *var(x) = 2; var(y) = 2*, we can calculate the power of the t-test to detect the observed effect size:
@@ -715,9 +1157,15 @@ delta = (mean(y) - mean(x)) / sqrt(sd) = 15 / sqrt(2)
 
 
 The obtained **power = 0.94 !!!** 
-This is an **adequtely powered experiment**. That is if the true difference of means of two populations is 15, we can detect it drawing only 2 random and independent samples from each population. And while conducting the t-test we will commit Type II error in only 6% of tests; that is, the given effect size will be NOT seen as significant (p-value will be above 0.05). 
+This is an **adequtely powered experiment**. 
+That is, if the true difference of means of two populations is 15, 
+we can detect it by drawing only 2 random and independent samples from each population. 
+ That means that in only 6% (1 - power) of tests conducted with 
+ **these parameters for n and sd**, 
+ the given effect size delta will be NOT seen as significant even when it is significant. 
 
-If however the significance level alpha becomes more stringent, say 0.01, the power will decrease:
+If however, the significance level alpha becomes more stringent,
+ say 0.01, the power will decrease to 0.43:
 ```
 > power.t.test(n = 2, delta = 15/sqrt(2), sd = sqrt(2), sig.level = 0.01)
 
@@ -747,9 +1195,14 @@ We can calculate directly how many samples are needed to observe that effect siz
     alternative = two.sided
 
 ```
+n=2.54 --> We need to draw 3 samples from each group of our population to 
+observe the difference of means = 15 
+at significance level = 0.01 and power = 0.9
 
+<br>
 
-Or, for difference in means = 2 at power=0.8 and significance level=0.05:
+For a much smaller effect size of difference in means = 2 
+at power=0.8 and significance level=0.05, we need n=17 (!):
 ```
 > power.t.test(power = 0.8, delta = 2/sqrt(2), sd = sqrt(2), sig.level = 0.05)
 
@@ -765,127 +1218,77 @@ Or, for difference in means = 2 at power=0.8 and significance level=0.05:
 NOTE: n is number in *each* group
 ```
 
-<br/>
+<br>
 
-Consider also examples on page 36 of the [Cambridge manual](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
+---
 
-<br/>
+## References
 
-## Design of RNA-seq experiment
+### RNA-seq experimental design and replication
 
-| Things to consider|
-| :---:  |
-|<img src="images/exp_design.jpg" width="700" align="middle" />|
-|from [https://galaxyproject.org/tutorials/rb_rnaseq/](https://galaxyproject.org/tutorials/rb_rnaseq/)|
+- **Schurch NJ. RNA. 2016.**  
+  *How many biological replicates are needed in an RNA-seq experiment and which differential expression tool should you use?*  
+  [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)
 
-<br/>
+- **Liu Y. Bioinformatics. 2014.**  
+  *RNA-seq differential expression studies: more sequence or more replication?*  
+  [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/)
 
+- **Tarazona S. Genome Research. 2011.**  
+  *Differential expression in RNA-seq: a matter of depth or replication?*  
+  [https://genome.cshlp.org/content/21/12/2213](https://genome.cshlp.org/content/21/12/2213)
 
-## Technical vs. biological replicates
+- **SEQC Consortium. Nature Biotechnology. 2014.**  
+  *A comprehensive assessment of RNA-seq accuracy, reproducibility and information content by the Sequencing Quality Control Consortium.*  
+  [https://pmc.ncbi.nlm.nih.gov/articles/PMC4321899](https://pmc.ncbi.nlm.nih.gov/articles/PMC4321899)
 
-**Technical replicates can be defined as different library preparations from the same RNA sample.** They should account for batch effects from the library preparation such as reverse transcription and PCR amplification. To avoid possible lane effects (e.g., differences in the sample loading, cluster amplification, and efficiency of the sequencing reaction), it is good practice to multiplex the same sample over different lanes of the same flowcell. In most cases, technical variability introduced by the sequencing protocol is quite low and well controlled.
+- **Degen R. PLOS Computational Biology. 2025.**  
+  *Replicability of RNA-seq differential expression results with small sample sizes.*  
+  [https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011630)
 
-**Technical replicates** are samples in which the starting biological material is the same, but the replicates are processed separately: there, we test the technical variability. It can be done for example to assess the **variability in library preparation**, or in the **sequencing** part itself.
-
-Technical variation of the sequencing protocols is very low: **hence technical replicates are nowadays considered unnecessary** (in the era of microarrays, it was more problematic).
-
-<br/> 
-
-**Biological replicates** are samples in which the starting biological material is different. It could include:
-  * Different organisms
-  * Different cell cultures
-  * Different samplings of the same tumors
-
-Why are **biological** replicates important?
-
-They are crucial to assess the **variability within an experimental group**: the more the number of replicates, the better this assessment, and thus the more precise the differential expression measurement.
-
-<br/> 
-
-**Questions:** Are those samples technical or biological replicates?
-* Three samples of blood were obtained from a healthy patient not under any treatment during three consecutive days at the same hour.
-* Three samples of blood were obtained from a healthy patient not under any treatment during a day in the morning, after lunch and after dinner.
-* Three samples of blood were obtained from three healthy patient not under any treatment.
-* Bone marrow was obtained from 12 mice. Cells from 6 mice were pooled to form sample 1; and cells from another 6 mice, to make sample 2.  
+- **Antoszewski M. Methods. 2025.**  
+  *A practical guide to designing RNA-seq experiments.*  
+  [https://www.sciencedirect.com/science/article/pii/S2001037025005525](https://www.sciencedirect.com/science/article/pii/S2001037025005525)
 
 
-<br/>
+---
 
-From [ENCODE Guidelines and Best Practices for RNA-Seq](https://www.encodeproject.org/documents/cede0cbe-d324-4ce7-ace4-f0c3eddf5972/@@download/attachment/ENCODE%20Best%20Practices%20for%20RNA_v2.pdf):
-"In all cases, experiments should be performed with **two or more biological replicates**, unless there is a compelling reason why this is impractical or wasteful (e.g. overlapping time points with high temporal resolution). **A biological replicate is defined as an independent growth of cells/tissue** and subsequent analysis. **Technical replicates from the same RNA library are not required, except to evaluate cases where biological variability is abnormally high.** In such instances, separating technical and biological variation is critical. In general, detecting and quantifying low prevalence RNAs is inherently more variable than high abundance RNAs. As part of the ENCODE pipeline, annotated transcript and genes are quantified using RSEM and the values are made available for downstream correlation analysis. 
-**Replicate concordance:** the gene level quantification should have a Spearman correlation of >0.9 between **isogenic replicates** *(Two replicates from biosamples derived from the same human donor or model organism strain. These biosamples have been treated separately; i.e. two growths, two separate knockdowns, or two different excisions)* and >0.8 between **anisogenic replicates** *(Two biological replicates from similar tissue biosamples derived from different human donors or model organism strains)*."
+### Statistical power and experimental design
 
-<br/>
+- **Lieber RL. Journal of Orthopaedic Research. 1990.**  
+  *Statistical significance and statistical power in hypothesis testing.*  
+  [http://muscle.ucsd.edu/More_HTML/papers/pdf/Lieber_JOR_1990.pdf](http://muscle.ucsd.edu/More_HTML/papers/pdf/Lieber_JOR_1990.pdf)
 
+- **Biau DJ. Emergency Medicine Journal. 2003.**  
+  *An introduction to power and sample size estimation.*  
+  [https://emj.bmj.com/content/20/5/453](https://emj.bmj.com/content/20/5/453)
 
-## Number of replicates in RNA-seq experiment
+- **Button KS. Nature Reviews Neuroscience. 2013.**  
+  *Power failure: why small sample size undermines the reliability of neuroscience.*  
+  [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5367316/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5367316/)
 
-From [Schurch, et al., RNA, 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/):
-"RNA-seq is now the technology of choice for genome-wide differential gene expression experiments, but it is not clear how many biological replicates are needed to ensure valid biological interpretation of the results or which statistical tools are best for analyzing the data. An RNA-seq experiment with 48 biological replicates in each of two conditions was performed to answer these questions and provide guidelines for experimental design. **With three biological replicates, nine of the 11 tools evaluated found only 20%–40% of the significantly differentially expressed (SDE) genes identified with the full set of 42 clean replicates. This rises to >85% for the subset of SDE genes changing in expression by more than fourfold. To achieve >85% for all SDE genes regardless of fold change requires more than 20 biological replicates.**" 
+- **Gigerenzer G. Psychological Science. 2004.**  
+  *Mindless statistics.*  
+  [http://library.mpib-berlin.mpg.de/ft/gg/GG_Mindless_2004.pdf](http://library.mpib-berlin.mpg.de/ft/gg/GG_Mindless_2004.pdf)
 
-| Recommendations for RNA-seq experiment design for identifying differentially expressed (DE) genes|
-| :---:  |
-|<img src="images/fig2_schurch_2016.png" width="700" align="middle" />|
-| from [Schurch, et al., RNA, 2016; Fig 2.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)|
+---
 
-Final recommendations from this paper:
-* At least 6 replicates per condition for all experiments.
-* At least 12 replicates per condition for experiments in which identifying of the majority of all DE genes is important.
-* For experiments with <12 replicates per condition; use edgeR (exact) or DESeq2.
-* For experiments with >12 replicates per condition; use DESeq.
-* Apply a fold-change threshold (T) appropriate to the number of replicates per condition between 0.1 ≤ abs(T) ≤ 0.5.
+### Guidelines and educational resources
 
-<br/>
+- **ENCODE Consortium.**  
+  *Guidelines and Best Practices for RNA-seq.*  
+  [https://www.encodeproject.org/documents/cede0cbe-d324-4ce7-ace4-f0c3eddf5972/@@download/attachment/ENCODE%20Best%20Practices%20for%20RNA_v2.pdf](https://www.encodeproject.org/documents/cede0cbe-d324-4ce7-ace4-f0c3eddf5972/@@download/attachment/ENCODE%20Best%20Practices%20for%20RNA_v2.pdf)
 
+- **Statistics Knowledge Portal – Design of Experiments.**  
+  [https://www.jmp.com/en/statistics-knowledge-portal/design-of-experiments/key-design-of-experiments-concepts/key-principles-of-experimental-design](https://www.jmp.com/en/statistics-knowledge-portal/design-of-experiments/key-design-of-experiments-concepts/key-principles-of-experimental-design)
 
-## RNA-Seq: Paired-end vs. single-end reads, read size and sequencing depth
+- **Experimental Design Assistant (NC3RS).**  
+  [https://eda.nc3rs.org.uk/experimental-design](https://eda.nc3rs.org.uk/experimental-design)
 
-| Paired-end read |
-| :---:  |
-|<img src="images/read.png" width="400" align="middle" />|
+- **Harvard Chan Bioinformatics Core RNA-seq training materials.**  
+  [https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md](https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md)
 
-<br/>
-Sequencing depth refers to the number of reads covering each genomic position, on average.
-
-It is calculated as **(total number of reads * average read length) / total length of genome**. However, since in RNA-seq experiments scientists are dealing with transcriptomes rather than genomes, it is conventinal to tak about **the number of reads**.
-
-
-### General gene-level differential expression
-* For large genomes (human/mouse), ENCODE suggests to have per sample 30 million single-end (mappable to the genome) reads of size 50 bp and more (and use stranded protocol with polyA selection).
-
-### Gene-level differential expression with detection of low-expressed genes
-* For large genomes, 30-60M single-end (aligned to the genome) reads of size 50 bp and more (stranded protocol with polyA selection).
-
-### Differential expression of gene isoforms and detection of new isoforms
-* 50-100M paired-end reads of size 100 bp or more
-
-### *De novo* transcriptome assembly
-* 100-200M paired-end reads of size 150 bp or more
-
-<br/>
-
-| Adding more sequencing depth after 10 M reads gives diminishing returns on power to detect DE genes, whereas adding biological replicates improves power significantly regardless of sequencing depth |
-| :---:  |
-|<img src="images/seq_depth_Bioinformatics_2014.png" width="800" align="middle" />|
-| from [Liu et al., RNA-seq differential expression studies: more sequence or more replication? Bioinformatics, 2014](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/)|
-
-
-
-<br/>
-
-## Resources
-* [ENCODE Guidelines and Best Practices for RNA-Seq](https://www.encodeproject.org/documents/cede0cbe-d324-4ce7-ace4-f0c3eddf5972/@@download/attachment/ENCODE%20Best%20Practices%20for%20RNA_v2.pdf)
-* [The Experimental Design Assistant from NC3RS, UK](https://eda.nc3rs.org.uk/experimental-design)
-* [https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md](https://github.com/hbctraining/rnaseq_overview/blob/master/lessons/experimental_planning_considerations.md)
-* [Experimental design manual, Cambridge University, UK ](https://rawgit.com/bioinformatics-core-shared-training/experimental-design/master/ExperimentalDesignManual.pdf)
-* [Paper on statistical power in biomedical science](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5367316/)
-* [Paper "Statistical significance and statistical power in hypothesis testing"](http://muscle.ucsd.edu/More_HTML/papers/pdf/Lieber_JOR_1990.pdf)
-* [Blog post "Underpowered statistics"](https://www.statisticsdonewrong.com/power.html)
-* [Paper "An introduction to power and sample size estimation"](https://emj.bmj.com/content/20/5/453)
-* [Paper "Mindless statistics"](http://library.mpib-berlin.mpg.de/ft/gg/GG_Mindless_2004.pdf)
-* [http://chagall.med.cornell.edu/RNASEQcourse/Intro2RNAseq.pdf](http://chagall.med.cornell.edu/RNASEQcourse/Intro2RNAseq.pdf)
-* [Paper "How many biological replicates are needed in an RNA-seq experiment and which differential expression tool should you use?" RNA, 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4878611/)
-* [Paper "RNA-seq differential expression studies: more sequence or more replication?" Bioinformatics, 2014](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3904521/)
-
-
-
+- **Statistics Done Wrong – Underpowered statistics.**  
+  [https://www.statisticsdonewrong.com/power.html](https://www.statisticsdonewrong.com/power.html)
+  
+    
