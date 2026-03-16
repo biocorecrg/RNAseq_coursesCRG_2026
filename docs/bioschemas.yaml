@@ -42,6 +42,11 @@ author:
   name: "Centre for Genomic Regulation"
   "@id": https://ror.org/03wyzt892
   url: https://www.crg.eu
+contributor:
+- "@type": Person
+  name: "Antonia Taianni"
+  "@id": https://orcid.org/0009-0004-4282-6801
+  url: https://orcid.org/0009-0004-4282-6801
 dateModified: 2026-03-18
 description: Course providing a comprehensive introduction to RNA sequencing, guiding participants through the complete data analysis workflow  
 keywords: "genomics, linux, bioinformatics, RNA-seq, NGS"
