@@ -261,7 +261,7 @@ firefox ./fastqc_results/SRR390728_fastqc.html &
 
 ---
 
-### sDataset 3
+### Dataset 3
 
 **Dataset:** Human PBMCs profiled with 10x Chromium v3 chemistry — a widely used reference scRNA-seq dataset.
 
@@ -555,7 +555,7 @@ fastqc_config:
 
 ---
 
-## Part 2 — Read Pre-processing
+## Read Pre-processing: adapter trimming and rRNA removal
 
 After running raw QC, two issues commonly stand out in the MultiQC report that must be addressed before alignment:
 
@@ -689,7 +689,7 @@ echo "All samples trimmed."
 
 ---
 
-## rRNA Removal with RiboPicker
+## rRNA Removal with RiboDetector
 
 Even after trimming, RNA-seq libraries often retain a proportion of **ribosomal RNA reads** from incomplete ribo-depletion (e.g., RiboZero, RNase H) or polyA selection inefficiency. These reads:
 
@@ -697,63 +697,90 @@ Even after trimming, RNA-seq libraries often retain a proportion of **ribosomal 
 - Can bias normalization and differential expression results
 - Inflate total read counts relative to informative mRNA reads
 
-[**RiboPicker**](https://ribopicker.sourceforge.net/) screens reads against rRNA reference databases and **removes matching reads**, keeping only the non-rRNA fraction. It works by:
+[**RiboDetector**](https://github.com/hzi-bifo/RiboDetector) is a **deep learning-based** tool that accurately identifies and removes rRNA reads without relying on a reference database. It uses a neural network trained on a broad set of rRNA sequences from bacteria, archaea, and eukaryotes, enabling robust detection even for divergent or novel rRNA sequences.
 
-1. Maintaining a **database of rRNA reference sequences** (16S, 18S, 23S, 28S, 5S, 5.8S from multiple organisms)
-2. Aligning each read against the database using fast local alignment
-3. Classifying reads that align above a similarity/coverage threshold as **rRNA** and separating them out
-4. Writing non-rRNA reads to a clean output file
+**Advantages over alignment-based tools:**
+- No reference database download or maintenance required
+- Faster and more memory-efficient than alignment-based approaches
+- Handles partial rRNA matches and divergent sequences well
+- GPU acceleration available for large datasets
 
-### Setting Up the rRNA Database
+### Installation
 
 ```bash
-# List available bundled databases
-ls $(which ribopicker.pl | xargs dirname)/../db/
+# Install via pip
+pip install ribodetector
 
-# Common databases:
-# rrnadb    - broad rRNA (16S, 18S, 23S, 28S, 5S)
-# silva     - SILVA rRNA sequences
-# rfam      - Rfam RNA families
+# Or via conda
+conda install -c bioconda ribodetector
 ```
 
 ### Basic Usage
 
 ```bash
 # Single-end reads
-ribopicker.pl \
+ribodetector_cpu \
+    -t 8 \
+    -l 100 \
     -i ~/RNAseq_coursesCRG_2026/trimming/SRR3091420_1_chr6_trimmed.fq.gz \
-    -dbs rrnadb \
-    -out_dir ~/RNAseq_coursesCRG_2026/ribopicker_output/ \
-    -id 95 \      # minimum % identity (default: 90)
-    -al 80        # minimum % read length aligned (default: 80)
+    -e rrna \
+    --rrna ~/RNAseq_coursesCRG_2026/ribodetector_output/SRR3091420_1_chr6_rrna.fq.gz \
+    -o ~/RNAseq_coursesCRG_2026/ribodetector_output/SRR3091420_1_chr6_nonrrna.fq.gz
+
+# Paired-end reads
+ribodetector_cpu \
+    -t 8 \
+    -l 100 \
+    -i sample_R1_trimmed.fq.gz sample_R2_trimmed.fq.gz \
+    -e rrna \
+    --rrna rrna_R1.fq.gz rrna_R2.fq.gz \
+    -o nonrrna_R1.fq.gz nonrrna_R2.fq.gz
+
+# GPU-accelerated (requires CUDA)
+ribodetector \
+    -t 8 \
+    -l 100 \
+    -i sample_trimmed.fq.gz \
+    -e rrna \
+    --rrna rrna_reads.fq.gz \
+    -o nonrrna_reads.fq.gz
 ```
 
 ### Key Parameters
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `-id` | 90 | Minimum % nucleotide identity to rRNA |
-| `-al` | 80 | Minimum % of read length that must align |
-| `-dbs` | — | Comma-separated list of databases to use |
-| `-out_dir` | — | Output directory |
+| Parameter | Description |
+|-----------|-------------|
+| `-t` | Number of threads |
+| `-l` | Read length (bp) — should match your actual read length after trimming |
+| `-i` | Input FASTQ file(s) |
+| `-e rrna` | Ensure rRNA reads are written to the `--rrna` output (use `norrna` to keep only clean reads) |
+| `--rrna` | Output file for detected rRNA reads |
+| `-o` | Output file for non-rRNA reads (use downstream) |
+| `--chunk_size` | Number of reads processed per batch (default: 256; increase for speed if RAM allows) |
 
-> **Choosing thresholds:** More stringent thresholds (higher `-id`, higher `-al`) reduce false positives but may miss divergent rRNA sequences. For standard eukaryotic RNA-seq, the defaults are appropriate.
+> **Setting `-l` correctly:** RiboDetector is length-aware — always set `-l` to match the read length in your input file. After TrimGalore, reads may vary in length; use the modal or maximum post-trim read length as a guide.
 
 ### Output Files
 
 ```
-ribopicker_output/
-├── sample_rrna.fastq         # rRNA reads (removed from analysis)
-├── sample_nonrrna.fastq      # Clean reads for downstream use ← use these
-└── sample_ribopicker.log     # Summary statistics
+ribodetector_output/
+├── SRR3091420_1_chr6_rrna.fq.gz       # rRNA reads (removed from analysis)
+└── SRR3091420_1_chr6_nonrrna.fq.gz    # Clean reads for downstream use ← use these
 ```
 
-### Interpreting the Log
+### Interpreting the Output
 
-```
-Total sequences: 4,987,320
-rRNA sequences:    312,458  (6.3%)     ← removed
-Non-rRNA sequences: 4,674,862  (93.7%) ← kept
+RiboDetector does not produce a separate log file by default, but read counts can be inferred by comparing input and output:
+
+```bash
+# Count reads in input
+echo $(zcat trimmed.fq.gz | wc -l) / 4 | bc
+
+# Count reads in clean output
+echo $(zcat nonrrna.fq.gz | wc -l) / 4 | bc
+
+# Count rRNA reads removed
+echo $(zcat rrna.fq.gz | wc -l) / 4 | bc
 ```
 
 A rRNA percentage of 1–10% is typical for well-depleted libraries. Values >20–30% suggest ribo-depletion failure and should be flagged, though the reads can still be usable after removal.
@@ -779,7 +806,7 @@ fastqc -t 4 -o ~/RNAseq_coursesCRG_2026/fastqc_trimmed/ ~/RNAseq_coursesCRG_2026
 
 # FastQC on rRNA-removed reads
 mkdir -p ~/RNAseq_coursesCRG_2026/fastqc_clean/
-fastqc -t 4 -o ~/RNAseq_coursesCRG_2026/fastqc_clean/ ~/RNAseq_coursesCRG_2026/ribopicker_output/*_nonrrna.fastq
+fastqc -t 4 -o ~/RNAseq_coursesCRG_2026/fastqc_clean/ ~/RNAseq_coursesCRG_2026/ribodetector_output/*_nonrrna.fq.gz
 ```
 
 ### Running MultiQC Across All Three Stages
@@ -790,7 +817,6 @@ multiqc \
     ~/RNAseq_coursesCRG_2026/fastqc_trimmed/ \     # FastQC on TrimGalore output
     ~/RNAseq_coursesCRG_2026/fastqc_clean/ \       # FastQC on rRNA-removed reads
     ~/RNAseq_coursesCRG_2026/trimming/ \           # TrimGalore trimming reports
-    ~/RNAseq_coursesCRG_2026/ribopicker_output/ \  # RiboPicker logs (if supported by MultiQC version)
     -o ~/RNAseq_coursesCRG_2026/multiqc_comparison/ \
     -n pre_vs_post_processing_report \
     -f
@@ -848,7 +874,7 @@ The file `~/RNAseq_coursesCRG_2026/docs/data/reads/example2_reads.fq.gz` contain
 2. Run **FastQ Screen** to check for cross-species contamination.
 3. Run **Kraken2** to perform taxonomic classification.
 4. Run **TrimGalore** to remove adapters and low-quality bases.
-5. Run **RiboPicker** to remove rRNA reads from the trimmed output.
+5. Run **RiboDetector** to remove rRNA reads from the trimmed output.
 6. Run **FastQC** again on both the trimmed and rRNA-cleaned reads.
 7. Aggregate all results with **MultiQC** and compare the pre- and post-processing reports.
 
@@ -869,8 +895,7 @@ Once you have inspected all the outputs, consider the following questions:
 - **MultiQC:** https://multiqc.info/docs/ — Module list: https://multiqc.info/modules/
 - **TrimGalore:** https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/ — User Guide: https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md
 - **Cutadapt:** https://cutadapt.readthedocs.io/
-- **RiboPicker:** http://ribopicker.sourceforge.net/
-- **RiboDetector** (deep learning-based alternative): https://github.com/hzi-bifo/RiboDetector
+- **RiboDetector:** https://github.com/hzi-bifo/RiboDetector
 
 ### Key Articles
 
@@ -880,4 +905,4 @@ Once you have inspected all the outputs, consider the following questions:
 - Ewels, P. et al. (2016). **MultiQC: Summarize analysis results for multiple tools and samples in a single report.** *Bioinformatics*, 32(19), 3047–3048. https://doi.org/10.1093/bioinformatics/btw354
 - Martin, M. (2011). **Cutadapt removes adapter sequences from high-throughput sequencing reads.** *EMBnet.journal*, 17(1), 10–12. https://doi.org/10.14806/ej.17.1.200
 - Bolger, A.M. et al. (2014). **Trimmomatic: a flexible trimmer for Illumina sequence data.** *Bioinformatics*, 30(15), 2114–2120. https://doi.org/10.1093/bioinformatics/btu170
-- Schmieder, R. & Edwards, R. (2011). **Fast identification and removal of sequence contamination from genomic and metagenomic datasets.** *PLOS ONE*, 6(3). https://doi.org/10.1371/journal.pone.0017288 *(RiboPicker)*
+- Deng, Z. et al. (2022). **RiboDetector: accurate and rapid RiboRNA sequences detector based on deep learning.** *Nucleic Acids Research*, 50(10), e60. https://doi.org/10.1093/nar/gkac112
