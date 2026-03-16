@@ -40,22 +40,3 @@ The course integrates laboratory practice with computational training, equipping
 * 12:00 - 13:00 Q&A and General discussion
 * 13:00 - 14:00 _Lunch_
 
-
-Previous public courses/repos with materials to re-use:
-* https://github.com/biocorecrg/PhD_course_genomics_format
-* https://github.com/biocorecrg/R_GSEA_Docker
-* https://github.com/biocorecrg/CRG_RIntroduction
-* https://github.com/biocorecrg/CRG_RIntroduction_2021
-* https://github.com/biocorecrg/CRG_R_tidyverse_2021
-* https://github.com/biocorecrg/nextflow-course-2025-spring
-* https://github.com/biocorecrg/nextflow-course-2024-alba
-* https://github.com/biocorecrg/contamination-nf
-* https://github.com/biocorecrg/PhD_course_containers_2024
-* https://github.com/biocorecrg/CoursesCRG_Containers_Nextflow_May_2022
-
-
-* https://github.com/biocorecrg/PHINDaccess_RNAseq_2020
-* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/expdesign.html
-* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/r_basics.html
-* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/functional_analysis.html
-* https://biocorecrg.github.io/PHINDaccess_RNAseq_2020/resources.html
