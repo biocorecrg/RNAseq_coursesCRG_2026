@@ -36,9 +36,9 @@ Like the index at the end of a book, an index of a large DNA sequence allows one
 
 ### Fast (splice-unaware) aligners to a reference transcriptome
 These tools can be used for aligning **short reads** to a transcriptome reference.
-<br>
+
 If a genome were used as a reference, these tools would not map reads to **splicing junctions**.
-<br>
+
 They can be much faster than traditional aligners like [**Blast**](https://blast.ncbi.nlm.nih.gov/Blast.cgi) but less sensitive and may have limitations about the read size. 
 
 * [**Bowtie**](http://bowtie-bio.sourceforge.net/index.shtml) is an ultrafast, memory-efficient short read aligner geared toward quickly aligning large sets of short DNA sequences (reads) to large genomes/transcriptomes. Bowtie uses a **Burrows-Wheeler index**. 
@@ -121,12 +121,11 @@ To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** opt
 * It usually equals the minimum read size minus 1; it tells **STAR** what is the maximum possible stretch of sequence that can be found on one side of a splicing site. 
 * In our case, since the read size is 49 bases, we can accept a maximum of 48 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **48**. 
 * This also means that **for every different read-length to be aligned, a new STAR index needs to be generated**. Otherwise, a drop in aligned reads can be experienced.
-<br>
+
 * **--runThreadN** allows you to parallelize the job.
-<br>
+
 **NOTE** that for small genomes, parameter **--genomeSAindexNbases** (default 14) should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
-<br>
 
 Building the STAR index (option **--runMode genomeGenerate**):
 
