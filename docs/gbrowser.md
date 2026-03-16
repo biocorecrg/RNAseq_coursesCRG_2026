@@ -12,51 +12,9 @@ There are two kinds of genome browsers:
   * [GBrowse](http://gmod.org/wiki/GBrowse_2.0_HOWTO)
   * [IGV](https://software.broadinstitute.org/software/igv/)
   
-Small-sized data can be directly uploaded to the genome browser, while large files are normally placed on a web server that is accessible to the browser. To explore BAM and CRAM files produced by the STAR mapper, we first need to sort and index the files. In our case, sorting has already been done by STAR's **BAM SortedByCoordinate** option.
-<br>
-The indexing can be done with samtools:
-
-```bash
-cd ~/rnaseq_course/mapping
-
-$RUN samtools index SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
-
-```
-
+Small-sized data can be directly uploaded to the genome browser, while large files are normally placed on a web server that is accessible to the browser. To explore BAM and CRAM files produced by the STAR mapper, we first need to sort and index the files. 
 
 ## UCSC Genome Browser
-
-**IMPORTANT!** 
-<br>
-Be careful with the **chromosome name conventions**!
-<br>
-Different genome browsers name chromosomes differently. UCSC names chromosomes as **chr1**, **chr2**,...**chrM**; while Ensembl, **1**, **2**, ... **MT**. 
-<br>
-When you map reads to a genome with a given convention, you cannot directly display BAM/CRAM files in a genome browser that uses a different convention.
-<br>
-**GENCODE** uses the **UCSC convention**, while **ENSEMBL doesn't**: we need to change the chromosome names before being able to load them in the UCSC Genome Browser. 
-
-```bash
-cd ~/rnaseq_course/mapping
-
-# create new sub-directory
-mkdir bam_ucsc
-
-# convert chromosome naming (produce a SAM file)
-$RUN samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam  | awk -F "\t" 'BEGIN{OFS="\t"}{if($1 ~ /^@/){print $0} else {print $1,$2,"chr"$3,$4,$5,$6,$7,$8,$9,$10,$11,$12}}' | sed 's/chrMT/chrM/g' | sed 's/SN:/SN:chr/g' > SRR3091420_1_chr6Aligned.sam
-
-# convert SAM to BAM
-$RUN samtools view -b -o SRR3091420_1_chr6Aligned.bam SRR3091420_1_chr6Aligned.sam
-
-# create index for BAM file
-$RUN samtools index SRR3091420_1_chr6Aligned.bam
-
-# remove SAM files
-rm *.sam
-```
-
-First, you need to upload your sorted BAM (or cram) file(s) **together with an index (.bai or .crai) file(s)** to a HTTP server that is accessible from the Internet. 
-<br>
 
 We uploaded the files for this project (chromosome 6 only) to:[https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/index.html](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/aln/index.html)
 
