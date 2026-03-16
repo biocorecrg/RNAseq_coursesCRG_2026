@@ -53,7 +53,6 @@ rnaseq_data_analysis.md
 linux_cli.md
 raw_data_qc.md
 annotations.md
-gbrowser.md
 alignment.md
 r_basics.md
 differential_expression.md
