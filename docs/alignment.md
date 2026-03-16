@@ -709,6 +709,18 @@ Then run **multiqc** on the directory **multiqc_report** to combine all reports:
 cd ~/rnaseq_course/multiqc_report
 
 $RUN multiqc .
+
+/// MultiQC 🔍 v1.33
+
+       file_search | Search path: /users/bi/lcozzuto/rnaseq_course/RNAseq_coursesCRG_2026/docs/data/multiqc
+         searching | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 40/40  
+          qualimap | Found 1 RNASeq reports
+              star | Found 1 reports and 1 gene count files
+          cutadapt | Found 1 reports
+     write_results | Data        : multiqc_data
+     write_results | Report      : multiqc_report.html
+           multiqc | MultiQC complete
+
 ```
 
 We can visualize the final report in the internet browser:
@@ -717,7 +729,8 @@ We can visualize the final report in the internet browser:
 firefox multiqc_report.html
 ```
 
-Here an example done on just one sample:
+Here is an example done on just one sample:
 
 
+<img src="images/multiQC.png" width="800" />
 
