@@ -5,9 +5,14 @@
 
 What does it mean to map reads to a transcriptome? During sequencing, we read both ends of each RNA fragment—these are called "paired-end reads." Mapping to the transcriptome means finding where these paired reads match in our database of known transcript sequences. Since transcripts already have introns removed and exons joined together, the reads align directly without needing to "jump" across gaps as they would when mapping to the genome.
 
-<div align="center">
-<img src="images/800px-Mapping_Reads.png" width="500"  />
-</div>
+
+||
+| :---:  |
+|<img src="images/800px-Mapping_Reads.png" width="500" />|
+|From wikimedia commons|
+
+
+
 
 ## Tools for read mapping
 
@@ -25,8 +30,8 @@ Like the index at the end of a book, an index of a large DNA sequence allows one
 
 |k-mer index|
 | :---:  |
-|<img src="images/index_kmer.png" width="300" />|
-|from [https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index](https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index)|
+|<img src="images/index_kmer.png" width="200" />|
+|from [coursera.org](https://www.coursera.org/learn/dna-sequencing/lecture/d5oFY/lecture-indexing-and-the-k-mer-index)|
 
 
 ### Fast (splice-unaware) aligners to a reference transcriptome
