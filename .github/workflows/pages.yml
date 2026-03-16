@@ -30,7 +30,7 @@ jobs:
           fetch-tags: true
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Prepare site directory and list tags
         run: |
           mkdir -p site
