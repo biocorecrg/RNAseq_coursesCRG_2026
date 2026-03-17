@@ -15,18 +15,21 @@ The **Sequence Read Archive (SRA)** at NCBI is a public repository of raw sequen
 
 The **SRR Run accession** is what you need to download reads. A single experiment (SRX) may have multiple runs (SRR). The data that will be using for the hands-on exercises is from GEO data set **GSE76647**. Specifically, it contains *Homo sapiens* samples from differentiated (5-day differentiation) and undifferentiated primary keratinocytes. Additionally, some samples underwent a knock-down of the **FOXC1** gene. 
 
-We could try to download these datasets from SRA directly but due to time constrains, we have already prepared fastq files that correspond to **chromosome 6 only**. You will find them in the data directory within the repository of the course. 
+We could try to download these datasets from SRA directly but due to time constrains, we have already prepared fastq files that correspond to **chromosome 6 only**. You will find them in the data directory (* ~/RNAseq_coursesCRG_2026/docs/data/reads/*) within the repository of the course. 
 
 ## Raw Data QC
 
 Before any downstream analysis (alignment, read count, differential expression, functional enrichment), it is critical to assess the **quality of raw sequencing reads** and pre-process them accordingly. Poor-quality data can introduce errors that propagate through the entire pipeline.
 
 Pre-processing includes:
-- Quality control of initial reads
-- Adapter trimming
-- Filtering out low-quality reads
-- Trimming reads at low-quality base positions
-- rRNA removal (where applicable)
+- Raw data QC:
+    - Quality control of initial reads
+    - Contamination checks
+
+- Read pre-processing:
+    - Adapter trimming
+    - Filtering out low-quality reads/base positions
+    - rRNA removal (where applicable)
 
 ---
 
@@ -56,18 +59,21 @@ Pre-processing includes:
 - Overrepresented sequences
 - Adapter content
 
-> **Reminder — Phred quality scores**
->
-> Phred scores (Q scores) encode the probability of a base-calling error:
->
-> | Phred Score | Error Probability | Accuracy |
-> |-------------|-------------------|----------|
-> | Q10 | 1 in 10 | 90% |
-> | Q20 | 1 in 100 | 99% |
-> | Q30 | 1 in 1,000 | 99.9% |
-> | Q40 | 1 in 10,000 | 99.99% |
->
-> Reads are generally considered good quality if the median Phred score is ≥ Q30 across most positions.
+:::{admonition} Reminder — Phred quality scores
+:class: tip
+
+Phred scores (Q scores) encode the probability of a base-calling error:
+
+| Phred Score | Error Probability | Accuracy |
+|-------------|-------------------|----------|
+| Q10 | 1 in 10 | 90% |
+| Q20 | 1 in 100 | 99% |
+| Q30 | 1 in 1,000 | 99.9% |
+| Q40 | 1 in 10,000 | 99.99% |
+
+Reads are generally considered good quality if the median Phred score is **≥ Q30** across most bases.
+
+:::
 
 ### Running FastQC
 
@@ -200,7 +206,7 @@ Problem case (insert < read length):
 
 ## Exercises I
 
-The following exercises use publicly available datasets from NCBI SRA, each chosen to illustrate a specific and **recognisable FastQC signature**. For each one, download the data, run FastQC, and answer the interpretation questions below. To download these datasets, NCBI provides the **SRA Toolkit**:
+The following exercise use publicly available datasets from NCBI SRA. Download the data using the **SRA toolkit**, run FastQC, and answer the questions below:
 
 ```bash
 # Download a single run (compressed .sra format)
@@ -216,11 +222,7 @@ fasterq-dump SRR1234567 --split-files --outdir ./fastq/
 gzip ./fastq/SRR1234567.fastq
 ```
 
-> **Note on download size:** Full SRA runs can be large (several GB). For the exercises below, downloading 1–2 million reads is sufficient to see the QC patterns clearly. Use `fasterq-dump -X 1000000` to limit the download.
-
----
-
-### Dataset: accession number SRR36179215
+#### Dataset: accession number SRR36179215
 
 ```bash
 # Download 1 million reads
@@ -234,7 +236,6 @@ firefox ./fastqc_results/SRR36179215_fastqc.html &
 **Discussion questions:**
 1. Is this adapter content a sign of a failed experiment? Why or why not? Which type of dataset this might be?
 2. Would you apply the same quality interpretation to a standard mRNA-seq dataset with this level of adapter content?
-
 
 
 ## FastQ Screen
@@ -253,7 +254,13 @@ The tool works by:
 
 ### Setting Up Databases
 
-> **WARNING:** Do not run the following command in class — it will take too much time and resources.
+:::{admonition} Warning
+:class: warning
+
+Do not run the following command in class — it will take too much time and resources.
+
+:::
+
 
 ```bash
 # Download default databases
