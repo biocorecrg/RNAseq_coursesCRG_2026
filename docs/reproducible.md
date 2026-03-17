@@ -362,7 +362,7 @@ These repositories  are linked to the repositories of NGS raw data (FASTQ files)
 
 We will use **[E-MTAB-8316](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8316)** from ArrayExpress as example.
 
-### Findable (RNAseq Examples)
+### Findable
 
 **Example:**
 - Dataset **E-MTAB-8316** (from Alivernini et al. 2020, Nature Medicine) has a globally unique and persistent identifier: `E-MTAB-8316` or full URL `https://www.ebi.ac.uk/biostudies/ArrayExpress/studies/E-MTAB-8316`
@@ -375,7 +375,7 @@ We will use **[E-MTAB-8316](https://www.ebi.ac.uk/biostudies/arrayexpress/studie
 - FASTQ files named `sample1.fq`, `sample2.fq` with no associated metadata file
 
 
-### Accessible (RNAseq Examples)
+### Accessible
 
 **Example:**
 - Data retrievable via standard HTTP/HTTPS protocol using the persistent identifier
@@ -388,7 +388,7 @@ We will use **[E-MTAB-8316](https://www.ebi.ac.uk/biostudies/arrayexpress/studie
 - FASTQ files in proprietary or obscure sequencing format
 - Data behind paywall or institutional login requirement
 
-### Interoperable (RNAseq Examples)
+### Interoperable
 
 **Example:**
 - Uses published ontologies: [NCBI taxonomy](https://www.ncbi.nlm.nih.gov/taxonomy) for species ("Homo sapiens")
@@ -403,7 +403,7 @@ We will use **[E-MTAB-8316](https://www.ebi.ac.uk/biostudies/arrayexpress/studie
 - Proprietary sample annotation system without ontology links
 - Protocol descriptions using only lab-specific terminology
 
-### Reusable (RNAseq Examples)
+### Reusable
 
 **Example:**
 - Clear licensing: **CC BY 4.0** ([Creative Commons](https://creativecommons.org/) Attribution)

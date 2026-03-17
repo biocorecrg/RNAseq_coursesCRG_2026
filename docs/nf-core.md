@@ -461,4 +461,11 @@ Let's inspect the output.
 
 The final report can be seen [here](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/nf-core/multiqc_report.html)
 
+## Seqera containers
+Seqera Containers is a freely available resource that simplifies the container generation, allowing researchers to make a container for any combination of Conda and PyPI packages with the click of a button. It was launched in spring 2024 during the Nextflow Summit in Boston, and it is powered by Amazon Web Services and built on Wave, Seqera's open-source container provisioning service.
+
+Here you can see the [webpage](https://seqera.io/containers/) and make the containers that you need!
+
+<img src="images/seqera_container.png" width="1000"/>
+
 
