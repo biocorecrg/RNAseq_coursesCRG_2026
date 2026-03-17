@@ -443,7 +443,7 @@ Why Apptainer/Singularity?
 
 
 ```
-singularity pull RNAseq_course.sif docker://community.wave.seqera.io/library/fastq-screen_fastqc_kraken_multiqc_pruned:c1cc2fe6e981fe2c
+singularity pull RNAseq_course.sif docker://community.wave.seqera.io/library/fastq-screen_fastqc_kraken2_multiqc_pruned:3161b0b514b51263
 
 singularity exec -e RNAseq_course.sif fastqc --version
 
