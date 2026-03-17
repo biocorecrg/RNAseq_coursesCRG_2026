@@ -100,17 +100,19 @@ The best performing tools for differential expression analysis tend to be:
 | **Flexibility for complex designs** | Good                                                    | Very good                                          | Excellent                                          |
 | **Low-count genes**                 | Conservative handling                                   | Handles low counts well                            | Less ideal for extremely low counts                |
 
-```{admonition} Further reading
+:::{admonition} Further reading
 :class: note
 
 For more information see [Schurch et al, 2015; arXiv:1505.02017](https://arxiv.org/abs/1505.02017) and [the Biostars thread about the main differences between the methods](https://www.biostars.org/p/284775/).
-```
+:::
 
 Main differences between the tools rely on the **statistical modeling** of counts and different normalization approaches. They capture different biological meaning and their results are not mutually exclusive.
 
 In this tutorial, we will give you an overview of the **DESeq2** pipeline to find differentially expressed **genes** between two conditions.
 
 ### DESeq2
+
+This DESeq2 tutorial is inspired by the [RNA-seq workflow](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) developed by the authors of the tool, and by the [differential gene expression course](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) from the [Harvard Chan Bioinformatics Core](http://bioinformatics.sph.harvard.edu/).
 
 [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) is an R/Bioconductor implemented method to detect differentially expressed features.
 
@@ -122,8 +124,6 @@ It tests for differential expression using [**negative binomial generalized line
 Source: <https://bioramble.wordpress.com/2016/01/30/why-sequencing-data-is-modeled-as-negative-binomial/>
 
 DESeq2 (as edgeR) is based on the hypothesis that **most genes are not differentially expressed**.
-
-This DESeq2 tutorial is inspired by the [RNA-seq workflow](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) developed by the authors of the tool, and by the [differential gene expression course](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) from the [Harvard Chan Bioinformatics Core](http://bioinformatics.sph.harvard.edu/).
 
 DESeq2 takes as an input **raw counts** (i.e. non normalized counts): the DESeq2 model internally **corrects for library size**, so giving as an input normalized count would be incorrect.
 
@@ -159,11 +159,11 @@ For each gene, the **geometric mean** is calculated across all samples:
 | GeneD | (55 × 980 × 60)^(1/3) = 3,234,000^(1/3) ≈ 147.9 |
 | GeneE | (430 × 820 × 500)^(1/3) = 176,300,000^(1/3) ≈ 560.7 |
 
-```{admonition} Note
+:::{admonition} Note
 :class: note
 
 We use the **geometric mean** instead of the arithmetic mean because it is less sensitive to outliers (very high or very low count values).
-```
+:::
 
 Then the counts for a gene in each sample is then **divided** by this mean.
 
@@ -197,7 +197,7 @@ Each raw count is divided by the size factor of the sample it belongs to.
 | GeneD | 73 | 653 | 67 |
 | GeneE | 573 | 547 | 562 |
 
-::{admonition}
+:::{admonition}
 :class: seealso
 You can also find normalized counts by using the **TPM** (Transcripts Per Million) or **FPKM** (Fragments Per Kilobase of transcript per Million mapped reads) metrics. [See here](https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/)
 :::
@@ -278,7 +278,7 @@ cd ~/rnaseq_course/differential_expression
 mkdir counts_STAR_selected
 ```
 
-* Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (2nd column).
+* Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1st column) and the correct counts (2nd column).
 
 ```bash
 for i in full_data_counts/counts_STAR/*ReadsPerGene.out.tab
