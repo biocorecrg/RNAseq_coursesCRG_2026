@@ -621,7 +621,8 @@ BiocManager::install('GOstats')
 * Show the 3rd and the 6th elements of y.
 * Show all elements of y that have a value inferior to 7.
 
-:::{dropdown} Click to show correction
+:::{admonition} Click to show correction
+:class: dropdown note
 
 * Create a numeric vector **y** containing numbers from 2 to 11 (both included). 
 
@@ -650,7 +651,8 @@ or
 * Create the vector **x** of 1000 random numbers from the normal distribution (see **rnorm** function).
 * What are the mean, median, minimum and maximum values of x?
 
-:::{dropdown} Click to show correction
+:::{admonition} Click to show correction
+:class: dropdown note
 
 * Create the vector **x** of 1000 random numbers from the normal distribution (see **rnorm** function).
 
@@ -674,7 +676,8 @@ or the more straightforward:
 * Which elements of y2 are also present in y?
 * Remove NA values from y2.
 
-:::{dropdown} Click to show correction
+:::{admonition} Click to show correction
+:class: dropdown note
 
 * Create vector **y2** as: 
 
@@ -719,7 +722,8 @@ Then:
 * Write **df** to the file **mydf.txt** with **write.table()**. 
   + Explore parameters **sep**, **row.names**, **col.names**, **quote**.
 
-:::{dropdown} Click to show correction
+:::{admonition} Click to show correction
+:class: dropdown note
 
 * Create the following data frame wih 
   + row names: **John, Jessica, Steve, Rachel**
@@ -774,7 +778,8 @@ write.table(df,
 
 * Calculate the average score for Math across all 4 students
 
-:::{dropdown} Click to show correction
+:::{admonition} Click to show correction
+:class: dropdown note
 
 * Create a matrix called `grades` representing 4 students (rows) and 3 subjects (columns: Math, Science, English) with the following values:
   * Student1: 85, 92, 78

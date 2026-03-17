@@ -22,7 +22,7 @@ Problem case (insert < read length):
 
 FastQ Screen's `%Multiple` column was inflated, and FastQC's *Overrepresented Sequences* module likely flagged ribosomal RNA hits. Even with ribo-depletion protocols, a fraction of rRNA reads typically persists.
 
-### Why Does This Matter?
+## Why Does This Matter?
 
 | Problem | Consequence if not addressed |
 |:---------:|------------------------------|

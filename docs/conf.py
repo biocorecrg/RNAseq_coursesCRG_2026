@@ -62,6 +62,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     "sphinx_bioschemas",
+    "sphinx_togglebutton",
     "myst_parser",
 ]
 

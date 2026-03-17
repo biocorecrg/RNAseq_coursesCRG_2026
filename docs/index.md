@@ -1,7 +1,9 @@
 ![logo](https://raw.githubusercontent.com/CRG-CNAG/BioCoreMiscOpen/master/logo/biocore-logo_small.png)
 
 # RNAseq course - international course for the programme COURSES@CRG 
-### 16-20 March 2026
+
+**16-20 March 2026**
+
 ## Decoding Transcriptomes: A Practical Course on RNA-seq
 https://courses.crg.eu/events/decoding-transcriptomes-practical-course-rna-seq
 
@@ -45,7 +47,7 @@ The course integrates laboratory practice with computational training, equipping
 
 ```{toctree}
 :hidden:
-:depth: 2
+:maxdepth: 2
 
 sequencing_preprocessing.md
 reproducible.md
