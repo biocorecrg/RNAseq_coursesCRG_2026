@@ -230,10 +230,11 @@ mkdir -p ~/rnaseq_course/differential_expression
 cd ~/rnaseq_course/differential_expression
 
 # Download the full count data folder from the course repository
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/docs/data/differential_expression/full_data_counts.tar.gz
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/differential_expression/full_data_counts.tar.gz
 
 # Untar the data -x extract folder -z gzip decompression -v verbose -f file
 tar -xzvf full_data_counts.tar.gz
+rm full_data_counts.tar.gz
 ```
 
 ### Raw count matrices
@@ -343,7 +344,7 @@ The same sample sheet will be used for both **the STAR and the Salmon** DESeq2 a
 You can download it the following way, in R:
 
 ```bash
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/docs/data/differential_expression/sample_sheet_foxc1.txt
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/differential_expression/sample_sheet_foxc1.txt
 ```
 
 ## Analysis
@@ -354,7 +355,7 @@ We will use a local Rstudio server running a singularity container.
 
 ```bash
 # Download the bash script that installs the singularity container and run it in the localserver
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/run_rstudio.sh
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/run_rstudio.sh
 bash run_rstudio.sh
 ```
 
@@ -1187,11 +1188,10 @@ On the following example, we have samples that were processed at different weeks
 Download batch raw counts and sample table  data:
 
 ```bash
-mkdir ~/rnaseq_course/differential_expression/batch_example
-cd ~/rnaseq_course/differential_expression/batch_example
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/differential_expression/batch_example/batch_example.tar.gz
 
-wget https://github.com/fabian-andrade/RNAseq_coursesCRG_2026/raw/main/docs/data/differential_expression/batch_example/rnaseq_batch_example_raw_counts.txt
-wget https://github.com/fabian-andrade/RNAseq_coursesCRG_2026/raw/main/docs/data/differential_expression/batch_example/rnaseq_batch_example_sample_table.txt
+tar -xvzf batch_example.tar.gz
+rm batch_example.tar.gz
 ```
 
 ```r
@@ -1339,9 +1339,10 @@ Using the following sample table and matrix counts:
 ```bash
 cd ~/rnaseq_course/differential_expression/
 
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/mislabeled_sample_example/
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/differential_expression/mislabeled_sample_example.tar.gz
 
-cd mislabeled_sample_example/
+tar -xvzf mislabeled_sample_example.tar.gz
+rm mislabeled_sample_example.tar.gz
 
 ```
 
