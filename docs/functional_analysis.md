@@ -4,7 +4,11 @@ First, get the files from the **undifferentiated only** DESeq2 analysis (in case
 
 ```bash
 # get file
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/undiff
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/differential_expression/undiff.tar.gz
+
+# extract 
+tar -xvzf undiff.tar.gz
+rm undiff.tar.gz
 
 ```
 
@@ -252,12 +256,13 @@ As biomaRt may cause connection issues, you can download pre-computed Entrez ID 
 ```bash
 cd ~/rnaseq_course/functional_analysis
 
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/functional_analysis/deseq2_selection_padj005_entrez.txt
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/functional_analysis/deseq2_selection_padj005_entrez.txt
 
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/functional_analysis/deseq2_UNIVERSE_entrez.txt
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/functional_analysis/deseq2_UNIVERSE_entrez.txt
 ```
 
 ```r
+# read files
 entrez <- read.table("deseq2_selection_padj005_entrez.txt", header=T, as.is=T, sep="\t")
 entrez_univ <- read.table("deseq2_UNIVERSE_entrez.txt", header=T, as.is=T, sep="\t")
 ```

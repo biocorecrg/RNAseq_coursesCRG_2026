@@ -1188,7 +1188,7 @@ On the following example, we have samples that were processed at different weeks
 Download batch raw counts and sample table  data:
 
 ```bash
-wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/differential_expression/batch_example/batch_example.tar.gz
+wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/differential_expression/batch_example.tar.gz
 
 tar -xvzf batch_example.tar.gz
 rm batch_example.tar.gz
