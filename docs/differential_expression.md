@@ -282,11 +282,13 @@ mkdir counts_STAR_selected
 
 ```bash
 for i in full_data_counts/counts_STAR/*ReadsPerGene.out.tab
-do echo $i
+do echo $i 
 # retrieve the first (gene name) and second column (raw reads for unstranded protocol)
 cut -f1,2 $i | grep -v "_" > counts_STAR_selected/$(basename $i .ReadsPerGene.out.tab)_counts.txt
 done
 ```
+
+(Prepare-transcript-to-gene-annotation-file-salmon)=
 
 #### Prepare transcript-to-gene annotation file (Salmon)
 
@@ -331,14 +333,17 @@ The design indicates how to model the samples: in the model we need to specify w
 
 * Prepare this file (tab-separated columns) in a text editor: save it as **sample_sheet_foxc1.txt in the differential_analysis directory**: you can do it "manually" using a text editor, or you can try using the command line.
 
-*Note that the same sample sheet will be used for both **the STAR and the Salmon** DESeq2 analysis. (with a slight modification that we will see later on)*
+:::{admonition}
+: Note
+The same sample sheet will be used for both **the STAR and the Salmon** DESeq2 analysis. (with a slight modification that we will see later on)
+:::
 
 **BACK UP**
 
 You can download it the following way, in R:
 
 ```bash
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/sample_sheet_foxc1.txt
+wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/docs/data/differential_expression/sample_sheet_foxc1.txt
 ```
 
 ## Analysis
@@ -361,8 +366,10 @@ Note that in the R code boxes below **\#** is followed by comments, i.e. words n
 
 * Go to the **differential_expression** working directory and install and load the required packages (loading a package in R allows to use specific sets of functions developed as part of this package).
 
+The main libraries we will use are belong to the [Bioconductor](https://www.bioconductor.org/) project, a repository of R packages for the analysis of omics data.
+
 ```r
-library(BiocManager)
+library(BiocManager)  ## Library to install and manage packages from Bioconductor. 
 
 BiocManager::install("DESeq2") ## Installation of the package for differential expression analysis, only needed the first time in Rstudio local installation.
 library("DESeq2") ## Loading the package.
@@ -375,6 +382,7 @@ install.packages("reshape2")
 
 # setwd = set working directory; equivalent to the Linux "cd". All the files you will write will be in this directory
 # the R equivalent to the Linux pwd is getwd() = get working directory
+# unless you change or specify another address, all the written files will be in this directory. 
 setwd("~/rnaseq_course/differential_expression")
 ```
 
@@ -399,7 +407,10 @@ nrow(sampletable) # if this is not 10, please raise your hand !
 ncol(sampletable) # if this is not 4, also raise your hand !
 ```
 
+:::{admonition}
+:class: warning
 DESeq will process only the counts for the files listed in the sample table (keep in mind for future exercises and when you want to exclude some samples from the analysis).
+:::
 
 * Load the count data from **STAR** into a **DESeq** object:
   * **sampleTable:** the sample sheet / metadata we created
@@ -472,7 +483,7 @@ se_salmon <- DESeqDataSetFromTximport(txi,
 ```{admonition} Warning
 :class: warning
 
-    The only thing that differs slightly is the annotation *(remember that for STAR we used ENSEMBL annotation while we used GENCODE annotation for Salmon)*.
+    The only thing that differs is the annotation *(remember that for STAR we used ENSEMBL annotation while we used GENCODE annotation for Salmon)*.
 ```
 
 * We will focus the rest of the analysis on the **se_star**.
@@ -487,7 +498,7 @@ Let's filter:
 # Number of genes before filtering
 nrow(se_star)
 
-# Filter
+# Filter, we keep only the genes that have at least 10 counts in total (across all samples)
 se_star <- se_star[rowSums(counts(se_star)) > 10, ]
 
 # Number of genes left after low-count filtering
@@ -501,7 +512,7 @@ The **biomaRt** package is used for adding a more **detailed annotation** to our
 ```{admonition} Tip
 :class: tip
 
-When we don't perform the mapping, this tool is very useful when we receive directly the counts matrix and we lack the annotation file.
+When we don't perform the mapping, this tool is very useful when we receive directly the counts matrix and we lack the annotation file information.
 ```
 
 Additionally to the ENSEMBL gene IDs we want (for example):
@@ -518,11 +529,15 @@ library(biomaRt)
 # list ENSEMBL archives
 listEnsemblArchives()
 
-# We used version 115 of ENSEMBL, which corresponds to URL <https://sep2025.archive.ensembl.org>
+# We used release 115 of ENSEMBL, which corresponds to URL <https://sep2025.archive.ensembl.org>
 # we can load the corresponding database
-mart <- useMart(biomart="ENSEMBL_MART_ENSEMBL", host="<https://sep2025.archive.ensembl.org>", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
+mart <- useMart(
+  biomart="ENSEMBL_MART_ENSEMBL",               # database name
+  host="<https://sep2025.archive.ensembl.org>", # URL
+  path="/biomart/martservice",                  # path after the host to get access to the web service URL 
+  dataset="hsapiens_gene_ensembl")              # specie dataset (human in this case)
 
-# "filters" correspond to the input WE want to retrieve more annotation for
+# "filters" correspond to the input we want to retrieve more annotation for
 # a list of available filters can be obtained with listFilters(mart)
 head(listFilters(mart))
 
@@ -549,6 +564,13 @@ dim(annot)
 head(annot)
 ```
 
+:::{admonition}
+:class: seealso
+
+For more information on how to use **biomaRt**, see [here](https://huber-group-embl.github.io/biomaRt/reference/useMart.html)
+
+:::
+
 ### Fit statistical model
 
 All steps are wrapped up in a single call to **`DESeq()`**, which runs three phases: normalization, dispersion estimation, and statistical testing.
@@ -557,7 +579,7 @@ All steps are wrapped up in a single call to **`DESeq()`**, which runs three pha
 se_star2 <- DESeq(se_star)
 ```
 
-* **Estimating size factors:** corrects for differences in sequencing depth between samples using the median-of-ratios method. Each sample gets a size factor; dividing its raw counts by that factor normalizes it.
+* **Estimating size factors:** corrects for differences in sequencing depth between samples using the median-of-ratios method. Each sample gets a size factor; dividing its raw counts by that factor normalizes it (as wee see in the previously)
 
 * **Gene-wise dispersion estimates:** RNA-seq counts are overdispersed (variance > mean). DESeq2 uses a Negative Binomial model with a gene-specific dispersion parameter (α), estimated independently for each gene via maximum likelihood.
 
@@ -574,7 +596,7 @@ se_star2 <- DESeq(se_star)
 
 ### Normalized counts
 
-The main objective of normalization is to adjust raw reads so that samples become comparable. We will extract the DESeq normalized counts, which are calculated by dividing the raw counts by the size factor (that represents the sequencing depth).
+We will extract the DESeq normalized counts, which are calculated by dividing the raw counts by the size factor (that represents the sequencing depth).
 Then we will log2-transform these normalized counts in order to compress large values and expand small values, thus making distributions more symmetric.
 
 ```r
@@ -590,7 +612,10 @@ norm_counts_symbols <- merge(data.frame(ID=rownames(norm_counts), norm_counts, c
 write.table(norm_counts_symbols, "normalized_counts_log2_star.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
 
-This normalized counts table serves as interpretable expression levels, to compare how the expression changes between samples and genes.
+:::{admonition} Why log2-transform the normalized counts?
+:class: tip
+RNA-seq count data is heavily right-skewed — a handful of housekeeping genes have counts in the tens of thousands while most genes sit near zero. Log transformation compresses that skew and makes the distribution more symmetric. The base-2 choice is purely for interpretability: a difference of 1 on the log2 scale equals exactly a 2-fold change in expression, which is the natural unit biologists think in
+:::
 
 **Exercise**
 
@@ -603,7 +628,7 @@ This normalized counts table serves as interpretable expression levels, to compa
 
 DESeq2 developers advise using **transformed counts**, rather than normalized counts, for anything involving a distance (e.g. visualization).
 
-Because RNA-seq data typically contain many genes with very low counts and a small number of genes with extremely high counts, the variance of the data depends strongly on the mean expression level. To make the data more suitable for visualization and exploratory analyses, a variance stabilizing transformation (VST) is applied to the normalized counts.
+Because RNA-seq data typically contain many genes with very low counts and a small number of genes with extremely high counts, the variance of the data depends strongly on the mean expression level. To avoid that PCA or heatmaps are   dominated by highly expressed genes, a variance stabilizing transformation (VST) is applied to the normalized counts.
 
 They offer two transformation methods, both of which stabilize the variance across the mean:
 
@@ -611,6 +636,11 @@ They offer two transformation methods, both of which stabilize the variance acro
 * **VST** (Variance Stabilizing Transformation)
 
 Both options produce **log2 scale data** which has been normalized by the DESeq2 method with respect to library size.
+
+:::{admonition}
+:class: warning
+The values are not on a natural count scale and are not directly interpretable as counts or as fold-changes in the way log2(x+1) is. A difference of 1 between two VST values is not guaranteed to mean a 2-fold change.
+:::
 
 From [this tutorial](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog):
 *The VST is* **much faster** *to compute and is* **less sensitive to high count outliers** *than the rlog. The rlog tends to work well on* **small datasets (n < 30)**, *potentially outperforming the VST when there is a wide range of sequencing depth across samples (an order of magnitude difference).
@@ -631,45 +661,37 @@ se_vst <- vst(se_star2)
 #### Samples correlation
 
 The aim of this plot is to compare the expression of all genes for each pair of samples, so if gene expression behaves similarly between two samples, their correlation will be high. The most common measure is Pearson correlation, but you can use others such as Euclidean distance or Spearman correlation.
+
 We expect that replicates show a high correlation, and they will cluster together.
 
-```{admonition} Tip
+:::{admonition} Tip
 :class: tip
-
 Good replicate concordance has a Pearson correlation value > 0.9.
-```
+:::
 
 Calculate the sample-to-sample distances:
 
 ```r
 
 # load libraries pheatmap to create the heatmap plot
-
 library(pheatmap)
 
 # Retrieves the vst counts table
-
 vst_counts <- assay(se_vst)
 
 # Correlation matrix
-
-sampleDists  <- cor(vst_counts, method = "pearson")
+sampleDists  <- cor(vst_counts, method = "pearson") # method = "spearman" if you want to use Spearman correlation
 sampleDistMatrix <- as.matrix(sampleDists )
 
 # prepare a "metadata" object to add a colored bar with the differentiation and condition information
-
 metadata <- sampletable[,c("Differentiation", "Condition")]
 rownames(metadata) <- sampletable$SampleName
 
 # create figure in PNG format
-
 png("sample_distance_heatmap_star.png")
-  pheatmap(sampleDistMatrix, annotation_col=metadata)
-
+pheatmap(sampleDistMatrix, annotation_col=metadata)
 # close PNG file after writing figure in it
-
 dev.off()
-
 ```
 
 | |
@@ -681,15 +703,13 @@ Are they clustering better by differentiation or by condition?
 
 #### Principal Component Analysis (PCA)
 
-Reduction of dimensionality to be able to retrieve main differences / underlying variance between samples.
-It is used to bring out strong patterns from complex biological datasets.
+Because we can not represent each sample in 20.000 dimensions (number of genes).PCA is used to reduce the dimensionality where each dot is a sample. The axes (PC1, PC2) are not individual genes — they are linear combinations of thousands of genes, weighted by how much they contribute to that PC's direction. Samples that are close together have similar overall expression profiles; samples far apart are very different.
 
 :::{seealso}
 <https://www.youtube.com/watch?v=FgakZw6K1QQ>
 :::
 
 ```r
-
 png("PCA_star.png")
 plotPCA(object = se_rlog,
   intgroup = c("Condition", "Differentiation"))
@@ -708,7 +728,10 @@ For the PC1 axis, do samples separate by differentiation or by condition?
 ```{admonition} Interpreting the PCA plot
 :class: note
 
-At this stage, the PCA plot allows us to evaluate whether samples belonging to the same experimental condition cluster together. Ideally, biological replicates should appear close to each other in the plot, indicating similar global gene expression profiles. If a sample does not cluster with the other replicates of its condition, it may indicate a potential technical problem, such as low library complexity, RNA degradation, contamination, or a sample labeling error. In such cases, the sample should be carefully evaluated by reviewing quality control metrics before deciding whether it should be retained or excluded from further analysis.
+- At this stage, the PCA plot allows us to evaluate whether samples belonging to the same experimental condition cluster together. Ideally, biological replicates should appear close to each other in the plot, indicating similar global gene expression profiles. 
+- Do samples cluster by the biological condition you care about (treatment vs control, WT vs KO)? 
+- Or do any samples cluster by other factors such as batch, RNA quality, sex, differentiation? 
+- If an individual sample does not cluster with the other replicates of its condition, it may indicate a potential technical problem, such as low library complexity, RNA degradation, contamination, or a sample labeling error. In such cases, the sample should be carefully evaluated by reviewing quality control metrics, and sample annotation before deciding whether it should be retained or excluded from further analysis.
 ```
 
 #### Gene expression plots
@@ -716,11 +739,8 @@ At this stage, the PCA plot allows us to evaluate whether samples belonging to t
 We can also plot the **normalized counts** of a gene per sample / experimental group:
 
 ```r
-
 # FOXC1 is ENSG00000054598
-
 plotCounts(se_star2, gene="ENSG00000054598", intgroup="Condition")
-
 ```
 
 | |
@@ -731,28 +751,22 @@ Let's produce a more comprehensive plot: we can **add the sample names and the d
 To do so, we can use the **ggplot2** package.
 
 ```r
-
 library(ggplot2)
 library(reshape2)
 
 # Retrieve the normalized counts per sample for FOXC1 / ENSG00000054598
-
 tmp <- norm_counts[rownames(norm_counts)=="ENSG00000054598",]
 
 # convert to "long" format
-
 mygenelong <- melt(tmp)
 
 # sample name
-
 mygenelong$name <- rownames(mygenelong)
 
 # sample Condition and Differentiation: merge with sample table
-
 mygenelong <- merge(mygenelong, sampletable, by.x="name", by.y="SampleName", all=F)
 
 # Dot plot
-
 pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differentiation, shape=Condition, label=name)) + 
   geom_point() +
   geom_text_repel(nudge_x=0.2) +  
@@ -762,8 +776,6 @@ pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differenti
   theme_bw()
 
 ggsave("counts_foxc1_nice.png", pdot)
-
-
 ```
 
 | |
@@ -773,9 +785,7 @@ ggsave("counts_foxc1_nice.png", pdot)
 We can represent it as a boxplot:
 
 ```r
-
 # Boxplot
-
 pbox <- ggplot(data=mygenelong,
                mapping=aes(x=Condition, y=value, fill=Differentiation, label=name)) +
   geom_boxplot(alpha = 0.3) +
@@ -787,8 +797,6 @@ pbox <- ggplot(data=mygenelong,
   theme_bw()
 
 ggsave("counts_foxc1_nice_boxplot.png", pbox)
-
-
 ```
 
 Here we can see clearly that in KO this gene was expressed 2^1.5 times higher in 5 days, and same for WT.
@@ -803,27 +811,21 @@ Also, we can compare the expression of our study gene with a control gene (GADPH
 GAPDH ensembl id ENSG00000111640
 
 ```r
-
-# Retrieve the normalized counts per sample for FOXC1 and GAPDH genes
-
+# Retrieve the normalized counts per sample for FOXC1 (ENSG00000054598) and GAPDH (ENSG00000111640) genes
 tmp<-norm_counts[c("ENSG00000054598","ENSG00000111640"),]
 
 # convert to "long" format
-
 mygenelong <- melt(tmp)
 mygenelong
 
 # sample name
-
 colnames(mygenelong) <- c("gene","name","value")
 
 # sample Condition and Differentiation: merge with sample table
-
 mygenelong <- merge(mygenelong, sampletable, by.x="name", by.y="SampleName", all=F)
 mygenelong
 
 # Dot plot
-
 pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differentiation, shape=Condition, label=name)) +
   geom_point() +
   geom_text(nudge_x=0.2) +  
@@ -843,7 +845,7 @@ Now is the moment to retrieve the results of the differential expression analysi
 
 From results we will obtain the following columns each one with a value for each gene:
 
-  baseMean log2FoldChange     lfcSE       stat    pvalue      padj
+|baseMean|log2FoldChange|lfcSE|stat|pvalue|padj|
 
 ```r
 # check results names: depends on what was modeled. Here it was the "Condition"
@@ -874,6 +876,16 @@ write.table(de_symbols, "deseq2_results.txt", quote=F, col.names=T, row.names=F,
 * **log2 fold change:**
 A positive fold change indicates an increase of expression while a negative fold change indicates a decrease in expression for a given comparison.
 This value is reported in a **logarithmic scale (base 2)**: for example, a log2 fold change of 1.5 in the "WT vs KO comparison" means that the expression of that gene is increased, in the WT relative to the KO, by a multiplicative factor of 2^1.5 ≈ 2.82.
+
+|log2 fold change|Fold change (condition B vs A)|Interpretation|
+|:---:|:---:|:---:|
+|log2 = 1|2-fold change|gene is 2× higher in condition B|
+|log2 = 2|4-fold change|gene is 4× higher in condition B|
+|log2 = 3|8-fold change|gene is 8× higher in condition B|
+|log2 = -1|2-fold lower|gene is 2× lower in condition B|
+|log2 = -2|4-fold lower|gene is 4× lower in condition B|
+|log2 = -3|8-fold lower|gene is 8× lower in condition B|
+
 * **pvalue:**
 Wald test p-value: Indicates whether the gene analysed is likely to be differentially expressed in that comparison. **The lower the more significant**.
 * **padj:**
@@ -1132,7 +1144,7 @@ How do results overlap between STAR and Salmon?
 
 ```{note}
 
-Remember to use the Gencode annotation file gencode.v49.annotation.gtf.gz preapred with the annotation columns you want to include in your normalized counts and differential expression tables.
+Remember to use the Gencode annotation file [gencode.v49.annotation.gtf.gz](#Prepare-transcript-to-gene-annotation-file-salmon) preapred with the annotation columns you want to include in your normalized counts and differential expression tables.
 ```
 
 ## Other cases
