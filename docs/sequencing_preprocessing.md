@@ -113,7 +113,7 @@ In this case, only two images are generated and analysed per cycle and therefore
 | |
 |:---:|
 | ![fishy](images/preprocessing/SBS_channels.png) | 
-| *Figure 7: 2 channel vs 4 channel chemistry. Image taken from [Illumina's technical note.](https://emea.illumina.com/content/dam/illumina-marketing/documents/products/techspotlights/cmos-tech-note-770-2013-054.pdf)* 
+| *Figure 8: 2 channel vs 4 channel chemistry. Image taken from [Illumina's technical note.](https://emea.illumina.com/content/dam/illumina-marketing/documents/products/techspotlights/cmos-tech-note-770-2013-054.pdf)* 
 
 </div>
 
@@ -126,7 +126,7 @@ Once the sequencing of read 1 has finished, the sequencing order for the remaini
 | |
 |:---:|
 | ![fishy](images/preprocessing/Library_structure.png) | 
-| *Figure 8: Sequencing order for paired-end reads (PE). Image taken from [Illumina's knowledge base.](https://knowledge.illumina.com/library-preparation/general/library-preparation-general-faq-list/000005679)* 
+| *Figure 9: Sequencing order for paired-end reads (PE). Image taken from [Illumina's knowledge base.](https://knowledge.illumina.com/library-preparation/general/library-preparation-general-faq-list/000005679)* 
 
 </div>
 
@@ -203,7 +203,7 @@ This format contains the information about the sequence and the quality of each 
 | |
 |:---:|
 | ![fishy](images/fastq_format.png) | 
-| *Figure 9: FastQ format example* 
+| *Figure 10: FastQ format example* 
 
 </div>
 
