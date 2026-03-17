@@ -1,10 +1,10 @@
 # Hands-on: Pre-processing and Quality Control of Raw Sequencing Data
 
-## Data for this course and SRA download:
+## Data for this course and SRA download
 
 The **Sequence Read Archive (SRA)** at NCBI is a public repository of raw sequencing data. It is the primary source for publicly available datasets to use for practice, benchmarking, or reproduction of published results.
 
-### SRA Accession Types
+**SRA Accession Types:**
 
 | Prefix | Level | Example |
 |--------|-------|---------|
@@ -31,9 +31,8 @@ Pre-processing includes:
     - Filtering out low-quality reads/base positions
     - rRNA removal (where applicable)
 
----
 
-### Tools Overview
+**Tools Overview**
 
 | Tool | Purpose |
 |:----:|:-------:|
@@ -42,7 +41,6 @@ Pre-processing includes:
 | **Kraken2** | Taxonomic classification to detect biological contamination |
 | **MultiQC** | Aggregates reports from all tools into one summary |
 
----
 
 ## FastQC
 
@@ -59,7 +57,7 @@ Pre-processing includes:
 - Overrepresented sequences
 - Adapter content
 
-:::{admonition} Reminder — Phred quality scores
+:::{admonition} **Reminder — Phred quality scores**
 :class: tip
 
 Phred scores (Q scores) encode the probability of a base-calling error:
@@ -98,11 +96,11 @@ sample_fastqc.html     # Visual HTML report with bar charts
 sample_fastqc.zip      # Zip file with graphs and results in txt
 ```
 
-### Hands-on: FastQC
+### Hands-on
 ```bash
 # Go to the "quality_control" folder
-mkdir ~/RNAseq_coursesCRG_2026/quality_control
-cd ~/RNAseq_coursesCRG_2026/quality_control
+mkdir ~/RNAseq_coursesCRG_2026/raw_qc
+cd ~/RNAseq_coursesCRG_2026/raw_qc
 
 # Run FastQC for one sample
 $RUN fastqc ~/RNAseq_coursesCRG_2026/docs/data/reads/SRR3091420_1_chr6.fastq.gz -o .
@@ -138,7 +136,7 @@ less SRR3091420_1_chr6_fastqc/fastqc_data.txt
 
 ### Interpreting Key Plots
 
-#### 1. Per Base Sequence Quality
+**1. Per Base Sequence Quality**
 
 - **Good:** Box plots remain in the **green zone** (Q > 28)
 - **Warning:** Boxes drop into yellow (Q 20–28)
@@ -157,13 +155,13 @@ Below is an example of a good quality dataset (top) and a poor quality dataset (
 | *Figure 2: Bad quality per base sequence* | 
 </div>
 
-#### 2. Per Sequence GC Content
+**2. Per Sequence GC Content**
 
 - Should follow a **normal bell-shaped curve**
 - A shifted peak may indicate contamination or adapter dimers
 - Bimodal distribution = likely contamination from another organism
 
-#### 3. Adapter Content
+**3. Adapter Content**
 
 - Should be near **0%** in well-prepared libraries
 - High adapter content indicates insufficient insert size or failed library prep
@@ -183,17 +181,19 @@ Problem case (insert < read length):
          Adapter sequence contaminates the read
 ```
 
-#### 4. Overrepresented Sequences
+**4. Overrepresented Sequences**
 
 - FastQC will BLAST-match overrepresented sequences
 - Common hits: TruSeq adapters, polyA tails, rRNA
 - Any unknown overrepresented sequence warrants investigation
 
-> **Important — General rules do not apply to all applications**
->
-> The guides above apply to regular RNA-seq datasets. In other applications, these rules do not hold:
-> - **Small RNA-seq libraries:** insert size is smaller and adapter content is expected to be higher (see example below).
-> - **Single-cell experiments:** read 1 contains the cell barcode and UMI, so its GC content profile may be altered.
+:::{admonition} **Important — General rules do not apply to all applications**
+
+:class: important
+
+The guides above apply to regular RNA-seq datasets. In other applications, these rules do not hold:
+- **Small RNA-seq libraries:** insert size is smaller and adapter content is expected to be higher (see example below).
+- **Single-cell experiments:** read 1 contains the cell barcode and UMI, so its GC content profile may be altered.
 
 <div style="display:flex; justify-content:center;">
 
@@ -204,9 +204,11 @@ Problem case (insert < read length):
 
 </div>
 
+:::
+
 ## Exercises I
 
-The following exercise use publicly available datasets from NCBI SRA. Download the data using the **SRA toolkit**, run FastQC, and answer the questions below:
+The first part of this exercise is to download publicly available data from SRA, using the **SRA toolkit**. Below you can find the basic commands to use this tool:
 
 ```bash
 # Download a single run (compressed .sra format)
@@ -222,16 +224,16 @@ fasterq-dump SRR1234567 --split-files --outdir ./fastq/
 gzip ./fastq/SRR1234567.fastq
 ```
 
-#### Dataset: accession number SRR36179215
+Now, download the data (**accession number SRR36179215**) using the **SRA toolkit**, run FastQC, and answer the questions below.
 
 ```bash
-# Download 1 million reads
-fasterq-dump SRR36179215 --outdir ./fastq/ -X 1000000
-gzip ./fastq/SRR36179215.fastq
+# Download from SRA:
+fasterq-dump SRR36179215 --outdir ./exercise1/
+gzip ./exercise1/SRR36179215.fastq
 
 # Run FastQC
-fastqc ./fastq/SRR36179215.fastq.gz -o ./fastqc_results/
-firefox ./fastqc_results/SRR36179215_fastqc.html &
+fastqc ./exercise1/SRR36179215.fastq.gz -o ./ex1_fastqc_results/
+firefox ./ex1_fastqc_results/SRR36179215_fastqc.html &
 ```
 **Discussion questions:**
 1. Is this adapter content a sign of a failed experiment? Why or why not? Which type of dataset this might be?
@@ -260,7 +262,6 @@ The tool works by:
 Do not run the following command in class — it will take too much time and resources.
 
 :::
-
 
 ```bash
 # Download default databases
@@ -301,19 +302,10 @@ DATABASE Adapters /path/to/FastQ_Screen_Genomes/Adapters/contaminants
 ```bash
 $RUN fastq_screen --conf FastQ_Screen_Genomes/fastq_screen.conf \
            ~/RNAseq_coursesCRG_2026/docs/data/reads/SRR3091420_1_chr6.fastq.gz \
-           --outdir ~/RNAseq_coursesCRG_2026/quality_control/
+           --outdir ~/RNAseq_coursesCRG_2026/raw_qc/
 ```
 
 To view example results for SRR3091420_1_chr6.fastq.gz:
-
-```bash
-cd ~/RNAseq_coursesCRG_2026/quality_control/
-
-wget https://public-docs.crg.es/biocore/projects/training/PHINDaccess2020/SRR3091420_1_fastq_screen.tar.gz
-tar -zvxf SRR3091420_1_fastq_screen.tar.gz
-
-firefox SRR3091420_1_screen.html
-```
 
 ![FastQ Screen results](images/SRR3091420_1_screen.png)
 
@@ -362,6 +354,8 @@ FastQ Screen results require careful interpretation — context matters dependin
 
 2. Inspect the fastq_screen output. What do you think is happening to the sample? Would you need to ask more information about it before reaching any conclusion?
 
+<div style="display:flex; justify-content:center;">
+
 | |
 |:---:|
 | ![Good quality per base](images/Fastq_screen_ex2.png) |
@@ -385,19 +379,6 @@ FastQ Screen results require careful interpretation — context matters dependin
 2. Looks up each k-mer in a pre-built hash table of taxonomic assignments
 3. Uses a **lowest common ancestor (LCA)** algorithm to assign a taxonomy
 4. Reports classification at each taxonomic level (phylum → species)
-
-### Building or Downloading a Database
-
-```bash
-# Download prebuilt standard database (~8 GB, includes bacteria, archaea, viruses, human)
-# From: https://benlangmead.github.io/aws-indexes/k2
-wget https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08gb_20240904.tar.gz
-mkdir kraken2_db
-tar -xzf k2_standard_08gb_20240904.tar.gz -C kraken2_db/
-
-# Or build a custom database (requires more disk space)
-kraken2-build --standard --db kraken2_db/ --threads 16
-```
 
 ### Basic Usage
 
@@ -441,17 +422,54 @@ The report file (`--report`) follows this tab-delimited format:
 | taxID | NCBI taxonomy ID |
 | name | Taxonomic name |
 
-### Interpreting Results
-
-- **Expected (human WGS):** >95% reads classified as *Homo sapiens*
-- **Investigate:** Any bacterial taxon at >1% in a non-metagenomic sample
-- **Common contaminants:** *Mycoplasma* spp., *E. coli*, *Cutibacterium acnes* (skin)
-- **Spike-ins:** PhiX should appear at low levels in Illumina data
-
 ### Hands-on: Kraken2
 
-Missing hands on for Kraken!
+```bash
+# Uncompress the kraken2 database:
+cd ~/RNAseq_indices/
+tar -zxf minikraken2_v2_8GB_201904_UPDATE.tar.gz
 
+# Classify single-end reads
+cd ~/RNAseq_coursesCRG_2026
+
+$RUN kraken2 \
+    --db ~/RNAseq_indices/minikraken2_v2_8GB_201904_UPDATE \
+    --output ~/RNAseq_coursesCRG_2026/raw_qc/SRR3091420_1_chr6_kraken_output.txt \
+    --report ~/RNAseq_coursesCRG_2026/raw_qc/SRR3091420_1_chr6_kraken_report.txt \
+    docs/data/reads/SRR3091420_1_chr6.fastq.gz
+    
+```
+
+### Exercises III:
+Now, run Kraken2 for all of our samples and check the results. Are what do you expected? Do they match with those from fastq_screen? 
+
+```bash
+
+# Go to the repository directory:
+cd ~/RNAseq_coursesCRG_2026
+
+# Run Kraken2 in all samples:
+
+for fastq_file in ~/RNAseq_coursesCRG_2026/docs/data/reads/*.fastq.gz; do
+  
+    filename=$(basename "$fastq_file")
+
+    # Strip extension(s): handles .fastq.gz, .fq.gz, .fastq, .fq
+    sample_name="${filename%%.*}"
+
+    # Set output and report names:
+    output_path="$HOME/RNAseq_coursesCRG_2026/raw_qc/${sample_name}_kraken_output.txt"
+    report_path="$HOME/RNAseq_coursesCRG_2026/raw_qc/${sample_name}_kraken_report.txt"
+
+
+    $RUN kraken2 \
+        --db ~/RNAseq_indices/minikraken2_v2_8GB_201904_UPDATE \
+        --output $output_path \
+        --report $report_path \
+        $fastq_file
+; done
+
+```
 
 ## MultiQC — Raw Data Summary
 
@@ -469,16 +487,24 @@ mkdir multiqc_report
 cd ~/RNAseq_coursesCRG_2026/multiqc_report
 
 # Link QC, trimming and mapping data
-ln -s ~/RNAseq_coursesCRG_2026/quality_control* .
+ln -s ~/RNAseq_coursesCRG_2026/raw_qc .
 
 # Run MultiQC on the directory
 $RUN multiqc .
 
 # Visualize in browser
-firefox multiqc_report.html
+firefox multiqc_report.html &
 ```
 
-![MultiQC report](images/multiqc.png)
+<div style="display:flex; justify-content:center;">
+
+| |
+|:---:|
+| ![MultiQC report](images/multiqc.png)         |
+| *Figure 6: Example of multiQC report (html).* | 
+
+</div>
+
 
 ### Useful Options
 
@@ -500,27 +526,6 @@ multiqc . --config multiqc_config.yaml
 
 ```
 
-### Example `multiqc_config.yaml`
-
-```yaml
-title: "RNA-seq QC Report — Project XYZ"
-report_comment: "Initial QC of untrimmed raw reads"
-
-fn_clean_exts:
-    - ".fastq.gz"
-    - "_R1"
-    - "_R2"
-    - "_001"
-
-module_order:
-    - fastqc
-    - fastq_screen
-    - kraken
-
-fastqc_config:
-    reads_min_count: 1000000
-```
-
 ---
 
 ## Read Pre-processing: adapter trimming and rRNA removal
@@ -532,8 +537,6 @@ After running raw QC, two issues commonly stand out in the MultiQC report that m
 | Adapter sequences | Misalignments, spurious variant calls, reduced mapping rate |
 | Low quality 3' bases | Increased error rate in alignments and assemblies |
 | rRNA reads | Wasted sequencing depth; biased expression estimates |
-
----
 
 ## Adapter Trimming
 
@@ -566,7 +569,11 @@ Result: ACGTACGTACGTACGT
 
 **Step 3 — Minimum Length Filtering:** After trimming, reads that are too short to align reliably are discarded entirely (common threshold: 20–36 bp).
 
-> **Paired-end reads:** In paired-end mode, **both reads of a pair must be handled together**. If one read is discarded (too short after trimming), its partner must also be removed or placed in an "orphan" file to maintain pairing integrity — aligners require paired reads to be in the same order.
+:::{admonition} **Important: how paired-end reads are handled**
+:class: important
+
+In paired-end mode, **both reads of a pair must be handled together**. If one read is discarded (too short after trimming), its partner must also be removed or placed in an "orphan" file to maintain pairing integrity — aligners require paired reads to be in the same order.
+:::
 
 ### Trimming with TrimGalore
 
@@ -590,7 +597,7 @@ trim_galore \
     --fastqc \                  # Run FastQC on output
     --cores 4 \                 # Parallel processing
     -o trimmed_output/ \
-    ~/RNAseq_coursesCRG_2026/docs/data/reads/SRR3091420_1_chr6.fastq.gz
+    sample.fastq.gz
 ```
 
 **Specifying adapters manually:**
@@ -599,70 +606,81 @@ trim_galore \
 # Illumina TruSeq adapter (most common for single-end)
 trim_galore \
     --adapter AGATCGGAAGAGCACACGTCTGAACTCCAGTCA \
-    ~/RNAseq_coursesCRG_2026/docs/data/reads/SRR3091420_1_chr6.fastq.gz
+    sample.fastq.gz
 
 # Nextera adapter
-trim_galore --nextera ~/RNAseq_coursesCRG_2026/docs/data/reads/SRR3091420_1_chr6.fastq.gz
+trim_galore --nextera sample.fastq.gz
 
 # Small RNA (miRNA) adapter
-trim_galore --small_rna ~/RNAseq_coursesCRG_2026/docs/data/reads/SRR3091420_1_chr6.fastq.gz
+trim_galore --small_rna sample.fastq.gz
+```
+
+#### Hands-on: Trim Galore
+
+```bash
+cd ~/RNAseq_coursesCRG_2026/
+
+# Create a folder for the trimmed data:
+mkdir trimmed_data
+
+$RUN trim_galore \
+    --quality 20 \
+    -o trimmed_data/ \
+    ~/RNAseq_coursesCRG_2026/docs/data/reads/SRR3091420_1_chr6.fastq.gz
 ```
 
 **Output files:**
 
 ```
-trimmed_output/
+trimmed_data/
 ├── SRR3091420_1_chr6_trimmed.fq.gz                      # Trimmed reads
-└── SRR3091420_1_chr6.fastq.gz_trimming_report.txt        # Trimming stats
+└── SRR3091420_1_chr6.fastq.gz_trimming_report.txt       # Trimming stats
 ```
 
 **Reading the trimming report:**
 
 ```
-Total reads processed:               5,000,000
-Reads with adapters:                 2,150,000  (43.0%)    ← worth noting
-Reads written (passing filters):     4,987,320  (99.7%)
-Quality-trimmed:                 8,250,000 bp  (1.1%)
-Adapter-trimmed:               125,400,000 bp  (16.7%)
-Total written (filtered):      616,349,680 bp  (82.2%)
+Total reads processed:                 835,169
+Reads with adapters:                   277,510 (33.2%)
+Reads written (passing filters):       835,169 (100.0%)
+
+Total basepairs processed:    40,923,281 bp
+Quality-trimmed:                       0 bp (0.0%)
+Total written (filtered):     40,540,114 bp (99.1%)
 ```
 
 Key numbers to check:
 - **Reads with adapters:** confirms the adapter contamination seen in FastQC
 - **Reads written (passing filters):** should remain high (>95%); low values suggest aggressive trimming or very short inserts
-- **Total basepairs removed:** gives a sense of how much data was lost to trimming
 
-**Batch processing multiple samples:**
+### Exercises IV
+Adapt the code provided in exercise III (Kraken2) and, together with the trim-galore code above, modify it to run trimming in all of our samples. Afterwards, check the results and see if all samples behave similarly. 
 
-```bash
-#!/bin/bash
-RAWDIR=~/RNAseq_coursesCRG_2026/docs/data/reads
-OUTDIR=~/RNAseq_coursesCRG_2026/trimming
-mkdir -p "${OUTDIR}"
+:::{admonition} **Solution**
+:class: dropdown
 
-for FASTQ in "${RAWDIR}"/*.fastq.gz; do
-    SAMPLE=$(basename "${FASTQ}" .fastq.gz)
-    echo "Trimming: ${SAMPLE}"
-    trim_galore \
-        --quality 20 \
-        --length 36 \
-        --fastqc \
-        --cores 4 \
-        -o "${OUTDIR}" \
-        "${FASTQ}"
+# Go to the repository directory:
+cd ~/RNAseq_coursesCRG_2026
+
+# Run Kraken2 in all samples:
+
+for fastq_file in ~/RNAseq_coursesCRG_2026/docs/data/reads/*.fastq.gz; do
+
+    $RUN trim_galore \
+    --quality 20 \
+    -o trimmed_data/ \
+    "$fastq_file"
+
 done
 
-echo "All samples trimmed."
-```
+:::
 
----
 
 ## rRNA Removal with RiboDetector
 
 Even after trimming, RNA-seq libraries often retain a proportion of **ribosomal RNA reads** from incomplete ribo-depletion (e.g., RiboZero, RNase H) or polyA selection inefficiency. These reads:
 
 - Consume sequencing depth without contributing to gene expression estimates
-- Can bias normalization and differential expression results
 - Inflate total read counts relative to informative mRNA reads
 
 [**RiboDetector**](https://github.com/hzi-bifo/RiboDetector) is a **deep learning-based** tool that accurately identifies and removes rRNA reads without relying on a reference database. It uses a neural network trained on a broad set of rRNA sequences from bacteria, archaea, and eukaryotes, enabling robust detection even for divergent or novel rRNA sequences.
@@ -673,15 +691,6 @@ Even after trimming, RNA-seq libraries often retain a proportion of **ribosomal 
 - Handles partial rRNA matches and divergent sequences well
 - GPU acceleration available for large datasets
 
-### Installation
-
-```bash
-# Install via pip
-pip install ribodetector
-
-# Or via conda
-conda install -c bioconda ribodetector
-```
 
 ### Basic Usage
 
@@ -689,29 +698,21 @@ conda install -c bioconda ribodetector
 # Single-end reads
 ribodetector_cpu \
     -t 8 \
-    -l 100 \
-    -i ~/RNAseq_coursesCRG_2026/trimming/SRR3091420_1_chr6_trimmed.fq.gz \
+    -l 49 \
+    -i sample_R1_trimmed.fq.gz \
     -e rrna \
-    --rrna ~/RNAseq_coursesCRG_2026/ribodetector_output/SRR3091420_1_chr6_rrna.fq.gz \
-    -o ~/RNAseq_coursesCRG_2026/ribodetector_output/SRR3091420_1_chr6_nonrrna.fq.gz
+    --rrna rrna.fq.gz \
+    -o nonrrna.fq.gz
 
 # Paired-end reads
 ribodetector_cpu \
     -t 8 \
-    -l 100 \
+    -l 49 \
     -i sample_R1_trimmed.fq.gz sample_R2_trimmed.fq.gz \
     -e rrna \
     --rrna rrna_R1.fq.gz rrna_R2.fq.gz \
     -o nonrrna_R1.fq.gz nonrrna_R2.fq.gz
 
-# GPU-accelerated (requires CUDA)
-ribodetector \
-    -t 8 \
-    -l 100 \
-    -i sample_trimmed.fq.gz \
-    -e rrna \
-    --rrna rrna_reads.fq.gz \
-    -o nonrrna_reads.fq.gz
 ```
 
 ### Key Parameters
@@ -726,70 +727,62 @@ ribodetector \
 | `-o` | Output file for non-rRNA reads (use downstream) |
 | `--chunk_size` | Number of reads processed per batch (default: 256; increase for speed if RAM allows) |
 
-> **Setting `-l` correctly:** RiboDetector is length-aware — always set `-l` to match the read length in your input file. After TrimGalore, reads may vary in length; use the modal or maximum post-trim read length as a guide.
+
+#### Hands-on: Ribodetector
+
+```bash
+cd ~/RNAseq_coursesCRG_2026/
+
+# Create a folder for the trimmed data:
+mkdir ribodetector
+cd ribodetector
+
+# Ribodetector does not give us a % of rRNA reads per se, so we will have to calculate it apart of running the tool:
+
+tot=$(( $(zcat trimmed_data/SRR3091420_1_chr6_trimmed.fq.gz | wc -l) / 4 ))
+
+length=` zcat ~/RNAseq_coursesCRG_2026/trimmed_data/SRR3091420_1_chr6_trimmed.fq.gz | awk '{num++}{if(num%4==2) {seq++; len+=length(\$0)}}END{print int(len/seq)}' `
+
+$RUN ribodetector_cpu \
+-l $length \
+-o SRR3091420_1_chr6_nonrrna.fq.gz -e rrna -r SRR3091420_1_chr6_rrna.fq.gz \
+-i ~/RNAseq_coursesCRG_2026/trimmed_data/SRR3091420_1_chr6_trimmed.fq.gz
+
+awk -v tot=\$tot '{num++}END{print id" "num/4/tot*100}' rna1.fq > SRR3091420_1_chr6_trimmed_rna_perc.txt
+
+```
 
 ### Output Files
 
 ```
 ribodetector_output/
 ├── SRR3091420_1_chr6_rrna.fq.gz       # rRNA reads (removed from analysis)
-└── SRR3091420_1_chr6_nonrrna.fq.gz    # Clean reads for downstream use ← use these
+└── SRR3091420_1_chr6_nonrrna.fq.gz    # Clean reads
+└── SRR3091420_1_chr6_trimmed_rna_perc.txt # Percentage of %rRNA reads
 ```
 
 ### Interpreting the Output
 
-RiboDetector does not produce a separate log file by default, but read counts can be inferred by comparing input and output:
-
-```bash
-# Count reads in input
-echo $(zcat trimmed.fq.gz | wc -l) / 4 | bc
-
-# Count reads in clean output
-echo $(zcat nonrrna.fq.gz | wc -l) / 4 | bc
-
-# Count rRNA reads removed
-echo $(zcat rrna.fq.gz | wc -l) / 4 | bc
-```
-
 A rRNA percentage of 1–10% is typical for well-depleted libraries. Values >20–30% suggest ribo-depletion failure and should be flagged, though the reads can still be usable after removal.
 
----
 
 ## Post-Processing QC with MultiQC
 
-After trimming and rRNA removal, verify that:
-1. **Adapter contamination is gone** — the FastQC Adapter Content module should be flat near 0%
-2. **Read quality has improved** — per-base quality at 3' ends should be higher
-3. **Read counts remain acceptable** — we haven't lost too many reads
-4. **rRNA depletion was effective** — the proportion removed is within expected range
+Now, once we have finished the preprocessing, it is time to colapse all results into a multiQC report, which will contain  **pre- and post-trimming** results, enabling direct side-by-side comparison.
 
-The most powerful approach is to run MultiQC on **pre- and post-trimming FastQC results together**, enabling direct side-by-side comparison.
 
-### Generating FastQC on Trimmed and Cleaned Reads
+### Hands-on: multiQC on pre and post processed reads
 
 ```bash
-# FastQC on trimmed reads (if not already done via --fastqc in TrimGalore)
-mkdir -p ~/RNAseq_coursesCRG_2026/fastqc_trimmed/
-fastqc -t 4 -o ~/RNAseq_coursesCRG_2026/fastqc_trimmed/ ~/RNAseq_coursesCRG_2026/trimming/*_trimmed.fq.gz
 
-# FastQC on rRNA-removed reads
-mkdir -p ~/RNAseq_coursesCRG_2026/fastqc_clean/
-fastqc -t 4 -o ~/RNAseq_coursesCRG_2026/fastqc_clean/ ~/RNAseq_coursesCRG_2026/ribodetector_output/*_nonrrna.fq.gz
-```
-
-### Running MultiQC Across All Three Stages
-
-```bash
 multiqc \
-    ~/RNAseq_coursesCRG_2026/quality_control/ \    # FastQC on untrimmed reads
-    ~/RNAseq_coursesCRG_2026/fastqc_trimmed/ \     # FastQC on TrimGalore output
-    ~/RNAseq_coursesCRG_2026/fastqc_clean/ \       # FastQC on rRNA-removed reads
-    ~/RNAseq_coursesCRG_2026/trimming/ \           # TrimGalore trimming reports
+    ~/RNAseq_coursesCRG_2026/raw_qc/ \    
+    ~/RNAseq_coursesCRG_2026/trimmed_data/ \     
     -o ~/RNAseq_coursesCRG_2026/multiqc_comparison/ \
     -n pre_vs_post_processing_report \
     -f
 
-firefox ~/RNAseq_coursesCRG_2026/multiqc_comparison/pre_vs_post_processing_report.html
+firefox ~/RNAseq_coursesCRG_2026/multiqc_comparison/pre_vs_post_processing_report.html &
 ```
 
 With raw and trimmed samples in the same report, use a config file to keep sample names clean:
@@ -832,8 +825,6 @@ fn_clean_exts:
 - Shows % reads with adapters per sample, total bp trimmed, and reads failing minimum length filter
 - Outlier samples (e.g., one sample with 80% adapter rate vs. ~40% for others) warrant investigation — possible library prep failure
 
----
-
 ## Final Exercise
 
 The file `~/RNAseq_coursesCRG_2026/docs/data/reads/example2_reads.fq.gz` contains a set of single-end reads from an unknown sample. Apply the full pre-processing pipeline we covered in this session:
@@ -843,7 +834,7 @@ The file `~/RNAseq_coursesCRG_2026/docs/data/reads/example2_reads.fq.gz` contain
 3. Run **Kraken2** to perform taxonomic classification.
 4. Run **TrimGalore** to remove adapters and low-quality bases.
 5. Run **RiboDetector** to remove rRNA reads from the trimmed output.
-6. Run **FastQC** again on both the trimmed and rRNA-cleaned reads.
+6. Run **FastQC** again on both the processed reads.
 7. Aggregate all results with **MultiQC** and compare the pre- and post-processing reports.
 
 Once you have inspected all the outputs, consider the following questions:
