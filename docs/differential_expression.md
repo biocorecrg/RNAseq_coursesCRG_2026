@@ -197,7 +197,10 @@ Each raw count is divided by the size factor of the sample it belongs to.
 | GeneD | 73 | 653 | 67 |
 | GeneE | 573 | 547 | 562 |
 
-For additional information regarding the tool and the algorithm, please refer to the [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4302049/) and the user-friendly package [vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html).
+::{admonition}
+:class: seealso
+You can also find normalized counts by using the **TPM** (Transcripts Per Million) or **FPKM** (Fragments Per Kilobase of transcript per Million mapped reads) metrics. [See here](https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/)
+:::
 
 ## Tutorial on basic DESeq2 usage for differential analysis of gene expression
 
@@ -229,7 +232,7 @@ cd ~/rnaseq_course/differential_expression
 # Download the full count data folder from the course repository
 wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/docs/data/differential_expression/full_data_counts.tar.gz
 
-# Untar the data
+# Untar the data -x extract folder -z gzip decompression -v verbose -f file
 tar -xzvf full_data_counts.tar.gz
 ```
 
@@ -1382,3 +1385,4 @@ ggsave("PCA_mislabeled.png",PCA_misl,  width = 12, height = 6)
 ## Further reading materials
 
 * [Analyzing RNA-seq data with DESeq2](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)
+* [For additional information regarding the tool and the algorithm, please refer to the paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4302049/)
