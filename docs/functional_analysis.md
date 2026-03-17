@@ -3,6 +3,7 @@
 First, get the files from the **undifferentiated only** DESeq2 analysis (in case we did not have time to do it):
 
 ```bash
+cd ~/rnaseq_course/differential_expression
 # get file
 wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/differential_expression/undiff.tar.gz
 
@@ -13,6 +14,8 @@ rm undiff.tar.gz
 ```
 
 ## Databases
+
+Gene enrichment analysis use **gene sets** and **pathways** to look for over-represented biological themes in our study list of genes.
 
 ### Gene Ontology
 
@@ -88,7 +91,7 @@ Tools based on a user-selection of genes usually require 2 inputs:
 * **Gene Universe:** in our example, all genes used in our analysis (after filtering out low counts).
 * **List of genes selected from the universe:** our selection of genes given the criteria we previously used: **padj < 0.05**.
 
-They are often based on the **Hypergeometric test** or on the **Fisher's exact test**. You can have a look at this [page](http://pedagogix-tagc.univ-mrs.fr/courses/ASG1/practicals/go_statistics_td/go_statistics_td_2015.html) for some explanation of both tests.
+They are often based on the **Hypergeometric test** or on the **Fisher's exact test**.
 
 Let's prepare this list from the file we saved before:
 
@@ -528,3 +531,4 @@ Heatmap of all genes from that gene set (ranked by GSEA) for each sample:
 * [clusterProfiler](https://bioconductor.org/packages/clusterProfiler/)
 * [GOstats](https://bioconductor.org/packages/GOstats/)
 * [ClusterProfiler tutorial](https://learn.gencore.bio.nyu.edu/rna-seq-analysis/gene-set-enrichment-analysis/)
+* [Biomedical Knowledge Mining with R](https://yulab-smu.top/biomedical-knowledge-mining-book/02-Enrichment.html)

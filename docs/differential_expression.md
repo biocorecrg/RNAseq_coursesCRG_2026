@@ -1352,7 +1352,7 @@ rm mislabeled_sample_example.tar.gz
 
 ¿Do you find any sample that is not in the cluster is should be in?
 
-:::{admonition}
+:::{admonition} Click to see the solution
 :class: dropdown, tip
 
 ```r
