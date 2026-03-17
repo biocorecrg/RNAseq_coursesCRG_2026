@@ -44,6 +44,15 @@ Examples:
 * {kbd}`CTRL` + {kbd}`ENTER` to send the current row or a selected block of code to the console
 * {kbd}`CTRL` + {kbd}`2` to move the cursor to the console
 
+https://docs.posit.co/ide/user/ide/guide/code/projects.html
+
+```{tip}
+If you start using RStudio IDE for your work, please refer to the (great) official documentation, for example:
+
+* [RStudio IDE User Guide](https://docs.posit.co/ide/user/)
+* [RStudio Projects](https://docs.posit.co/ide/user/ide/guide/code/projects.html)
+```
+
 
 ## R Basics
 
@@ -66,7 +75,6 @@ Assigning a value to the object **B**:
 B <- 10
 ```
 
-Reassigning: modifying the content of an object:
 
 ```r
 B + 10
@@ -74,6 +82,7 @@ B + 10
 
 <span style="color:red">**B unchanged !!**</span><br>
 
+**Reassigning**: modifying the content of an object:
 
 ```r
 B <- B + 10
@@ -183,7 +192,7 @@ Check the length of (i.e. number of elements) a vector:
 length(a)
 ```
 
-You can extract elements of a vector using the slicing operator **[]**:
+You can extract elements of a vector using the slicing operator (the square bracket) **[ ]**:
 
 Extract 1st and 3rd elements of **a**:
 
@@ -273,7 +282,7 @@ head(mat, n=10)
 tail(mat)
 ```
 
-You can extract rows and columns of a matrix using the slicing operator **[]** and their position/index:
+You can extract rows and columns of a matrix using the slicing operator (square bracket **[ ]** and their position/index:
 
 ```r
 # first row
@@ -291,6 +300,11 @@ mat[,c(2, 3)]
 # or mat[,2:3]
 ```
 
+```{note}
+The left item of the square bracket always corresponds to the row, while the right item always corresponds to the column:
+
+**mat[row_index, colum_index]**
+```
 
 ##### Data frames
 
@@ -338,7 +352,7 @@ colnames(df)
 rownames(df)
 ```
 
-You can extract rows - as with matrices - using the slicing operator: df[1,]
+You can extract rows - as with matrices - using the slicing operator: the square bracket **[ ]** df[1,]
 
 You can extract columns of a data frame with:
 
@@ -359,7 +373,7 @@ Select rows of the data frame based on multiple conditions, for example, **if th
 df[df$Age > 24 & df$Vegetarian == TRUE,]
 ```
 
-Finally, select only columns of interest for your selection:
+Finally, select only columns of interest for your selection: in the following example, we extract the name of vegetarian people older than 24:
 
 ```r
 df[df$Age > 24 & df$Vegetarian == TRUE, "Name"]
@@ -381,7 +395,7 @@ The `length` of a list gives you the number of elements.
 length(mylist)
 ```
 
-You can extract elements of a list (and apply functions on them) using the double square brackets **[[]]**.
+You can extract elements of a list (and apply functions on them) using the double square brackets **[[ ]]**.
 
 ```r
 # extract third element of the list with the index...
@@ -545,6 +559,10 @@ For example, if the file is located in the home directory, read it as:
 ```r
 scan(file="~/gene_list.txt", 
         what="character")
+        
+# here, we can read it as:
+
+scan(file="~/rnaseq_course/r_basics/gene_list.txt", what="character")
 ```
 
 
