@@ -1032,10 +1032,8 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 
 **DON'T FORGET TO WRITE FILES DOWN AT EACH STEP!!**
 
-**STEP BY STEP CORRECTION**
-
 :::{admonition} Click to see the solution
-:class: dropdown, note
+:class: dropdown, tip
 
 ```r
 ## DESeq2 analysis
@@ -1152,7 +1150,6 @@ Do the same using the **Salmon counts** (object *se_salmon*): how many genes are
 How do results overlap between STAR and Salmon?
 
 ```{note}
-
 Remember to use the Gencode annotation file [gencode.v49.annotation.gtf.gz](#Prepare-transcript-to-gene-annotation-file-salmon) preapred with the annotation columns you want to include in your normalized counts and differential expression tables.
 ```
 
@@ -1167,7 +1164,7 @@ Other times, some samples are processed at different time points, by different o
 In all these cases, unintended technical variation can be introduced into the data — something known as a **batch effect**.
 
 :::{admonition} What is a batch effect?
-    :class: note
+:class: note
 
     A **batch effect** is systematic, non-biological variation in gene expression data introduced by technical factors such as:
 
@@ -1177,6 +1174,8 @@ In all these cases, unintended technical variation can be introduced into the da
     * Samples stored under different conditions before RNA extraction
 
     Batch effects can be just as large as (or larger than) the biological signal you are trying to detect, and will **confound** your differential expression results if not properly accounted for.
+
+    In the worst case scenario, batch effects becomes completely inseparable from the biological signal of interest. For example, if all your control samples were processed in batch 1 and all your treatment samples were processed in batch 2, you will not be able to distinguish between the effect of the treatment and the effect of the batch.
 :::
 
 #### Detect batch effects using PCA
@@ -1352,6 +1351,9 @@ cd mislabeled_sample_example/
 
 ¿Do you find any sample that is not in the cluster is should be in?
 
+:::{admonition}
+:class: dropdown, tip
+
 ```r
 setwd("~/rnaseq_course/differential_expression/mislabeled_sample_example")
 
@@ -1398,6 +1400,8 @@ PCA_misl <- ggplot(pcaData, aes(PC1, PC2, color=Condition)) +
 
 ggsave("PCA_mislabeled.png",PCA_misl,  width = 12, height = 6)
 ```
+
+:::
 
 | | |
 |:---:|:---:|
