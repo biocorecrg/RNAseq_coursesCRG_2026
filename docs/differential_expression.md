@@ -116,6 +116,11 @@ In this tutorial, we will give you an overview of the **DESeq2** pipeline to fin
 
 It tests for differential expression using [**negative binomial generalized linear models**](https://bioramble.wordpress.com/2016/01/30/why-sequencing-data-is-modeled-as-negative-binomial/).
 
+| |
+|:---:|
+| ![Negative binomial vs Poisson distribution](images/nb_mean_var.png) |
+Source: <https://bioramble.wordpress.com/2016/01/30/why-sequencing-data-is-modeled-as-negative-binomial/>
+
 DESeq2 (as edgeR) is based on the hypothesis that **most genes are not differentially expressed**.
 
 This DESeq2 tutorial is inspired by the [RNA-seq workflow](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html) developed by the authors of the tool, and by the [differential gene expression course](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) from the [Harvard Chan Bioinformatics Core](http://bioinformatics.sph.harvard.edu/).
@@ -131,7 +136,66 @@ DESeq2 takes as an input **raw counts** (i.e. non normalized counts): the DESeq2
 * Testing for differential expression (Wald test).
 
 DESeq2 uses the **median of ratio** method for **normalization**: briefly, the raw counts are divided by sample-specific **size factors**.
-**Geometric mean** is calculated for each gene **across all samples**. The counts for a gene in each sample is then **divided** by this mean. The **median of these ratios** in a sample is the size factor for that sample.
+
+Let's see how it works with a simple example:
+
+Raw counts:
+
+| Gene | Sample A | Sample B | Sample C |
+|:---:|:---:|:---:|:---:|
+| GeneA | 80 | 160 | 95 |
+| GeneB | 1200 | 2100 | 1350 |
+| GeneC | 340 | 700 | 410 |
+| GeneD | 55 | 980 | 60 |
+| GeneE | 430 | 820 | 500 |
+
+For each gene, the **geometric mean** is calculated across all samples:
+
+| Gene | Geometric mean |
+|:---:|:---:|
+| GeneA | (80 × 160 × 95)^(1/3) = 1,216,000^(1/3) ≈ 106.6 |
+| GeneB | (1200 × 2100 × 1350)^(1/3) = 3,402,000,000^(1/3) ≈ 1503.3 |
+| GeneC | (340 × 700 × 410)^(1/3) = 97,580,000^(1/3) ≈ 461.5 |
+| GeneD | (55 × 980 × 60)^(1/3) = 3,234,000^(1/3) ≈ 147.9 |
+| GeneE | (430 × 820 × 500)^(1/3) = 176,300,000^(1/3) ≈ 560.7 |
+
+```{admonition} Note
+:class: note
+
+We use the **geometric mean** instead of the arithmetic mean because it is less sensitive to outliers (very high or very low count values).
+```
+
+Then the counts for a gene in each sample is then **divided** by this mean.
+
+| Gene (geo mean) | Sample A | Sample B | Sample C |
+|:---:|:---:|:---:|:---:|
+| GeneA (106.6) | 80 ÷ 106.6 = 0.75 | 160 ÷ 106.6 = 1.50 | 95 ÷ 106.6 = 0.89 |
+| GeneB (1503.3) | 1200 ÷ 1503.3 = 0.80 | 2100 ÷ 1503.3 = 1.40 | 1350 ÷ 1503.3 = 0.90 |
+| GeneC (461.5) | 340 ÷ 461.5 = 0.74 | 700 ÷ 461.5 = 1.52 | 410 ÷ 461.5 = 0.89 |
+| GeneD (147.9) | 55 ÷ 147.9 = 0.37 | 980 ÷ 147.9 = 6.63 | 60 ÷ 147.9 = 0.41 |
+| GeneE (560.7) | 430 ÷ 560.7 = 0.77 | 820 ÷ 560.7 = 1.46 | 500 ÷ 560.7 = 0.89 |
+
+The **median of these ratios** in a sample is the size factor for that sample.
+
+| Gene | Sample A ratios | Sample B ratios | Sample C ratios |
+|:---:|:---:|:---:|:---:|
+| GeneA | 0.75 | 1.50 | 0.89 |
+| GeneB | 0.80 | 1.40 | 0.90 |
+| GeneC | 0.74 | 1.52 | 0.89 |
+| GeneD | 0.37 | 6.63 | 0.41 |
+| GeneE | 0.77 | 1.46 | 0.89 |
+| Sorted → median | 0.37, 0.74, 0.75, 0.77, 0.80 | 1.40, 1.46, 1.50, 1.52, 6.63 | 0.41, 0.89, 0.89, 0.89, 0.90 |
+| Size factor | 0.75 | 1.50 | 0.89 |
+
+Each raw count is divided by the size factor of the sample it belongs to.
+
+| Gene | Sample A (÷ 0.75) | Sample B (÷ 1.50) | Sample C (÷ 0.89) |
+|:---:|:---:|:---:|:---:|
+| GeneA | 107 | 107 | 107 |
+| GeneB | 1600 | 1400 | 1517 |
+| GeneC | 453 | 467 | 461 |
+| GeneD | 73 | 653 | 67 |
+| GeneE | 573 | 547 | 562 |
 
 For additional information regarding the tool and the algorithm, please refer to the [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4302049/) and the user-friendly package [vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html).
 
@@ -159,10 +223,14 @@ Get the count data for the full data set, output of both STAR and Salmon:
 
 ```bash
 # Navigate to your course directory
+mkdir -p ~/rnaseq_course/differential_expression
 cd ~/rnaseq_course/differential_expression
 
 # Download the full count data folder from the course repository
-wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/tree/master/docs/data/differential_expression/full_data_counts
+wget https://github.com/biocorecrg/RNAseq_coursesCRG_2026/blob/master/docs/data/differential_expression/full_data_counts.tar.gz
+
+# Untar the data
+tar -xzvf full_data_counts.tar.gz
 ```
 
 ### Raw count matrices
@@ -210,9 +278,8 @@ mkdir counts_STAR_selected
 * Loop around the 10 **ReadsPerGene.out.tab** files and extract the gene ID (1rst column) and the correct counts (2nd column).
 
 ```bash
-for i in counts_STAR/*ReadsPerGene.out.tab
+for i in full_data_counts/counts_STAR/*ReadsPerGene.out.tab
 do echo $i
-
 # retrieve the first (gene name) and second column (raw reads for unstranded protocol)
 cut -f1,2 $i | grep -v "_" > counts_STAR_selected/$(basename $i .ReadsPerGene.out.tab)_counts.txt
 done
