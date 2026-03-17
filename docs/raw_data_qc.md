@@ -222,7 +222,7 @@ fasterq-dump SRR1234567 --split-files --outdir ./fastq/
 gzip ./fastq/SRR1234567.fastq
 ```
 
-#### Dataset: accession number SRR36179215
+### Dataset: accession number SRR36179215
 
 ```bash
 # Download 1 million reads
