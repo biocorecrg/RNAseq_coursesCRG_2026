@@ -897,7 +897,7 @@ Standard error of the log2FoldChange.
 * **stat:**
 Wald statistic: the log2FoldChange divided by its standard error.
 
-```{admonition} Note on p-values set to NA
+:::{admonition} Note on p-values set to NA
 :class: note
 
 Some values in the results table can be set to NA for one of the following reasons (from [Analyzing RNA-seq data with DESeq2 by M. Love et al., 2017](https://bioconductor.statistik.tu-dortmund.de/packages/3.5/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)):
@@ -905,7 +905,7 @@ Some values in the results table can be set to NA for one of the following reaso
 * If within a row, all samples have zero counts, the baseMean column will be zero, and the log2 fold change estimates, p value and adjusted p value will all be set to NA.
 * If a row contains a sample with an extreme count outlier then the p value and adjusted p value will be set to NA. These outlier counts are detected by Cook's distance. If there are very many outliers (e.g. many hundreds or thousands) reported by summary(res), one might consider further exploration to see if a single sample or a few samples should be removed due to low quality.
 * If a row is filtered by automatic independent filtering, for having a low mean normalized count, then only the adjusted p value will be set to NA. This independent filtering can be customized or turned off in the DESeq2 function results(dds, independentFiltering=FALSE).
-```
+:::
 
 #### Volcano plot
 
@@ -942,11 +942,11 @@ Each dot is a gene. The plot naturally splits into four regions:
 
 The name "volcano" comes from the shape: most genes cluster at the bottom (non-significant), with two "plumes" of significant genes rising on the left and right flanks.
 
-```{admonition} How to read it
+:::{admonition} How to read it
 :class: tip
 
 Focus on the **top corners** — genes that are both far from zero on the X-axis (large effect) and high on the Y-axis (highly significant). Those are the most biologically meaningful candidates.
-```
+:::
 
 | |
 |:---:|
@@ -974,17 +974,21 @@ We need to take into account the p-value or, better **the adjusted p-value** (pa
 Setting a p-value threshold of 0.05 means that there is a **5% chance that the observed result is a false positive**.
 For thousands of simultaneous tests (as in RNA-seq, there are thousands of genes tested at the same time), 5% can result in a large number of false positives.
 
+For example, if we test 20000 genes, and we use a p-value threshold of 0.05, we expect to have 1000 false positives.
+
 The Benjamini-Hochberg procedure controls the False Discovery Rate (FDR) (it is one of many methods to adjust p-values for multiple testing).
 
 A FDR adjusted p-value of 0.05 implies that 5% of **significant tests according to the "raw" p-value** will result in false positives.
+
+So for 1000 significant genes at raw p-value < 0.05, we expect to have 50 false positives.
 
 * Selection of differentially expressed genes between WT and KO based on padj < 0.05.
 
 ```r
 # how many genes are differentially expressed, taking into account "padj < 0.05"?
-  # contains NAs... Filter them out
+# contains NAs... Filter them out
 de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
-  # 85 genes
+# 85 genes
 
 # save results in file for further usage
 write.table(de_select, "deseq2_selection_padj005.txt", quote=F, col.names=T, row.names=F, sep="\t")
@@ -994,9 +998,9 @@ write.table(de_select, "deseq2_selection_padj005.txt", quote=F, col.names=T, row
 
 ```r
 # how many genes are differentially expressed, taking into account "padj < 0.05" and log2FoldChange < -0.5 or > 0.5?
-  # contains NAs... Filter them out
+# contains NAs... Filter them out
 de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(de_symbols$log2FoldChange) > 0.5,]
-  # 83 genes
+# 83 genes
 ```
 
 ## Exercise 1
@@ -1029,6 +1033,9 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 **DON'T FORGET TO WRITE FILES DOWN AT EACH STEP!!**
 
 **STEP BY STEP CORRECTION**
+
+:::{admonition} Click to see the solution
+:class: dropdown, note
 
 ```r
 ## DESeq2 analysis
@@ -1120,6 +1127,8 @@ nrow(de_select)
 # save results in file for further usage
 write.table(de_select, "deseq2_selection_padj005_undiff.txt", quote=F, col.names=T, row.names=F, sep="\t")
 ```
+
+:::
 
 ## Exercise 3
 
