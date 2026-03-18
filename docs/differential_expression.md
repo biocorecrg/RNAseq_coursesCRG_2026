@@ -288,26 +288,6 @@ cut -f1,2 $i | grep -v "_" > counts_STAR_selected/$(basename $i .ReadsPerGene.ou
 done
 ```
 
-(Prepare-transcript-to-gene-annotation-file-salmon)=
-
-#### Prepare transcript-to-gene annotation file (Salmon)
-
-Prepare the annotation file needed to import the **Salmon** counts: a two-column data frame linking transcript id (column 1) to gene id (column 2).
-
-We will add the gene symbol in column 3, for a more comprehensive annotation.
-
-Process from the **GTF file**:
-
-```bash
-cd ~/rnaseq_course/differential_expression
-
-# Gencode annotation for all chromosomes
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz
-
-# first column is the transcript ID, second column is the gene ID, third column is the gene symbol
-zcat gencode.v49.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transcript"){split($9, a, "\""); print a[4],a[2],a[8]}}' > tx2gene.gencode.v49.csv
-```
-
 #### Sample sheet
 
 Additionally, DESeq2 needs a **sample sheet** that describes the samples characteristics: treatment, knock-out / wild type, replicates, time points, etc. in the form:
@@ -428,60 +408,6 @@ se_star <- DESeqDataSetFromHTSeqCount(sampleTable = sampletable,
 
 The design formula is used to estimate the dispersions and to estimate the log2 fold changes of the model!
 For more information on how to build a design formula, see [here](https://www.atakanekiz.com/technical/a-guide-to-designs-and-contrasts-in-DESeq2/).
-```
-
-### Import Salmon counts
-
-* Load the count data from **SALMON** into a **DESeq** object:
-
-```r
-# Go to the deseq2 directory
-setwd("~/rnaseq_course/differential_expression")
-
-# Load the tximport package that we use to import Salmon counts
-library(tximport)
-
-# List the quantification files from Salmon: one quant.sf file per sample
-
-# dir is list all files in "~/rnaseq_course/differential_expression/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
-files <- dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon", recursive=TRUE, pattern="quant.sf", full.names=TRUE)
-files
-
-# files is a vector of file paths. we will name each element of this vector with a simplified corresponding sample name
-names(files) <- gsub("_quant.sf", "", dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon"))
-names(files)
-
-# Read in the two-column data.frame linking transcript id (column 1) to gene id (column 2)
-transcripts2genes <- read.table("tx2gene.gencode.v49.csv",
-  sep="\t",
-  header=F)
-
-# tximport can import data from Salmon, Kallisto, Sailfish, RSEM, Stringtie
-
-# here we summarize the transcript-level counts to gene-level counts
-txi <- tximport(files,
-  type = "salmon",
-  tx2gene = transcripts2genes)
-
-# check the names of the "slots" of the txi object
-names(txi)
-
-# display the first rows of the counts per gene information
-head(txi$counts)
-
-# Create a DESeq2 object based on Salmon per-gene counts
-se_salmon <- DESeqDataSetFromTximport(txi,
-   colData = sampletable,
-   design = ~ Condition)
-
-```
-
-* From that step on, you can proceed **the same way** with se_star and se_salmon!
-
-```{admonition} Warning
-:class: warning
-
-    The only thing that differs is the annotation *(remember that for STAR we used ENSEMBL annotation while we used GENCODE annotation for Salmon)*.
 ```
 
 * We will focus the rest of the analysis on the **se_star**.
@@ -1144,10 +1070,94 @@ In a way, we "discard" the expected changes due to differentiation to focus on t
 
 Do the same using the **Salmon counts** (object *se_salmon*): how many genes are found differentially expressed when using the Salmon counts?
 How do results overlap between STAR and Salmon?
+:::{admonition} Click here too see results.
+: class: dropdown, tip
 
-```{note}
-Remember to use the Gencode annotation file [gencode.v49.annotation.gtf.gz](#Prepare-transcript-to-gene-annotation-file-salmon) preapred with the annotation columns you want to include in your normalized counts and differential expression tables.
+(Prepare-transcript-to-gene-annotation-file-salmon)=
+
+* **Prepare transcript-to-gene annotation file (Salmon)**
+
+Prepare the annotation file needed to import the **Salmon** counts: a two-column data frame linking transcript id (column 1) to gene id (column 2).
+
+We will add the gene symbol in column 3, for a more comprehensive annotation.
+
+Process from the **GTF file**:
+
+```{bash}
+cd ~/rnaseq_course/differential_expression
+
+# Gencode annotation for all chromosomes
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz
+
+# first column is the transcript ID, second column is the gene ID, third column is the gene symbol
+zcat gencode.v49.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transcript"){split($9, a, "\""); print a[4],a[2],a[8]}}' > tx2gene.gencode.v49.csv
+
+
+## Preparing annotation file with gene names, gene id, chromosome, start, end
+
+```bash
+cd ~/rnaseq_course/differential_expression
+
+zcat gencode.v49.annotation.gtf.gz | awk -v OFS='\t' '{ if ($3=="gene") { gsub(";",""); gsub("\"",""); print $10,$14,$12,$1,$4,$5,$7} }' > salmon_gene_anno.txt
 ```
+
+* **Import Salmon counts**
+
+Load the count data from **SALMON** into a **DESeq** object:
+
+```{r}
+# Go to the deseq2 directory
+setwd("~/rnaseq_course/differential_expression")
+
+annot <- read.table("salmon_gene_anno.txt", header=T)
+
+# Load the tximport package that we use to import Salmon counts
+library(tximport)
+
+# List the quantification files from Salmon: one quant.sf file per sample
+
+# dir is list all files in "~/rnaseq_course/differential_expression/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
+files <- dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon", recursive=TRUE, pattern="quant.sf", full.names=TRUE)
+files
+
+# files is a vector of file paths. we will name each element of this vector with a simplified corresponding sample name
+names(files) <- gsub("_quant.sf", "", dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon"))
+names(files)
+
+# Read in the two-column data.frame linking transcript id (column 1) to gene id (column 2)
+transcripts2genes <- read.table("tx2gene.gencode.v49.csv",
+  sep="\t",
+  header=F)
+
+# tximport can import data from Salmon, Kallisto, Sailfish, RSEM, Stringtie
+
+# here we summarize the transcript-level counts to gene-level counts
+txi <- tximport(files,
+  type = "salmon",
+  tx2gene = transcripts2genes)
+
+# check the names of the "slots" of the txi object
+names(txi)
+
+# display the first rows of the counts per gene information
+head(txi$counts)
+
+# Create a DESeq2 object based on Salmon per-gene counts
+se_salmon <- DESeqDataSetFromTximport(txi,
+   colData = sampletable,
+   design = ~ Condition)
+
+
+# Load the annotation file to annotate the normalized and differential expression results
+
+anno <- read.table("gene_anno.txt", as.is=T)
+colnames(anno) <- c("gene_id","gene_name","gene_type",'chromosome_name', 'start_position', 'end_position','strand')
+
+```
+
+* From that step on, you can proceed **the same way** with se_star.
+
+:::
 
 ## Other cases
 
