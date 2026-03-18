@@ -1,0 +1,11 @@
+/* Custom styles for RNA-seq Bioinformatics Course */
+/* Add more custom CSS rules here */
+
+/* Let's make all admonition titles bold for better visibility */
+.admonition-title {
+  font-weight: bold;
+}
+
+.important .attention .warning {
+  font-size: 1rem !important;
+}
