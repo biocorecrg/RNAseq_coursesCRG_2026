@@ -246,6 +246,9 @@ firefox ./exercise1_fastqc/SRR36179215_fastqc.html &
 1. Is this adapter content a sign of a failed experiment? Why or why not? Which type of dataset this might be?
 2. Would you apply the same quality interpretation to a standard mRNA-seq dataset with this level of adapter content?
 
+```{note}
+Reads are shorter than what we can normally expect nowadays, because it is old data and also because it is convenient to run analyses faster for the course.
+```
 
 ## FastQ Screen
 
