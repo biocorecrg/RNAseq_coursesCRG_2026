@@ -932,7 +932,7 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 :::{admonition} Click to see the solution
 :class: dropdown, tip
 
-```{r}
+```r
 de_select[de_select$external_gene_name == "FOXC1",]
 ```
 
@@ -943,7 +943,7 @@ de_select[de_select$external_gene_name == "FOXC1",]
 :::{admonition} Click to see the solution
 :class: dropdown, tip
 
-```{r}
+```r
 de_select <- de_symbols[de_symbols$padj < 0.01 & !is.na(de_symbols$padj) & abs(de_symbols$log2FoldChange) > 0.8,]
 nrow(de_select)
 ```
@@ -1089,7 +1089,7 @@ In a way, we "discard" the expected changes due to differentiation to focus on t
 :::{admonition} Click to see the solution
 :class: dropdown, tip
 
-```{r}
+```r
 sampletable <- read.table("sample_sheet_foxc1.txt", header=T, sep="\t")
 colnames(sampletable)
 
@@ -1130,7 +1130,7 @@ We will add the gene symbol in column 3, for a more comprehensive annotation.
 
 Process from the **GTF file**:
 
-```{bash}
+```bash
 cd ~/rnaseq_course/differential_expression
 
 # Gencode annotation for all chromosomes
@@ -1138,9 +1138,9 @@ wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.
 
 # first column is the transcript ID, second column is the gene ID, third column is the gene symbol
 zcat gencode.v49.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transcript"){split($9, a, "\""); print a[4],a[2],a[8]}}' > tx2gene.gencode.v49.csv
+```
 
-
-## Preparing annotation file with gene names, gene id, chromosome, start, end
+Preparing annotation file with  gene id, gene names, gene type, chromosome, start, end and strand information.
 
 ```bash
 cd ~/rnaseq_course/differential_expression
@@ -1152,7 +1152,7 @@ zcat gencode.v49.annotation.gtf.gz | awk -v OFS='\t' '{ if ($3=="gene") { gsub("
 
 Load the count data from **SALMON** into a **DESeq** object:
 
-```{r}
+```r
 # Go to the deseq2 directory
 setwd("~/rnaseq_course/differential_expression")
 
