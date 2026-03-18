@@ -98,7 +98,7 @@ We use what we name the *Command Line Interface* (CLI) Shell, in our case **Bash
 ### Absolute paths
 
 - `cd /` -> go to root
-- `cd /home/ubuntu/Desktop`
+- `cd /home/training/Desktop`
 - `cd ~` -> go to home
 
 
@@ -442,7 +442,7 @@ Why Apptainer/Singularity?
     - You don't need to worry so much about different kind of UNIX permissions
 
 
-```
+```bash
 singularity pull RNAseq_course.sif docker://community.wave.seqera.io/library/fastq-screen_fastqc_kraken2_multiqc_pruned:3161b0b514b51263
 
 singularity exec -e RNAseq_course.sif fastqc --version
@@ -451,7 +451,7 @@ singularity exec -e RNAseq_course.sif fastqc --version
 
 Along the course we will use this shortcut for no needing to type so much:
 
-```
+```bash
 export RUN="singularity exec -e RNAseq_course.sif"
 $RUN fastqc --version
 ```
