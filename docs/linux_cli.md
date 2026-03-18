@@ -452,7 +452,8 @@ singularity exec -e RNAseq_course.sif fastqc --version
 Along the course we will use this shortcut for no needing to type so much:
 
 ```bash
-export RUN="singularity exec -e RNAseq_course.sif"
+# Important: RNASeq_course.sif must be in home ~
+export RUN="singularity exec -e ~/RNAseq_course.sif"
 $RUN fastqc --version
 ```
 
