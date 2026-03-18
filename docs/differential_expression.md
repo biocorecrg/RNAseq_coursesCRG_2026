@@ -197,8 +197,7 @@ Each raw count is divided by the size factor of the sample it belongs to.
 | GeneD | 73 | 653 | 67 |
 | GeneE | 573 | 547 | 562 |
 
-:::{admonition}
-:class: seealso
+:::{seealso}
 You can also find normalized counts by using the **TPM** (Transcripts Per Million) or **FPKM** (Fragments Per Kilobase of transcript per Million mapped reads) metrics. [See here](https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/)
 :::
 
@@ -334,8 +333,7 @@ The design indicates how to model the samples: in the model we need to specify w
 
 * Prepare this file (tab-separated columns) in a text editor: save it as **sample_sheet_foxc1.txt in the differential_analysis directory**: you can do it "manually" using a text editor, or you can try using the command line.
 
-:::{admonition}
-: Note
+:::{note}
 The same sample sheet will be used for both **the STAR and the Salmon** DESeq2 analysis. (with a slight modification that we will see later on)
 :::
 
@@ -408,8 +406,7 @@ nrow(sampletable) # if this is not 10, please raise your hand !
 ncol(sampletable) # if this is not 4, also raise your hand !
 ```
 
-:::{admonition}
-:class: warning
+:::{warning}
 DESeq will process only the counts for the files listed in the sample table (keep in mind for future exercises and when you want to exclude some samples from the analysis).
 :::
 
@@ -565,8 +562,7 @@ dim(annot)
 head(annot)
 ```
 
-:::{admonition}
-:class: seealso
+:::{seealso}
 
 For more information on how to use **biomaRt**, see [here](https://huber-group-embl.github.io/biomaRt/reference/useMart.html)
 
@@ -638,8 +634,7 @@ They offer two transformation methods, both of which stabilize the variance acro
 
 Both options produce **log2 scale data** which has been normalized by the DESeq2 method with respect to library size.
 
-:::{admonition}
-:class: warning
+:::{warning}
 The values are not on a natural count scale and are not directly interpretable as counts or as fold-changes in the way log2(x+1) is. A difference of 1 between two VST values is not guaranteed to mean a 2-fold change.
 :::
 

@@ -485,7 +485,6 @@ Similarity reflects consistency, but not the variability required for statistica
 
 :::
 
----
 
 ### Recommended number of sequencing reads
 
