@@ -27,7 +27,7 @@ Careful experimental design is required to:
 - estimate biological variability.
 
 :::{admonition} Important
-:class: important
+:class: attention
 
 Design determines whether RNA-seq results are interpretable.
 
@@ -61,7 +61,7 @@ biological question
 :::
 
 :::{admonition} Important
-:class: important
+:class: attention
 
 The biological question determines:
 - what to measure,
@@ -102,7 +102,7 @@ which determines whether observed differences are real.
 <br>
 
 :::{admonition} Golden rule of replication
-:class: important
+:class: attention
 
 Replicates must be **independent biological units**, 
 not repeated measurements of the same sample.
@@ -193,7 +193,7 @@ Example:
 <br>
 
 :::{admonition} Important
-:class: important
+:class: attention
 
 The number of libraries does not determine replication.  
 The number of independent experimental units does.
@@ -225,7 +225,7 @@ replicates ([RNA 2016](https://pubmed.ncbi.nlm.nih.gov/27022035/)).
 <br>
 
 :::{admonition} Important
-:class: important
+:class: attention
 
 Biological variability is typically much larger than technical variability.
 
@@ -279,7 +279,7 @@ The statistical power of an RNA-seq experiment depends on:
 <br>
 
 :::{admonition} Important
-:class: important
+:class: attention
 
 Increasing the number of biological replicates improves power 
 more than increasing sequencing depth.
@@ -464,7 +464,7 @@ Is the fold change larger than a biologically meaningful threshold?
 ```
 
 :::{admonition} Rule of thumb for RNA-seq experiments
-:class: important
+:class: attention
 
 - 2 replicates → insufficient  
 - 3 replicates → minimum  
@@ -512,7 +512,7 @@ Sequencing depth affects:
 <br>
 
 :::{admonition} Important
-:class: important
+:class: attention
 
 Increasing sequencing depth improves sensitivity,  
 but does not replace biological replication.
@@ -579,7 +579,7 @@ you cannot tell which one caused the difference.
 ---
 
 :::{admonition} Important
-:class: important
+:class: attention
 
 Randomize samples across all experimental steps:
 - RNA extraction  
@@ -664,7 +664,7 @@ The biological condition is perfectly confounded with the batch variable.
 **No statistical method can separate these effects.**
 
 :::{admonition} **Batch effect rule**
-:class: important
+:class: attention
 
 Batch effects are problematic only when they are **correlated with the biological condition**.
 
@@ -720,7 +720,7 @@ randomization has to be applied.
 
 
 :::{admonition} **Key message**
-:class: important
+:class: attention
 
 Randomize what you cannot control, 
 <br>block what you can control (using batch in statistical model: *design = ~ batch + condition*).
@@ -824,7 +824,7 @@ In RNA-seq experiments, factorial designs are common
 when studying treatment effects across **sex, genotype, time points, or environmental conditions**.
 
 :::{admonition} Practical rule of thumb for factorial design
-:class: important
+:class: attention
 
 - 3 biological replicates per group → minimum (exploratory; sufficient mainly for homogeneous systems)
 - 5–6 per group → reasonable for main effects and strong interactions
@@ -846,7 +846,7 @@ when studying treatment effects across **sex, genotype, time points, or environm
 <br>
 
 :::{admonition} Important
-:class: important
+:class: attention
 
 Replication determines power.  
 Design determines whether results are interpretable.
