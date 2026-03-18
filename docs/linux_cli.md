@@ -104,6 +104,7 @@ We use what we name the *Command Line Interface* (CLI) Shell, in our case **Bash
 
 Play with `ls` and different modifiers: `ls -l`, `ls -lt`, `ls -la`, etc.
 
+Sometimes we get lost and would like to know where we are. We can use the command `pwd`
 
 **PRO TIP**: Don't use `man`, visit [tldr.sh](https://tldr.sh)
 
@@ -179,7 +180,6 @@ ls
 my_beautiful_folder  my_ugly_file.txt  my_ugly_folder
 ```
 
-Sometimes we get lost and would like to know where we are. We can use the command `pwd`
 
 We can write to a file using the character **>**, that means output redirection.
 
