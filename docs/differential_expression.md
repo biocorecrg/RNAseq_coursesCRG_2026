@@ -928,7 +928,27 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 ## Exercise 1
 
 * Is **FOXC1** differentially expressed? What are the corresponding adjusted-value and log2FoldChanges?
+
+:::{admonition} Click to see the solution
+:class: dropdown, tip
+
+```{r}
+de_select[de_select$external_gene_name == "FOXC1",]
+```
+
+:::
+
 * How many genes are found differentially expressed if you change the log2FoldChange threshold to 0.8 / -0.8 and the padj threshold to 0.01?
+
+:::{admonition} Click to see the solution
+:class: dropdown, tip
+
+```{r}
+de_select <- de_symbols[de_symbols$padj < 0.01 & !is.na(de_symbols$padj) & abs(de_symbols$log2FoldChange) > 0.8,]
+nrow(de_select)
+```
+
+:::
 
 ## Exercise 2
 
@@ -1066,14 +1086,41 @@ In a way, we "discard" the expected changes due to differentiation to focus on t
 * Repeat the first analysis, changing the design **~ Condition** to **~ Differentiation + Condition**.
 * How many genes are now found differentially expressed, when filtering for padj < 0.05?
 
+:::{admonition} Click to see the solution
+:class: dropdown, tip
+
+```{r}
+sampletable <- read.table("sample_sheet_foxc1.txt", header=T, sep="\t")
+colnames(sampletable)
+
+se_star <- DESeqDataSetFromHTSeqCount(sampleTable = sampletable,
+                                      directory = "counts_STAR_selected",
+                                      design = ~ Differentiation + Condition)
+se_star
+se_star <- se_star[rowSums(counts(se_star)) > 10, ]
+
+se_star2 <- DESeq(se_star)
+
+de <- results(object = se_star2, contrast=c("Condition", "WT", "KO"))
+de_symbols <- merge(data.frame(ID=rownames(de), de, check.names=FALSE), annot, by.x="ID", by.y="ensembl_gene_id", all=F)
+
+
+## How many genes are now found differential expressed, when filtering for padj < 0.05.
+
+de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
+nrow(de_select)
+
+```
+
+:::
+
 ### Homework
 
 Do the same using the **Salmon counts** (object *se_salmon*): how many genes are found differentially expressed when using the Salmon counts?
 How do results overlap between STAR and Salmon?
-:::{admonition} Click here too see results.
-: class: dropdown, tip
 
-(Prepare-transcript-to-gene-annotation-file-salmon)=
+:::{admonition} Click to see the solution
+:class: dropdown, tip
 
 * **Prepare transcript-to-gene annotation file (Salmon)**
 
@@ -1172,16 +1219,16 @@ In all these cases, unintended technical variation can be introduced into the da
 :::{admonition} What is a batch effect?
 :class: note
 
-    A **batch effect** is systematic, non-biological variation in gene expression data introduced by technical factors such as:
+  A **batch effect** is systematic, non-biological variation in gene expression data introduced by technical factors such as:
 
-    * Different **sequencing runs** or **flow cells**
-    * Samples processed on different **dates** or by different **operators**
-    * Different **reagent lots** or **library prep kits**
-    * Samples stored under different conditions before RNA extraction
+* Different **sequencing runs** or **flow cells**
+* Samples processed on different **dates** or by different **operators**
+* Different **reagent lots** or **library prep kits**
+* Samples stored under different conditions before RNA extraction
 
-    Batch effects can be just as large as (or larger than) the biological signal you are trying to detect, and will **confound** your differential expression results if not properly accounted for.
+  Batch effects can be just as large as (or larger than) the biological signal you are trying to detect, and will **confound** your differential expression results if not properly accounted for.
 
-    In the worst case scenario, batch effects becomes completely inseparable from the biological signal of interest. For example, if all your control samples were processed in batch 1 and all your treatment samples were processed in batch 2, you will not be able to distinguish between the effect of the treatment and the effect of the batch.
+  In the worst case scenario, batch effects becomes completely inseparable from the biological signal of interest. For example, if all your control samples were processed in batch 1 and all your treatment samples were processed in batch 2, you will not be able to distinguish between the effect of the treatment and the effect of the batch.
 :::
 
 #### Detect batch effects using PCA
