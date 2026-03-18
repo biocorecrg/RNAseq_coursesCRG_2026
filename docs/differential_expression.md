@@ -197,7 +197,8 @@ Each raw count is divided by the size factor of the sample it belongs to.
 | GeneD | 73 | 653 | 67 |
 | GeneE | 573 | 547 | 562 |
 
-:::{seealso}
+:::{admonition}
+:class: seealso
 You can also find normalized counts by using the **TPM** (Transcripts Per Million) or **FPKM** (Fragments Per Kilobase of transcript per Million mapped reads) metrics. [See here](https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/)
 :::
 
@@ -333,7 +334,8 @@ The design indicates how to model the samples: in the model we need to specify w
 
 * Prepare this file (tab-separated columns) in a text editor: save it as **sample_sheet_foxc1.txt in the differential_analysis directory**: you can do it "manually" using a text editor, or you can try using the command line.
 
-:::{note}
+:::{admonition}
+: Note
 The same sample sheet will be used for both **the STAR and the Salmon** DESeq2 analysis. (with a slight modification that we will see later on)
 :::
 
@@ -353,7 +355,7 @@ We will use a local Rstudio server running a singularity container.
 
 ```bash
 # Download the bash script that installs the singularity container and run it in the localserver
-wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/run_rstudio.sh
+wget https://raw.githubusercontent.com/biocorecrg/RNAseq_coursesCRG_2026/refs/heads/master/run_rstudio.sh
 bash run_rstudio.sh
 ```
 
@@ -406,7 +408,8 @@ nrow(sampletable) # if this is not 10, please raise your hand !
 ncol(sampletable) # if this is not 4, also raise your hand !
 ```
 
-:::{warning}
+:::{admonition}
+:class: warning
 DESeq will process only the counts for the files listed in the sample table (keep in mind for future exercises and when you want to exclude some samples from the analysis).
 :::
 
@@ -562,7 +565,8 @@ dim(annot)
 head(annot)
 ```
 
-:::{seealso}
+:::{admonition}
+:class: seealso
 
 For more information on how to use **biomaRt**, see [here](https://huber-group-embl.github.io/biomaRt/reference/useMart.html)
 
@@ -634,7 +638,8 @@ They offer two transformation methods, both of which stabilize the variance acro
 
 Both options produce **log2 scale data** which has been normalized by the DESeq2 method with respect to library size.
 
-:::{warning}
+:::{admonition}
+:class: warning
 The values are not on a natural count scale and are not directly interpretable as counts or as fold-changes in the way log2(x+1) is. A difference of 1 between two VST values is not guaranteed to mean a 2-fold change.
 :::
 

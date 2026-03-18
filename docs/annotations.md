@@ -80,7 +80,7 @@ wget ftp://ftp.ensembl.org/pub/release-115/gtf/homo_sapiens/Homo_sapiens.GRCh38.
 
 ## Our data set
 
-To speed up the mapping process, we retrieved a subset of the FASTA and GTF files that correspond **only to chromosome 6** here: [reference_chr6_Hsapiens.tar.gz)](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/annotation/reference_chr6_Hsapiens.tar.gz)
+To speed up the mapping process, we retrieved a subset of the FASTA and GTF files that correspond **only to chromosome 6** here: [reference_chr6_Hsapiens.tar.gz](https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/annotation/reference_chr6_Hsapiens.tar.gz)
 
 You can download them from:
 
@@ -138,15 +138,26 @@ As you can see, this is a multi fasta file with several sequences, each one with
 | Transcript Length | 938 | Length of the transcript in base pairs (bp). |
 | Gene Biotype | unprocessed_pseudogene | Gene type indicating a duplicated gene that lost protein-coding ability but retains intron–exon structure. |
 
-We can count how many transcripts we have in our fasta file by counting the character ">" that is in the header: 
 
+#### Exercise
+
+- We can count how many transcripts we have in our fasta file by counting the character ">" that is in the header: 
+
+
+:::{admonition} **Solution**
+:class: dropdown
 
 ```bash
 zcat gencode.v49.transcripts.chr6.fa.gz| grep ">" -c 
 25648
 ```
 
-We can count the number of **Gene Biotype** by using a combination of linux commands such as **grep**, **cut**, **sort**, and **uniq**: 
+:::
+
+- We can count the number of **Gene Biotype** by using a combination of linux commands such as **grep**, **cut**, **sort**, and **uniq**: 
+
+:::{admonition} **Solution**
+:class: dropdown
 
 ```bash
 zcat gencode.v49.transcripts.chr6.fa.gz| grep ">" | cut -d "|" -f8|sort|uniq -c 
@@ -173,7 +184,7 @@ zcat gencode.v49.transcripts.chr6.fa.gz| grep ">" | cut -d "|" -f8|sort|uniq -c
       3 unitary_pseudogene
      74 unprocessed_pseudogene
 ```
-
+:::
 
 ### GTF file
 
