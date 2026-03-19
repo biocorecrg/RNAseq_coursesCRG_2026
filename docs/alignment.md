@@ -21,6 +21,7 @@ Multiples **aligners** were developed over the last decades, using different **a
 |Read mappers timeline|
 | :---:  |
 |<img src="images/mappers_timeline.jpeg" width="800" />|
+|Nuno A. Fonseca, Johan Rung, Alvis Brazma, John C. Marioni, Tools for mapping high-throughput sequencing data, *Bioinformatics*, Volume 28, Issue 24, December 2012, Pages 3169–3177, https://doi.org/10.1093/bioinformatics/bts605
 
 
 ## Index
