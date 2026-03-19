@@ -123,12 +123,12 @@ To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** opt
 * In our case, since the read size is 49 bases, we can accept a maximum of 48 bases on one side and one base on the other of a splicing site; that is, to set up this parameter to **48**. 
 * This also means that **for every different read-length to be aligned, a new STAR index needs to be generated**. Otherwise, a drop in aligned reads can be experienced.
 
-* **--runThreadN** allows you to parallelize the job.
+* `--runThreadN` allows you to parallelize the job.
 
-**NOTE** that for small genomes, parameter **--genomeSAindexNbases** (default 14) should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
+**NOTE** that for small genomes, parameter `--genomeSAindexNbases` (default 14) should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
 
-Building the STAR index (option **--runMode genomeGenerate**):
+Building the STAR index (option `--runMode genomeGenerate`):
 
 ```bash
 # go to mapping folder
@@ -138,7 +138,8 @@ cd ~/rnaseq_course/mapping
 mkdir index_star_chr6
 
 # remember to have defined the environmental variable RUN to access your singularity image
-export RUN="singularity exec -e $YOURPATH=fastq-screen_fastqc_kraken_multiqc_pruned_c1cc2fe6e981fe2c.sif"
+# We use the RNAseq_course.sif image we downloaded in previous sections
+export RUN="singularity exec -e $HOME/RNAseq_course.sif"
 
 # create the index and store it in ~/rnaseq_course/mapping/index_star_chr6
 $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
@@ -150,21 +151,21 @@ $RUN STAR --runMode genomeGenerate --genomeDir index_star_chr6 \
 		--runThreadN 1
 ```
 
-* **--genomeSAindexNbases**: default 14. If the genome is small, it should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
+* `--genomeSAindexNbases`: default 14. If the genome is small, it should be scaled down as: **min(14, log2(GenomeLength)/2 - 1)**. Here: min(14, log2(170805979/2)-1) =~ 12.6
 
 This should take around 3 to 4 minutes to complete.
 
 ### Aligning reads to the genome
 
-To use **STAR** for the read alignment (default **--runMode** option), we have to specify the following options:
-* the index directory (**--genomeDir**)
-* the read files (**--readFilesIn**)
-* if reads are compressed or not (**--readFilesCommand**)
+To use **STAR** for the read alignment (default `--runMode` option), we have to specify the following options:
+* the index directory (`--genomeDir`)
+* the read files (`--readFilesIn`)
+* if reads are compressed or not (`--readFilesCommand`)
 
 The following parameters are optional but very convenient:
-* **--outSAMtype**: type of output. Default is **BAM Unsorted**; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be indexed or directly used with downstream software such as HTseq, without the need for sorting."* We therefore prefer the option **BAM SortedByCoordinate**
-* **--outFileNamePrefix**: the path for the output directory and prefix of all output files. By default, this parameter is ./, i.e. all output files are written in the current directory.
-* **--quantMode**. With the **--quantMode GeneCounts** option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In the case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by **htseq-count** with default parameters. **This option requires annotations (in GTF format or GFF with –-sjdbGTFfile option) used at the genome generation step, or at the mapping step.** (from [STAR Manual] (https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf)) 
+* `--outSAMtype`: type of output. Default is **BAM Unsorted**; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be indexed or directly used with downstream software such as HTseq, without the need for sorting."* We therefore prefer the option **BAM SortedByCoordinate**
+* `--outFileNamePrefix`: the path for the output directory and prefix of all output files. By default, this parameter is ./, i.e. all output files are written in the current directory.
+* `--quantMode`. With the `--quantMode GeneCounts` option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In the case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by **htseq-count** with default parameters. **This option requires annotations (in GTF format or GFF with `–-sjdbGTFfile` option) used at the genome generation step, or at the mapping step.** (from [STAR Manual] (https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf)) 
 
 <br>
 We can try to launch the mapping for one file:
@@ -553,7 +554,7 @@ $RUN salmon index -t ~/rnaseq_course/reference_genome/reference_chr6/gencode.v49
 	--gencode
 ```
 
-We add the parameter **--gencode** as our data come from **Gencode** and their header contains several identifiers separated by the character **&#x7c;**. This parameter allows the program to parse the header and keep only the transcript identifier.
+We add the parameter `--gencode` as our data come from **Gencode** and their header contains several identifiers separated by the character **&#x7c;**. This parameter allows the program to parse the header and keep only the transcript identifier.
 
 <br/>
 
