@@ -165,7 +165,7 @@ To use **STAR** for the read alignment (default `--runMode` option), we have to 
 The following parameters are optional but very convenient:
 * `--outSAMtype`: type of output. Default is **BAM Unsorted**; STAR outputs unsorted Aligned.out.bam file(s). *"The paired ends of an alignment are always adjacent, and multiple alignments of a read are adjacent as well. This ”unsorted” file cannot be indexed or directly used with downstream software such as HTseq, without the need for sorting."* We therefore prefer the option **BAM SortedByCoordinate**
 * `--outFileNamePrefix`: the path for the output directory and prefix of all output files. By default, this parameter is ./, i.e. all output files are written in the current directory.
-* `--quantMode`. With the `--quantMode GeneCounts` option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In the case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by **htseq-count** with default parameters. **This option requires annotations (in GTF format or GFF with `–-sjdbGTFfile` option) used at the genome generation step, or at the mapping step.** (from [STAR Manual] (https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf)) 
+* `--quantMode`. With the `--quantMode GeneCounts` option set, STAR will count the number of reads per gene while mapping. A read is counted if it **overlaps (1nt or more)** one and only one gene. In the case of mapping paired-end data, both ends are checked for overlaps. The counts coincide with those produced by **htseq-count** with default parameters. **This option requires annotations (in GTF format or GFF with `–-sjdbGTFfile` option) used at the genome generation step, or at the mapping step.** (from [STAR Manual](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf)) 
 
 <br>
 We can try to launch the mapping for one file:
@@ -177,8 +177,10 @@ cd ~/rnaseq_course/mapping
 # create sub-folder where we will store the alignments
 mkdir alignments_STAR
 
+# we place trimmed reads in a location that is convenient
+# as written below, index_star_chr6 must be in the same location as you are running the program
 $RUN STAR --genomeDir index_star_chr6 \
-      --readFilesIn ~/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz \
+      --readFilesIn ~/rnaseq_course/trimmed_reads/SRR3091420_1_chr6_trimmed.fq.gz \
       --readFilesCommand zcat \
       --outSAMtype BAM SortedByCoordinate \
       --quantMode GeneCounts \
