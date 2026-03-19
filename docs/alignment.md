@@ -131,6 +131,9 @@ To index the genome with **STAR** for RNA-seq analysis, the **sjdbOverhang** opt
 Building the STAR index (option `--runMode genomeGenerate`):
 
 ```bash
+# make a mapping folder
+mkdir cd ~/rnaseq_course/mapping
+
 # go to mapping folder
 cd ~/rnaseq_course/mapping
 
