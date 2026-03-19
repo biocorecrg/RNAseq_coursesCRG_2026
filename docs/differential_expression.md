@@ -329,17 +329,9 @@ wget https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/differentia
 
 The analysis is done in R!
 
-We will use a local Rstudio server running a singularity container.
+We will use a local RStudio server running a Singularity container as we did in R introduction section.
 
-```bash
-# Download the bash script that installs the singularity container and run it in the localserver
-wget https://raw.githubusercontent.com/biocorecrg/RNAseq_coursesCRG_2026/refs/heads/master/run_rstudio.sh
-bash run_rstudio.sh
-```
-
-Start **R Studio**.
-In your browser, type the following url: <http://localhost:8787/>
-Open a new R script file.
+From RStudio, open a new R script file.
 
 Note that in the R code boxes below **\#** is followed by comments, i.e. words not interpreted by R, as in Linux.
 

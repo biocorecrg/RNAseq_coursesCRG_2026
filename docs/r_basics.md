@@ -16,6 +16,15 @@ What is RStudio?
 <img title="rstudio logo" alt="RStudio logo" src="images/rstudio_logo.jpeg" width="100">
 <img title="posit logo" alt="posit logo" src="images/posit_logo.png" width="190">
 
+We will use a local Rstudio server running a singularity container.
+
+```bash
+# Download the bash script that installs the singularity container and run it in the localserver
+wget https://raw.githubusercontent.com/biocorecrg/RNAseq_coursesCRG_2026/refs/heads/master/run_rstudio.sh
+bash run_rstudio.sh
+```
+
+In your browser, type the following url: <http://localhost:8787/>
 
 ### Panels
 
