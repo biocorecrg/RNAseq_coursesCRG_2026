@@ -288,26 +288,6 @@ cut -f1,2 $i | grep -v "_" > counts_STAR_selected/$(basename $i .ReadsPerGene.ou
 done
 ```
 
-(Prepare-transcript-to-gene-annotation-file-salmon)=
-
-#### Prepare transcript-to-gene annotation file (Salmon)
-
-Prepare the annotation file needed to import the **Salmon** counts: a two-column data frame linking transcript id (column 1) to gene id (column 2).
-
-We will add the gene symbol in column 3, for a more comprehensive annotation.
-
-Process from the **GTF file**:
-
-```bash
-cd ~/rnaseq_course/differential_expression
-
-# Gencode annotation for all chromosomes
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz
-
-# first column is the transcript ID, second column is the gene ID, third column is the gene symbol
-zcat gencode.v49.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transcript"){split($9, a, "\""); print a[4],a[2],a[8]}}' > tx2gene.gencode.v49.csv
-```
-
 #### Sample sheet
 
 Additionally, DESeq2 needs a **sample sheet** that describes the samples characteristics: treatment, knock-out / wild type, replicates, time points, etc. in the form:
@@ -430,60 +410,6 @@ The design formula is used to estimate the dispersions and to estimate the log2 
 For more information on how to build a design formula, see [here](https://www.atakanekiz.com/technical/a-guide-to-designs-and-contrasts-in-DESeq2/).
 ```
 
-### Import Salmon counts
-
-* Load the count data from **SALMON** into a **DESeq** object:
-
-```r
-# Go to the deseq2 directory
-setwd("~/rnaseq_course/differential_expression")
-
-# Load the tximport package that we use to import Salmon counts
-library(tximport)
-
-# List the quantification files from Salmon: one quant.sf file per sample
-
-# dir is list all files in "~/rnaseq_course/differential_expression/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
-files <- dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon", recursive=TRUE, pattern="quant.sf", full.names=TRUE)
-files
-
-# files is a vector of file paths. we will name each element of this vector with a simplified corresponding sample name
-names(files) <- gsub("_quant.sf", "", dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon"))
-names(files)
-
-# Read in the two-column data.frame linking transcript id (column 1) to gene id (column 2)
-transcripts2genes <- read.table("tx2gene.gencode.v49.csv",
-  sep="\t",
-  header=F)
-
-# tximport can import data from Salmon, Kallisto, Sailfish, RSEM, Stringtie
-
-# here we summarize the transcript-level counts to gene-level counts
-txi <- tximport(files,
-  type = "salmon",
-  tx2gene = transcripts2genes)
-
-# check the names of the "slots" of the txi object
-names(txi)
-
-# display the first rows of the counts per gene information
-head(txi$counts)
-
-# Create a DESeq2 object based on Salmon per-gene counts
-se_salmon <- DESeqDataSetFromTximport(txi,
-   colData = sampletable,
-   design = ~ Condition)
-
-```
-
-* From that step on, you can proceed **the same way** with se_star and se_salmon!
-
-```{admonition} Warning
-:class: warning
-
-    The only thing that differs is the annotation *(remember that for STAR we used ENSEMBL annotation while we used GENCODE annotation for Salmon)*.
-```
-
 * We will focus the rest of the analysis on the **se_star**.
 
 ### Filtering out lowly expressed genes
@@ -531,7 +457,7 @@ listEnsemblArchives()
 # we can load the corresponding database
 mart <- useMart(
   biomart="ENSEMBL_MART_ENSEMBL",               # database name
-  host="<https://sep2025.archive.ensembl.org>", # URL
+  host="https://sep2025.archive.ensembl.org", # URL
   path="/biomart/martservice",                  # path after the host to get access to the web service URL 
   dataset="hsapiens_gene_ensembl")              # specie dataset (human in this case)
 
@@ -588,7 +514,7 @@ se_star2 <- DESeq(se_star)
 
 ```{admonition} See also
     :class: seealso
-    <https://bookdown.org/ggiaever/2025_RNA-Seq-Analysis/differential-expression-analysis-with-deseq2.html>
+[Detailed explanation of DESeq adjusting model](https://bookdown.org/ggiaever/2025_RNA-Seq-Analysis/differential-expression-analysis-with-deseq2.html)
 ```
 
 ### Normalized counts
@@ -707,7 +633,7 @@ Because we can not represent each sample in 20.000 dimensions (number of genes).
 
 ```r
 png("PCA_star.png")
-plotPCA(object = se_rlog,
+plotPCA(object = se_vst,
   intgroup = c("Condition", "Differentiation"))
 dev.off()
 
@@ -748,6 +674,7 @@ To do so, we can use the **ggplot2** package.
 
 ```r
 library(ggplot2)
+library(ggrepel)
 library(reshape2)
 
 # Retrieve the normalized counts per sample for FOXC1 / ENSG00000054598
@@ -822,13 +749,16 @@ mygenelong <- merge(mygenelong, sampletable, by.x="name", by.y="SampleName", all
 mygenelong
 
 # Dot plot
-pdot <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differentiation, shape=Condition, label=name)) +
+pdot_comp <- ggplot(data=mygenelong, mapping=aes(x=Condition, y=value, col=Differentiation, shape=Condition, label=name)) +
   geom_point() +
   geom_text(nudge_x=0.2) +  
   xlab(label="Experimental group") +
   ylab(label="Normalized expression (log2)") +
   facet_wrap(~ gene) +
   theme_bw()
+
+ggsave("counts_foxc1_gapdh.png", pdot_comp)
+
 ```
 
 | |
@@ -908,6 +838,8 @@ Some values in the results table can be set to NA for one of the following reaso
 A volcano plot combines **effect size** and **statistical significance** into a single view, making it one of the most widely used plots in differential expression analysis.
 
 ```r
+library(EnhancedVolcano)
+
 ## Let's select the columns with the gene.name, Log2 foldchange and padjusted value information. 
 colnames(de_symbols)
 res_for_volc <- de_symbols[, c("external_gene_name","log2FoldChange","padj")]
@@ -984,6 +916,7 @@ So for 1000 significant genes at raw p-value < 0.05, we expect to have 50 false 
 # how many genes are differentially expressed, taking into account "padj < 0.05"?
 # contains NAs... Filter them out
 de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
+nrow(de_select)
 # 85 genes
 
 # save results in file for further usage
@@ -996,13 +929,34 @@ write.table(de_select, "deseq2_selection_padj005.txt", quote=F, col.names=T, row
 # how many genes are differentially expressed, taking into account "padj < 0.05" and log2FoldChange < -0.5 or > 0.5?
 # contains NAs... Filter them out
 de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(de_symbols$log2FoldChange) > 0.5,]
+nrow(de_select)
 # 83 genes
 ```
 
 ## Exercise 1
 
 * Is **FOXC1** differentially expressed? What are the corresponding adjusted-value and log2FoldChanges?
+
+:::{admonition} Click to see the solution
+:class: dropdown, tip
+
+```r
+de_select[de_select$external_gene_name == "FOXC1",]
+```
+
+:::
+
 * How many genes are found differentially expressed if you change the log2FoldChange threshold to 0.8 / -0.8 and the padj threshold to 0.01?
+
+:::{admonition} Click to see the solution
+:class: dropdown, tip
+
+```r
+de_select <- de_symbols[de_symbols$padj < 0.01 & !is.na(de_symbols$padj) & abs(de_symbols$log2FoldChange) > 0.8,]
+nrow(de_select)
+```
+
+:::
 
 ## Exercise 2
 
@@ -1031,7 +985,14 @@ de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj) & abs(d
 :::{admonition} Click to see the solution
 :class: dropdown, tip
 
+```bash
+mkdir ~/rnaseq_course/differential_expression/undiff
+cd ~/rnaseq_course/differential_expression/undiff
+
 ```r
+
+setwd("~/rnaseq_course/differential_expression/undiff")
+
 ## DESeq2 analysis
 
 library(DESeq2)
@@ -1076,6 +1037,9 @@ norm_counts <- log2(counts(se_star2, normalized = TRUE)+1)
 # add annotation to count table 
 norm_counts_symbols <- merge(data.frame(ID=rownames(norm_counts), norm_counts, check.names=FALSE), annot, by.x="ID", by.y="ensembl_gene_id", all=F)
 
+# Let's sabe our results in the undiff folder
+setwd("~/rnaseq_course/differential_expression/undiff")
+
 # write normalized counts to text file
 write.table(norm_counts_symbols, "normalized_counts_log2_star_undiff.txt", quote=F, col.names=T, row.names=F, sep="\t")
 
@@ -1101,7 +1065,7 @@ dev.off()
 
 # Principal component analysis
 png("PCA_star_undiff.png")
-plotPCA(object = se_rlog,
+plotPCA(object = se_vst,
         intgroup = c("Condition", "Differentiation"))
 dev.off()
 
@@ -1140,14 +1104,127 @@ In a way, we "discard" the expected changes due to differentiation to focus on t
 * Repeat the first analysis, changing the design **~ Condition** to **~ Differentiation + Condition**.
 * How many genes are now found differentially expressed, when filtering for padj < 0.05?
 
+:::{admonition} Click to see the solution
+:class: dropdown, tip
+
+```r
+setwd("~/rnaseq_course/differential_expression")
+
+sampletable <- read.table("sample_sheet_foxc1.txt", header=T, sep="\t")
+colnames(sampletable)
+
+se_star <- DESeqDataSetFromHTSeqCount(sampleTable = sampletable,
+                                      directory = "counts_STAR_selected",
+                                      design = ~ Differentiation + Condition)
+se_star
+se_star <- se_star[rowSums(counts(se_star)) > 10, ]
+
+se_star2 <- DESeq(se_star)
+
+de <- results(object = se_star2, contrast=c("Condition", "WT", "KO"))
+de_symbols <- merge(data.frame(ID=rownames(de), de, check.names=FALSE), annot, by.x="ID", by.y="ensembl_gene_id", all=F)
+
+
+## How many genes are now found differential expressed, when filtering for padj < 0.05.
+
+de_select <- de_symbols[de_symbols$padj < 0.05 & !is.na(de_symbols$padj),]
+nrow(de_select)
+
+```
+
+:::
+
 ### Homework
 
 Do the same using the **Salmon counts** (object *se_salmon*): how many genes are found differentially expressed when using the Salmon counts?
 How do results overlap between STAR and Salmon?
 
-```{note}
-Remember to use the Gencode annotation file [gencode.v49.annotation.gtf.gz](#Prepare-transcript-to-gene-annotation-file-salmon) preapred with the annotation columns you want to include in your normalized counts and differential expression tables.
+:::{admonition} Click to see the solution
+:class: dropdown, tip
+
+* **Prepare transcript-to-gene annotation file (Salmon)**
+
+Prepare the annotation file needed to import the **Salmon** counts: a two-column data frame linking transcript id (column 1) to gene id (column 2).
+
+We will add the gene symbol in column 3, for a more comprehensive annotation.
+
+Process from the **GTF file**:
+
+```bash
+cd ~/rnaseq_course/differential_expression
+
+# Gencode annotation for all chromosomes
+wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz
+
+# first column is the transcript ID, second column is the gene ID, third column is the gene symbol
+zcat gencode.v49.annotation.gtf.gz | awk -F "\t" 'BEGIN{OFS="\t"}{if($3=="transcript"){split($9, a, "\""); print a[4],a[2],a[8]}}' > tx2gene.gencode.v49.csv
 ```
+
+Preparing annotation file with  gene id, gene names, gene type, chromosome, start, end and strand information.
+
+```bash
+cd ~/rnaseq_course/differential_expression
+
+zcat gencode.v49.annotation.gtf.gz | awk -v OFS='\t' '{ if ($3=="gene") { gsub(";",""); gsub("\"",""); print $10,$14,$12,$1,$4,$5,$7} }' > salmon_gene_anno.txt
+```
+
+* **Import Salmon counts**
+
+Load the count data from **SALMON** into a **DESeq** object:
+
+```r
+# Go to the deseq2 directory
+setwd("~/rnaseq_course/differential_expression")
+
+annot <- read.table("salmon_gene_anno.txt", header=T)
+
+# Load the tximport package that we use to import Salmon counts
+library(tximport)
+
+# List the quantification files from Salmon: one quant.sf file per sample
+
+# dir is list all files in "~/rnaseq_course/differential_expression/counts_salmon" and in any directories inside, that have the pattern "quant.sf". full.names = TRUE means that we want to keep the whole paths
+files <- dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon", recursive=TRUE, pattern="quant.sf", full.names=TRUE)
+files
+
+# files is a vector of file paths. we will name each element of this vector with a simplified corresponding sample name
+names(files) <- gsub("_quant.sf", "", dir("~/rnaseq_course/differential_expression/full_data_counts/counts_salmon"))
+names(files)
+
+# Read in the two-column data.frame linking transcript id (column 1) to gene id (column 2)
+transcripts2genes <- read.table("tx2gene.gencode.v49.csv",
+  sep="\t",
+  header=F)
+
+# tximport can import data from Salmon, Kallisto, Sailfish, RSEM, Stringtie
+
+# here we summarize the transcript-level counts to gene-level counts
+txi <- tximport(files,
+  type = "salmon",
+  tx2gene = transcripts2genes)
+
+# check the names of the "slots" of the txi object
+names(txi)
+
+# display the first rows of the counts per gene information
+head(txi$counts)
+
+# Create a DESeq2 object based on Salmon per-gene counts
+se_salmon <- DESeqDataSetFromTximport(txi,
+   colData = sampletable,
+   design = ~ Condition)
+
+
+# Load the annotation file to annotate the normalized and differential expression results
+
+annot <- read.table("salmon_gene_anno.txt", as.is=T)
+colnames(annot) <- c("gene_id","gene_name","gene_type",'chromosome_name', 'start_position', 'end_position','strand')
+
+```
+
+* From that step on, you can proceed **the same way** with se_star.
+
+:::
 
 ## Other cases
 
@@ -1162,16 +1239,16 @@ In all these cases, unintended technical variation can be introduced into the da
 :::{admonition} What is a batch effect?
 :class: note
 
-    A **batch effect** is systematic, non-biological variation in gene expression data introduced by technical factors such as:
+  A **batch effect** is systematic, non-biological variation in gene expression data introduced by technical factors such as:
 
-    * Different **sequencing runs** or **flow cells**
-    * Samples processed on different **dates** or by different **operators**
-    * Different **reagent lots** or **library prep kits**
-    * Samples stored under different conditions before RNA extraction
+* Different **sequencing runs** or **flow cells**
+* Samples processed on different **dates** or by different **operators**
+* Different **reagent lots** or **library prep kits**
+* Samples stored under different conditions before RNA extraction
 
-    Batch effects can be just as large as (or larger than) the biological signal you are trying to detect, and will **confound** your differential expression results if not properly accounted for.
+  Batch effects can be just as large as (or larger than) the biological signal you are trying to detect, and will **confound** your differential expression results if not properly accounted for.
 
-    In the worst case scenario, batch effects becomes completely inseparable from the biological signal of interest. For example, if all your control samples were processed in batch 1 and all your treatment samples were processed in batch 2, you will not be able to distinguish between the effect of the treatment and the effect of the batch.
+  In the worst case scenario, batch effects becomes completely inseparable from the biological signal of interest. For example, if all your control samples were processed in batch 1 and all your treatment samples were processed in batch 2, you will not be able to distinguish between the effect of the treatment and the effect of the batch.
 :::
 
 #### Detect batch effects using PCA
