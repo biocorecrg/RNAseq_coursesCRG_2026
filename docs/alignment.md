@@ -191,7 +191,7 @@ $RUN STAR --genomeDir index_star_chr6 \
 If this was successful and not too slow and resource-consuming, you can do it for all samples, in a **loop**:
 
 ```bash
-for fastq in ~/rnaseq_course/trimming/*_trimmed.fq.gz
+for fastq in ~/rnaseq_course/trimmed_reads/*_trimmed.fq.gz
 do echo $fastq
 $RUN STAR --genomeDir index_star_chr6 \
       --readFilesIn $fastq \
@@ -335,9 +335,9 @@ $RUN samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam | head -n 1
 
 @HD	VN:1.4	SO:coordinate
 @SQ	SN:6	LN:170805979
-@PG	ID:STAR	PN:STAR	VN:2.7.11b	CL:/opt/conda/bin/STAR-avx2   --genomeDir index_star_chr6   --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts   
+@PG	ID:STAR	PN:STAR	VN:2.7.11b	CL:/opt/conda/bin/STAR-avx2   --genomeDir index_star_chr6   --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimmed_reads/SRR3091420_1_chr6_trimmed.fq.gz      --readFilesCommand zcat      --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts   
 @PG	ID:samtools	PN:samtools	PP:STAR	VN:1.17	CL:/usr/local/bin/samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam
-@CO	user command line: /opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6
+@CO	user command line: /opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimmed_reads/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6
 10416098	0	6	113167	255	48M	*	0	0	GGGAAAAGTACAAATTCAACATGTAATTGTATAGTAATCCATATAAAA	bbbeeeeecggggiiiiiiiiiihhhiiighhiihhhhigiiiiiiii	NH:i:1	HI:i:1	AS:i:47	nM:i:0
 8553177	272	6	119288	3	48M	*	0	0	GAAATCCAGTGGGACAGTCAAATCTTAAAGCTCCAAAATGATCTCCTT	iiiiiiiiiiiiigiiiiiiiihiihiiiiihhiigggggeeeeebbb	NH:i:2	HI:i:2	AS:i:47	nM:i:0
 4630026	272	6	128432	3	49M	*	0	0	AGCACTAACCATTGTAGCATGCCAATATACTCAAAATTCAATGAAATTC	hfgehhggiihhhiiihhiihhhhffffghdihhiifggggeeeeebbb	NH:i:2	HI:i:2	AS:i:48	nM:i:0
@@ -357,13 +357,13 @@ The first part indicated by the first character **@** in each row is the header:
 | @PG | ID | STAR |
 | @PG | PN | STAR |
 | @PG | VN | 2.7.11b |
-| @PG | CL | `/opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6 --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts` |
+| @PG | CL | `/opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimmed_reads/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6 --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts` |
 | @PG | ID | samtools |
 | @PG | PN | samtools |
 | @PG | PP | STAR |
 | @PG | VN | 1.17 |
 | @PG | CL | `/usr/local/bin/samtools view -h SRR3091420_1_chr6Aligned.sortedByCoord.out.bam` |
-| @CO | - | user command line: `/opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimming/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6` |
+| @CO | - | user command line: `/opt/conda/bin/STAR-avx2 --genomeDir index_star_chr6 --readFilesIn /users/bi/lcozzuto/rnaseq_course/trimmed_reads/SRR3091420_1_chr6_trimmed.fq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix alignments_STAR/SRR3091420_1_chr6` |
 
 The rest is a read alignment. 
 
@@ -669,7 +669,7 @@ We will use information on read counts for transcripts from **quant.sf** files f
 Now, if time and resources allow, proceed with the mapping of the **9 remaining samples**:
 
 ```bash
-for fastq in ~/rnaseq_course/ ~/rnaseq_course/trimming/SRR309142*.gz;
+for fastq in ~/rnaseq_course/ ~/rnaseq_course/trimmed_reads/SRR309142*.gz;
 do echo $fastq
 
 $RUN salmon quant -i index_salmon -l U \
@@ -700,10 +700,10 @@ cd ~/rnaseq_course/
 mkdir multiqc_report
 cd ~/rnaseq_course/multiqc_report
 
-# link QC, trimming and mapping data
+# link QC, trimmed_reads and mapping data
 ln -s ~/rnaseq_course/quality_control* .
 ln -s ~/rnaseq_course/mapping* .
-ln -s ~/rnaseq_course/trimming
+ln -s ~/rnaseq_course/trimmed_reads
 ```
 
 Then run **multiqc** on the directory **multiqc_report** to combine all reports:
