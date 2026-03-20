@@ -392,7 +392,7 @@ sample_val<-norm_counts[,2:6] ## Selecting the sample columns with the normalize
 #Select column names and ensembl gene ids
 y <- x[,c(1,11)] ## Select the gene_id and gene_name columns
 colnames(y)
-x <- data.frame(NAME=y[,2], DESCRIPTION=y[,1])
+x <- data.frame(NAME=y[,1], DESCRIPTION=y[,2])
 x <- cbind(x,sample_val)
 colnames(x)
 
@@ -440,6 +440,16 @@ The first label **WT** in the second line is associated to the first label **0**
 
 Create the phenotype labels file and save it as **gsea_phenotypes.cls**.
 :::
+
+* **BACKUP**
+
+```r
+### Downloading normalized counts 
+wget  https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/functional_analysis/gsea_normalized_counts.txt
+
+### Downloading phenotype labels
+wget  https://biocorecrg.github.io/RNAseq_coursesCRG_2026/latest/data/functional_analysis/gsea_phenotypes.cls
+```
 
 #### Download and run GSEA
 
