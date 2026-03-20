@@ -94,6 +94,7 @@ We use what we name the *Command Line Interface* (CLI) Shell, in our case **Bash
 - `cd Desktop` -> go to Desktop
 - `cd ../../` -> go two levels back
 - `cd ../Desktop/..` -> don't move
+- `cd .` -> go nowhere - '.' means current location
 
 ### Absolute paths
 
@@ -104,9 +105,15 @@ We use what we name the *Command Line Interface* (CLI) Shell, in our case **Bash
 
 Play with `ls` and different modifiers: `ls -l`, `ls -lt`, `ls -la`, etc.
 
-Sometimes we get lost and would like to know where we are. We can use the command `pwd`
+:::{note}
 
-**PRO TIP**: Don't use `man`, visit [tldr.sh](https://tldr.sh)
+Sometimes we get lost and would like to know where we are. We can use the command `pwd`
+:::
+
+:::{admonition} PRO TIP
+:class: tip
+
+Don't use `man`, visit [tldr.sh](https://tldr.sh)
 
 You can use from the terminal:
 
@@ -114,6 +121,7 @@ You can use from the terminal:
 uv tool install tldr
 tldr ls
 ```
+:::
 
 
 ## Create files and directories
@@ -456,4 +464,44 @@ Along the course we will use this shortcut for no needing to type so much:
 export RUN="singularity exec -e $HOME/RNAseq_course.sif"
 $RUN fastqc --version
 ```
+
+### Further recommendations
+
+- You can browse the contents of a directory in a Graphical User Interface (GUI) calling the file explorer program and the target directory.
+
+```bash
+# This opens Nautilus - GUI file explorer in the current directory 
+# Used in Ubuntu GNOME environment
+nautilus .
+```
+
+There are also many CLI text editors available (e.g., `vim`, `nano`, etc.), but we can also choose to use GUI editors.
+
+By default, by using `open <file>` command, we will open the actual file with the default application associated with that file type.
+
+```bash
+
+open myfile.txt
+```
+
+We expect that text files in the Ubuntu GNOME environment will be opened with: `gnome-text-editor`.
+
+
+:::{tip}
+
+If you execute `open <directory>`, it will actually open that directory with the default file explorer.
+
+```bash
+# Open current directory in a file explorer
+open .
+```
+
+:::
+
+
+:::{seealso}
+
+In Ubuntu, default applications can also be changed for specific file types following these instructions: <https://help.ubuntu.com/stable/ubuntu-help/files-open.html.en>
+:::
+
 
