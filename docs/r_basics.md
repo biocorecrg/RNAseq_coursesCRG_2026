@@ -16,7 +16,7 @@ What is RStudio?
 <img title="rstudio logo" alt="RStudio logo" src="images/rstudio_logo.jpeg" width="100">
 <img title="posit logo" alt="posit logo" src="images/posit_logo.png" width="190">
 
-We will use a local Rstudio server running a singularity container.
+We will use a local RStudio server running a singularity container. It uses [Tidyverse Rocker image](https://hub.docker.com/r/rocker/tidyverse).
 
 ```bash
 # Download the bash script that installs the singularity container and run it in the localserver

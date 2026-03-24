@@ -342,7 +342,7 @@ The main libraries we will use are belong to the [Bioconductor](https://www.bioc
 ```r
 library(BiocManager)  ## Library to install and manage packages from Bioconductor. 
 
-BiocManager::install("DESeq2") ## Installation of the package for differential expression analysis, only needed the first time in Rstudio local installation.
+BiocManager::install("DESeq2") ## Installation of the package for differential expression analysis, only needed the first time in RStudio local installation.
 library("DESeq2") ## Loading the package.
 
 BiocManager::install("EnhancedVolcano")
@@ -885,7 +885,7 @@ In the picture below, fold changes for gene A and for gene B between groups **t2
 
 | |
 |:---:|
-| ![RNAseq dispersion](images/RNAseq_dispersion.png) |
+| ![RNA-seq dispersion](images/RNAseq_dispersion.png) |
 
 DESeq2 also takes into account the library size, sufficient coverage of a gene, ...
 

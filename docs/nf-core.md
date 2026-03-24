@@ -31,9 +31,9 @@ Most nf-core pipelines rely on container images from [Biocontainers](https://bio
 
 The nf-core community has a great [documentation](https://nf-co.re/docs/usage/getting_started/introduction), which is being updated continuously. 
 
-## RNAseq nf-core pipeline 
+## RNA-seq nf-core pipeline 
 
-For our data analysis, we will use the [nf-core RNAseq pipeline](https://nf-co.re/rnaseq/3.23.0/). The whole pipeline is described in this fancy diagram:
+For our data analysis, we will use the [nf-core RNA-seq pipeline](https://nf-co.re/rnaseq/3.23.0/). The whole pipeline is described in this fancy diagram:
 
 <div align="center">
 <img src="images/nf-core-rnaseq_metro_map_grey_animated.svg" width="800"  />

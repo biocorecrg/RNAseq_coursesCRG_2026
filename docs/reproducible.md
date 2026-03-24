@@ -296,7 +296,7 @@ Other tools:
 - [RO-Crate](https://www.researchobject.org/ro-crate/) - Effort to package research data with metadata. `nf-prov` project supports it.
 
 - Register your workflow or refer to it: [WorkflowHub](https://workflowhub.eu/) 
-    - Example: related to [RNAseq](https://workflowhub.eu/search?q=rnaseq#workflows)
+    - Example: related to [RNA-seq](https://workflowhub.eu/search?q=rnaseq#workflows)
 
 ## FAIR
 
@@ -356,9 +356,9 @@ These repositories  are linked to the repositories of NGS raw data (FASTQ files)
     - Map these 4 concepts to simple TSV files
     - There are checklists, specific metadata requirements, depending on the sample/experiments that are going to be uploaded: [Checklist templates](https://github.com/ELIXIR-Belgium/ENA-metadata-templates)
 
-## FAIR in practice for RNAseq
+## FAIR in practice for RNA-seq
 
-- Reference: [FAIRification of an RNAseq dataset](https://training.galaxyproject.org/training-material/topics/fair/tutorials/fair-rna/tutorial.html)
+- Reference: [FAIRification of an RNA-seq dataset](https://training.galaxyproject.org/training-material/topics/fair/tutorials/fair-rna/tutorial.html)
 
 We will use **[E-MTAB-8316](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8316)** from ArrayExpress as example.
 
@@ -371,7 +371,7 @@ We will use **[E-MTAB-8316](https://www.ebi.ac.uk/biostudies/arrayexpress/studie
 - Uses resolution services like identifiers.org for regularized URLs
 
 **Counter-example:**
-- RNAseq data kept only on a lab's local server without public deposition
+- RNA-seq data kept only on a lab's local server without public deposition
 - FASTQ files named `sample1.fq`, `sample2.fq` with no associated metadata file
 
 

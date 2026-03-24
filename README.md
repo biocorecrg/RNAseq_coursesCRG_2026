@@ -1,4 +1,4 @@
-# RNAseq course - international course for the programme COURSES@CRG 
+# RNA-seq course - international course for the programme COURSES@CRG 
 ### 16-20 March 2026
 ## Decoding Transcriptomes: A Practical Course on RNA-seq
 https://courses.crg.eu/events/decoding-transcriptomes-practical-course-rna-seq

@@ -45,7 +45,7 @@ PCR (Polymerase Chain Reaction) is a technique invented in 1983 that amplifies s
 
 <p align="center"> <img src="images/454.jpg"  width="200" /> <img src="images/solexa.jpg"  width="100" /></p>
 
-Using these technologies for sequencing libraries of Expressed Sequence Tags (EST) allows the analysis  of a large part of the transcriptome, or performing RNAseq analysis.   
+Using these technologies for sequencing libraries of Expressed Sequence Tags (EST) allows the analysis  of a large part of the transcriptome, or performing RNA-seq analysis.   
 
 - In 2006 and in 2008, two milestone papers were published using this concept:
 
@@ -76,7 +76,7 @@ From that moment, different labs tried to apply the same technique to different 
   <img src="images/pacbio.png" width="200" /><img src="images/nanopore.png" width="200" />
 </p>
 
-During this course, we will focus on bulk RNAseq, but it is important for you to know that currently we are also able to detect the transcriptome of single cells and their spatial location.
+During this course, we will focus on bulk RNA-seq, but it is important for you to know that currently we are also able to detect the transcriptome of single cells and their spatial location.
 
 <p align="center">
   <img src="images/all_rnaseqs.png" width="400" />
@@ -94,7 +94,7 @@ Here, for instance, you have a whole mouse embryo that is being "sequenced" and 
 </br>
 </br>
 
-The RNAseq data analysis
+The RNA-seq data analysis
 ----------------
 
 This is a schema of your whole data analysis workflow. In the next section, we will focus on the alignment part.

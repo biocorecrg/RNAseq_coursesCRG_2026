@@ -449,6 +449,7 @@ Why Apptainer/Singularity?
 - Not as popular as Docker, but very convenient for Bioinformatics and HPC environments
     - You don't need to worry so much about different kind of UNIX permissions
 
+For the command-line part of the course not happening in RStudio, we will use this [container image](https://community.wave.seqera.io/repo/library/fastq-screen_fastqc_kraken2_multiqc_pruned) we generated with [Seqera Containers](https://seqera.io/containers/).
 
 ```bash
 singularity pull RNAseq_course.sif docker://community.wave.seqera.io/library/fastq-screen_fastqc_kraken2_multiqc_pruned:3161b0b514b51263

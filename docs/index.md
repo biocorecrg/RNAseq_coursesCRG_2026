@@ -1,6 +1,6 @@
 ![logo](https://raw.githubusercontent.com/CRG-CNAG/BioCoreMiscOpen/master/logo/biocore-logo_small.png)
 
-# RNAseq course - international course for the programme COURSES@CRG 
+# RNA-seq course - international course for the programme COURSES@CRG 
 
 **16-20 March 2026**
 
