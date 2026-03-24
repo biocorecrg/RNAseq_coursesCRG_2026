@@ -93,26 +93,27 @@ Save files as logical sets of changes and write a good description of why you ch
 
 ~ 40 years since first use
 
-- Three main generations
+- Three main generations. [Reference Images](https://abahmed.com/article/version-control-systems)
 
-### Local
+#### Local
 
 e.g. `RCS`
 
 ![local](./images/vcs_local.png)
 
-### Centralized
+#### Centralized
 
 e.g. `SUBVERSION`
 
 ![centralized](./images/vcs_centralized.png)
 
 
-### Distributed
+#### Distributed
 
 e.g. `GIT`
 
 ![distributed](./images/vcs_distributed.png)
+
 
 ### What is Git?
 
