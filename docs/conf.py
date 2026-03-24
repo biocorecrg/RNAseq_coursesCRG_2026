@@ -22,6 +22,8 @@ author = "Fabian Andrade, Sarah Bonnin, Luca Cozzuto, Anna Delgado, Toni Hermoso
 version = "2026"
 release = version
 
+html_title = "RNA-seq Bioinformatics Course (2026, CRG)"
+
 # -- Matomo configuration ---------------------------------------------------
 
 matomo_url = "//stats.biocore.crg.eu/"
